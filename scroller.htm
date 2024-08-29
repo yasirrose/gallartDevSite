@@ -1,0 +1,133 @@
+
+<html>
+
+<head>
+<title>Scroller</title>
+<Script>
+///////////////////
+//www.fortochka.com
+//Alexander Babichev 2006 Coopyright
+//This script is free for private use. Otherwise a $10 fee per a site is required.
+//the script can be modified but the copyright notice should be left unchanged.
+///////////////////
+
+
+var pic = new Array()
+
+function banner(name, width, link){
+	this.name = name
+	this.width = width
+	this.link = link
+   }
+
+pic[0] = new banner('http://www.sxc.hu/pic/s/r/re/remind/256228_sunflowers.jpg',102,'http://www.sxc.hu/pic/m/r/re/remind/256228_sunflowers.jpg')
+pic[1] = new banner('http://www.sxc.hu/pic/s/c/cl/claumart/289593_colors_of_the_countryside.jpg',102,'http://www.sxc.hu/pic/m/c/cl/claumart/289593_colors_of_the_countryside.jpg')
+pic[2] = new banner('http://www.sxc.hu/pic/s/w/wl/wlangusta/260792_rose_olsztyn.jpg',102,'http://www.sxc.hu/pic/m/w/wl/wlangusta/260792_rose_olsztyn.jpg')
+pic[3] = new banner('http://www.sxc.hu/pic/s/d/da/da9l/290444_yellow_rose.jpg',102,'http://www.sxc.hu/pic/m/d/da/da9l/290444_yellow_rose.jpg')
+pic[4] = new banner('http://www.sxc.hu/pic/s/d/da/da9l/290447_roses_are_red.jpg',102,'http://www.sxc.hu/pic/m/d/da/da9l/290447_roses_are_red.jpg')
+pic[5] = new banner('http://www.sxc.hu/pic/s/r/re/remind/256228_sunflowers.jpg',102,'http://www.sxc.hu/pic/m/r/re/remind/256228_sunflowers.jpg')
+pic[6] = new banner('http://www.sxc.hu/pic/s/c/cl/claumart/289593_colors_of_the_countryside.jpg',102,'http://www.sxc.hu/pic/m/c/cl/claumart/289593_colors_of_the_countryside.jpg')
+pic[7] = new banner('http://www.sxc.hu/pic/s/w/wl/wlangusta/260792_rose_olsztyn.jpg',102,'http://www.sxc.hu/pic/m/w/wl/wlangusta/260792_rose_olsztyn.jpg')
+pic[8] = new banner('http://www.sxc.hu/pic/s/d/da/da9l/290444_yellow_rose.jpg',102,'http://www.sxc.hu/pic/m/d/da/da9l/290444_yellow_rose.jpg')
+pic[9] = new banner('http://www.sxc.hu/pic/s/d/da/da9l/290447_roses_are_red.jpg',102,'http://www.sxc.hu/pic/m/d/da/da9l/290447_roses_are_red.jpg')
+pic[10] = new banner('http://www.sxc.hu/pic/s/r/re/remind/256228_sunflowers.jpg',102,'http://www.sxc.hu/pic/m/r/re/remind/256228_sunflowers.jpg')
+pic[11] = new banner('http://www.sxc.hu/pic/s/c/cl/claumart/289593_colors_of_the_countryside.jpg',102,'http://www.sxc.hu/pic/m/c/cl/claumart/289593_colors_of_the_countryside.jpg')
+pic[12] = new banner('http://www.sxc.hu/pic/s/w/wl/wlangusta/260792_rose_olsztyn.jpg',102,'http://www.sxc.hu/pic/m/w/wl/wlangusta/260792_rose_olsztyn.jpg')
+pic[13] = new banner('http://www.sxc.hu/pic/s/d/da/da9l/290444_yellow_rose.jpg',102,'http://www.sxc.hu/pic/m/d/da/da9l/290444_yellow_rose.jpg')
+pic[14] = new banner('http://www.sxc.hu/pic/s/d/da/da9l/290447_roses_are_red.jpg',102,'http://www.sxc.hu/pic/m/d/da/da9l/290447_roses_are_red.jpg')
+
+var speed = 50
+
+var kk = pic.length
+var ii
+var hhh
+var nnn
+var myInterval
+var myPause
+var mode = 0
+
+
+var imgArray = new Array(kk)
+var myLeft = new Array(kk)
+
+for (ii=0;ii<kk;ii++){
+imgArray[ii] = new Image()
+imgArray[ii].src = pic[ii].name
+imgArray[ii].width = pic[ii].width
+
+	hhh=0 
+	for (nnn=0;nnn<ii;nnn++){
+		hhh=hhh+pic[nnn].width
+	}
+	myLeft[ii] = hhh
+}
+
+function ready(){
+	for (ii=0;ii<kk;ii++){ 
+		if (document.images[ii].complete == false){
+			return false	
+			break
+		}
+	}
+return true
+}
+
+
+function startScrolling(){
+	if (ready() == true){		
+		window.clearInterval(myPause)
+		myInterval = setInterval("autoScroll()",speed)	
+	}
+}	
+	
+
+function autoScroll(){
+	for (ii=0;ii<kk;ii++){
+		myLeft[ii] = myLeft[ii] - 1
+		
+	if (myLeft[ii] == -(pic[ii].width)){
+		hhh = 0
+		for (nnn=0;nnn<kk;nnn++){
+			if (nnn!=ii){
+				hhh = hhh + pic[nnn].width
+			}			
+		}
+		myLeft[ii] =  hhh
+	}
+		
+				
+		document.images[ii].style.left = myLeft[ii]
+	}
+	mode = 1
+}
+
+function stop(){
+	if (mode == 1){
+		window.clearInterval(myInterval)
+	}
+	if (mode == 0){
+		window.clearInterval(myPause)
+	}	
+}
+
+function go(){
+	if (mode == 1){
+		myInterval = setInterval("autoScroll()",speed)
+	}
+	if (mode == 0){
+		myPause = setInterval("startScrolling()",3000)
+	}	
+}
+
+myPause = setInterval("startScrolling()",3000)
+</Script>
+
+<body bgcolor='#eeffff'>
+<Script>
+for (ii=0;ii<kk;ii++){
+document.write('<a href = ' + pic[ii].link + ' target="_blank" ><img space=0 hspace=0 vspace=0 border=0 height=74 style=position:absolute;top:0;left:' + myLeft[ii]  + '; src=' + pic[ii].name + ' onMouseOver=stop() onMouseOut=go()></a>')
+}
+</Script>
+</body>
+
+</html>

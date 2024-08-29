@@ -1,0 +1,11 @@
+<CFMAIL
+server="mail.YourDomain.com"
+username=“AnyEmail@YourDomain.com”
+password=“YourEmailPassword”
+from="AnyEmail@YourDomain"
+to="AnyEmail@AnyDomain.com"
+subject="Any Subject">
+
+This is the body of the message.
+
+</CFMAIL>

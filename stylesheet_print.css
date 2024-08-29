@@ -1,0 +1,22 @@
+.navContainer {
+	margin-top: 5px;
+}
+.navElement {
+	padding-left: 5px!important;
+	padding-right: 5px!important;
+}
+#top {
+    width: 100%;
+}
+#top .title {
+	width: 100%;
+}
+#top .title img {
+	width: 100%;
+}
+#top .mailto {
+	display: none;
+}
+#top .top_icons {
+	display: none;
+}

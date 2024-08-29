@@ -1,0 +1,48 @@
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	<tr>
+		<td>
+		
+		<cfif isDefined('session.userinfo.login') and session.userinfo.login eq 0>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td style="font-size: 8pt; padding-left: 20px; color:#ff3399;">
+						Wrong email or password - <br>please try again.
+					</td>
+				</tr>
+			</table>
+		</cfif>
+			<cfif isDefined('session.userinfo.pk_users')>
+				<cfoutput>
+				<table border="0" cellpadding="0" cellspacing="0" align="center">
+					<tr>
+						<td style="font-size: 8pt; padding-left: 20px; color:##ff3399;">
+							Welcome Member:
+						</td>
+					</tr>
+					<tr>
+						<td style="font-size: 8pt; padding-left: 20px; color:##ff3399;">
+							#UCASE(session.UserInfo.fname)# #UCASE(session.UserInfo.lname)#
+						</td>
+					</tr>
+					<tr>
+						<td style="font-size: 8pt; color:##ff3399;">
+							<input type="Button" name="logout" onclick="document.location.href='user_listing_search.cfm?xss=#xss#'" value="MEMBER'S AREA" style="font-size: 7pt;">
+						</td>
+					</tr>
+					<tr>
+						<td style="font-size: 8pt; padding-left: 20px; color:##ff3399;">
+							<input type="Button" name="logout" onclick="document.location.href='logout.cfm?xss=#xss#'" value="LOG OUT" style="font-size: 7pt;">
+						</td>
+					</tr>
+				</table>
+				</cfoutput>
+			<cfelse>
+			<div>
+				<cfinclude template="userlogin.cfm">	
+			</div>
+			</cfif>
+		
+		</td>
+	</tr>
+
+</table>

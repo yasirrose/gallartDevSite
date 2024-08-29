@@ -1,0 +1,5 @@
+Sitemap: http://gallart.com/Sitemap.xml
+
+User-agent: Baiduspider
+
+Disallow: /
