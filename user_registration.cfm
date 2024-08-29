@@ -167,10 +167,14 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 <script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 
 <script type="text/javascript">
 
@@ -200,7 +204,30 @@
 
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-
+	<div class="main-container">
+		<div class="header-section">
+			<div class="top-header">
+				<cfinclude template="top_.cfm">
+			</div>
+			<div class="navbar-section">
+				<cfinclude template="navbar_.cfm">
+			</div>
+		</div>
+		<div class="inner-section">
+			<div class="container-fluid">
+				<div class="main-content">
+					<div class="mobile-sidebar-logo">
+						<div class="sidebar-Icon">
+							<i class="fas fa-bars"></i>
+						</div>
+					</div>
+					<div class="sidebar web-sidebar-modal">	
+						<cfinclude template="left_.cfm">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 <cfif IsDefined( "form.login" )>
 	<cfquery name="ValidUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 		SELECT * from users
@@ -380,7 +407,7 @@
 </form>
 
 </cfoutput>
-	<tr>
+	<!-- <tr>
 		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
 			<cfinclude template="top.cfm">
 		</td>
@@ -389,7 +416,7 @@
 		<td colspan="2" width="100%" valign="top" height="37" bgcolor="#000000">
 			<cfinclude template="navbar.cfm">
 		</td>
-	</tr>
+	</tr> -->
 	<tr height="100%">
 		<td valign="top" width="173" height="100%">
 			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
