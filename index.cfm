@@ -414,7 +414,7 @@ a.SeeMore:hover {
 							</div>
 						</div>
 					</div>
-				</divcl>
+				</div>
 			</div>
 			<tr height="100%">
 				<td valign="top" width="727" height="100%">

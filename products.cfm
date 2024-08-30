@@ -9,10 +9,14 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+	<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -159,9 +163,203 @@
 	SELECT show FROM makeoffer_buttons
 	WHERE pk_makeoffer_buttons = 1
 </cfquery>
-
+<div class="main-container">
+	<div id="Table_01">
+		<div class="header-section">
+			<div class="top-header">
+				<cfinclude template="top_.cfm">
+			</div>
+			<div class="navbar-section">
+				<cfinclude template="navbar_.cfm">
+			</div>
+		</div>
+		<div class="inner-section">
+			<div class="container-fluid">
+				<div class="main-content">
+					<div class="mobile-sidebar-logo">
+						<div class="sidebar-Icon">
+							<i class="fas fa-bars"></i>
+						</div>
+					</div>
+					<div class="sidebar web-sidebar-modal">	
+						<cfinclude template="left_.cfm">
+					</div>
+					<div class="content-section">
+						<div class="bottom-content-sec">
+							<div class="banner-section">
+								<div class="art-work-content">
+									<div class="bottom-content">
+										<div class="gallery-lists">
+											<form name="frm" action="products.cfm" method="post">
+												<cfoutput>
+												<cfif parameterexists(xss)>
+													<input type="hidden" name="xss" value="#xss#">
+												</cfif>
+												<cfif parameterexists(keywords)>
+													<input type="hidden" name="keywords" value="#keywords#">
+												</cfif>
+												<cfif parameterexists(fam)>
+													<input type="hidden" name="fam" value="#fam#">
+												</cfif>
+												<cfif parameterexists(man)>
+													<input type="hidden" name="man" value="#man#">
+												</cfif>
+												<cfif parameterexists(manufact)>
+													<input type="hidden" name="manufact" value="#manufact#">
+												</cfif>
+												<cfif parameterexists(cat)>
+													<input type="hidden" name="cat" value="#cat#">
+												</cfif>
+												<cfif parameterexists(artist)>
+													<input type="hidden" name="artist" value="#artist#">
+												</cfif>
+												</cfoutput>
+											</form>
+						
+											<cfif #productinfo.recordcount# gt 0>
+												<cfif parameterexists(pagego)>
+													<cfset starton = #pagego#>
+												<cfelse>
+													<cfset starton=1>
+												</cfif>
+												<cfif starton is 1>
+													<cfset startrow = 1>
+												<cfelse>
+													<cfset startrow = ((#starton# - 1) * ipp) + 1>
+												</cfif>
+												<cfset pc = 0>
+													<cfoutput query="productinfo" startrow="#startrow#" maxrows="#ipp#">
+													
+													<cfif productinfo.closeout EQ 1 AND use_highestimate EQ 0>
+														<cfset saleprice = special_price />
+													<cfelseif productinfo.closeout EQ 1 AND use_highestimate EQ 1>
+														<cfset saleprice = high_estimate />
+													<cfelse>
+														<cfset saleprice = 0 />
+													</cfif>
+													<cfif listlen(manufacturer) gt 1>
+														<cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
+														<cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
+														<cfset artist_name_alt = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
+													<cfelse>
+														<cfset artist_name = manufacturer />
+														<cfset artist_name_url = manufacturer />
+														<cfset artist_name_alt = manufacturer />
+													</cfif>
+												<cfset pc = pc + 1>
+												<div class="list-item">
+													<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#jsStringFormat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+														<!--- <cfset imageUrl = "http://23.20.226.157/img/thumbnails/#uid#.jpg">--->
+												
+													<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")>
+														<img src="http://23.20.226.157/img/thumbnails/#uid#.jpg" alt="#artist_name_alt# - #name#" title="#artist_name_alt# - #name#" border="0" align="center">
+													<cfelse>
+														<div align="center" style="padding: 20px;">NO IMAGE AVAILABLE#imageUrl#</div>
+													</cfif>	
+													</A>
+													<br>
+													<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#')">#name#</a>
+													<br>
+													<span>BY: <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#ucase(artist_name)#</a></span>
+													<br>
+													<span color="660066" size="1">
+														<p class="mb-2">
+															<cfif retail_price gt 0 and retail_price gt gallery_price>
+																Retail Price: <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#dollarformat(retail_price)#</a>
+															</cfif>
+														</p>
+														<p class="mb-1">
+															<cfif gallery_price EQ 0 OR gallery_price EQ ''>
+																<span style="font-size: 12px; font-weight: bold;">Price On Request</span>
+																305.932.6166
+																<cfelse>
+																<cfif gallery_price neq ''>
+																	Gallery Price: <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#dollarformat(gallery_price)#</a>
+																</cfif>
+															</cfif>
+														</p>
+													</span>
+													<br>
+													Art ID:&nbsp;<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#modelno#</a>
+													<br>
+													<span class="pinkText">
+														<b><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="dbl_arrows">MORE INFO</a></b>
+													</span>
+													<div class="e-pricing">
+														<cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>
+														<cfif makeoffer_buttons.show EQ 1>
+															<a href="make_offer.cfm?pid=#uid#&xss=#xss#"><img src="images/make_offer.gif" border="0"></a>
+														<cfelse>
+															<a href="epricing.cfm?pid=#uid#&xss=#xss#"><img src="images/epricing.gif" border="0"></a>
+														</cfif>
+													</div>
+												</div>
+												<cfif pc eq rows>
+												<cfset pc = 0>
+																		
+												</cfif>
+												</cfoutput>
+												<cfset Totalpages = ceiling(#productinfo.recordcount#/ipp)>
+												<form name="pagination_form">
+														<cfoutput>
+														<tr bgcolor="ffffff">
+															<td align="right" valign="top" colspan="#rows#"><font face="Arial, Helvetica, sans-serif" size="1">Page #starton# of #Totalpages#</font>
+															&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+															<select name="pagego" onChange="javascript:gonextProduct('products.cfm?pagego=')" style="font-size: 9pt;">
+															<CFLOOP INDEX="pagecount" FROM="1" TO="#Totalpages#" STEP="1">
+															<cfif parameterexists(pagego) and pagego eq pagecount>
+															<option value="#pagecount#" selected>#pagecount#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+															<cfelse>
+															<option value="#pagecount#">#pagecount#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+															
+															</cfif>
+															</CFLOOP>
+															</select>
+																</td>
+														</tr>
+													</cfoutput> 
+												</form>
+												<cfset nextplace = starton + 1>
+												<cfset preplace = starton - 1>
+												<cfif parameterexists(pagego) and pagego gt 1>
+													<font face="Arial, Helvetica, sans-serif" size="1"><A HREF="javascript:gonext22('products.cfm?pagego=<cfoutput>#preplace#</cfoutput>')">
+													<< Previous Page</a></font>
+												</cfif>
+												<cfif starton neq Totalpages>
+													<font face="Arial, Helvetica, sans-serif" size="1"><A HREF="javascript:gonext22('products.cfm?pagego=<cfoutput>#nextplace#</cfoutput>')">
+													Next Page >>
+												</a></font>
+												</cfif>
+												<cfelse>
+													<center><Br><Br><Br>
+													<cfif parameterexists(keywords) and (productinfo.recordcount lt 1)>
+													<font face="verdana, arial,helvetica" size="3" color="66066"><b>Our records show no listing of <cfoutput>#keywords#</cfoutput>/s in our catalog.<br>Please try another search criteria.</b></font>
+													</center>
+													</cfif>
+													<cfif parameterexists(man) and (productinfo.recordcount lt 1)>
+													<font face="verdana, arial,helvetica" size="3" color="66066"><b>Our records show no listing of artists whose names begin with <cfoutput>"#man#"</cfoutput> in our catalog.<br>Please try another search criteria.</b></font>
+													</center>
+													</cfif>
+												
+												</cfif>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<tr>
+			<td colspan="2" valign="baseline">
+				<cfinclude template="footer_.cfm">
+			</td>
+		</tr>
+	</div>
+</div>
 <table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
+	<!-- <tr>
 		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
 			<cfinclude template="top.cfm">
 		</td>
@@ -170,9 +368,9 @@
 		<td colspan="2" width="100%" valign="top" height="37" bgcolor="#000000">
 			<cfinclude template="navbar.cfm">
 		</td>
-	</tr>
+	</tr> -->
 	<tr height="100%">
-		<td valign="top" width="173" height="100%">
+		<!-- <td valign="top" width="173" height="100%">
 			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
 				<tr height="100%">
 					<td valign="top" height="100%">	
@@ -180,217 +378,11 @@
 					</td>
 				</tr>
 			</table>
-		</td>
+		</td> -->
 		<td valign="top" width="727" height="100%">
 		<!--- content starts --->
-			<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	
-<!--- RESULT LIST STARTS --->	
-				<tr>
-					<td width="100%">
-					<!--- this section shows the list of products --->
-					
-					<form name="frm" action="products.cfm" method="post">
-						<cfoutput>
-						<cfif parameterexists(xss)>
-							<input type="hidden" name="xss" value="#xss#">
-						</cfif>
-						<cfif parameterexists(keywords)>
-							<input type="hidden" name="keywords" value="#keywords#">
-						</cfif>
-						<cfif parameterexists(fam)>
-							<input type="hidden" name="fam" value="#fam#">
-						</cfif>
-						<cfif parameterexists(man)>
-							<input type="hidden" name="man" value="#man#">
-						</cfif>
-						<cfif parameterexists(manufact)>
-							<input type="hidden" name="manufact" value="#manufact#">
-						</cfif>
-						<cfif parameterexists(cat)>
-							<input type="hidden" name="cat" value="#cat#">
-						</cfif>
-						<cfif parameterexists(artist)>
-							<input type="hidden" name="artist" value="#artist#">
-						</cfif>
-						</cfoutput>
-					</form>
-
-					<cfif #productinfo.recordcount# gt 0>
-						<cfif parameterexists(pagego)>
-							<cfset starton = #pagego#>
-						<cfelse>
-							<cfset starton=1>
-						</cfif>
-						<cfif starton is 1>
-							<cfset startrow = 1>
-						<cfelse>
-							<cfset startrow = ((#starton# - 1) * ipp) + 1>
-						</cfif>
-							
-					
-				<table cellpadding="15" cellspacing="1" border="0" width="100%">
-					<!--- Show product list --->
-					<cfset pc = 0>
-							<tr valign="top">
-							<cfoutput query="productinfo" startrow="#startrow#" maxrows="#ipp#">
-							
-							<cfif productinfo.closeout EQ 1 AND use_highestimate EQ 0>
-								<cfset saleprice = special_price />
-							<cfelseif productinfo.closeout EQ 1 AND use_highestimate EQ 1>
-								<cfset saleprice = high_estimate />
-							<cfelse>
-								<cfset saleprice = 0 />
-							</cfif>
-							<cfif listlen(manufacturer) gt 1>
-								<cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
-								<cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
-                                <cfset artist_name_alt = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
-							<cfelse>
-								<cfset artist_name = manufacturer />
-								<cfset artist_name_url = manufacturer />
-                                <cfset artist_name_alt = manufacturer />
-							</cfif>
-					<cfset pc = pc + 1>
-					<td valign="top" align="center">
-						<table cellpadding="2" cellspacing="0" width="150">
-							<tr>
-								<td align="center" class="testcheck">
-									<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#jsStringFormat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
-										<!--- <cfset imageUrl = "http://23.20.226.157/img/thumbnails/#uid#.jpg">--->
-								
-									<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")>
-										<img src="http://23.20.226.157/img/thumbnails/#uid#.jpg" alt="#artist_name_alt# - #name#" title="#artist_name_alt# - #name#" border="0" align="center">
-									<cfelse>
-										<div align="center" style="padding: 20px;">NO IMAGE AVAILABLE#imageUrl#</div>
-									</cfif>	
-									</A>
-								</td>
-							</tr>
-							<tr>
-								<td align="center">
-									<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#')">#name#</a>
-								</td>
-							</tr>
-							<tr>
-								<td align="center">
-									BY: <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#ucase(artist_name)#</a>
-								</td>
-							</tr>
-							<tr>
-								<td align="center">
-									<cfif retail_price gt 0 and retail_price gt gallery_price>
-									Retail Price: <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#dollarformat(retail_price)#</a><br>
-									</cfif>
-									<cfif gallery_price EQ 0 OR gallery_price EQ ''>
-									<span style="font-size: 12px; font-weight: bold;">Price On Request</span><br>
-									305.932.6166<br>
-									<cfelse>
-										<cfif gallery_price neq ''>
-											Gallery Price: <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#dollarformat(gallery_price)#</a>
-										</cfif>
-									</cfif>
-								</td>
-							</tr>
-							<tr>
-								<td align="center">
-									Art ID:&nbsp;<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#modelno#</a>
-								</td>
-							</tr>
-							<tr>
-								<td align="center">
-									<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="dbl_arrows">MORE INFO</a>
-								</td>
-							</tr>
-							<tr>
-								<td align="center">
-									<cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>
-									<cfif makeoffer_buttons.show EQ 1>
-										<a href="make_offer.cfm?pid=#uid#&xss=#xss#"><img src="images/make_offer.gif" border="0"></a>
-									<cfelse>
-										<a href="epricing.cfm?pid=#uid#&xss=#xss#"><img src="images/epricing.gif" border="0"></a>
-									</cfif>
-								</td>
-							</tr>
-						</table>
-					</td>
-					<cfif pc eq rows>
-					</tr>
-					<Tr>
-					<cfset pc = 0>
-											
-					</cfif>
-					</cfoutput>
-					</tr>
-					<cfset Totalpages = ceiling(#productinfo.recordcount#/ipp)>
-
-					<form name="pagination_form">
-						 <cfoutput>
-							<Tr bgcolor="ffffff">
-								<td align="right" valign="top" colspan="#rows#"><font face="Arial, Helvetica, sans-serif" size="1">Page #starton# of #Totalpages#</font>
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<select name="pagego" onChange="javascript:gonextProduct('products.cfm?pagego=')" style="font-size: 9pt;">
-								<CFLOOP INDEX="pagecount" FROM="1" TO="#Totalpages#" STEP="1">
-								<cfif parameterexists(pagego) and pagego eq pagecount>
-								<option value="#pagecount#" selected>#pagecount#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<cfelse>
-								<option value="#pagecount#">#pagecount#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								
-								</cfif>
-								</CFLOOP>
-								</select>
-									</td>
-							</tr>
-						</cfoutput> 
-					</form>
-					</table>
-								</td>
-							</tr>
-							<tr>
-								<td align="center">
-					<cfset nextplace = starton + 1>
-					<cfset preplace = starton - 1>
-					<table cellspacing="0" cellpadding="6" border="0" align="center" width="100%"  bgcolor="#eeeeee" height="10">
-							<tr>			
-							<td align="left" width="25%">
-							<cfif parameterexists(pagego) and pagego gt 1>
-							<font face="Arial, Helvetica, sans-serif" size="1"><A HREF="javascript:gonext22('products.cfm?pagego=<cfoutput>#preplace#</cfoutput>')">
-							<< Previous Page</a></font>
-							</cfif>
-							</td>
-							<td align="Center" width="50%"><font face="Arial, Helvetica, sans-serif" size="1"></font>
-							</td>
-							<td align="right" width="25%">
-							<cfif starton neq Totalpages>
-								<font face="Arial, Helvetica, sans-serif" size="1"><A HREF="javascript:gonext22('products.cfm?pagego=<cfoutput>#nextplace#</cfoutput>')">
-						Next Page >>
-							</a></font>
-							</cfif>
-							</td>
-						</tr>
-					</table>
-					
-					<cfelse>
-						<center><Br><Br><Br>
-						<cfif parameterexists(keywords) and (productinfo.recordcount lt 1)>
-						<font face="verdana, arial,helvetica" size="3" color="66066"><b>Our records show no listing of <cfoutput>#keywords#</cfoutput>/s in our catalog.<br>Please try another search criteria.</b></font>
-						</center>
-						</cfif>
-						<cfif parameterexists(man) and (productinfo.recordcount lt 1)>
-						<font face="verdana, arial,helvetica" size="3" color="66066"><b>Our records show no listing of artists whose names begin with <cfoutput>"#man#"</cfoutput> in our catalog.<br>Please try another search criteria.</b></font>
-						</center>
-						</cfif>
-					
-					</cfif></td>
-						</tr>
-					<!--- RESULT LIST ENDS --->												
-						</table>
+			
 		<!--- content ends --->
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" valign="baseline">
-			<cfinclude template="footer.cfm">
 		</td>
 	</tr>
 </table>
