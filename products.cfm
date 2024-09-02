@@ -184,7 +184,7 @@
 					<div class="sidebar web-sidebar-modal">	
 						<cfinclude template="left_.cfm">
 					</div>
-					<div class="content-section">
+					<div class="content-section product-page">
 						<div class="bottom-content-sec">
 							<div class="banner-section">
 								<div class="art-work-content">
@@ -300,38 +300,41 @@
 												</cfif>
 												</cfoutput>
 												<cfset Totalpages = ceiling(#productinfo.recordcount#/ipp)>
-												<form name="pagination_form">
-														<cfoutput>
-														<tr bgcolor="ffffff">
-															<td align="right" valign="top" colspan="#rows#"><font face="Arial, Helvetica, sans-serif" size="1">Page #starton# of #Totalpages#</font>
-															&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-															<select name="pagego" onChange="javascript:gonextProduct('products.cfm?pagego=')" style="font-size: 9pt;">
-															<CFLOOP INDEX="pagecount" FROM="1" TO="#Totalpages#" STEP="1">
-															<cfif parameterexists(pagego) and pagego eq pagecount>
-															<option value="#pagecount#" selected>#pagecount#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-															<cfelse>
-															<option value="#pagecount#">#pagecount#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-															
-															</cfif>
-															</CFLOOP>
-															</select>
-																</td>
-														</tr>
-													</cfoutput> 
-												</form>
+												
 												<cfset nextplace = starton + 1>
 												<cfset preplace = starton - 1>
-												<cfif parameterexists(pagego) and pagego gt 1>
-													<font face="Arial, Helvetica, sans-serif" size="1"><A HREF="javascript:gonext22('products.cfm?pagego=<cfoutput>#preplace#</cfoutput>')">
-													<< Previous Page</a></font>
-												</cfif>
-												<cfif starton neq Totalpages>
-													<font face="Arial, Helvetica, sans-serif" size="1"><A HREF="javascript:gonext22('products.cfm?pagego=<cfoutput>#nextplace#</cfoutput>')">
-													Next Page >>
-												</a></font>
-												</cfif>
+												<div class="pagination-section">
+													<cfif parameterexists(pagego) and pagego gt 1>
+														<font face="Arial, Helvetica, sans-serif" size="1"><A HREF="javascript:gonext22('products.cfm?pagego=<cfoutput>#preplace#</cfoutput>')">
+														<i class="fa fa-arrow-left" aria-hidden="true"></i> Previous Page</a></font>
+													</cfif>
+													<form name="pagination_form" class="pagination_form">
+														<cfoutput>
+															<tr bgcolor="ffffff">
+																<td align="right" valign="top" colspan="#rows#"><font face="Arial, Helvetica, sans-serif" size="1">Page #starton# of #Totalpages#</font>
+																&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																<select name="pagego" onChange="javascript:gonextProduct('products.cfm?pagego=')" style="font-size: 9pt;">
+																<CFLOOP INDEX="pagecount" FROM="1" TO="#Totalpages#" STEP="1">
+																<cfif parameterexists(pagego) and pagego eq pagecount>
+																<option value="#pagecount#" selected>#pagecount#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																<cfelse>
+																<option value="#pagecount#">#pagecount#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																
+																</cfif>
+																</CFLOOP>
+																</select>
+																	</td>
+															</tr>
+														</cfoutput> 
+													</form>
+													<cfif starton neq Totalpages>
+														<font face="Arial, Helvetica, sans-serif" size="1"><A HREF="javascript:gonext22('products.cfm?pagego=<cfoutput>#nextplace#</cfoutput>')">
+														Next Page <i class="fa fa-arrow-right" aria-hidden="true"></i>
+													</a></font>
+													</cfif>
+												</div>
 												<cfelse>
-													<center><Br><Br><Br>
+													<center>
 													<cfif parameterexists(keywords) and (productinfo.recordcount lt 1)>
 													<font face="verdana, arial,helvetica" size="3" color="66066"><b>Our records show no listing of <cfoutput>#keywords#</cfoutput>/s in our catalog.<br>Please try another search criteria.</b></font>
 													</center>
@@ -358,34 +361,6 @@
 		</tr>
 	</div>
 </div>
-<table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<!-- <tr>
-		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
-			<cfinclude template="top.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="100%" valign="top" height="37" bgcolor="#000000">
-			<cfinclude template="navbar.cfm">
-		</td>
-	</tr> -->
-	<tr height="100%">
-		<!-- <td valign="top" width="173" height="100%">
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-				<tr height="100%">
-					<td valign="top" height="100%">	
-						<cfinclude template="left.cfm">
-					</td>
-				</tr>
-			</table>
-		</td> -->
-		<td valign="top" width="727" height="100%">
-		<!--- content starts --->
-			
-		<!--- content ends --->
-		</td>
-	</tr>
-</table>
 
 <cfinclude template="frmxss.cfm">
 <script>

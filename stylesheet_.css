@@ -561,7 +561,22 @@ a.dbl_arrows {
 	object-fit: contain;
 	margin-bottom: 15px;
 }
-
+.content-section .banner-section .art-work-content .bottom-content .gallery-lists .list-item .e-pricing img {
+    height: auto;
+    width: auto;
+}
+.content-section.product-page .banner-section .art-work-content {
+    border: 0;
+    margin-bottom: 50px;
+    padding-top: 65px;
+}
+.pagination-section {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+	justify-content: center;
+	width: 100%;
+}
 .content-section .banner-section .featured-work-content .top-heading {
 	text-align: center;
 	margin-bottom: 50px;
