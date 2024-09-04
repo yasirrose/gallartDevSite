@@ -51,7 +51,7 @@
     <!-- Output the products as HTML -->
     <cfif productinfo.recordcount gt 0>
         <cfoutput query="productinfo">
-            <div class="product-item">
+            <div class="list-item">
                 <a href="">
                     <cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")>
                         <img src="http://23.20.226.157/img/thumbnails/#uid#.jpg" alt="#name#" title="#name#" border="0" align="center">

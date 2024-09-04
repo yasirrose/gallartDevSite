@@ -974,7 +974,32 @@ html body .mobile-search {
 .content-section .banner-section .featured-artwork-content .bottom-content .featured-row .featured-item .featured-heading {
 	padding: 20px 5px;
 }
-
+.registration-page .content-section .banner-section .art-work-content {
+    border: 0;
+    padding-top: 80px;
+}
+.registration-page .content-section .banner-section .art-work-content input{
+	height: 30px;
+    margin-bottom: 10px;
+    border-radius: 2px !important;
+}
+.registration-page .content-section .banner-section .art-work-content input[type="file"] {
+    border: 0;
+}
+.registration-page .content-section .banner-section .art-work-content textarea{
+	margin-bottom: 10px;
+}
+.registration-page .content-section .banner-section .art-work-content .user-content ul li {
+    padding: 5px 0;
+}
+.main-content .content-section.item-page {
+    max-width: 100%;
+    padding: 100px 0 0;
+}
+.main-content .classifieds-page .content-sec .top-heading {
+    text-align: left;
+    padding: 0 30px;
+}
 @media (max-width: 1600px) {
 	.main-content .content-section {
 		width: calc(100% - 325px);
