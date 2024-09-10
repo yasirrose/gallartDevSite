@@ -1,0 +1,1 @@
+<cfdiv bind="url: index.cfm?event=email.selectTemplate" width="200" height="200" />

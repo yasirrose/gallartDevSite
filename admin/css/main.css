@@ -1,0 +1,161 @@
+body {
+	font-family: Arial;
+	background: #FFFFFF;
+}
+
+td {
+	
+	font-size: 10px;
+}
+
+.header {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.subheader {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.title {
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.orderTitle {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+input,select {
+	font-size: 10px;
+
+}
+
+h2{
+	font-size:16px;	
+}
+
+.formTable{
+	border-top: 1px solid #000000;
+	border-left: 1px solid #000000;
+}
+
+.formCell{
+	height: 40px;
+	margin: 0px 0px 0px 0px;
+	padding: 5px 0px 0px 0px;
+	vertical-align: top;
+	border-right: 1px solid #000000;
+}
+
+.productCell{
+	height: 30px;
+	margin: 0px 0px 0px 0px;
+	padding: 5px 0px 0px 0px;
+	vertical-align: top;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+.formCellNoBorder{
+	height: 20px;
+	margin: 0px 0px 0px 0px;
+	padding: 5px 0px 0px 0px;
+}
+
+.formCellBorderBottom {
+	height: 30px;
+	margin: 0px 0px 0px 0px;
+	padding: 5px 0px 5px 0px;
+	border-bottom: 1px solid #000000;
+}
+
+.label{
+	font-size: 9px;
+	margin-top: 3px;
+	margin-left: 3px;
+	color: #111111;
+}
+
+.data{
+	font-size: 15px;
+	margin-top: 10px;
+	margin-left: 3px;
+}
+
+.largeLabel{
+	font-size: 12px;
+	margin-left: 3px;
+}
+
+.displayInput {
+	border: 1px solid #7f9db9; 
+	background-color: #FFFFFF; 
+	color: #000000;
+}
+
+.editBox {
+	border: 1px solid #cccccc;
+	background-color: #f6f6f6;
+}
+
+.row0 {background : #db3a7d; color: #FFFFFF; font-weight : bold;} 
+.row1 {background : #bbbbbb;} 
+.row2 {background : #eeeeee;}
+
+.massupdate {
+	font-size: 8pt;
+	border: 1px solid #bbbbbb;
+	background-color: #ffffff;
+}
+
+/* yui css modifications */
+
+.yuimenubaritem a.selected {
+	background-color: #000!important;
+	color: #fff!important;
+}
+
+input[type="checkbox"] {
+	margin: 3px 0.5ex;
+}
+
+input[type="button"], input[type="submit"], input[type="reset"], input[type="file"]::-webkit-file-upload-button, button {
+	padding: 2px 6px 3px;
+	border: 2px outset buttonface;
+	margin: 1px;
+}
+
+input, input[type="password"], input[type="search"] {
+	padding: 1px;
+}
+
+h1,h2,h3 {
+	margin: 1% 0;
+}
+
+form {
+	margin-bottom: 1em;
+}
+
+td {
+	padding: 2px!important;
+}
+
+.ScreenOnly td {
+	padding: 0!important;
+}
+
+.x-grid3 table {
+	width: 100%!important;
+}
+
+.x-grid3-body {
+	width: 100%!important;
+}
+
+.x-grid3-row {
+	width: 100%!important;
+}

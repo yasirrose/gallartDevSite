@@ -1,0 +1,272 @@
+<!--- <cfdump var="dump here" abort="true"> --->
+
+<link href="css/navbar.css" rel="stylesheet">
+
+<!--- checks to see if user is logged in, or if logged in on old adminpage site --->
+<cfif session.loggedin EQ true AND NOT structKeyExists(session,'userinfo') OR (structKeyExists(session,'userinfo') AND NOT isDefined('session.userinfo.roles'))>
+	<cflocation url="index.cfm?logout=1" addtoken="No">
+</cfif>
+
+<!--- <cfset art = new ../models.art() /> --->
+<!--- <cfset art = CreateObject("component","admin.models.art")/>  --->
+<!--- <cfdump var="#art#" abort="true"> --->
+<cfajaximport tags="cfwindow">
+<cfajaxproxy cfc="admin.models.art" jsclassname="getArtById">
+<cfajaxproxy cfc="admin.models.customers" jsclassname="getCustomerById">
+<cfajaxproxy cfc="admin.models.leads" jsclassname="getLeadById">
+<cfajaxproxy cfc="admin.models.all_contacts" jsclassname="getAllContacts">
+
+<table cellspacing="0" cellpadding="0" border="0" width="100%" height="50" bgcolor="#000000">
+	<tr>
+		<td width="20%" style="padding-left: 10px;">
+			<cfif session.loggedin EQ true>
+				<input type="Button" value="Change Password" onclick="javaScript:changePassword();" />
+			</cfif>
+		</td>
+		<td align="center" style="width: 60%;">
+			<img src="images/admin_header_small.gif" width="200">
+		</td>
+		<td align="right" width="20%" style="padding-right: 10px; color: white;">
+			<cfif session.loggedin EQ false>
+				<input type="Button" value="LOG IN" onclick="javaScript:doLogin();" />
+			<cfelse>
+				<cfoutput><strong>Welcome #session.userinfo.fname# #session.userinfo.lname#</strong></cfoutput>
+				<input type="Button" value="LOG OUT" onclick="location.href='index.cfm?logout=1'" />
+			</cfif>
+		</td>
+	</tr>
+</table>
+
+<cfset menu = structNew()>
+<cfset menu.name = "myMenu">
+<cfset menu.bgColor = "##dd3a7d">
+<cfset menu.font = "Arial">
+<cfset menu.fontColor = "##ffffff">
+<cfset menu.fontSize= 14>
+<cfset menu.menuStyle="font-weight: bold;">
+<cfset menu.selectedFontColor = "##000000">
+<cfset menu.selectedItemColor = "">
+<cfset menu.type = "horizontal">
+<!--- you can not specify a width if the menu type is horizontal --->
+<cfif menu.type EQ "vertical">
+	<cfset menu.width = "150">
+</cfif>
+
+<cfif session.loggedin EQ true AND (listLen(session.userinfo.roles) OR session.userinfo.sa EQ 1)>
+<table style="border-top: 2px solid #fbe7f0;border-collapse: collapse;width:100%;background:#dd3a7d;">
+	<tr>
+		<td valign="middle">
+			<div id="wrapper">
+				<ul id="nav">
+					<cfif listFindNoCase(session.userinfo.roles,'artists') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=artists">Artists</a></li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'content management') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=content">Content</a></li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'email blasts') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=email">Email <img src="/images/submenu.png"></a>
+							<ul class="sub-nav">
+								<li><a href="index.cfm?event=email.csvImportSearch">CSV Import</a></li>
+								<li><a href="index.cfm?event=email.emailTemplates">Email Templates</a></li>
+								<li><a href="index.cfm?event=email.selectTemplate">Email Blasts</a></li>
+								<li><a href="index.cfm?event=email.clickReport">Click Report</a></li>
+								<li><a href="index.cfm?event=email.popEmail">Pop Email</a></li>
+							</ul>
+
+						</li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'email contacts') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=email.emailContactsFrame">Email Contacts</a></li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'events') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;"><a href="#">Events <img src="/images/submenu.png"></a>
+							<ul class="sub-nav">
+								<li><a href="index.cfm?event=events">Manage Events</a></li>
+								<li><a href="index.cfm?event=events.eventRegistrations">Event Registrations</a></li>
+							</ul>
+						</li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'exports') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;">
+							<a href="#">Exports <img src="/images/submenu.png"></a>
+							<ul class="sub-nav">
+								<li><a href="index.cfm?event=exports.artistsXls">Export by Artists - Excel</a></li>
+								<li><a href="index.cfm?event=exports.artistsCsv">Export by Artists - CSV</a></li>
+								<li><a href="index.cfm?event=exports.selected">Export by Selected Fields</a></li>
+								<li><a href="index.cfm?event=exports.allUsers">Export All Users</a></li>
+								<li><a href="index.cfm?event=exports.mailinglist">Export Mailinglist</a></li>
+								<li><a href="index.cfm?event=exports.phonelist">Export Phonelist</a></li>
+								<li><a href="index.cfm?event=exports.artistinfo">Export Artist Info</a></li>
+							</ul>
+						</li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'forms') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;">
+							<a href="#">Forms <img src="/images/submenu.png"></a>
+							<ul class="sub-nav">
+								<li><a href="index.cfm?event=forms.coa">Certificate of Authenticity</a></li>
+								<li><a href="index.cfm?event=forms.coa_generic">COA - Generic</a></li>
+								<li><a href="index.cfm?event=forms.appraisal">Appraisal</a></li>
+								<li><a href="index.cfm?event=forms.appraisal_generic">Appraisal - Generic</a></li>
+								<li><a href="index.cfm?event=forms.framing">Framing</a></li>
+							</ul>
+						</li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'listings') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;">
+							<a href="index.cfm?event=listings">Listings <img src="/images/submenu.png"></a>
+							<ul class="sub-nav">
+								<li><a href="index.cfm?event=listings.remove_dups">Remove Duplicate Listings</a></li>
+								<li><a href="index.cfm?event=listings.remove_noimage">Remove Listings With No Image</a></li>
+								<li><a href="index.cfm?event=listings.image_sheets">Image Sheets By Artist</a></li>
+							</ul>
+						</li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'mass update') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=massupdate">Mass Update</a></li>
+					</cfif>
+
+					<cfif NOT listFindNoCase(session.userinfo.roles,'special admin')>
+						<li style="border-right:1px white solid;">
+							<a href="#">Modules <img src="/images/submenu.png"></a>
+							<ul class="sub-nav">
+								<cfif listFindNoCase(session.userinfo.roles,'purchases_consignments') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=purchases_consignments">Purchases/ Consignments</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'appraisals') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=appraisals">Appraisals</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'make offer') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=makeoffer">Make Offer</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'epricing') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=epricing">E-Pricing</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'quotes') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=quotes">Quotes</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'requests') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=requests">Requests</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'price tags') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=pricetags">Price Tags</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'bios') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=bios">Bios</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'campaign') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=campaign">Campaign</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'cameras') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=cameras">Cameras</a></li>
+								</cfif>
+
+								<li><a href="index.cfm?event=ebay">Ebay</a></li>
+
+								<li><a href="index.cfm?event=optouts">Optouts</a></li>
+
+								<li><a href="index.cfm?event=phoneformat">Format Phone Numbers</a></li>
+
+								<cfif session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=email_imports"></a></li>
+								</cfif>
+							</ul>
+						</li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'orders') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=orders.manageProducts">Orders</a></li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'sales') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=sales">Sales</a></li>
+					</cfif>
+
+					<cfif listFindNoCase(session.userinfo.roles,'reports') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;">
+							<a href="#">Reports <img src="/images/submenu.png"></a>
+							<ul class="sub-nav">
+								<li><a href="index.cfm?event=reports.orderReportSearch">Order Report</a></li>
+							</ul>
+						</li>
+					</cfif>
+
+					<li style="border-right:1px white solid;">
+						<a href="#">Users <img src="/images/submenu.png"></a>
+						<ul class="sub-nav">
+							<cfif listFindNoCase(session.userinfo.roles,'customers') OR session.userinfo.sa EQ 1>
+								<li><a href="index.cfm?event=customers">Customers</a></li>
+							</cfif>
+
+							<cfif listFindNoCase(session.userinfo.roles,'employees') OR session.userinfo.sa EQ 1>
+								<li><a href="index.cfm?event=employees">Employees</a></li>
+							</cfif>
+
+							<cfif listFindNoCase(session.userinfo.roles,'leads') OR session.userinfo.sa EQ 1>
+								<li><a href="index.cfm?event=leads.manageLeads">Leads</a></li>
+							</cfif>
+
+							<cfif listFindNoCase(session.userinfo.roles,'sellers') OR session.userinfo.sa EQ 1>
+								<li><a href="index.cfm?event=sellers">Sellers</a></li>
+							</cfif>
+						</ul>
+					</li>
+					<!--- <cfif listFindNoCase(session.userinfo.roles,'orders') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;">
+							<a href="#">Email Templates<img src="/images/submenu.png"></a>
+							<ul class="sub-nav">
+								<li><a href="index.cfm?event=emailTemplate">Email Templates</a></li>
+							
+								<cfif listFindNoCase(session.userinfo.roles,'email contacts') OR session.userinfo.sa EQ 1>
+									<li style="border-right:1px white solid;"><a href="index.cfm?event=emailTemplate.emailContactsFrame">Email Contacts</a></li>
+								</cfif>
+
+								<!--- <li><a href="index.cfm?event=leads.managewLeads">Leads</a></li> --->
+
+								
+							</ul>
+						</li>
+					</cfif> --->
+					<!--- <cfif listFindNoCase(session.userinfo.roles,'orders') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=emailTemplate">Mail Templates</a></li>
+					</cfif> --->
+					<cfif (session.userinfo.sa EQ 1) OR (session.userinfo.emp_email EQ 'waseemgallart@gmail.com')>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=filterOption">Filter</a></li>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=banners">Banners</a></li>
+					</cfif>
+					
+					
+				</ul>
+			</div>
+		</td>
+	</tr>
+</table>
+</cfif>
+<table cellspacing="0" cellpadding="0" border="0" width="100%" height="30" bgcolor="#dd3a7d" height="25" style="border-top: 2px solid #fbe7f0; border-bottom: 2px solid #fbe7f0;">
+	<tr>
+		<td width="50%" align="center" valign="middle">
+			<input type="Button" value="      NEW LEAD      " onclick="location.href='index.cfm?event=leads'" style="font-size: 12px; font-weight: bold;">
+		</td>
+		<td width="50%" align="center" valign="middle">
+			<input type="Button" value="     NEW ORDER     " onclick="location.href='index.cfm?event=orders.newOrder'" style="font-size: 12px; font-weight: bold;">
+		</td>
+	</tr>
+</table>
