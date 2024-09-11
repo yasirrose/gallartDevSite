@@ -26,6 +26,11 @@
         WHERE RowNum BETWEEN #startrow# AND (#startrow# + #ipp# - 1)
     </cfquery>
 
+<cfquery name="makeoffer_buttons" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+	SELECT show FROM makeoffer_buttons
+	WHERE pk_makeoffer_buttons = 1
+</cfquery>
+
 	<!--- <cfdump var="#productinfo#" abort="true"> --->
     <!-- Output the products as HTML -->
     <cfif getRecentAcquisitions.recordcount gt 0>
@@ -50,7 +55,7 @@
         <IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
         </A>
         <Br>
-        <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+        <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" class="name-hover" >
         #name#
         </a>
         <br>
@@ -68,6 +73,17 @@
         </cfif>
         </span><br>
         Art ID:&nbsp;#modelno#<br><br>
+
+        <div class="e-pricing">
+            <cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>
+            <cfif makeoffer_buttons.show EQ 1>
+                <a href="make_offer.cfm?pid=#uid#&xss=#xss#"><img src="images/make_offer.gif" border="0"></a>
+            <cfelse>
+                <a href="epricing.cfm?pid=#uid#&xss=#xss#">
+                    <img src="images/question.gif" border="0">
+                </a>
+            </cfif>
+        </div>
     <cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>
     
     </td>
@@ -85,3 +101,12 @@
     <cfdump var="#cfcatch#" abort="true">
 </cfcatch>
 </cftry>
+
+<style>
+	.name-hover:hover{
+		color: #dd3a7d;
+	}
+	.name-hover{
+		color:black;
+	}
+</style>

@@ -456,12 +456,13 @@ a.dbl_arrows {
 	margin: 0 auto;
 }
 .inner-section .container-fluid {
-    width: 97%;
-    margin: 0 auto;
+	padding: 0;
 }
 
-.main-content {
+.inner-section .main-content {
 	display: flex;
+	max-width: 97%;
+    margin: 0 auto;
 }
 .main-content .sidebar {
 	padding: 90px 10px 10px;
@@ -816,6 +817,7 @@ a.dbl_arrows {
 }
 footer {
 	border-top: solid 2px #000000;
+	background: #000;
 }
 footer .footer-container {
 	max-width: 1140px;
@@ -832,13 +834,38 @@ footer .footer-container .footer-wrapper .top-footer {
 	justify-content: center;
 	row-gap: 20px;
 }
-footer .footer-container .footer-wrapper .top-footer a {
-	padding: 0 15px;
-	border-right: 1px solid #000;
-	font-size: 18px;
-	line-height: 18px;
-	color: #000;
+footer .footer-container .footer-wrapper .top-footer .footer-menu h3 {
+    font-weight: 600;
+    font-size: 18px;
+    color: #fff;
+    letter-spacing: 0.6px;
+    text-transform: capitalize;
+    margin-bottom: 20px;
+}
+footer .footer-container .footer-wrapper .top-footer .footer-menu ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+footer .footer-container .footer-wrapper .top-footer .footer-menu ul li{
+	margin-bottom: 15px;
+}
+footer .footer-container .footer-wrapper .top-footer a, footer .footer-container .footer-wrapper .top-footer .footer-menu p {
+	font-size: 16px;
+	line-height: 1.4;
+	color: #fff;
 	font-weight: 400;
+}
+footer .footer-container .footer-wrapper .top-footer .footer-menu .social-media ul {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 10px;
+}
+footer .footer-container .footer-wrapper .top-footer .footer-menu .social-media ul li img{
+	max-width: 50px;
+}
+footer .footer-container .footer-wrapper .top-footer a:last-child {
+    border: 0;
 }
 
 footer .footer-container .footer-wrapper .bottom-footer {
@@ -978,10 +1005,13 @@ html body .mobile-search {
     border: 0;
     padding-top: 80px;
 }
-.registration-page .content-section .banner-section .art-work-content input{
+.registration-page .content-section .banner-section .art-work-content input,
+.registration-page .content-section .banner-section .art-work-content select{
 	height: 30px;
     margin-bottom: 10px;
-    border-radius: 2px !important;
+	border-radius: 2px !important;
+	padding: 0 5px;
+	font-size: 14px;
 }
 .registration-page .content-section .banner-section .art-work-content input[type="file"] {
     border: 0;
@@ -999,6 +1029,82 @@ html body .mobile-search {
 .main-content .classifieds-page .content-sec .top-heading {
     text-align: left;
     padding: 0 30px;
+}
+.seller-login {
+    max-width: 500px;
+    margin: 0 auto;
+}
+.seller-login .form-field {
+    margin-bottom: 15px;
+    text-align: left;
+}
+.seller-login .form-field input {
+    width: 100%;
+}
+.seller-login .form-field label {
+    display: block;
+    margin-bottom: 5px;
+}
+.SeeMore {
+    background: #ec008c;
+    width: 100%;
+    max-width: 130px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0 10 auto;
+    color: #fff !important;
+    font-size: 14px;
+    border: 2px solid #ec008c;
+    font-weight: 700;
+    letter-spacing: 1px;
+	transition: all 0.5s ease;
+	text-transform: capitalize;
+}
+.SeeMore:hover {
+    background: transparent;
+    color: #ec008c !important;
+    transition: all 0.5s ease;
+}
+.forget-message {
+    margin-bottom: 15px;
+}
+.forget-message a {
+    color: #ec008c;
+}
+.content-section.new-listings .search-box {
+    background-color: #F2F2F2;
+    border-radius: 10px;
+    padding: 40px;
+    max-width: 70%;
+    margin: 0 auto 50px;
+}
+.content-section.new-listings .search-form-group {
+    margin: 0;
+}
+.content-section.new-listings .search-form-group button {
+    margin: 0 auto;
+}
+.content-section.new-listings .search-form-group label {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+.content-section.new-listings .search-form-group .select-field {
+    display: flex;
+    align-items: center;
+    max-width: 500px;
+    margin: 20px 0 0;
+}
+.content-section.new-listings .search-form-group .select-field label {
+    margin: 0 10px 0 0;
+    white-space: nowrap;
+}
+.content-section.new-listings .search-form-group .select-field .select-option {
+    width: 100%;
+}
+footer .footer-container .footer-wrapper .top-footer a:hover{
+	color: #db3a7d;
 }
 @media (max-width: 1600px) {
 	.main-content .content-section {

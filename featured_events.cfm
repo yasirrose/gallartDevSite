@@ -9,6 +9,10 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 <script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
@@ -17,7 +21,7 @@
 	WHERE pk_pages = 7
 </cfquery>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -45,40 +49,48 @@
 
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
-			<cfinclude template="top.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="100%" valign="top" height="37" bgcolor="#000000">
-			<cfinclude template="navbar.cfm">
-		</td>
-	</tr>
-	<tr height="100%">
-		<td valign="top" width="173" height="100%">
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-				<tr height="100%">
-					<td valign="top" height="100%">	
-						<cfinclude template="left.cfm">
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td valign="top" width="100%" height="100%">
-			<!--- <iframe frameborder="0" width="100%" src="http://www.razzadesign.com/gallery/21114/Dance%20of%20the%20Chains%20The%20Living%20Art%20Project"></iframe> --->
-			<cfoutput>#getPages.page_content#</cfoutput><br>
-			
-		</td>
-	</tr>
+	<div class="main-container">
+		<div id="Table_01">
+			<div class="header-section">
+				<div class="top-header">
+					<cfinclude template="top_.cfm">
+				</div>
+				<div class="navbar-section">
+					<cfinclude template="navbar_.cfm">
+				</div>
+			</div>
+			<div class="inner-section">
+				<div class="container-fluid">
+					<div class="main-content">
+						<div class="mobile-sidebar-logo">
+							<div class="sidebar-Icon">
+								<i class="fas fa-bars"></i>
+							</div>
+						</div>
+						<div class="sidebar web-sidebar-modal">	
+							<cfinclude template="left_.cfm">
+						</div>
+						<div class="content-section">
+							<div class="bottom-content-sec">
+								<div class="banner-section">
+									<div class="art-work-content">
+										<div class="bottom-content">
+											<cfoutput>#getPages.page_content#</cfoutput>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<tr>
 		<td colspan="2" valign="baseline">
-			<cfinclude template="footer.cfm">
+			<cfinclude template="footer_.cfm">
 		</td>
 	</tr>
-</table>
-
 <cfinclude template="frmxss.cfm">
 
 </body>

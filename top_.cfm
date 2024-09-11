@@ -37,11 +37,11 @@ function helpWin(url) {
 			<a href="https://www.pinterest.com/gallartcom/" target="_blank"><img src="https://gallart.com/images/social_icons/pinterest-sm.png" border="0" alt="pinterest" /></a>
 			<a href="https://www.linkedin.com/company/fine-art-gallery" target="_blank"><img src="https://gallart.com/images/social_icons/linkedin.png?x=y" border="0" alt="linkedin" /></a>
 			<!--- <a href="https://plus.google.com/109102775092016158483/posts" target="_blank"><img src="https://gallart.com/images/social_icons/Gplus.png" border="0" alt="googleplus" /></a> --->
-			<a href="https://www.tiktok.com/@GallArtcom" target="_blank">
+			<a href="https://www.tiktok.com/@gallart.com?_t=8pV8Ytrax5j&_r=1" target="_blank">
 				<img src="https://gallart.com/images/social_icons/tik-tok.png" border="0" alt="tiktok" />
 				<!--- https://www.tiktok.com/@yourusername --->
 			</a>
-			<a href="https://www.youtube.com/channel/yourchannelid" target="_blank">
+			<a href="https://youtu.be/IcsQJXlEMrA?si=Y06pms8b5_vgz3Pq" target="_blank">
 				<img src="https://gallart.com/images/social_icons/youtube.png" border="0" alt="youtube" />
 				<!--- https://www.youtube.com/channel/yourchannelid --->
 			</a>

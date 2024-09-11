@@ -48,6 +48,25 @@
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
+    <!--- <cfquery name="getArtists" dbtype="query">
+        SELECT DISTINCT manufacturer from allClassifieds
+        ORDER BY manufacturer
+    </cfquery> --->
+    
+    <cfquery name="getArtists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+        SELECT DISTINCT manufacturer from products
+        WHERE active = 1
+        AND fk_users is not null
+        ORDER by manufacturer 
+    </cfquery>
+    
+    <cfquery name="getMedium" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+        Select path from products
+        WHERE fk_users is not null
+        group by path
+        order by path
+    </cfquery>
+
     <div class="main-container">
         <div id="Table_01">
             <div class="header-section">
@@ -70,18 +89,66 @@
 					<div class="sidebar web-sidebar-modal">	
 						<cfinclude template="left_.cfm">
 					</div>
-					<div class="content-section product-page classifieds-page">
+					<div class="content-section product-page classifieds-page new-listings">
 						<div class="bottom-content-sec">
 							<div class="banner-section">
 								<div class="art-work-content">
+                                    <div class="top-heading">
+                                        <h3>CLASSIFIEDS/PRIVATE LISTINGS!</h3>
+                                    </div>
+
+                                    <cfoutput>
+                                        <div class="search-box">
+                                            <div class="search-form-group">
+                                                <form method="post" action="classifieds.cfm?xss=#xss#" name="srchForm">
+                                                    <div class="row">
+                                                        <div class="col-md-6 mb-3">
+                                                            <label>Search By Artist:</label>
+                                                            <div class="select-option">
+                                                                <select name="artist" id="artist">
+                                                                    <option value="">Please Select</option>
+                                                                    <cfloop query="getArtists">
+                                                                        <option value="#manufacturer#">#manufacturer#</option>
+                                                                    </cfloop>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 mb-3">
+                                                            <label>Search By Medium:</label>
+                                                            <div class="select-option">
+                                                                <select name="path" id="path">
+                                                                    <option value="">Please Select</option>
+                                                                    <cfloop query="getMedium">
+                                                                        <option value="#path#">#path#</option>
+                                                                    </cfloop>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <button type="button" class="SeeMore" onclick="loadProducts()" id="searchButton">
+                                                                search
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="select-field">
+                                                                <label>Order By Sale Price:</label>
+                                                                <div class="select-option">
+                                                                    <select name="priceOrder" id="priceOrder" onChange="loadProducts();">
+                                                                        <option value="">Please Select</option>
+                                                                        <option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Lowest To Highest</option>
+                                                                        <option value="desc" <cfif isDefined('form.priceOrder') and priceOrder eq 'desc'>selected</cfif>>Highest To Lowest</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                     </cfoutput>
+
 									<div class="bottom-content">
-										<div align="center" style="font-size: 24px; font-weight: bold; padding: 0 0 3px 0;" class="pinkText">
-											<div class="content-sec">
-												<div class="top-heading">
-													<h3>CLASSIFIEDS/PRIVATE LISTINGS</h3>
-												</div>
-											</div>
-										</div>
+										
                                         <div id="product-container" class="gallery-lists">
                                                 <!-- Products will be loaded here -->
                                             <div id="loading" style="display: none;">Loading...</div>
@@ -108,76 +175,109 @@
 
                         <script>
                             var page = 1; // Start at page 1
-                            var loading = false; // Flag to prevent multiple requests
-                            var noMoreProducts = false; // Flag to check if there are no more products
-                            var previousData = ''; // Variable to store previously fetched data
-                        
-                            function loadProducts() {
-                                if (loading || noMoreProducts) return;
-                                loading = true;
-                                $('#loading').show();
-                        
-                                let currentUrl = window.location.href;
-                                console.log(currentUrl);
-                        
-                                let url = new URL(window.location.href);
-                                let params = new URLSearchParams(url.search);
-                                
-                                let Manufacturer = params.get('man');
-                                let Size = params.get('Size');
-                                let Subject = params.get('Subject');
-                                let Type = params.get('Type');
-                                let Style = params.get('Style');
-                                let Artist = params.get('artist');
-                        
-                                console.log('Manufacturer:', Manufacturer);
-                                console.log('Artist:', Artist);
-                        
-                                $.ajax({
-                                    url: 'getclassifieds.cfm',
-                                    type: 'GET',
-                                    data: {
-                                        page: page,
-                                        man: Manufacturer,
-                                        Size: Size,
-                                        url: currentUrl,
-                                        artist: Artist
-                                    },
-                                    success: function(data) {
-                                        if (data.trim() === '') {
-                                            // No data means all records have been loaded
-                                            noMoreProducts = true;
-                                            $('#loading').html('No more products').show();
-                                        } else if (data === previousData) {
-                                            // Data is the same as the last request, consider it as no more products
-                                            noMoreProducts = true;
-                                            $('#loading').html('No more products').show();
-                                        } else {
-                                            // Data is new, append it to the container
-                                            $('#product-container').append(data);
-                                            previousData = data; // Store the new data for comparison
-                                            page++;
-                                            $('#loading').hide();
-                                        }
-                                        loading = false;
-                                    },
-                                    error: function() {
-                                        $('#loading').html('Error loading products').show();
-                                        loading = false;
-                                    }
-                                });
-                            }
-                        
-                            // Load more products when user scrolls near the bottom
-                            $(window).scroll(function() {
-                                if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-                                    loadProducts();
-                                }
-                            });
-                        
-                            // Initial load
-                            loadProducts();
-                        </script>
+                   var loading = false; // Flag to prevent multiple requests
+                   var noMoreProducts = false; // Flag to check if there are no more products
+                   var previousData = ''; // Variable to store previously fetched data
+                   let lastArtist = ''; // Variable to store the last selected artist
+                   let lastpath = ''; // Variable to store the last selected artist
+                   let lastPriceOrder = '';
+                   function loadProducts() {
+                       if (loading || noMoreProducts) return; // Prevent multiple AJAX calls if already loading or no more products
+                       loading = true; 
+                       $('#loading').show(); 
+                   
+                       let currentUrl = window.location.href;
+                       let url = new URL(currentUrl);
+                       let params = new URLSearchParams(url.search);
+                   
+                       let Manufacturer = params.get('man');
+                       let Size = params.get('Size');
+                       let Subject = params.get('Subject');
+                       let Type = params.get('Type');
+                       let Style = params.get('Style');
+                       let urlArtist = params.get('artist');
+                   
+                       let Artist = document.getElementById('artist').value;
+                       let path = document.getElementById('path').value;
+                       let priceOrder = document.getElementById('priceOrder').value;
+                   
+                       // Check if artist or path has changed, reset page and load new data
+                       if (path || Artist || priceOrder) {
+                           if (Artist !== lastArtist || path !==lastpath || priceOrder !==lastPriceOrder) {
+                               page = 1; 
+                               $('#product-container').empty(); // Clear the product container for new results
+                               noMoreProducts = false; // Reset the no more products flag
+                               lastArtist = Artist; // Update lastArtist to the new artist value
+                               lastpath = path;
+                               lastPriceOrder = priceOrder; // Update lastArtist to the new artist value
+                           }
+                       } else if (urlArtist && !Artist) {
+                           // If artist is obtained through URL params, set Artist to urlArtist
+                           Artist = urlArtist;
+                       }
+                   
+                       console.log('Manufacturer:', Manufacturer);
+                       console.log('Artist:', Artist);
+                   
+                       $.ajax({
+                           url: 'getclassifieds.cfm',
+                           type: 'GET',
+                           data: {
+                               page: page,
+                               man: Manufacturer,
+                               Size: Size,
+                               artist: Artist,
+                               path: path,
+                               priceOrder: priceOrder
+                           },
+                           success: function(data) {
+                               if (data.trim() === '') {
+                                   noMoreProducts = true;
+                                   $('#loading').html('No more products').show();
+                               } else if (data === previousData && page !== 1) {
+                                   // Prevent loading duplicate data on scroll (ignore check for page 1)
+                                   noMoreProducts = true;
+                                   $('#loading').html('No more products').show();
+                               } else {
+                                   if (page === 1) {
+                                       $('#product-container').empty(); // On first page, replace content
+                                   }
+                                   $('#product-container').append(data); // Append new data
+                                   previousData = data;
+                                   page++; // Increment the page number for the next request
+                                   $('#loading').hide();
+                               }
+                               loading = false; // Reset the loading flag
+                           },
+                           error: function() {
+                               $('#loading').html('Error loading products').show();
+                               loading = false; // Reset the loading flag on error
+                           }
+                       });
+                   }
+                   
+                   // Scroll event handler to load more products when near the bottom
+                   $(window).scroll(function() {
+                       if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+                           if (!noMoreProducts && !loading) {
+                               loadProducts(); // Load products only if not loading and no more products
+                           }
+                       }
+                   });
+                   
+                   // Search button click event
+                   $('#searchButton').on('click', function() {
+                       page = 1; // Reset page to 1 when search button is clicked
+                       noMoreProducts = false;
+                       loadProducts(); // Trigger product loading based on search
+                       
+                   });
+                   
+                   // Initial load
+                   loadProducts();
+                   
+                            
+                         </script>
                         
 </body>
 </html>

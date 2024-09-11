@@ -15,10 +15,14 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 <script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -46,54 +50,51 @@
 
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
-			<cfinclude template="top.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="100%" valign="top" height="37" bgcolor="#000000">
-			<cfinclude template="navbar.cfm">
-		</td>
-	</tr>
-	<tr height="100%">
-		<td valign="top" width="173" height="100%">
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-				<tr height="100%">
-					<td valign="top" height="100%">	
-						<cfinclude template="left.cfm">
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td valign="top" width="727" height="100%">
-			<table cellspacing="0" cellpadding="0" border="0" width="575">
-				<tr>
-					<td align="center" style="padding-top: 10px;">
-						<strong>SELLER LOGIN</strong>
-					</td>
-				</tr>
-				<tr>
-					<td align="center" style="padding-top: 8px;">
-						<table cellspacing="0" cellpadding="0" border="0" width="100%">
-							<tr>
-								<td align="center">
-									<cfinclude template="userlogin_form.cfm">
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" valign="baseline">
-			<cfinclude template="footer_user.cfm">
-		</td>
-	</tr>
-</table>
+<div class="main-container registration-page">
+	<div id="Table_01">
+		<div class="header-section">
+			<div class="top-header">
+				<cfinclude template="top_.cfm">
+			</div>
+			<div class="navbar-section">
+				<cfinclude template="navbar_.cfm">
+			</div>
+		</div>
+		<div class="inner-section">
+			<div class="container-fluid">
+				<div class="main-content pb-4">
+					<div class="mobile-sidebar-logo">
+						<div class="sidebar-Icon">
+							<i class="fas fa-bars"></i>
+						</div>
+					</div>
+					<div class="sidebar web-sidebar-modal">	
+						<cfinclude template="left_.cfm">
+					</div>
+					<div class="content-section">
+						<div class="bottom-content-sec">
+							<div class="banner-section">
+								<div class="art-work-content">
+									<div class="bottom-content">
+										<div class="top-heading">
+											<h3>SELLER LOGIN</h3>
+										</div>
+										<div><cfinclude template="userlogin_form.cfm"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<tr>
+	<td colspan="2" valign="baseline">
+		<cfinclude template="footer_user.cfm">
+	</td>
+</tr>
 
 <cfinclude template="frmxss.cfm">
 
