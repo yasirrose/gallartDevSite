@@ -9,10 +9,14 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 <script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -83,132 +87,138 @@ order by Stateabb
 <cfset tax = 0>
 <cfset total = 0>
 <!--- End variable set, start page output --->
-<table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
-			<cfinclude template="top.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="100%" valign="top" height="37" bgcolor="#000000">
-			<cfinclude template="navbar.cfm">
-		</td>
-	</tr>
-	<tr height="100%">
-		<td valign="top" width="173" height="100%">
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-				<tr height="100%">
-					<td valign="top" height="100%">	
-						<cfinclude template="left.cfm">
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td valign="top" width="727" height="100%">
-			<!--- content starts --->
-			<!--- Customer Entry --->
-			<table cellpadding="0" cellspacing="0" border="0" width="100%">
-			<tr>
-				<td  valign="top" style="padding-top: 10px;">
-				<cfif #contents.recordcount# Lt 1>
-					<table cellpadding="0" cellspacing="0" border=0 width="600" align="center">
-						<tr>
-							<td align="center">
-								<strong>There are no items in your cart. <br>Please choose item(s) to purchase before checking out.</strong>
-							</td>
-						</tr>
-					</table>
-				<cfelse>
-					<table width="600" border="0" cellspacing="0" cellpadding="2" align="center">
-						<tr>
-							<td colspan="5" height="40">
-								<strong>VIEW CONTENTS OF YOUR CART:</strong>
-							</td>
-						</tr>
-						<tr class="row0">
-							<td width="50%" height="20" style="color: #ffffff;"><b>Name</b></td>
-							<td width="10%" align="center" style="color: #ffffff;"><b>Qty</b></td>
-							<td width="15%" align="Center" style="color: #ffffff;"><b>Price</b></td>
-							<td width="15%" align="Center" style="color: #ffffff;"><b>Ext.</b></td>
-							<td width="10%">&nbsp;
-								
-							</td>
-						</tr>
-						<Cfoutput query="contents">
-						<FORM ACTION="#securepage#/view.cfm?xss=#xss#&uid=#uid#&co=y" method="post">
-						<TR class="#this_row()#">
-						<cfquery name="get_name" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-							SELECT * from products where uid='#pid#'
-						</cfquery>
-							<td valign="top">
-								<a onMouseOver="javascript:popUpWin('#get_name.imageURL#')" onMouseOut="myWin.close();">#get_name.name#</a>
-							</td>
-							<td align="center" valign="middle">
-								<input type="text" name="qty" value="#qty#" size="2" style="font-size: 7pt;">
-							</td>
-							<td align="right" valign="middle">
-								#dollarformat(charge)#
-							</td>
-							<cfset ext = #charge# * #qty#>
-							<td align="right" valign="middle">
-								#dollarformat(Ext)#</td>
-								<cfset subtotal = #subtotal# + #ext#>
-							<td align="right" valign="middle">
-								<input type="image" src="/img/update.gif" border="0" style="border: 1px solid ##ffffff;">
-							</td>
-						</tr>
-						</form>
-						</cfoutput>
-						<tr>
-							<td colspan="5">
-								<hr>
-							</td>
-						</tr>
-						<cfoutput>
-						<tr>
-							<td colspan="2">&nbsp;
-								
-							</td>
-							<td>
-								<b>Sub Total:</b>
-							</td>
-							<td align="right">
-								<b>#dollarformat(subtotal)#</b>
-							</td>
-							<td>&nbsp;
-								
-							</td>
-						</tr>
-						<tr>
-							<td colspan="5" align="center" style="padding-top:10px;">
-								<form action="checkout_new.cfm?xss=#xss#&co=y" method="post">
-								<table cellpadding="0" cellspacing="0" border="0" width="100%">
-									<tr>
-										<td colspan="2" align="Center">
-											<input type="submit" value="Continue >>">
-										</td>
-									</tr>
-								</table>
-								</form>
-							</td>
-						</tr>
-						</cfoutput>
-					</table>
-					</cfif>
-					</td>
-				</tr>
-			</table>
-			
-		<!--- content ends --->
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" valign="baseline">
-			<cfinclude template="footer.cfm">
-		</td>
-	</tr>
-</table>
-
+<div class="main-container registration-page">
+	<div id="Table_01">
+		<div class="header-section">
+			<div class="top-header">
+				<cfinclude template="top_.cfm">
+			</div>
+			<div class="navbar-section">
+				<cfinclude template="navbar_.cfm">
+			</div>
+		</div>
+		<div class="inner-section">
+			<div class="container-fluid">
+				<div class="main-content">
+					<div class="mobile-sidebar-logo">
+						<div class="sidebar-Icon">
+							<i class="fas fa-bars"></i>
+						</div>
+					</div>
+					<div class="sidebar web-sidebar-modal">	
+						<cfinclude template="left_.cfm">
+					</div>
+					<div class="content-section">
+						<div class="bottom-content-sec">
+							<div class="banner-section">
+								<div class="art-work-content">
+									<div class="bottom-content">
+										<table cellpadding="0" cellspacing="0" border="0" width="100%">
+											<tr>
+												<td  valign="top" style="padding-top: 10px;">
+												<cfif #contents.recordcount# Lt 1>
+													<table cellpadding="0" cellspacing="0" border=0 width="600" align="center">
+														<tr>
+															<td align="center">
+																<strong>There are no items in your cart. <br>Please choose item(s) to purchase before checking out.</strong>
+															</td>
+														</tr>
+													</table>
+												<cfelse>
+													<table width="600" border="0" cellspacing="0" cellpadding="2" align="center">
+														<tr>
+															<td colspan="5" height="40">
+																<strong>VIEW CONTENTS OF YOUR CART:</strong>
+															</td>
+														</tr>
+														<tr class="row0">
+															<td width="50%" height="20" style="color: #ffffff;"><b>Name</b></td>
+															<td width="10%" align="center" style="color: #ffffff;"><b>Qty</b></td>
+															<td width="15%" align="Center" style="color: #ffffff;"><b>Price</b></td>
+															<td width="15%" align="Center" style="color: #ffffff;"><b>Ext.</b></td>
+															<td width="10%">&nbsp;
+																
+															</td>
+														</tr>
+														<Cfoutput query="contents">
+														<FORM ACTION="#securepage#/view.cfm?xss=#xss#&uid=#uid#&co=y" method="post">
+														<TR class="#this_row()#">
+														<cfquery name="get_name" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+															SELECT * from products where uid='#pid#'
+														</cfquery>
+															<td valign="top">
+																<a onMouseOver="javascript:popUpWin('#get_name.imageURL#')" onMouseOut="myWin.close();">#get_name.name#</a>
+															</td>
+															<td align="center" valign="middle">
+																<input type="text" name="qty" value="#qty#" size="2" style="font-size: 7pt;">
+															</td>
+															<td align="right" valign="middle">
+																#dollarformat(charge)#
+															</td>
+															<cfset ext = #charge# * #qty#>
+															<td align="right" valign="middle">
+																#dollarformat(Ext)#</td>
+																<cfset subtotal = #subtotal# + #ext#>
+															<td align="right" valign="middle">
+																<input type="image" src="/img/update.gif" border="0" style="border: 1px solid ##ffffff;">
+															</td>
+														</tr>
+														</form>
+														</cfoutput>
+														<tr>
+															<td colspan="5">
+																<hr>
+															</td>
+														</tr>
+														<cfoutput>
+														<tr>
+															<td colspan="2">&nbsp;
+																
+															</td>
+															<td>
+																<b>Sub Total:</b>
+															</td>
+															<td align="right">
+																<b>#dollarformat(subtotal)#</b>
+															</td>
+															<td>&nbsp;
+																
+															</td>
+														</tr>
+														<tr>
+															<td colspan="5" align="center" style="padding-top:10px;">
+																<form action="checkout_new.cfm?xss=#xss#&co=y" method="post">
+																<table cellpadding="0" cellspacing="0" border="0" width="100%">
+																	<tr>
+																		<td colspan="2" align="Center">
+																			<input type="submit" value="Continue >>">
+																		</td>
+																	</tr>
+																</table>
+																</form>
+															</td>
+														</tr>
+														</cfoutput>
+													</table>
+													</cfif>
+													</td>
+												</tr>
+											</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<tr>
+	<td colspan="2" valign="baseline">
+		<cfinclude template="footer_.cfm">
+	</td>
+</tr>
 <cfinclude template="frmxss.cfm">
 
 </body>
