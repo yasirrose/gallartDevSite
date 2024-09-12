@@ -13,6 +13,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
 <script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
@@ -47,10 +48,12 @@
 									<div class="art-work-content">
 										<div class="bottom-content">
 											<div class="policy-content">
-												<cfoutput>
-													<h4>SHIPPING POLICY</h4>
-													<p>Once #companyname# receives payment in full, we will take up to 7 working days to ship the artwork. Most orders are delivered within 1 to 10 working days. We do not guarantee any time limit of delivery, in the case a shipment may be delayed due to extraneous circumstances such as flight delays, remote locations, strikes, force majuere and etc.</p> 
-												</cfoutput>
+												<div class="top-heading text-left">
+													<cfoutput>
+														<h3>SHIPPING POLICY</h3>
+														<p>Once #companyname# receives payment in full, we will take up to 7 working days to ship the artwork. Most orders are delivered within 1 to 10 working days. We do not guarantee any time limit of delivery, in the case a shipment may be delayed due to extraneous circumstances such as flight delays, remote locations, strikes, force majuere and etc.</p> 
+													</cfoutput>
+												</div>
 											</div>
 										</div>
 									</div>

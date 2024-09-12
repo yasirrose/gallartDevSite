@@ -63,9 +63,11 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
 	<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
+<meta name='viewport' content='width=device-width, initial-scale=1'>
 <link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
@@ -121,104 +123,65 @@
 								<div class="banner-section">
 									<div class="art-work-content">
 										<div class="bottom-content">
-											<table cellspacing="0" cellpadding="0" border="0" width="627">
-												<tr>
-													<td align="center" style="padding-top: 10px;">
-														<strong>EMAIL ALERTS</strong><br><br>
-														Click <a href="alerts_info.cfm?xss=#xss#">HERE</a> for more information.
-													</td>
-												</tr>
-												<cfif not isDefined('session.sellerinfo.fname')>
-												<tr>
-													<td style="padding-top: 10px;">
-														You must be a registered member in order to submit email alerts.  Please login below or click <a href="alerts_registration.cfm?xss=#xss#">HERE </a> to register.<br><br>
-													</td>
-												</tr>
-												<tr>
-													<td style="padding-top: 10px;">
-														<cfif structKeyExists(session,'sellerinfo') AND session.sellerinfo.login EQ 0>
-															<span style="color: red;">Sorry, we couldn't find that username/password combination in our system.  Please try again.</span>
-														</cfif>
-														<cfinclude template="alerts_login.cfm">
-													</td>
-												</tr>
-												<cfelse>
-												<tr>
-													<td style="padding-top: 10px;">
-														<cfif isDefined('url.alertthanks')>
-															Thank you for entering your alerts into our system. <br>When art is added by these artists, you will be notified by email:<br><br>
-															<cfif len(session.alertlst)>
-															
-																<cfloop list="#session.alertlst#" index="idx" delimiters="|">
-																	#idx#<br>							
-																</cfloop>
-																
-															<cfelse>
-															
-																No artists were selected.
-															
+											<div class="user-registrations alert-page">
+												<div class="user-content">
+													<div class="top-heading">
+														<h3><strong>EMAIL ALERTS</strong></h3>
+														<p>Click <a href="alerts_info.cfm?xss=#xss#">HERE</a> for more information.</p>
+													</div>
+													<cfif not isDefined('session.sellerinfo.fname')>
+														<p>You must be a registered member in order to submit email alerts.  Please login below or click <a href="alerts_registration.cfm?xss=#xss#">HERE </a> to register.</p>
+														<p><cfif structKeyExists(session,'sellerinfo') AND session.sellerinfo.login EQ 0>
+																<span style="color: red;">Sorry, we couldn't find that username/password combination in our system.  Please try again.</span>
 															</cfif>
-								
+															<cfinclude template="alerts_login.cfm">
+														</p>
+													<cfelse>
+													<cfif isDefined('url.alertthanks')>
+														<p>Thank you for entering your alerts into our system. <br>When art is added by these artists, you will be notified by email:</p>
+														<cfif len(session.alertlst)>
+															<cfloop list="#session.alertlst#" index="idx" delimiters="|">
+																#idx#<br>							
+															</cfloop>
 														<cfelse>
-														
-														<cfquery name="getAlerts" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-															SELECT * FROM alerts
-															WHERE FK_USERS = #session.sellerinfo.pk_users#
-														</cfquery>
-														
-														<form method="POST" action="#script_name#?#query_string#">
+															<p>No artists were selected.</p>
+														</cfif>
+													<cfelse>
+													
+													<cfquery name="getAlerts" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+														SELECT * FROM alerts
+														WHERE FK_USERS = #session.sellerinfo.pk_users#
+													</cfquery>
+													<form method="POST" action="#script_name#?#query_string#">
 														<input type="Hidden" name="alerts_proc">
-														<table cellspacing="0" cellpadding="3" border="0" width="100%" bgcolor="##eeeeee" height="10">
-															<tr>
-																<td style="font-weight: bold;" valign="middle">
-																	Please select the artists for which you would like to receive alerts.<br><br>Artists that you have previously selected are already checked.
-																</td>
-																<td valign="middle"><input type="submit" value="Submit" style="color: ##d9387c; font-size: 11pt; font-weight: bold; background-color: transparent; border: 1px solid ##eeeeee; cursor: pointer;"><input type="image" src="images/arrow.jpg" alt="Submit" align="top" style="border: 1px solid ##eeeeee;"></td>
-															</tr>
-														</table>
-														
-														<table cellspacing="0" cellpadding="2" border="0" width="100%">
-															<tr>
-																<td>
-																	<cfset thisQuery = artist_info />
-																	<cfset columnNum = 4 />
-																	<cfset column = round(thisQuery.recordcount/columnNum)>
-																	<cfset rem = thisQuery.recordcount MOD columnNum>
-																	<cfset x = 1 />
-																	<cfif rem EQ 1>
-																		<cfset val = evaluate(-1) />
-																	<cfelse>
-																		<cfset val = 0 />
-																	</cfif>
-																	
-																	<table>
-																		<tr>
-																			<td valign="top">
-																		
-																				<table>
-																				<cfloop query="thisQuery">
-																				<tr>
-																					<td style="font-size: 9px;"><input type="Checkbox" name="artist_#manufacturer#" value="#manufacturer#" <cfif listfindnocase(valuelist(getAlerts.artist,'|'),manufacturer,'|')>checked</cfif>>#manufacturer#</td>
-																				</tr>
-																					<cfif x IS column>
-																					</table></td><td valign="top"><table>
-																					<cfset x = val>
-																					</cfif>
-																				<cfset x = x + 1>    
-																				</cfloop>
-																				</table>
-																			</td>
-																		</tr>
-																	</table>
-																</td>
-															</tr>
-														</table>
+														<p>Please select the artists for which you would like to receive alerts.<br><br>Artists that you have previously selected are already checked.</p>
+														<div>
+															<input type="submit" value="Submit" style="color: ##d9387c; font-size: 11pt; font-weight: bold; background-color: transparent; border: 1px solid ##eeeeee; cursor: pointer;">
+															<input type="image" src="images/arrow.jpg" alt="Submit" align="top" style="border: 1px solid ##eeeeee;">
+														</div>
+														<cfset thisQuery = artist_info />
+															<cfset columnNum = 4 />
+															<cfset column = round(thisQuery.recordcount/columnNum)>
+															<cfset rem = thisQuery.recordcount MOD columnNum>
+															<cfset x = 1 />
+															<cfif rem EQ 1>
+																<cfset val = evaluate(-1) />
+															<cfelse>
+																<cfset val = 0 />
+															</cfif>
+															<cfloop query="thisQuery">
+																<div style="font-size: 9px;"><input type="Checkbox" name="artist_#manufacturer#" value="#manufacturer#" <cfif listfindnocase(valuelist(getAlerts.artist,'|'),manufacturer,'|')>checked</cfif>>#manufacturer#</div>
+																<cfif x IS column>
+																</table></td><td valign="top"><table>
+																<cfset x = val>
+																</cfif>
+															<cfset x = x + 1>    
+														</cfloop>
 														</form>
 														</cfif>
-													</td>
-												</tr>
-												</cfif>
-											</table>
+													</cfif>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>

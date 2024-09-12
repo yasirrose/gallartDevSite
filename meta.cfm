@@ -2,3 +2,4 @@
 <META NAME="keywords" content="Peter Max, Andy Warhol, Tom Wesselmann, Keith Haring, Roy Lichtenstein, Louis Icart, Erte, Charles Fazzino, Thomas McKnight, R.C. Gorman, Maimon, Tarkay, Romero Britto, Salvador Dali, Howard Behrens, Agam, Leroy Neiman, Mark Kostabi, Botero ">--->
 <meta name="description" content="Fine Art, Buy/Sell, 8,000 Sq, Ft. Showroom. Works by Warhol, Lichtenstein, Wesselmann, Indiana, Picasso, Chagall, Haring, Max, Britto, Neiman & more">
 <META NAME="keywords" content="Fine Art, Buy/Sell, 8,000 Sq, Ft. Showroom. Works by Warhol, Lichtenstein, Wesselmann, Indiana, Picasso, Chagall, Haring, Max, Britto, Neiman & more">
+<meta name='viewport' content='width=device-width, initial-scale=1'>

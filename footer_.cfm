@@ -4,7 +4,7 @@
 			<div class="footer-wrapper">
 				<div class="top-footer">
 					<div class="row">
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-6 col-12 mb-3">
 							<div class="footer-menu">
 								<h3>Main Menu</h3>
 								<ul>
@@ -21,7 +21,7 @@
 								</ul>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-6 col-12 mb-3">
 							<div class="footer-menu">
 								<h3>Customer Service</h3>
 								<ul>
@@ -31,7 +31,7 @@
 								</ul>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-6 col-12 mb-3">
 							<div class="footer-menu">
 								<h3>Contact Us</h3>
 								<div class="address">
@@ -43,7 +43,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-6 col-12 mb-3">
 							<div class="footer-menu">
 								<h3>Stay Connected</h3>
 								<div class="social-media">

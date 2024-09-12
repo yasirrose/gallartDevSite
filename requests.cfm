@@ -103,6 +103,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
 </cfoutput>
 
 <script language="JavaScript">
@@ -170,24 +171,15 @@
 							<div class="banner-section">
 								<div class="art-work-content">
 									<div class="bottom-content">
-										<table cellspacing="0" cellpadding="0" border="0" width="100%" style="padding-right: 10px;">
-												<tr>
-													<td align="center" style="padding-top: 10px;">
-														<h4>REQUESTS</h4><br>
-													</td>
-												</tr>
-												<cfif structKeyExists(form,'requestFormNotes')>
-												<tr>
-													<td style="color: ##ff0000;">
-														Thank you for submitting a response to one of our REQUEST listings. <br>You can respond to as many as you'd like, simply by clicking the Contact Gallery Art button.<br>
-													</td>
-												</tr>
-												</cfif>
-												<tr>
-													<td>
-														#getPages.page_content#
-													</td>
-												</tr>
+										<div class="top-heading text-left">
+											<h3>REQUESTS</h3>
+											<cfif structKeyExists(form,'requestFormNotes')>
+												<p>Thank you for submitting a response to one of our REQUEST listings. <br>You can respond to as many as you'd like, simply by clicking the Contact Gallery Art button.</p>
+											</cfif>
+											<p>#getPages.page_content#</p>
+										</div>
+										<div class="table-responsive">
+											<table cellspacing="0" cellpadding="0" border="0" width="100%" style="padding-right: 10px;">
 												<tr>
 													<td align="center" style="padding-top: 10px;">
 														<table cellspacing="0" cellpadding="3" border="0" width="100%">
@@ -232,7 +224,9 @@
 													</td>
 												
 												</tr>
-											</table>
+										</table>
+										</div>
+										
 									</div>
 								</div>
 							</div>

@@ -465,7 +465,7 @@ a.dbl_arrows {
     margin: 0 auto;
 }
 .main-content .sidebar {
-	padding: 90px 10px 10px;
+	padding: 90px 10px 40px;
 }
 .main-content .content-section {
 	padding: 0 10px;
@@ -824,7 +824,7 @@ footer .footer-container {
     margin: 0 auto;
 }
 footer .footer-container .footer-wrapper {
-	padding: 40px 0px 10px;
+	padding: 40px 20px 10px;
 }
 footer .footer-container .footer-wrapper .top-footer {
 	display: flex;
@@ -869,13 +869,16 @@ footer .footer-container .footer-wrapper .top-footer a:last-child {
 }
 
 footer .footer-container .footer-wrapper .bottom-footer {
-	text-align: center
+    text-align: center;
+    padding: 10px 0;
+    border-top: 1px solid #fff;
 }
 footer .footer-container .footer-wrapper .bottom-footer p {
-	font-size: 18px;
-	line-height: 18px;
-	font-weight: 400;
-	color: #000;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 400;
+    color: #fff;
+    margin: 0;
 }
 .footer-desc {
 	max-width: 1140px;
@@ -1010,7 +1013,7 @@ html body .mobile-search {
 	height: 30px;
     margin-bottom: 10px;
 	border-radius: 2px !important;
-	padding: 0 5px;
+	padding: 0 10px;
 	font-size: 14px;
 }
 .registration-page .content-section .banner-section .art-work-content input[type="file"] {
@@ -1048,7 +1051,7 @@ html body .mobile-search {
 .SeeMore {
     background: #ec008c;
     width: 100%;
-    max-width: 130px;
+	max-width: 150px;
     height: 40px;
     display: flex;
     justify-content: center;
@@ -1106,6 +1109,91 @@ html body .mobile-search {
 footer .footer-container .footer-wrapper .top-footer a:hover{
 	color: #db3a7d;
 }
+.user-registrations .input-form .input-field {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.user-registrations .input-form .input-field label {
+    display: block;
+	margin-bottom: 6px;
+	font-weight: bolder;
+}
+.user-registrations .input-form .input-field input, .user-registrations .input-form .input-field select {
+    width: 95% !important;
+    height: 40px !important;
+}
+.user-registrations .input-form .input-field textarea {
+    width: 95%;
+    height: 110px;
+}
+.user-registrations .input-form .input-button{
+	margin-bottom: 15px;
+}
+.user-registrations .input-form .input-button .SeeMore {
+    margin: 0;
+}
+.user-registrations .input-form .choose-field span {
+    padding-bottom: 10px;
+    display: inline-block;
+}
+.user-registrations .input-form .input-field img {
+    width: 95% !important;
+    height: auto;
+}
+.user-registrations .input-form .choose-field label {
+    display: block;
+    margin-bottom: 6px;
+}
+.user-registrations.alert-page .user-content {
+    margin: 0 auto;
+    max-width: 600px;
+}
+.user-registrations.guests-page {
+    max-width: 700px;
+    margin: 0 auto;
+}
+.user-registrations.guests-page .input-form .input-button {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.user-registrations.guests-page .input-form .input-button .SeeMore {
+    margin-bottom: 10px;
+}
+.content-section .banner-section .art-work-content .top-heading.text-left {
+    text-align: left;
+}
+.content-section .banner-section .art-work-content .top-heading p {
+    font-size: 16px;
+    line-height: 1.2;
+}
+.user-registrations.quotes-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.user-registrations.quotes-page .input-form .input-field input, .user-registrations.quotes-page .input-form .input-field select, .user-registrations.quotes-page .input-form .input-field img, .user-registrations.quotes-page .input-form .input-field textarea {
+    width: 85% !important;
+}
+.user-registrations.quotes-page .input-form .input-field img{
+	margin-bottom: 10px;
+}
+.registration-page .content-section .banner-section .art-work-content .checkbox {
+    display: flex;
+    gap: 30px;
+}
+.registration-page .content-section .banner-section .art-work-content .checkbox .checkbox-field {
+    display: flex;
+    align-items: center;
+}
+.registration-page .content-section .banner-section .art-work-content .checkbox .checkbox-field input {
+    height: 20px !important;
+    width: auto !important;
+}
+.registration-page .content-section .banner-section .art-work-content .checkbox .checkbox-field label {
+    margin-left: 12px;
+    text-transform: capitalize;
+}
 @media (max-width: 1600px) {
 	.main-content .content-section {
 		width: calc(100% - 325px);
@@ -1148,8 +1236,11 @@ footer .footer-container .footer-wrapper .top-footer a:hover{
 	.content-section .banner-section .art-work-content .bottom-content .gallery-lists{
 		gap: 16px;
 	}
+	footer .footer-container .footer-wrapper .top-footer .footer-menu .social-media ul li img {
+		max-width: 40px;
+	}
 }
-@media (max-width: 992px) {
+@media (max-width: 991px) {
 	.main-content .web-sidebar-modal.show-sidebar-modal #left {
 		position: absolute;
 		top: 199px;
@@ -1211,8 +1302,8 @@ footer .footer-container .footer-wrapper .top-footer a:hover{
 	.top-header #top .top_icons {
 		/* display: none; */
 		display: flex;
-width: 48%;
-}
+		width: 48%;
+	}
 	.site-logo img {
 		max-width: 440px;
 		width: 440px;
@@ -1286,8 +1377,27 @@ width: 48%;
 	top: -65px;
 	right: 20px;
 }
+footer .footer-container .footer-wrapper .top-footer .footer-menu .social-media ul li img {
+    max-width: 37px;
 }
-@media (max-width: 768px) {
+footer .footer-container .footer-wrapper .top-footer a, footer .footer-container .footer-wrapper .top-footer .footer-menu p {
+    font-size: 14px;
+}
+footer .footer-container .footer-wrapper .top-footer .footer-menu h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+footer .footer-container .footer-wrapper .top-footer .footer-menu .social-media ul {
+    column-gap: 5px;
+}
+}
+@media (max-width: 767px) {
+	.user-registrations .bottom-content {
+		margin: 15px 0 30px;
+	}
+	.table-responsive table td, .table-responsive table th {
+		font-size: 14px;
+	}
 	.content-section .banner-section .art-work-content .bottom-content .gallery-lists .list-item {
 		width: 31%;
 	}
@@ -1310,7 +1420,10 @@ width: 48%;
 	}
 	.top-header #top .top_icons,#top .mailto {
         width: 100%;
-    }
+	}
+	#top .top_icons img {
+		max-width: 35px;
+	}
 }
 @media (max-width: 575px) {
 	.content-section .banner-section .banner-content {
@@ -1339,8 +1452,7 @@ width: 48%;
 		gap: 10px;
 	}
 	footer .footer-container .footer-wrapper .top-footer a {
-		font-size:16px;
-		padding: 0 10px;
+		padding: 0;
 	}
 	.footer-desc span, .footer-desc h6, footer .footer-container .footer-wrapper .bottom-footer p{
 		font-size: 16px;

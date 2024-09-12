@@ -40,39 +40,21 @@
 </cfif>
 
 <cfoutput>
-		<table cellspacing="0" cellpadding="5" border="0" width="100%">
-			<cfform action="#script_name#?#query_string#" method="post">
-			<tr>
-				<td>
-					<strong>Username:</strong>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<cfinput type="text" required="Yes" message="Please enter your email address" name="req_username" style="font-size: 8pt; width: 132px;">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<strong>Password:</strong>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<cfinput type="password" required="Yes" message="Please enter your password" name="password" style="font-size: 8pt; width: 132px;">
-				</td>
-			</tr>
-			<tr>
-				<td style="padding-left: 68px;  padding-bottom: 7px;">
-					<input type="image" src="images/signin.jpg" alt="Sign In." style="border: 1px solid ##ffffff;">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a href="forgot_password.cfm?xss=#xss#">Forget your password?</a>
-				</td>
-			</tr>
-			</cfform>
-		</table>
+		<cfform action="#script_name#?#query_string#" method="post">
+			<div class="input-form">
+				<div class="input-field">
+					<label><strong>Username:</strong></label>
+					<cfinput type="text" required="Yes" message="Please enter your email address" name="req_username">
+				</div>
+				<div class="input-field">
+					<label><strong>Password:</strong></label>
+					<cfinput type="password" required="Yes" message="Please enter your password" name="password">
+				</div>
+				<div class="input-button">
+					<button type="submit" class="SeeMore">Sign In</button>
+				</div>
+				<p><a href="forgot_password.cfm?xss=#xss#">Forget your password?</a></p>
+			</div>
+		</cfform>
 		
 </cfoutput>

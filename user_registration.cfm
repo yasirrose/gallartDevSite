@@ -171,9 +171,10 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
 <script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
-
+<meta name='viewport' content='width=device-width, initial-scale=1'>
 <link href="stylesheet_.css" rel="stylesheet" type="text/css">
 
 <script type="text/javascript">
@@ -554,83 +555,58 @@
 																<CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST">
 																	<input type="hidden" name="submitted" value="1" />
 																	<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
-																	<table cellspacing="0" cellpadding="5" border="0" width="100%">
-																		<tr>
-																			<td><b>First Name:</b>
-																			</td>
-																			<td><cfinput type="text" name="fname" value="#form.fname#" size="30" required="Yes" message="Please enter your first name.">&nbsp;<span style="color: ##ff0000;">*</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td><b>Last Name:</b>
-																			</td>
-																			<td><cfinput type="text" name="lname" value="#form.lname#" size="30" required="Yes" message="Please enter your last name.">&nbsp;<span style="color: ##ff0000;">*</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td><b>Email:</b>
-																			</td>
-																			<td><cfinput type="text" name="Email" value="#form.Email#" size="30" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >&nbsp;<span style="color: ##ff0000;">*</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td><b>Cell Phone:</b>
-																			</td>
-																			<td><cfinput type="text" name="cellphone" value="#form.cellphone#" size="30" required="Yes"  message="Please enter a cell phone number." mask="(999) 999-9999">&nbsp;<span style="color: ##ff0000;">*</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td><b>Home Phone:</b>
-																			</td>
-																			<td><cfinput type="text" name="Phone" value="#form.Phone#" size="30" required="No"  message="Please enter a phone number."  mask="(999) 999-9999">
-																			</td>
-																		</tr>
-																		<tr>
-																			<td><b>Business Phone:</b>
-																			</td>
-																			<td><cfinput type="text" name="businessphone" value="#form.businessphone#" size="30" required="No"  message="Please enter a phone number."  mask="(999) 999-9999">
-																			</td>
-																		</tr>
-																		<tr>
-																			<td><b>Phone Number Outside the US:</b>
-																			</td>
-																			<td><cfinput type="text" name="otherphone" value="#form.otherphone#" size="30" required="No"  message="Please enter a phone number." >
-																			</td>
-																		</tr>
-																		<tr>
-																			<td><b>Website:</b>
-																			</td>
-																			<td><cfinput type="text" name="website" value="#form.website#" size="30" required="No"  message="Please enter a phone number." >
-																			</td>
-																		</tr>
-																		<tr>
-																			<td><b>Create a Password:</b>
-																			</td>
-																			<td><cfinput type="password" name="password" size="30" required="Yes" message="Please enter a password.">&nbsp;<span style="color: ##ff0000;">*</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td><b>Re-enter Password:</b>
-																			</td>
-																			<td><cfinput type="password" name="password2" size="30" required="Yes" message="Please re-enter your password.">&nbsp;<span style="color: ##ff0000;">*</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td colspan="2">
-																				<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
+																	<div class="input-form">
+																		<div class="input-field">
+																			<label><b>First Name:</b></label>
+																			<cfinput type="text" name="fname" value="#form.fname#" size="30" required="Yes" message="Please enter your first name.">&nbsp;<span style="color: ##ff0000;">*</span>
+																		</div>
+																		<div class="input-field">
+																			<label><b>Last Name:</b></label>
+																			<cfinput type="text" name="lname" value="#form.lname#" size="30" required="Yes" message="Please enter your last name.">&nbsp;<span style="color: ##ff0000;">*</span>
+																		</div>
+																		<div class="input-field">
+																			<label><b>Email:</b></label>
+																			<cfinput type="text" name="Email" value="#form.Email#" size="30" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >&nbsp;<span style="color: ##ff0000;">*</span>
+																		</div>
+																		<div class="input-field">
+																			<label><b>Cell Phone:</b></label>
+																			<cfinput type="text" name="cellphone" value="#form.cellphone#" size="30" required="Yes"  message="Please enter a cell phone number." mask="(999) 999-9999">&nbsp;<span style="color: ##ff0000;">*</span>
+																		</div>
+																		<div class="input-field">
+																			<label><b>Home Phone:</b></label>
+																			<cfinput type="text" name="Phone" value="#form.Phone#" size="30" required="No"  message="Please enter a phone number."  mask="(999) 999-9999">
+																		</div>
+																		<div class="input-field">
+																			<label><b>Business Phone:</b></label>
+																			<cfinput type="text" name="businessphone" value="#form.businessphone#" size="30" required="No"  message="Please enter a phone number."  mask="(999) 999-9999">
+																		</div>
+																		<div class="input-field">
+																			<label><b>Phone Number Outside the US:</b></label>
+																			<cfinput type="text" name="otherphone" value="#form.otherphone#" size="30" required="No"  message="Please enter a phone number." >
+																		</div>
+																		<div class="input-field">
+																			<label><b>Website:</b></label>
+																			<cfinput type="text" name="website" value="#form.website#" size="30" required="No"  message="Please enter a phone number." >
+																		</div>
+																		<div class="input-field">
+																			<label><b>Create a Password:</b></label>
+																			<cfinput type="password" name="password" size="30" required="Yes" message="Please enter a password.">&nbsp;<span style="color: ##ff0000;">*</span>
+																		</div>
+																		<div class="input-field">
+																			<label><b>Re-enter Password:</b></label>
+																			<cfinput type="password" name="password2" size="30" required="Yes" message="Please re-enter your password.">&nbsp;<span style="color: ##ff0000;">*</span>
+																		</div>
+																		<div class="input-field">
+																			<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
 																			<br><br>
 																			<FONT face="verdana,arial,helvetica" color="000000" size="-2"><b>Please enter the characters in the image above:</b></FONT><br><br>
 																			<cfinput type="text" name="captcha" required="true" message="Please enter the characters in the image.">
-																			
-																			</td>
-																		</tr>
-																		<tr>
-																			<td colspan="2" align="center">
-																				<input type="Hidden" name="proc_reg">
-																				<input type="image" src="images/become_a_seller.gif" style="border: none;">								
-																			</td>
-																		</tr>
-																	</table>
+																		</div>
+																		<div class="input-button">
+																			<input type="Hidden" name="proc_reg">
+																			<button type="submit" class="SeeMore">Become A Seller</button>
+																		</div>
+																	</div>
 																</cfform>
 															</div>
 														</cfoutput>
@@ -644,34 +620,22 @@
 																<cfoutput>
 																<cfform name="loginFrm" method="POST" action="#script_name#?#query_string#">
 																<input type="Hidden" name="login">
-																<table cellspacing="0" cellpadding="5" border="0" width="100%">
-																	<tr>
-																		<td>
-																			<strong>Email:</strong>
-																		</td>
-																		<td>
-																			<cfinput type="text" required="Yes" message="Please enter your email address" name="email_login" size="20">
-																		</td>
-																	</tr>
-																	<tr>
-																		<td>
-																			<strong>Password:</strong>
-																		</td>
-																		<td>
-																			<cfinput type="password" required="Yes" message="Please enter your password" name="password" size="20">
-																		</td>
-																	</tr>
-																	<tr>
-																		<td colspan="2" style="padding-left: 68px;  padding-bottom: 7px;">
-																			<input type="image" src="images/signin.jpg" alt="Sign In." style="border: 1px solid ##ffffff;">
-																		</td>
-																	</tr>
-																	<tr>
-																		<td colspan="2">
-																			<a href="forgot_password.cfm?xss=#xss#">Forget your password?</a>
-																		</td>
-																	</tr>
-																</table>
+																<div class="input-form">
+																	<div class="input-field">
+																		<label><strong>Email:</strong></label>
+																		<cfinput type="text" required="Yes" message="Please enter your email address" name="email_login" size="20">
+																	</div>
+																	<div class="input-field">
+																		<label><strong>Password:</strong></label>
+																		<cfinput type="password" required="Yes" message="Please enter your password" name="password" size="20">
+																	</div>
+																	<div class="input-button">
+																		<button type="submit" class="SeeMore">Sign In</button>
+																	</div>
+																	<div class="forget-pass">
+																		<a href="forgot_password.cfm?xss=#xss#">Forget your password?</a>
+																	</div>
+																</div>
 																</cfform>
 															</cfoutput>
 														</div>
@@ -713,91 +677,63 @@
 															<cfoutput>
 															<cfform name="frm1" action="#script_name#?xss=#xss#" method="post" enctype="multipart/form-data">
 															<input	type="hidden" name="captcha_check2"	value="#FORM.captcha_check2#" />
-															<table cellspacing="0" cellpadding="5" border="0" width="100%" class="purchases-consignments">
-																<tr>
-																	<td><b>Name:</b>
-																	</td>
-																	<td><cfinput type="text" name="name" value="#form.name#" size="30" required="Yes" message="Please enter your name.">&nbsp;<span style="color: ##ff0000;">*</span>
-																	</td>
-																</tr>
-																<tr>
-																	<td><b>Phone:</b>
-																	</td>
-																	<td><cfinput type="text" name="phone" value="#form.phone#" size="30" required="No"  message="Please enter a phone number." mask="(999) 999-9999">
-																	</td>
-																</tr>
-																<tr>
-																	<td><b>Email:</b>
-																	</td>
-																	<td><cfinput type="text" name="email_purchase" value="#form.email_purchase#" size="30" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >&nbsp;<span style="color: ##ff0000;">*</span>
-																	</td>
-																</tr>
-																<tr>
-																	<td><b>Artist:</b>
-																	</td>
-																	<td><cfinput type="text" name="artist" value="#form.artist#" size="30" required="Yes"  message="Please enter an artist." >&nbsp;<span style="color: ##ff0000;">*</span>
-																	</td>
-																</tr>
-																<tr>
-																	<td><b>Title:</b>
-																	</td>
-																	<td><cfinput type="text" name="title" value="#form.title#" size="30" required="No"  message="Please enter a title." >
-																	</td>
-																</tr>
-																<tr>
-																	<td><b>Medium:</b></td>
-																	<td>
-																		<Select name="medium" style="width: 171px;">
-																			<option value="">Select here ...</option>
-																			<cfloop query="cats">
-																				<option value="#path#">#ucase(path)#
-																			
-																		</cfloop></select>
-																	</td>
-																</tr>
-																<tr>
-																	<td><b>Size:</b>
-																	</td>
-																	<td><cfinput type="text" name="size" value="#form.size#" size="30" required="No"  message="Please enter a size." >
-																	</td>
-																</tr>
-																<tr>
-																	<td colspan="2"><b>Additional Details:</b></td>
-																</tr>
-																<tr>
-																	<td colspan="2"><textarea name="additional_details" cols="50" rows="4">#form.additional_details#</textarea></td>
-																</tr>
-																<tr>
-																	<td colspan="2">
-																	<b>Upload Photo</b> <br /><span style="color: ##ff0000; font-size: 8pt; font-weight: bold;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span>*<br><br>
-																		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-																			<tr>
-																				<td valign="top" width="50%">
-																					<input type="file" name="thisImage" size="22">
-																				</td>
-																			</tr>
-																		</table>
-																	</td>
-																</tr>
-																<tr>
-																	<td colspan="2">
-																		<cfimage action="captcha" height="75" width="363" text="#strCaptcha2#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
+															<div class="input-form">
+																<div class="input-field">
+																	<label><b>Name:</b></label>
+																	<cfinput type="text" name="name" value="#form.name#" size="30" required="Yes" message="Please enter your name.">&nbsp;<span style="color: ##ff0000;">*</span>
+																</div>
+																<div class="input-field">
+																	<label><b>Phone:</b></label>
+																	<cfinput type="text" name="phone" value="#form.phone#" size="30" required="No"  message="Please enter a phone number." mask="(999) 999-9999">
+																</div>
+																<div class="input-field">
+																	<label><b>Email:</b></label>
+																	<cfinput type="text" name="email_purchase" value="#form.email_purchase#" size="30" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >&nbsp;<span style="color: ##ff0000;">*</span>
+																</div>
+																<div class="input-field">
+																	<label><b>Artist:</b></label>
+																	<cfinput type="text" name="artist" value="#form.artist#" size="30" required="Yes"  message="Please enter an artist." >&nbsp;<span style="color: ##ff0000;">*</span>
+																</div>
+																<div class="input-field">
+																	<label><b>Title:</b></label>
+																	<cfinput type="text" name="title" value="#form.title#" size="30" required="No"  message="Please enter a title." >
+																</div>
+																<div class="input-field">
+																	<label><b>Medium:</b></label>
+																	<Select name="medium" style="width: 171px;">
+																		<option value="">Select here ...</option>
+																		<cfloop query="cats">
+																			<option value="#path#">#ucase(path)#
+																		</cfloop>
+																	</select>
+																</div>
+																<div class="input-field">
+																	<label><b>Size:</b></label>
+																	<cfinput type="text" name="size" value="#form.size#" size="30" required="No"  message="Please enter a size." >
+																</div>
+																<div class="input-field">
+																	<label><b>Additional Details:</b></label>
+																	<textarea name="additional_details" cols="50" rows="4">#form.additional_details#</textarea>
+																</div>
+																<div class="choose-field">
+																	<label><b>Upload Photo</b></label>
+																	<span style="color: ##ff0000; font-size: 8pt; font-weight: bold;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span>*
+																	<input type="file" name="thisImage" size="22">
+																</div>
+																<div class="input-field">
+																	<cfimage action="captcha" height="75" width="363" text="#strCaptcha2#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
 																	<br><br>
 																	<FONT face="verdana,arial,helvetica" color="000000" size="-2"><b>Please enter the characters in the image above:</b></FONT><br><br>
 																	<cfinput type="text" name="captcha2" required="true" message="Please enter the characters in the image.">
-																	
-																	</td>
-																</tr>
-																<tr>
-																	<td colspan="2" align="center">
-																		<input type="Hidden" name="process_purchase_consignment">
-																		<input type="Image" src="images/send.gif" style="border: none;">                          
-																	</td>
-																</tr>
-																<tr>
-																	<td colspan="2" style="font-size: 10pt;"><b>*If you any questions please email <a style="font-size: 10pt;" href="mailto: sales@gallart.com">sales@gallart.com</a> or call 305-932-6166 for further assistance. </b></td>
-																</tr>
-															</table>
+																</div>
+																<div class="input-button">
+																	<input type="Hidden" name="process_purchase_consignment">
+																	<button type="button" class="SeeMore">Send</button> 
+																</div>
+																<div class="any-question">
+																	<p><b>*If you any questions please email <a style="font-size: 10pt;" href="mailto: sales@gallart.com">sales@gallart.com</a> or call 305-932-6166 for further assistance. </b></p>
+																</div>
+															</div>
 															</cfform>						
 															</cfoutput>
 															</cfif>
