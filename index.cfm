@@ -46,26 +46,43 @@
 	.product-items {
 		width: 1000px;
 	}
+	.see-more-sec {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		margin: 40px 0px 0px;
+		padding: 10px;
+	}
 	a.SeeMore {
-    background: #ec008c;
+    /* background: #ec008c; */
+	background-color: transparent;
     width: 100%;
     max-width: 130px;
     height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 40px 0 10 auto;
-    color: #fff !important;
+    margin: 0;
+    color: #000 !important;
     font-size: 14px;
-    border: 2px solid #ec008c;
+    /* border: 2px solid #ec008c; */
+	border: 2px solid #000;
     font-weight: 700;
     letter-spacing: 1px;
 	transition: all 0.5s ease;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: uppercase;
+	gap: 8px;
+	
 }
 a.SeeMore:hover {
     background: transparent;
-    color: #ec008c !important;
+    color: #fff !important;
     transition: all 0.5s ease;
+	background-color: #0000004f;
 }
 </style>
 <script>
@@ -113,6 +130,7 @@ a.SeeMore:hover {
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	<div class="main-container">
+		
 		<div id="Table_01">
 			<div class="header-section">
 				<div class="top-header">
@@ -130,48 +148,27 @@ a.SeeMore:hover {
 								<i class="fas fa-bars"></i>
 							</div>
 						</div>
-						<div class="sidebar web-sidebar-modal">	
-							<cfinclude template="left_.cfm">
-						</div>
 						<div class="content-section">
 							<div class="banner-section">
 								<div class="banner-content">
 									<div class="content-sec">
-										<div class="top-heading">
-											<h3>Browse Our Inventory</h3>
-										</div>
 										<cfinclude template="search.cfm">
 										<div class="like-content mobile-like-content ">
 											<iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FGallArt%2F119056118127427&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:400px; height:35px;" allowTransparency="true"></iframe>
 										</div>
 									</div>
-									<div class="img-sec">
-										<div class="virtual-tour">
-											<form action="360_tour.cfm" style="margin-bottom: 2px;">
-												<input type="submit" value="Click To Take A 360 Virtual Tour" />
-											</form>
-											<div>
-												<a href="360_tour.cfm"><img src="/images/gallart_front.jpg" alt="" border="0"></a>
-											</div>
-											<div class="productSearch-filed mobile-search">
-												<form action="products.cfm?xss=#xss#" method="post">
-												<input type="text" name="keywords" placeholder="Product Search">                  
-												<button type="button" class="search-btn"><i class="fas fa-search"></i></button>
-												</form>
-											</div>
-										</div>
-									</div>
 <!--- 									<div style="padding: 20px 0 0 0;"> 
 										<div id="slideshow"></div>
-										</div>--->
+										</div> --->
 								</div>
+								
 								<div class="bottom-content-sec">
-									<div class="like-content desktop-like-content ">
+									<!-- <div class="like-content desktop-like-content ">
 										<iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FGallArt%2F119056118127427&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:400px; height:35px;" allowTransparency="true"></iframe>
-									</div>
+									</div> -->
 									<div class="art-work-content">
-										<div class="featured-work-content">
-											<div class="top-heading">
+										<div class="featured-work-content banner-sec">
+											<div class="top-heading ">
 												<!--- <h3>Banner Images</h3> --->
 											</div>
 											<div class="bottom-content">
@@ -180,9 +177,9 @@ a.SeeMore:hover {
 												</div>
 											</div>
 										</div>
-										<div class="featured-work-content">
-											<div class="top-heading">
-												<h3>Featured Artists</h3>
+										<div class="featured-work-content" style="background-color:#F2F2F2; border-radius:10px;">
+											<div class="top-heading home-page-heading">
+												<h3>FEATURED ARTISTS</h3>
 											</div>
 											<div class="bottom-content">
 												<div class="product-items">
@@ -213,8 +210,9 @@ a.SeeMore:hover {
 										<!--- <cfif isDefined('cgi.REMOTE_ADDR') and cgi.REMOTE_ADDR eq '127.0.0.1'>
 											<cfdump var="#initialQuery#">
 										</cfif> --->
-										<div class="top-heading">
-											<h3>Recent Acquisitions</h3>
+										<div class="Recent Aquestoins" style="background-color:#F2F2F2; border-radius:10px;">
+										<div class="top-heading home-page-heading">
+											<h3>RECENT ACQUISITIONS</h3>
 										</div>
 										<div class="bottom-content">
 											<div class="gallery-lists">
@@ -238,7 +236,11 @@ a.SeeMore:hover {
 												
 												 SRC="./img/thumbnails/#uid#.jpg?x=randrange(1,99)"
 												--->
-												<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
+												<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg") >
+													<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
+												<cfelse>
+													<img src="https://as2.ftcdn.net/v2/jpg/07/95/29/45/1000_F_795294547_gaBzWLhkAYBSz1ZUIZssHhvzGzstNmHK.jpg">
+												</cfif>
 												</A>
 												<Br>
 												<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
@@ -269,13 +271,19 @@ a.SeeMore:hover {
 											
 											</div>
 											<cfoutput>
-												<a href="new_listings.cfm?xss=#xss#" class="SeeMore">See More</a>
+												<div class="see-more-sec">
+													<a href="new_listings.cfm?xss=#xss#" class="SeeMore">
+														<span>See More</span>
+														<i class="fa fa-arrow-right" aria-hidden="true"></i>
+													</a>
+												</div>
 											</cfoutput>
 										</div>
+									</div>
 		
 										
 									</div>
-									<div class="art-work-content">
+									<div class="art-work-content" style="background-color:#F2F2F2; border-radius:10px;">
 
 
 
@@ -326,8 +334,8 @@ a.SeeMore:hover {
 										<!--- <cfif isDefined('cgi.REMOTE_ADDR') and cgi.REMOTE_ADDR eq '127.0.0.1'>
 											<cfdump var="#initialQuery#">
 										</cfif> --->
-										<div class="top-heading">
-											<h3>SALE ITEMS</h3>
+										<div class="top-heading home-page-heading">
+											<h3>ARTWORKS ON SALE</h3>
 										</div>
 										<div class="bottom-content">
 											<div class="gallery-lists">
@@ -387,7 +395,12 @@ a.SeeMore:hover {
 
 											
 											<cfoutput>
-												<a href="sales.cfm?xss=#xss#" class="SeeMore">See More</a>
+												<div class="see-more-sec">
+													<a href="sales.cfm?xss=#xss#" class="SeeMore">
+														<span>See More</span>
+														<i class="fa fa-arrow-right" aria-hidden="true"></i>
+													</a>
+												</div>
 											</cfoutput>
 										</div>
 		
@@ -395,7 +408,7 @@ a.SeeMore:hover {
 									</div>
 								
 									<!--- <div class="featured-work-content featured-artwork-content ">
-										<div class="top-heading">
+										<div class="top-heading home-page-heading">
 											<h3>Featured Artworks</h3>
 										</div>
 										<div class="bottom-content">
@@ -404,21 +417,21 @@ a.SeeMore:hover {
 											</div>
 										</div>
 									</div> --->
-									<div class="gallery-art-sec">
-										<div class="<cfinclude template="home_page_content.cfm">
-									</div>
-									<div class="company-sec">
-										<cfinclude template="company.cfm">
-									</div>
-								</div>
+									
 							</div>
 						</div>
+						
 					</div>
-				</div>
+				</divcl>
 			</div>
+
+			<button type="button" style="display:none;" onclick="gotoTopFunction()" class="btn"  id="myBtn" title="Go to top">
+				<i class="fas fa-chevron-up"></i>
+			 </button>
+
 			<tr height="100%">
 				<td valign="top" width="727" height="100%">
-					<table border="0" cellpadding="0" cellspacing="0" width="100%"
+					<table border="0" cellpadding="0" cellspacing="0" width="100%">
 					</table>
 				</td>
 			</tr>
@@ -430,15 +443,49 @@ a.SeeMore:hover {
 		</div>
 	</div>
 	
-<div itemscope itemtype="https://schema.org/ArtGallery" class="desc footer-desc">
-    <h6 itemprop="name">Gallery Art - Buying & Selling Fine Art & Collections</h6>
-    <span itemprop="url"><a href="https://gallart.com/">Gallart.com</a></span>
-    <span itemprop="description">Fine Art, Buy/Sell, 8,000 Sq, Ft. Showroom. Works by Warhol, Lichtenstein, Wesselmann, Indiana, Picasso, Chagall, Haring, Max, Britto, Neiman &amp; more</span>
-    <span itemprop="address">20633 Biscayne Blvd, Aventura, FL 33180</span>
-    <span itemprop="telephone">305.932.6166</span>
-    <span itemprop="email">info@gallart.com</span>
-</div>
+
 <cfinclude template="frmxss.cfm">
 
 </body>
 </html>
+
+<style>
+	#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 100;
+  width: 50px; /* Small square size */
+  height: 50px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 10px; /* Rounded corners for style */
+  cursor: pointer;
+  font-size: 28px; /* Icon size */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+}
+</style>
+
+<script>
+	 window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+   if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+	  document.getElementById("myBtn").style.display = "block";
+   } else {
+	  document.getElementById("myBtn").style.display = "none";
+   }
+}
+
+function gotoTopFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            e.preventDefault();
+        }
+
+</script>

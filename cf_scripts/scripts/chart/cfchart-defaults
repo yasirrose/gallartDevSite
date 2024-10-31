@@ -1,0 +1,59 @@
+{
+	"loader" : {
+		"gui" : {
+			"context-menu" : {
+				"visible" : true
+			},
+			"behaviors" : [
+				{
+					"id" : "Reload",
+					"enabled" : "none"
+				},
+				{
+					"id" : "SaveAsImage",
+					"enabled" : "none"
+				},
+				{
+					"id" : "Print",
+					"enabled" : "none"
+				},
+				{
+					"id" : "ViewSource",
+					"enabled" : "true"
+				},
+				{
+					"id" : "BugReport",
+					"enabled" : "none"
+				},
+				{
+					"id" : "FullScreen",
+					"enabled" : "none"
+				},
+				{
+					"id" : "ZoomIn",
+					"enabled" : "none"
+				},
+				{
+					"id" : "ZoomOut",
+					"enabled" : "none"
+				},
+				{
+					"id" : "ViewAll",
+					"enabled" : "none"
+				},
+				{
+					"id" : "3D",
+					"enabled" : "none"
+				},
+				{
+					"id" : "LinearScale",
+					"enabled" : "none"
+				},
+				{
+					"id" : "LogScale",
+					"enabled" : "none"
+				}
+			]
+		}
+	}
+}

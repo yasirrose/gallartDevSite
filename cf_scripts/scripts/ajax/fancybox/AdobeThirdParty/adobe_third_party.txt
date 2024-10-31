@@ -1,0 +1,32 @@
+The content of this file is Copyright (c) Adobe Systems, Incorporated.
+
+See below for instructions.
+
+
+-----------Start of Section to be filled in by engineer-------------
+
+The Content referenced by this file is Copyright (c) Aptana Inc.
+
+Path to Content: 
+	../scripts/fancybox/jquery.fancybox-1.3.4.css
+	../scripts/fancybox/jquery.fancybox-1.3.4.js
+	../scripts/fancybox/jquery.fancybox-1.3.4.pack.js
+	../scripts/fancybox/jquery.mousewheel-3.0.4.css
+	../scripts/fancybox/jquery.easing-1.3.pack.js
+Path to License: ../scripts/fancybox/license.txt
+
+Adobe Engineering Contact: ksakhare@adobe.com
+
+Is this Content intended to be used as a developer tool? no
+Is this Content used during release engineering builds? yes
+Are portions of the Content intended to be put into product(s) that Adobe ships? yes
+
+Notes: Plugins are built and shipped with Storm.
+
+
+
+Fill in the following when Legal has finished reviewing the license and sends you an AIPAS License # (not required at check-in time):
+
+AIPAS License #: <xxxxx>
+Reviewed by Adobe Legal on: <yyyy-mm-dd>
+Adobe Legal Contact: <email-of-adobe-legal-person@adobe.com>

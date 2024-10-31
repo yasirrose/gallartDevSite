@@ -9,11 +9,22 @@
     <cfquery name="getRecentAcquisitions" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
         SELECT * 
         FROM (
-            SELECT *, ROW_NUMBER() OVER (ORDER BY active_date DESC) AS RowNum
+            SELECT *, ROW_NUMBER() OVER (
+                <cfif isDefined('priceOrder') and len(priceOrder)>
+					<cfif priceOrder EQ 'newest' >
+                        ORDER BY uid DESC
+                        <cfelse>
+                            ORDER BY gallery_price #priceOrder# 
+                    </cfif>
+				<cfelse>
+					ORDER BY active_date DESC
+				</cfif>
+            ) AS RowNum
             FROM products
             WHERE active = 1
+            
             <cfif isDefined('keywords') and len(trim(keywords))>
-                AND (name LIKE '%#keywords#%' OR caption LIKE '%#keywords#%' OR modelno LIKE '#keywords#%' OR manufacturer LIKE '%#keywords#%')
+                AND (name LIKE '%#keywords#%' OR caption LIKE '%#keywords#%' OR modelno LIKE '%#keywords#%' OR manufacturer LIKE '%#keywords#%')
             </cfif>
             <cfif isDefined('artist') and len(trim(artist))>
                 AND manufacturer = '#artist#'
@@ -21,11 +32,31 @@
             <cfif isDefined('path') and len(trim(path))>
                 AND path = '#path#'
             </cfif>
+            <cfif isDefined('Subject') and len(Subject)>
+				AND artSubject LIKE '%#Subject#%'
+			</cfif>
+            <cfif isDefined('Size') and len(trim(Size))>
+					AND artSize LIKE '%#Size#%'
+			</cfif>
+            <cfif isDefined('Type') and len(trim(Type))>
+					AND artTypee LIKE '%#Type#%'
+			</cfif>
+            <cfif isDefined('Style') AND len(Style)>
+					-- AND artType LIKE '%#Style#%'
+                AND artType LIKE <cfqueryparam value="#Style#" cfsqltype="cf_sql_varchar"> OR
+                artType LIKE <cfqueryparam value="#Style#,%"
+                    cfsqltype="cf_sql_varchar"> OR
+                artType LIKE <cfqueryparam value="%,#Style#"
+                    cfsqltype="cf_sql_varchar"> OR
+                artType LIKE <cfqueryparam value="%,#Style#,%"
+                    cfsqltype="cf_sql_varchar">
+			</cfif>
             AND fk_users IS NULL
         ) AS Subquery
         WHERE RowNum BETWEEN #startrow# AND (#startrow# + #ipp# - 1)
+       
     </cfquery>
-
+    
 <cfquery name="makeoffer_buttons" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 	SELECT show FROM makeoffer_buttons
 	WHERE pk_makeoffer_buttons = 1
@@ -52,8 +83,14 @@
         
          SRC="./img/thumbnails/#uid#.jpg?x=randrange(1,99)"
         --->
-        <IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
+        <cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")> 
+            <IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
+        <cfelse>
+            <!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
+            <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+        </cfif>
         </A>
+        
         <Br>
         <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" class="name-hover" >
         #name#

@@ -22,15 +22,44 @@ function helpWin(url) {
 <div id="top">
 	<div class="top-conteiner">
 		<div class="site-logo"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>"><img src="images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
-		<div class="mailto">
+		<!--- <div class="mailto">
 			<div class="mailto-text">
 				<p>20633 Biscayne Blvd Aventura, FL 33180</p>
 				<p><strong>305-932-6166</strong></p>
 			</div>
 			<a class="btn" href="mailto:sales@gallart.com">Email Us! CLICK!</a>
+		</div> --->
+		<div class="productSearch-filed web-search">
+			<form action="products.cfm?xss=<cfoutput>#xss#</cfoutput>" method="get">
+			<input type="text" name="keywords" id="keywords" placeholder="Search by artist, medium, keywords">                  
+			<button type="submit" class="search-btn"  id="searchButton" ><i class="fas fa-search"></i></button>
+			</form>
 		</div>
 		<div class="top_icons">
-			<a href="https://www.facebook.com/pages/GallArt/119056118127427?ref=hl" target="_blank"><img src="https://gallart.com/images/social_icons/facebook-sm.png" border="0" alt="facebook" /></a>
+
+			<div class="mailto">
+				<div class="mailto-text">
+					<div class="resigter">
+						<ul>
+							<li><a href="/user_registration.cfm">Register</a></li>
+							<li>/</li>
+							<li><a href="/user_registration.cfm">Sign In</a></li>
+						</ul>
+					</div>
+					<!---<p>20633 Biscayne Blvd Aventura, FL 33180</p> --->
+					<p><strong>305.932.6166</strong></p>
+				</div>
+				<!--- <a class="btn" href="mailto:sales@gallart.com">Email Us! CLICK!</a> --->
+			</div>
+			<!--- <div class="productSearch-filed web-search">
+				<form action="products.cfm?xss=<cfoutput>#xss#</cfoutput>" method="get">
+				<input type="text" name="keywords" id="keywords" placeholder="Product Search">                  
+				<button type="submit" class="search-btn"  id="searchButton" ><i class="fas fa-search"></i></button>
+				</form>
+			</div> --->
+
+			<!---<div style="display:flex;">
+				<a href="https://www.facebook.com/pages/GallArt/119056118127427?ref=hl" target="_blank"><img src="https://gallart.com/images/social_icons/facebook-sm.png" border="0" alt="facebook" /></a>
 			<a href="https://instagram.com/gallartcom/" target="_blank"><img src="https://gallart.com/images/social_icons/instagram-sm.png" border="0" alt="instagram" /></a>
 			<a href="https://twitter.com/GallArtcom" target="_blank"><img src="https://gallart.com/images/social_icons/twitter-sm.png" border="0" alt="twitter" /></a>
 			<!--- <a href="https://www.tumblr.com/blog/gallartcom" target="_blank"><img src="https://gallart.com/images/social_icons/tumblr-sm.png" border="0" alt="tumblr" /></a> --->
@@ -45,6 +74,9 @@ function helpWin(url) {
 				<img src="https://gallart.com/images/social_icons/youtube.png" border="0" alt="youtube" />
 				<!--- https://www.youtube.com/channel/yourchannelid --->
 			</a>
+			</div> --->
+
+			
 			
 		</div>
 	</div>

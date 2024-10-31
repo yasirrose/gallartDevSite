@@ -1,0 +1,90 @@
+/*
+ * Copyright (c) 1995-2005 Macromedia, Inc. All rights reserved. 
+*/
+
+form .horizontal,
+form .fieldset {
+	width: 100%;
+}
+
+form p {
+	margin: 1ex 0;
+}
+
+form p, 
+form fieldset {
+	clear: both;
+}
+
+form .horizontal p {
+	float: left;
+	clear: right;
+	margin-right: 10px;
+}
+
+
+form .clear {
+	clear: both;
+}
+
+/* LABEL AND ELEMENT POSITION */
+
+
+.cfLabelPosTop .cfLabelTitle  {
+	margin-right: 1ex;
+	margin-bottom: 1ex;
+	display: block;
+}
+.cfLabelPosLeft .cfLabelTitle  {
+	display: block !important;
+	float: left !important;
+	clear: right !important;
+	text-align: right !important;
+	margin-right: 1ex !important;
+}
+.cfLabelPosRight .cfLabelTitle  {
+	margin-right: 1ex;
+}
+
+
+/* alignment */
+.cfAlignPosLeft {
+	margin-right: 10px;
+	margin-bottom: 1em;	
+}
+
+.cfAlignPosRight {
+	float: right !important;
+	margin-left: 1ex;
+	margin-bottom: 16px;
+}
+
+.cfAlignPosCenter {
+	float: right;
+	margin-left: 1ex;
+	margin-bottom: 16px;
+}
+
+
+
+
+/* MAC IE HACKS */
+* html>body .cfLabelPosLeft .cfLabelTitle {
+	display: inline;
+	float: none;
+	clear: none;
+	text-align: left;
+}
+* html>body .first-child .cfLabelTitle {
+	display: block;
+	float: left;
+	clear: right;
+	text-align: right;
+	margin-right: 1ex;
+}
+
+
+/* For Win Opera 7, nice to Opera 6 */
+head:first-child+body form .compact p {
+	display: inline-table;
+}

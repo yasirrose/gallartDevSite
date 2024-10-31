@@ -105,14 +105,27 @@ order by Stateabb
 							<i class="fas fa-bars"></i>
 						</div>
 					</div>
-					<div class="sidebar web-sidebar-modal">	
+					<!--- <div class="sidebar web-sidebar-modal">	
 						<cfinclude template="left_.cfm">
-					</div>
+					</div> --->
 					<div class="content-section">
 						<div class="bottom-content-sec">
 							<div class="banner-section">
 								<div class="art-work-content">
+
+									<div aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                          <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+                                          <li class="breadcrumb-item active" aria-current="page">View Cart</li>
+                                        </ol>
+                                    </div>
+
 									<div class="bottom-content">
+										<div class="user-registrations">
+											<div class="top-heading">
+												<p><strong>There are no items in your cart. <br>Please choose item(s) to purchase before checking out.</strong></p>
+											</div>
+									  <div class="table-responsive">
 										<table cellpadding="0" cellspacing="0" border="0" width="100%">
 											<tr>
 												<td  valign="top" style="padding-top: 10px;">
@@ -120,7 +133,7 @@ order by Stateabb
 													<table cellpadding="0" cellspacing="0" border=0 width="600" align="center">
 														<tr>
 															<td align="center">
-																<strong>There are no items in your cart. <br>Please choose item(s) to purchase before checking out.</strong>
+																
 															</td>
 														</tr>
 													</table>
@@ -206,6 +219,9 @@ order by Stateabb
 											</table>
 									</div>
 								</div>
+								
+							</div>
+						</div>
 							</div>
 						</div>
 					</div>

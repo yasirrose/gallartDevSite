@@ -399,13 +399,21 @@
 								<i class="fas fa-bars"></i>
 							</div>
 						</div>
-						<div class="sidebar web-sidebar-modal">	
+						<!--- <div class="sidebar web-sidebar-modal">	
 							<cfinclude template="left_.cfm">
-						</div>
+						</div> --->
 						<div class="content-section">
 							<div class="bottom-content-sec">
 								<div class="banner-section">
 									<div class="art-work-content">
+
+										<div aria-label="breadcrumb">
+											<ol class="breadcrumb">
+											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item active" aria-current="page">Sell Your Art</li>
+											</ol>
+										</div>
+
 										<div class="bottom-content">
 											<cfif FORM.submitted>	
 												<cfif phoneError>
@@ -557,20 +565,20 @@
 																	<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
 																	<div class="input-form">
 																		<div class="input-field">
-																			<label><b>First Name:</b></label>
-																			<cfinput type="text" name="fname" value="#form.fname#" size="30" required="Yes" message="Please enter your first name.">&nbsp;<span style="color: ##ff0000;">*</span>
+																			<label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
+																			<cfinput type="text" name="fname" value="#form.fname#" size="30" required="Yes" message="Please enter your first name.">
 																		</div>
 																		<div class="input-field">
-																			<label><b>Last Name:</b></label>
-																			<cfinput type="text" name="lname" value="#form.lname#" size="30" required="Yes" message="Please enter your last name.">&nbsp;<span style="color: ##ff0000;">*</span>
+																			<label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
+																			<cfinput type="text" name="lname" value="#form.lname#" size="30" required="Yes" message="Please enter your last name.">
 																		</div>
 																		<div class="input-field">
-																			<label><b>Email:</b></label>
-																			<cfinput type="text" name="Email" value="#form.Email#" size="30" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >&nbsp;<span style="color: ##ff0000;">*</span>
+																			<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
+																			<cfinput type="text" name="Email" value="#form.Email#" size="30" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >
 																		</div>
 																		<div class="input-field">
-																			<label><b>Cell Phone:</b></label>
-																			<cfinput type="text" name="cellphone" value="#form.cellphone#" size="30" required="Yes"  message="Please enter a cell phone number." mask="(999) 999-9999">&nbsp;<span style="color: ##ff0000;">*</span>
+																			<label><b>Cell Phone:<span style="color: ##ff0000;">*</span></b></label>
+																			<cfinput type="text" name="cellphone" value="#form.cellphone#" size="30" required="Yes"  message="Please enter a cell phone number." mask="(999) 999-9999">
 																		</div>
 																		<div class="input-field">
 																			<label><b>Home Phone:</b></label>
@@ -589,17 +597,17 @@
 																			<cfinput type="text" name="website" value="#form.website#" size="30" required="No"  message="Please enter a phone number." >
 																		</div>
 																		<div class="input-field">
-																			<label><b>Create a Password:</b></label>
-																			<cfinput type="password" name="password" size="30" required="Yes" message="Please enter a password.">&nbsp;<span style="color: ##ff0000;">*</span>
+																			<label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
+																			<cfinput type="password" name="password" size="30" required="Yes" message="Please enter a password.">
 																		</div>
 																		<div class="input-field">
-																			<label><b>Re-enter Password:</b></label>
-																			<cfinput type="password" name="password2" size="30" required="Yes" message="Please re-enter your password.">&nbsp;<span style="color: ##ff0000;">*</span>
+																			<label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
+																			<cfinput type="password" name="password2" size="30" required="Yes" message="Please re-enter your password.">
 																		</div>
 																		<div class="input-field">
 																			<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
 																			<br><br>
-																			<FONT face="verdana,arial,helvetica" color="000000" size="-2"><b>Please enter the characters in the image above:</b></FONT><br><br>
+																			<FONT face="verdana,arial,helvetica" color="000000"><b>Please enter the characters in the image above:</b></FONT><br><br>
 																			<cfinput type="text" name="captcha" required="true" message="Please enter the characters in the image.">
 																		</div>
 																		<div class="input-button">
@@ -679,20 +687,20 @@
 															<input	type="hidden" name="captcha_check2"	value="#FORM.captcha_check2#" />
 															<div class="input-form">
 																<div class="input-field">
-																	<label><b>Name:</b></label>
-																	<cfinput type="text" name="name" value="#form.name#" size="30" required="Yes" message="Please enter your name.">&nbsp;<span style="color: ##ff0000;">*</span>
+																	<label><b>Name:<span style="color: ##ff0000;">*</span></b></label>
+																	<cfinput type="text" name="name" value="#form.name#" size="30" required="Yes" message="Please enter your name.">
 																</div>
 																<div class="input-field">
 																	<label><b>Phone:</b></label>
 																	<cfinput type="text" name="phone" value="#form.phone#" size="30" required="No"  message="Please enter a phone number." mask="(999) 999-9999">
 																</div>
 																<div class="input-field">
-																	<label><b>Email:</b></label>
-																	<cfinput type="text" name="email_purchase" value="#form.email_purchase#" size="30" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >&nbsp;<span style="color: ##ff0000;">*</span>
+																	<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
+																	<cfinput type="text" name="email_purchase" value="#form.email_purchase#" size="30" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >
 																</div>
 																<div class="input-field">
-																	<label><b>Artist:</b></label>
-																	<cfinput type="text" name="artist" value="#form.artist#" size="30" required="Yes"  message="Please enter an artist." >&nbsp;<span style="color: ##ff0000;">*</span>
+																	<label><b>Artist:<span style="color: ##ff0000;">*</span></b></label>
+																	<cfinput type="text" name="artist" value="#form.artist#" size="30" required="Yes"  message="Please enter an artist." >
 																</div>
 																<div class="input-field">
 																	<label><b>Title:</b></label>
@@ -728,7 +736,7 @@
 																</div>
 																<div class="input-button">
 																	<input type="Hidden" name="process_purchase_consignment">
-																	<button type="button" class="SeeMore">Send</button> 
+																	<button type="submit" class="SeeMore">Send</button> 
 																</div>
 																<div class="any-question">
 																	<p><b>*If you any questions please email <a style="font-size: 10pt;" href="mailto: sales@gallart.com">sales@gallart.com</a> or call 305-932-6166 for further assistance. </b></p>

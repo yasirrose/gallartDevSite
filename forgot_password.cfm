@@ -51,10 +51,15 @@ password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com" sub
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
+	<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -82,80 +87,78 @@ password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com" sub
 
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<table id="Table_01" width="800" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="2" width="800" height="125" valign="top">
-			<cfinclude template="top.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="800" valign="top" height="37">
-			<cfinclude template="navbar.cfm">
-		</td>
-	</tr>
-	<tr height="100%">
-		<td valign="top" width="173" height="100%">
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-				<tr height="100%">
-					<td valign="top" height="100%">	
-						<cfinclude template="left.cfm">
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td valign="top" width="627" height="100%">
-			<table cellspacing="0" cellpadding="5" border="0" width="100%">
-				<tr>
-					<td align="center" style="padding-top: 10px;">
-						<strong>FORGOT PASSWORD</strong>
-					</td>
-				</tr>
-				<tr>
-					<td align="center" style="padding-top: 10px;">
-					<cfoutput>
-						<cfif success eq "false">
-						
-							<cfif len(msg)><strong>#msg#</strong></cfif>
-							
-							<table cellspacing="0" cellpadding="5" border="0" width="100%">
-								<form method="post" action="#script_name#">
-								<tr>
-									<td align="center">
-										Enter your email address below, and we will email your password to you:
-									</td>
-								</tr>
-								<tr>
-									<td align="center">
-										<input type="Text" name="email" size="40">
-									</td>
-								</tr>
-								<tr>
-									<td align="center">
-										<input type="Submit" value="Send My Password" name="proc_pw">
-									</td>
-								</tr>
-								</form>
-							</table>
-							
-						<cfelse>
-						
-							<cfif len(msg)><strong>#msg#</strong></cfif>
-						
-						</cfif>
-					</cfoutput>
-						
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" valign="baseline">
-			<cfinclude template="footer_user.cfm">
-		</td>
-	</tr>
-</table>
+	<div class="main-container registration-page">
+		<div id="Table_01">
+			<div class="header-section">
+				<div class="top-header">
+					<cfinclude template="top_.cfm">
+				</div>
+				<div class="navbar-section">
+					<cfinclude template="navbar_.cfm">
+				</div>
+			</div>
+			<div class="inner-section forget-password-screen">
+				<div class="container-fluid">
+					<div class="main-content">
+						<div class="content-section">
+							<div class="bottom-content-sec">
+								<div class="banner-section">
+									<div class="art-work-content">
 
+										<div aria-label="breadcrumb">
+											<ol class="breadcrumb">
+											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item"><a href="user_registration.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Sell Your Art</a></li>
+											  <li class="breadcrumb-item active" aria-current="page">Forget Password</li>
+											</ol>
+										</div>
+
+										<div class="bottom-content">
+											<div class="user-registrations forgot-password">
+												<div class="top-heading text-center">
+													<h3>FORGOT PASSWORD</h3>
+												</div>
+												<cfoutput>
+													<cfif success eq "false">
+													
+														<cfif len(msg)><strong>#msg#</strong></cfif>
+														
+														<form method="post" action="#script_name#">
+															<div class="user-content text-center">
+																<p>Enter your email address below, and we will email your password to you:</p>
+																<div class="input-form">
+																	<div class="input-field">
+																		<input type="Text" name="email" size="40">
+																	</div>
+																	<div class="input-button">
+																		<input type="Submit" value="Send My Password" class="SeeMore" name="proc_pw">
+																	</div>
+																</div>
+															</div>
+														</form>
+														
+													<cfelse>
+													
+														<cfif len(msg)><strong>#msg#</strong></cfif>
+													
+													</cfif>
+												</cfoutput>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<tr>
+	<td colspan="2" valign="baseline">
+		<cfinclude template="footer_user.cfm">
+	</td>
+</tr>
 <cfinclude template="frmxss.cfm">
 
 </body>

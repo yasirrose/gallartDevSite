@@ -8,10 +8,15 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
 <script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -39,113 +44,153 @@
 
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
-			<cfinclude template="top.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="100%" valign="top" height="37" bgcolor="#000000">
-			<cfinclude template="navbar.cfm">
-		</td>
-	</tr>
-	<tr height="100%">
-		<td valign="top" width="173" height="100%">
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-				<tr height="100%">
-					<td valign="top" height="100%">	
-						<cfinclude template="left.cfm">
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td valign="top" width="727" height="100%">
-			<table border="0" cellpadding="0" cellspacing="0" width="100%">
-				<tr>
-					<td valign="top">	
-						<cfinclude template="search.cfm">
-					</td>
-				</tr>
-				<tr height="100%">
-					<td height="100%" valign="top" style="padding-left: 20px;">	
-						<table border="0" cellpadding="0" cellspacing="0" width="100%">
-								<cfquery name="data" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-									SELECT distinct manufacturer,artist 
-									FROM products P
-									LEFT OUTER JOIN highlighted_artists HL on P.manufacturer = HL.artist
-									WHERE manufacturer like '#man#%' 
-									AND active = 1 
-									AND (path <> '') 
-									AND (path IS NOT NULL)
-									<!--- AND fk_users is null --->
-									ORDER BY manufacturer 
-								</cfquery>
-								<!--- <cfif man EQ "M">
-									<cfset temp = QueryAddRow(data)>
-									<cfset temp = QuerySetCell(data, "manufacturer", "MAX, PETER")> 
-								</cfif> --->
-								<cfquery dbtype="query" name="alpha_info">
-									select *
-									from data
-									ORDER BY manufacturer
-								</cfquery>
-							<tr>
-								<td style="color: #db3a7d;">
-								<cfif alpha_info.recordcount>
-									<strong>Artists whose name begins with <cfoutput>#man#</cfoutput></strong>&nbsp;(Click artist's name to view art):<br>
-									
-									<table border=0 cellpadding=3 cellspacing=3 width="100%">
-										<tr>
-											<td valign="top">
-												<table border=0 cellpadding=0 cellspacing=2>
-													<cfoutput query="alpha_info">
-														<!--- <cfquery name="thumb" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-															SELECT top 1 uid from products
-															WHERE manufacturer = '#manufacturer#'
-															order by datestamp desc
-														</cfquery> --->
-													<tr>
-														<td>
-														<a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
-															<cfif len(artist) OR manufacturer EQ 'MAX, PETER'>
-																<span style="color: ##ff0000; font-size: 12px;">
-																	#ucase(manufacturer)#
-																	<cfif manufacturer EQ 'MAX, PETER'> (ALL)</cfif>
-																</span>
-															<cfelse>
-																#ucase(manufacturer)#
-															</cfif>
-														</a>
-														</td>
-														<!---<td>
-															<img src="http://3.235.23.60/img/thumbnails/#thumb.uid#.jpg" border="0" width="75">
-														</td>--->
-													</tr>
-													</cfoutput>
-												</table>
-											</td>
-										</tr>
-									</table>
-								<cfelse>
-									<strong>There are no artists in our database whose name begins with <cfoutput>#man#</cfoutput>.  <br>Please try another search.</strong>
-								</cfif>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" valign="baseline">
-			<cfinclude template="footer.cfm">
-		</td>
-	</tr>
-</table>
+	<div class="main-container registration-page">
+		<div id="Table_01">
+			<div class="header-section">
+				<div class="top-header">
+					<cfinclude template="top_.cfm">
+				</div>
+				<div class="navbar-section">
+					<cfinclude template="navbar_.cfm">
+				</div>
+			</div>
+			<div class="inner-section">
+				<div class="container-fluid">
+					<div class="main-content">
+						<div class="mobile-sidebar-logo">
+							<div class="sidebar-Icon">
+								<i class="fas fa-bars"></i>
+							</div>
+						</div>
+						<!--- <div class="sidebar web-sidebar-modal">	
+							<cfinclude template="left_.cfm">
+						</div> --->
+						<div class="content-section">
+							<div class="bottom-content-sec">
+								<div class="banner-section">
+									<div class="art-work-content">
 
+										<div aria-label="breadcrumb">
+											<ol class="breadcrumb">
+											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item active" aria-current="page">Alpha Search</li>
+											</ol>
+										</div>
+
+										<div class="bottom-content banner-content p-0 m-0">
+											<div class="user-registrations searchpage-sec">
+												<div class="content-sec" style="margin: 0 auto 30px;">
+													<!--- <cfinclude template="search.cfm"> --->
+													<div class="search-form-group">
+														<div class="top-content new-top-content">
+															<h4><b>Browse <i>Artists</i> by Name</b></h4>
+														</div>
+														<form name="dropdown">
+															
+															<cfoutput>
+																<div class="alpha-row">
+																	<cfloop from="65" to="90" index="idx">
+																		<cfset currentLetter = chr(idx)>
+																		<div>
+																			<a href="alpha_list.cfm?man=#currentLetter#&xss=#xss#"
+																				class="alpha <cfif currentLetter EQ url.man>active</cfif>">
+																				#currentLetter#
+																			</a>
+																		</div>
+																	</cfloop>
+																</div>
+															</cfoutput>
+														</form>
+														
+													</div>
+												</div>
+												<div class="searchalpha-listing">
+													<cfquery name="data" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+														SELECT distinct manufacturer,artist 
+														FROM products P
+														LEFT OUTER JOIN highlighted_artists HL on P.manufacturer = HL.artist
+														WHERE manufacturer like '#man#%' 
+														AND active = 1 
+														AND (path <> '') 
+														AND (path IS NOT NULL)
+														<!--- AND fk_users is null --->
+														ORDER BY manufacturer 
+													</cfquery>
+													<!--- <cfif man EQ "M">
+														<cfset temp = QueryAddRow(data)>
+														<cfset temp = QuerySetCell(data, "manufacturer", "MAX, PETER")> 
+													</cfif> --->
+													<cfquery dbtype="query" name="alpha_info">
+														select *
+														from data
+														ORDER BY manufacturer
+													</cfquery>
+													<cfif alpha_info.recordcount>
+														<!--- <h4><strong>Artists whose name begins with <cfoutput>#man#</cfoutput></strong>&nbsp;(Click artist's name to view art):</h4> --->
+														<div class="aloha-list">
+															<ul>
+																<cfoutput query="alpha_info">
+																	<li>
+																		<a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
+																			<cfif len(artist) OR manufacturer EQ 'MAX, PETER'>
+																				<span style="color: ##ff0000; font-size: 14px;">
+																					#ucase(manufacturer)#
+																					<cfif manufacturer EQ 'MAX, PETER'> (ALL)</cfif>
+																				</span>
+																			<cfelse>
+																				#ucase(manufacturer)#
+																			</cfif>
+																		</a>
+																	</li>
+																</cfoutput>
+															</ul>
+														</div>
+													<cfelse>
+														<strong>There are no artists in our database whose name begins with <cfoutput>#man#</cfoutput>.  <br>Please try another search.</strong>
+													</cfif>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<tr>
+	<td colspan="2" valign="baseline">
+		<cfinclude template="footer_.cfm">
+	</td>
+</tr>
 <cfinclude template="frmxss.cfm">
+
+<style>
+	.main-content .mobile-sidebar-logo .sidebar-Icon{
+		display: none;
+	}
+
+	.alpha {
+  text-decoration: none;
+  padding-bottom: 5px;
+}
+
+.alpha.active {
+  border-bottom: 2px solid black; /* Underline effect */
+  color: red; /* Optional: Highlight the active letter in a different color */
+}
+.new-top-content {
+	margin-bottom: 40px;
+}
+.new-top-content h4 {
+	font-size: 34px;
+    font-weight: 300;
+    font-family: 'Font Awesome 5 Brands';
+    margin-bottom: 0;
+}
+</style>
 
 </body>
 </html>

@@ -1,0 +1,52 @@
+.color-title	{background-color:#888885;color:white;ackground-color:#7A8FA4;}
+.color-header	{background-color:#ddddd5;}
+.color-buttons	{background-color:#ccccc5;}
+.color-border	{background-color:#666666;}
+
+.color-row		{background-color:#fffff5;}
+.color-rowalert	{background-color:#ffddaa;}
+
+.combined { background-color: red; color: white; font-size: 8pt; }
+
+.buttn 			{font-size:.7em;font-family: tahoma,arial,Geneva,Helvetica,sans-serif;background-color:#e0e0d5;}
+.buttn-fix 		{font-size:.7em;font-family: tahoma,arial,Geneva,Helvetica,sans-serif;background-color:#e0e0d5;width:7.5em;}
+
+.form-title		{color:white;}
+
+a 				{text-decoration:none;}
+a:hover 		{text-decoration:underline; color:339900;}
+.link		 	{font-family:tahoma,arial,geneva,sans-serif; font-size: .7em; line-height:1.25em;}
+.tabs		 	{font-family:tahoma,arial,geneva,sans-serif; font-size: 10px;}
+a.link:hover	{text-decoration:underline; color:66ff66;}
+
+.label,.text 	{font-size:.7em;font-family: tahoma,arial,Geneva,Helvetica,sans-serif;}
+.nospace		{line-height:2px;}
+.sentance,ul {
+	font-size:.75em;
+	line-height:1.5em;
+	font-family: arial,Geneva,Helvetica,sans-serif;
+}
+td,p			{font-family: tahoma,arial,Geneva,Helvetica,sans-serif;}	
+th				{text-align:left;font-weight:normal;}	
+b,.b {font-weight:bold;}
+.text_bold {font-weight:bold;}
+.h3,h3 			{font-size:.9em;line-height:1.2em;font-family:arial,geneva,helvetica,sans-serif;}	
+.pagedivider	{font-size:.9em;line-height:1.2em;font-family:arial,geneva,helvetica,sans-serif;}	
+.itemdivider {background-color: silver;}
+
+.subhead {
+	font-size:12px;
+	font-family: arial,Geneva,Helvetica,sans-serif;
+	font-weight:normal,bold;
+	text-decoration : none;
+	color:black;
+	font-weight:bold;		
+}
+
+.buttnText {font-size:10px;}
+
+.input {width:250px;}
+
+.error {color:red;}
+
+.success {color:green;}

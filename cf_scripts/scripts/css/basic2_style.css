@@ -1,0 +1,146 @@
+/*
+ * Copyright (c) 1995-2005 Macromedia, Inc. All rights reserved. 
+*/
+.cfform{
+	width: 98%;
+	height: auto;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+.cfform hr{	
+	width: 99%;
+	height: 1px;
+}
+.cfform p{
+	margin-top: 0px;
+	padding: 0px;
+}
+
+
+/**********************
+ Form Elements 
+***********************/
+.cfElementRow{
+}
+
+.cfInput, .cfTextarea {
+	font-size: 10px;
+	font-family: inherit;
+}
+.cfSelect {
+	font-size: 10px;
+	font-family: inherit;
+}
+
+
+.cfTextarea{
+	
+}
+
+.cfRadio{
+	font-size: 10px;
+}
+
+.cfCheckbox{
+	font-size: 10px;
+}
+
+.cfButton{
+	
+}
+
+.cfButtonBar{
+
+}
+
+.cfText{
+	font-size: 12px;
+	font-family: inherit;
+	padding:10px !important;
+}
+
+
+.cfRequiredElement{
+
+}
+
+/**************************
+ labels 
+ **************************/
+/* label of form element */
+label{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	padding-right:2px;
+}
+
+/* first child in a horizontal group, sets width so all elements down form line up */
+.cfFirstChild  {
+	width: 100px !important; 
+}
+
+/* the label of an individual form element */
+.cfLabelTitle{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	margin-top: 8px;
+	width:100px;
+}
+
+/* applyes to vertical form group labels */
+.cfHeaderTitle{
+	width: 100%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+}
+
+/* applys to label of elements that are required */
+.cfRequiredLabel{
+
+}
+
+
+.cfRequiredLabelIndicator {
+    color: #ff0000;
+    font-size:1.2em;
+}
+
+/***************************
+	alignment 
+****************************/
+/* horizontal form groups */
+.horizontal{	
+
+}
+
+/* vertical form groups */
+.vertical table{	
+
+}
+
+/* left aligned labels */
+.cfLabelPosLeft  {
+	margin-left: 0px !important;
+	text-align:left;
+}
+
+/* right aligned labels */
+.cfLabelPosRight {
+	margin-right: 10px;
+	text-align: right;
+}
+
+/* top aligned labels */
+.cfLabelPosTop  {
+	margin-right: 1ex;
+	padding-left:50px;
+}
+
+/* centered aligned labels */
+.cfLabelPosCenter  {
+	margin-right: 1ex;
+	text-align: center;
+}
+
+
+

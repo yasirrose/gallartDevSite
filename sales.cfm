@@ -1,3 +1,18 @@
+
+<cfquery name="data" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#" cachedwithin="#createTimespan(0,1,0,0)#">
+   SELECT distinct manufacturer from products
+   where active = 1
+   <!--- AND fk_users is null --->
+   order by manufacturer
+</cfquery>
+<!--- <cfset temp = QueryAddRow(data)>
+<cfset Temp = QuerySetCell(data, "manufacturer", "MAX, PETER")>  --->
+<cfquery dbtype="query" name="artistinfo">
+   select *
+   from data
+   ORDER BY manufacturer
+</cfquery>
+
 <!DOCTYPE html>
 <cfparam name="xss" default="">
 <html lang="en">
@@ -37,8 +52,37 @@
          s2 = d.getElementsByTagName('script')[0]; s2.parentNode.insertBefore(s, s2);
          })(window, document, 'Robly');
       </script>
+
+         <!--- The below code is used for 4 dropdowns that on home page --->
+         <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                function drop(gothere, selectName) {
+                    var form = document.forms['dropdownSearchForsales'];
+                   
+                    if (form) {
+                        var select = form.elements[selectName];
+                        console.log('yes'+selectName);
+                        if (select) {
+                            parent.location = gothere + select.options[select.selectedIndex].value;
+                        } else {
+                            console.error("Select element '" + selectName + "' not found.");
+                        }
+                    } else {
+                        console.error("Form 'dropdown' not found.");
+                    }
+                    return true;
+                }
+                // Make the function globally available
+                window.drop = drop;
+            });
+        </script>
+
       <!-- END ROBLY WIDGET CODE -->
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+	   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
    </head>
    <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
       <cfquery name="getArtists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -53,6 +97,35 @@
          group by path
          order by path
       </cfquery>
+
+      <cfquery name="qEmployees" datasource="#application.dsource#">
+         SELECT * 
+         FROM filterOption
+         WHERE filterType = 'Subject'
+         ORDER BY filterName ASC
+      </cfquery>
+
+      <cfquery name="qGetStyle" datasource="#application.dsource#">
+         SELECT * 
+         FROM filterOption
+         WHERE filterType = 'Style'
+         ORDER BY filterName ASC
+      </cfquery>
+
+      <cfquery name="qGetSize" datasource="#application.dsource#">
+         SELECT * 
+         FROM filterOption
+         WHERE filterType = 'Size'
+         ORDER BY id ASC
+      </cfquery>
+
+      <cfquery name="qGetType" datasource="#application.dsource#">
+         SELECT * 
+         FROM filterOption
+         WHERE filterType = 'Type'
+         ORDER BY filterName ASC
+      </cfquery>
+
       <div class="main-container">
       <div id="Table_01">
          <div class="header-section">
@@ -72,79 +145,143 @@
                      <i class="fas fa-bars"></i>
                   </div>
                </div>
-               <div class="sidebar web-sidebar-modal">
-                  <cfinclude template="left_.cfm">
-               </div>
                <div class="content-section product-page new-listings">
                   <div class="bottom-content-sec">
                      <div class="banner-section">
                         <div class="art-work-content">
+
+                           <div aria-label="breadcrumb">
+                              <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Sales</li>
+                              </ol>
+                          </div>
+
+                           <cfif isDefined('url.Size') >
+                              <h3> Size: <cfoutput>"#url.Size#"</cfoutput> </h3>
+                          </cfif>
+
+                          <cfif isDefined('url.Subject') >
+                              <h3> Subject: <cfoutput>"#url.Subject#"</cfoutput> </h3>
+                          </cfif>
+
+                          <cfif isDefined('url.Style') >
+                              <h3> Style: <cfoutput>"#url.Style#"</cfoutput> </h3>
+                          </cfif>
+
+                          <cfif isDefined('url.Type') >
+                              <h3> Type: <cfoutput>"#url.Type#"</cfoutput> </h3>
+                          </cfif>
+
                             <div class="top-heading">
-                                <h3>SALE ITEMS!</h3>
+                                <h3>SALE ITEMS</h3>
                             </div>
                            <cfoutput>
                                 <div class="search-box">
                                     <div class="search-form-group">
-                                        <form method="post" action="sales.cfm?xss=#xss#" name="orderForm">
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label>Search By Artist:</label>
-                                                    <div class="select-option">
-                                                        <select name="artist" id="artist">
-                                                            <option value="">Please Select</option>
-                                                            <cfloop query="getArtists">
-                                                                <option value="#manufacturer#">#manufacturer#</option>
-                                                            </cfloop>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <label>Search By Medium:</label>
-                                                    <div class="select-option">
-                                                        <select name="path" id="path">
-                                                            <option value="">Please Select</option>
-                                                            <cfloop query="getMedium">
-                                                                <option value="#path#">#path#</option>
-                                                            </cfloop>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <button type="button" class="SeeMore" onclick="loadProducts()" id="searchButton">
-                                                        Search
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="select-field">
-                                                        <cfif parameterexists(keywords)>
-                                                            <input type="hidden" name="keywords" value="#keywords#">
-                                                        </cfif>
-                                                        <cfif parameterexists(artist)>
-                                                            <input type="hidden" name="artist" value="#artist#">
-                                                        </cfif>
-                                                        <cfif parameterexists(path)>
-                                                            <input type="hidden" name="path" value="#path#">
-                                                        </cfif>
-                                                        <label>Order By Sale Price:</label>
-                                                        <div class="select-option">
-                                                            <select name="priceOrder" id="priceOrder" onChange="loadProducts();">
-                                                                <option value="">Please Select</option>
-                                                                <option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Lowest To Highest</option>
-                                                                <option value="desc" <cfif isDefined('form.priceOrder') and priceOrder eq 'desc'>selected</cfif>>Highest To Lowest</option>
+                                       <div class="row input-form">
+                                       <form name="dropdownSearchForsales">
+                                          <div class="row">
+
+                                             <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+                                                <div class="select-option">
+                                                    <cfoutput>
+                                                        
+                                                            <select name="artist" id="artist" onChange="artistClick()">
+                                                                <option value="">Search By Artist</option>
+                                                                    <cfloop query="getArtists">
+                                                                        <option value="#manufacturer#">#manufacturer#</option>
+                                                                    </cfloop>
                                                             </select>
-                                                        </div>
-                                                    </div>
+                                                        
+                                                    </cfoutput>
                                                 </div>
                                             </div>
-                                        </form>
+
+                                             <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+                                                 <div class="select-option input-field">
+                                                     
+                                                         <select name="artSubject" class="chosen-select m-0" data-placeholder="Search by Subject" onChange="drop('sales.cfm?xss=<cfoutput>#xss#</cfoutput>&Subject=', 'artSubject')">
+                                                             <option value="">Search by Subject</option>
+                                                             <!--- Loop through the query results to create option tags --->
+                                                             <cfloop query="qEmployees">
+                                                                 <option value="#filterName#" <cfif isDefined('url.Subject') and url.Subject EQ filterName >selected</cfif> >#filterName#</option>
+                                                             </cfloop>
+                                                         </select>
+                                                    
+                                                 </div>
+                                             </div>
+   
+                                             <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+                                                 <div class="select-option input-field">
+                                                     
+                                                         <select name="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="drop('sales.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
+                                                             <option value="">Search by Style</option>
+                                                             <cfloop query="qGetStyle">
+                                                                 <option value="#filterName#" <cfif isDefined('url.Style') and url.Style EQ filterName >selected</cfif> >#filterName#</option>
+                                                             </cfloop>
+                                                         </select>
+                                                    
+                                                 </div>
+                                             </div>
+                                             
+                                             <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+                                                 <div class="select-option input-field">
+                                                     
+                                                         <select name="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="drop('sales.cfm?xss=<cfoutput>#xss#</cfoutput>&Size=', 'artSize')">
+                                                             <option value="">Search by Size</option>
+                                                             <cfloop query="qGetSize">
+                                                                 <option value="#filterName#" <cfif isDefined('url.Size') and url.Size EQ filterName >selected</cfif> >#filterName#</option>
+                                                             </cfloop>
+                                                            
+                                                         </select>
+                                                    
+                                                 </div>
+                                             </div>
+   
+                                             <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+                                                 <div class="select-option input-field">
+                                                     
+                                                         <select name="artType" class="chosen-select m-0" data-placeholder="Search by Type" onChange="drop('sales.cfm?xss=<cfoutput>#xss#</cfoutput>&Type=', 'artType')">
+                                                             <option value="">Search by Type</option>
+                                                             <cfloop query="qGetType">
+                                                                 <option value="#filterName#" <cfif isDefined('url.Type') and url.Type EQ filterName >selected</cfif> >#filterName#</option>
+                                                             </cfloop>
+                                                         </select>
+                                                     
+                                                 </div>
+                                             </div>
+   
+                                             <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+                                                 <div class="select-option">
+                                                     <cfoutput>
+                                                         <form >
+                                                             <select name="priceOrder" id="priceOrder" onChange="artistClick()">
+                                                                 <option value="" >Sort</option>
+                                                                 <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>>Date Listed: Old to New</option>
+
+                                                                  <option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Price: Low to High</option>
+                                                                  
+                                                                  <option value="desc" <cfif isDefined('form.priceOrder') and priceOrder eq 'desc'>selected</cfif>>Price: High to Low</option>
+                                                             </select>
+                                                         </form>
+                                                     </cfoutput>
+                                                 </div>
+                                             </div>
+                                          </div>
+                                       </form>
                                     </div>
-                                </div>
+                                 </div>
+                              </div>
                            </cfoutput>
                            <div class="bottom-content">
                               <div id="product-container" class="gallery-lists">
                                  <!-- Products will be loaded here -->
                                  <div id="loading" style="display: none;">Loading...</div>
                               </div>
+                              <button type="button" style="display:none;" onclick="gotoTopFunction()" class="btn"  id="myBtn" title="Go to top">
+                                 <i class="fas fa-chevron-up"></i>
+                              </button>
                            </div>
                         </div>
                      </div>
@@ -159,14 +296,74 @@
          </td>
       </tr>
       <cfinclude template="frmxss.cfm">
+
+      <style>
+          #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 100;
+        width: 50px; /* Small square size */
+        height: 50px;
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 10px; /* Rounded corners for style */
+        cursor: pointer;
+        font-size: 28px; /* Icon size */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+    }
+     </style>
+
       <script>
+
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+               if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                  document.getElementById("myBtn").style.display = "block";
+               } else {
+                  document.getElementById("myBtn").style.display = "none";
+               }
+            }
+
+      $(document).ready(function() {
+			toastr.options = {
+				'closeButton': true,
+				'debug': false,
+				'newestOnTop': false,
+				'progressBar': true,
+				'positionClass': 'toast-top-right',
+				'preventDuplicates': false,
+				'showDuration': '1000',
+				'hideDuration': '1000',
+				'timeOut': '5000',
+				'extendedTimeOut': '1000',
+				'showEasing': 'swing',
+				'hideEasing': 'linear',
+				'showMethod': 'fadeIn',
+				'hideMethod': 'fadeOut',
+			}
+		});
+
          var page = 1; // Start at page 1
          var loading = false; // Flag to prevent multiple requests
          var noMoreProducts = false; // Flag to check if there are no more products
          var previousData = ''; // Variable to store previously fetched data
          let lastArtist = ''; // Variable to store the last selected artist
-         let lastpath = ''; // Variable to store the last selected artist
+         // let lastpath = ''; // Variable to store the last selected artist
          let lastPriceOrder = '';
+         let lastkeywords = '';
+
+         function gotoTopFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            e.preventDefault();
+        }
 
          function loadProducts() {
          if (loading || noMoreProducts) return; // Prevent multiple AJAX calls if already loading or no more products
@@ -185,18 +382,20 @@
          let urlArtist = params.get('artist');
          
          let Artist = document.getElementById('artist').value;
-         let path = document.getElementById('path').value;
+         // let path = document.getElementById('path').value;
          let priceOrder = document.getElementById('priceOrder').value;
+         let keywords = document.getElementById('keywords').value;
          
          // Check if artist or path has changed, reset page and load new data
-         if (path || Artist || priceOrder) {
-            if (Artist !== lastArtist || path !== lastpath || priceOrder !==lastPriceOrder) {
+         if ( Artist || priceOrder || keywords) {
+            if (Artist !== lastArtist ||  priceOrder !==lastPriceOrder || keywords!==lastkeywords) {
                     page = 1; 
                     $('#product-container').empty(); // Clear the product container for new results
                     noMoreProducts = false; // Reset the no more products flag
                     lastArtist = Artist; // Update lastArtist to the new artist value
-                    lastpath = path; // Update lastArtist to the new artist value
+                  //   lastpath = path; // Update lastArtist to the new artist value
                     lastPriceOrder = priceOrder;
+                    lastkeywords = keywords;
             }
          } else if (urlArtist && !Artist) {
          // If artist is obtained through URL params, set Artist to urlArtist
@@ -214,17 +413,29 @@
             man: Manufacturer,
             Size: Size,
             artist: Artist,
-            path: path,
-            priceOrder: priceOrder
+          
+            priceOrder: priceOrder,
+            Subject: Subject,
+            Type: Type,
+            Style: Style,
+            keywords: keywords
          },
          success: function(data) {
             if (data.trim() === '') {
                 noMoreProducts = true;
                 $('#loading').html('No more products').show();
+
+               // toastr.warning('No more products');
+               // $('#loading').hide();
+
             } else if (data === previousData && page !== 1) {
                 // Prevent loading duplicate data on scroll (ignore check for page 1)
                 noMoreProducts = true;
                 $('#loading').html('No more products').show();
+
+               // toastr.warning('No more products');
+               // $('#loading').hide();
+
             } else {
                 if (page === 1) {
                     $('#product-container').empty(); // On first page, replace content
@@ -245,7 +456,7 @@
          
          // Scroll event handler to load more products when near the bottom
          $(window).scroll(function() {
-            if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+            if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
                 if (!noMoreProducts && !loading) {
                     loadProducts(); // Load products only if not loading and no more products
                 }
@@ -259,6 +470,13 @@
             loadProducts(); // Trigger product loading based on search
          
          });
+
+         function artistClick() {
+            page = 1; // Reset page to 1 when search button is clicked
+            noMoreProducts = false;
+            loadProducts();
+         }
+         
          
          // Initial load
          loadProducts();

@@ -62,14 +62,22 @@
 								<i class="fas fa-bars"></i>
 							</div>
 						</div>
-						<div class="sidebar web-sidebar-modal">	
+						<!--- <div class="sidebar web-sidebar-modal">	
 							<cfinclude template="left_.cfm">
-						</div>
+						</div> --->
 						<div class="content-section">
 								<div class="bottom-content-sec">
 									<div class="banner-section">
 										<div class="art-work-content">
-											<div class="bottom-content">
+
+											<div aria-label="breadcrumb">
+												<ol class="breadcrumb">
+												  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+												  <li class="breadcrumb-item active" aria-current="page">Quotes</li>
+												</ol>
+											</div>
+
+												<div class="bottom-content">
 													<div class="user-registrations quotes-page">
 														<cfinclude template="/quotes/index.cfm" />
 													</div>

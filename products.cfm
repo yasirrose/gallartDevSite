@@ -1,179 +1,98 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<!DOCTYPE html>
 <cfparam name="xss" default="">
-<html>
+<html lang="en">
 <head>
-<cfoutput>
-<title>#companyname# - #titletext#</title>
-</cfoutput>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <cfoutput>
+        <title>#companyname# - #titletext#</title>
+    </cfoutput>
 
-<cfinclude template="meta.cfm">
+    <cfinclude template="meta.cfm">
 
-<cfoutput>
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-	<script language="JavaScript" src="./js/utils.js"></script>
-</cfoutput>
+    <cfoutput>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+        <script language="JavaScript" src="./js/utils.js"></script>
+    </cfoutput>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
-<script type="text/javascript">
+    <link href="stylesheet_.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript">
+    
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34565365-1']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    
+    </script>
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-34565365-1']);
-  _gaq.push(['_trackPageview']);
+    <!-- BEGIN ROBLY WIDGET CODE -->
+    <script type='text/javascript'>
+        var _d_site = _d_site || 'ebb8c5f7da7077e127988b3276107648';
+        (function(w, d, p, s, s2) {
+        w[p] = w[p] || function() { (w[p].q = w[p].q || []).push(arguments) };
+        s = d.createElement('script'); s.async = 1; s.src = '//s3.amazonaws.com/roblyimages/accounts/20559/forms/29541/signup_popup.js';
+        s2 = d.getElementsByTagName('script')[0]; s2.parentNode.insertBefore(s, s2);
+        })(window, document, 'Robly');
+    </script>
+    <!-- END ROBLY WIDGET CODE -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
-<!-- BEGIN ROBLY WIDGET CODE -->
-<script type='text/javascript'>
-  var _d_site = _d_site || 'ebb8c5f7da7077e127988b3276107648';
-  (function(w, d, p, s, s2) {
-    w[p] = w[p] || function() { (w[p].q = w[p].q || []).push(arguments) };
-    s = d.createElement('script'); s.async = 1; s.src = '//s3.amazonaws.com/roblyimages/accounts/20559/forms/29541/signup_popup.js';
-    s2 = d.getElementsByTagName('script')[0]; s2.parentNode.insertBefore(s, s2);
-  })(window, document, 'Robly');
-</script>
-<!-- END ROBLY WIDGET CODE -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 </head>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
-<cfset ipp = 12 />
-<Cfset rows = 4 />
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
-<!--- Search Individual Items --->
+    <!--- <cfif isDefined('url.man') >
+        <cfquery name="getBio" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+            SELECT * from bios
+            WHERE artist = '#url.man#' 
+        </cfquery>   
+    </cfif> --->
 
-<cfquery name="productinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT gallery_price as pvalue, *
-	FROM products 
-	WHERE active = 1 And (path <> '') 
-	AND (path IS NOT NULL)
-	<cfif isDefined('keywords') and len(keywords)>
-		<cfif keywords EQ 'Erte'>
-			AND (manufacturer = 'ERTE' OR manufacturer = 'ERTE, ROMAIN')
-		<cfelse>
-			<cfset keyArray = listtoarray(keywords,' ') />
-			AND (
-				(<cfloop from="1" to="#arraylen(keyArray)#" index="idx">
-					name like '%#keyArray[idx]#%' <cfif idx lt arraylen(keyArray)>AND</cfif>
-				</cfloop>)
-				OR
-				(<cfloop from="1" to="#arraylen(keyArray)#" index="idx">
-					caption like '%#keyArray[idx]#%' <cfif idx lt arraylen(keyArray)>AND</cfif>
-				</cfloop>)
-				OR
-				(<cfloop from="1" to="#arraylen(keyArray)#" index="idx">
-					modelno like '%#keyArray[idx]#%' <cfif idx lt arraylen(keyArray)>AND</cfif>
-				</cfloop>)
-				OR
-				(<cfloop from="1" to="#arraylen(keyArray)#" index="idx">
-					manufacturer like '%#keyArray[idx]#%' <cfif idx lt arraylen(keyArray)>AND</cfif>
-				</cfloop>)
-			)
-		</cfif>
-	<cfelseif isDefined('keywords_artist') and len(keywords_artist)>
-		<cfset keyArray = listtoarray(keywords_artist,' ') />
-		AND (
-			(<cfloop from="1" to="#arraylen(keyArray)#" index="idx">
-				manufacturer like '%#keyArray[idx]#%' <cfif idx lt arraylen(keyArray)>AND</cfif>
-			</cfloop>)
-		)
-	<cfelseif isDefined('fam')>
-		AND family = '#fam#'
-	<cfelseif isDefined('man')>
-		<cfif man EQ 'Erte'>
-			AND (manufacturer = 'ERTE' OR manufacturer = 'ERTE, ROMAIN')
-		<cfelse>
-			AND manufacturer like '%#man#%'
-		</cfif>
-	<cfelseif isDefined('artist')>
-		<cfif artist EQ 'MAX, PETER'>
-			AND manufacturer like 'MAX, PETER%'
-		<cfelse>
-			AND manufacturer = '#artist#'
-		</cfif>
-	<cfelseif isDefined('manufact')>
-		AND manufacturer like '%#manufact#%'
-	<cfelseif isDefined('cat')>
-		AND path like '%#cat#%'
-	<cfelseif isDefined('new')>
-		AND 0=0
-	<cfelseif isDefined('form.adv_title') and len(form.adv_title)>
-		AND name like '%#form.adv_title#%'
-	<cfelseif isDefined('form.adv_artist') and len(form.adv_artist)>
-		AND manufacturer like '#form.adv_artist#%'
-	<cfelseif isDefined('form.adv_desc_keyword') and len(form.adv_desc_keyword)>
-		AND caption like '%#form.adv_desc_keyword#%'
-	<cfelseif isDefined('form.adv_year') and len(form.adv_year)>
-		AND cast(year as varchar) = '#form.adv_year#'
-	<cfelseif isDefined('form.adv_price_range') and len(form.adv_price_range)>
-		<cfif form.adv_price_range eq 1>
-			AND (cast(gallery_price as float) >= 0 and cast(gallery_price as float) <= 1000)
-		<cfelseif form.adv_price_range eq 2>
-			AND (cast(gallery_price as float) >= 1000 and cast(gallery_price as float) <= 5000)
-		<cfelseif form.adv_price_range eq 3>
-			AND (cast(gallery_price as float) >= 5000 and cast(gallery_price as float) <= 10000)
-		<cfelseif form.adv_price_range eq 4>
-			AND (cast(gallery_price as float) >= 10000 and cast(gallery_price as float) <= 100000)
-		<cfelseif form.adv_price_range eq 5>
-			AND cast(gallery_price as float) > 100000
-		</cfif>
-	<cfelseif isDefined('form.adv_medium') and len(form.adv_medium)>
-		AND path like '%#form.adv_medium#'
-	</cfif>
-
-
-	<cfif isDefined('url.Subject') AND len(url.Subject)>
-        AND artSubject LIKE '%#url.Subject#%'
+  <cfif isDefined('url.man')>
+    <!--- Split the name by comma and trim any extra whitespace --->
+    <cfset nameParts = listToArray(url.man, ",")>
+    
+    <!--- Check if we have both first and last name parts --->
+    <cfif arrayLen(nameParts) EQ 2>
+        <!--- Assign first and last name correctly --->
+        <cfset firstName = trim(nameParts[2])>
+        <cfset lastName = trim(nameParts[1])>
+        <cfset fullName = firstName & " " & lastName>
+    <cfelse>
+        <!--- If the format is unexpected, just display it as is --->
+        <cfset fullName = trim(url.man)>
     </cfif>
-	<cfif isDefined('url.Style') AND len(url.Style)>
-        -- AND artType LIKE '%#url.Style#%'
-		AND artType LIKE <cfqueryparam value="#url.Style#" cfsqltype="cf_sql_varchar"> OR
-          artType LIKE <cfqueryparam value="#url.Style#,%"
-            cfsqltype="cf_sql_varchar"> OR
-          artType LIKE <cfqueryparam value="%,#url.Style#"
-            cfsqltype="cf_sql_varchar"> OR
-          artType LIKE <cfqueryparam value="%,#url.Style#,%"
-            cfsqltype="cf_sql_varchar">
-    </cfif>
-	<cfif isDefined('url.Size') AND len(url.Size)>
-        AND artSize LIKE '%#url.Size#%'
-    </cfif>
-	<cfif isDefined('url.Type') AND len(url.Type)>
-        AND artTypee LIKE '%#url.Type#%'
-    </cfif>
-	<!--- AND fk_users is null --->
-	
-	ORDER by pvalue DESC
-</cfquery>
+    
+    <!--- Query to fetch the bio --->
+    <cfquery name="getBio" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+        SELECT * FROM bios
+        WHERE artist = '#url.man#'
+    </cfquery>
+</cfif>
 
-<!--- <cfif isDefined('cgi.REMOTE_ADDR') and cgi.REMOTE_ADDR eq '127.0.0.1'>
-	<cfdump var="#productinfo#" abort="true">
-</cfif>  --->
-
-
-
-<cfquery name="makeoffer_buttons" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT show FROM makeoffer_buttons
-	WHERE pk_makeoffer_buttons = 1
-</cfquery>
-<div class="main-container">
-	<div id="Table_01">
-		<div class="header-section">
-			<div class="top-header">
-				<cfinclude template="top_.cfm">
-			</div>
-			<div class="navbar-section">
-				<cfinclude template="navbar_.cfm">
-			</div>
-		</div>
-		<div class="inner-section">
+    <div class="main-container">
+        <div id="Table_01">
+            <div class="header-section">
+                <div class="top-header">
+                    <cfinclude template="top_.cfm">
+                </div>
+                <div class="navbar-section">
+                    <cfinclude template="navbar_.cfm">
+                </div>
+            </div>
+        </div>
+        <div class="inner-section">
 			<div class="container-fluid">
 				<div class="main-content">
 					<div class="mobile-sidebar-logo">
@@ -181,251 +100,389 @@
 							<i class="fas fa-bars"></i>
 						</div>
 					</div>
-					<div class="sidebar web-sidebar-modal">	
-						<cfinclude template="left_.cfm">
-					</div>
 					<div class="content-section product-page">
 						<div class="bottom-content-sec">
 							<div class="banner-section">
 								<div class="art-work-content">
+
+                                    <div aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                          <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+                                          <li class="breadcrumb-item active" aria-current="page">Products</li>
+                                        </ol>
+                                    </div>
+
 									<div class="bottom-content">
-										<div class="gallery-lists">
-											<form name="frm" action="products.cfm" method="post">
-												<cfoutput>
-												<cfif parameterexists(xss)>
-													<input type="hidden" name="xss" value="#xss#">
-												</cfif>
-												<cfif parameterexists(keywords)>
-													<input type="hidden" name="keywords" value="#keywords#">
-												</cfif>
-												<cfif parameterexists(fam)>
-													<input type="hidden" name="fam" value="#fam#">
-												</cfif>
-												<cfif parameterexists(man)>
-													<input type="hidden" name="man" value="#man#">
-												</cfif>
-												<cfif parameterexists(manufact)>
-													<input type="hidden" name="manufact" value="#manufact#">
-												</cfif>
-												<cfif parameterexists(cat)>
-													<input type="hidden" name="cat" value="#cat#">
-												</cfif>
-												<cfif parameterexists(artist)>
-													<input type="hidden" name="artist" value="#artist#">
-												</cfif>
-												</cfoutput>
-											</form>
-						
-											<cfif #productinfo.recordcount# gt 0>
-												<cfif parameterexists(pagego)>
-													<cfset starton = #pagego#>
-												<cfelse>
-													<cfset starton=1>
-												</cfif>
-												<cfif starton is 1>
-													<cfset startrow = 1>
-												<cfelse>
-													<cfset startrow = ((#starton# - 1) * ipp) + 1>
-												</cfif>
-												<cfset pc = 0>
-													<cfoutput query="productinfo" startrow="#startrow#" maxrows="#ipp#">
-													
-													<cfif productinfo.closeout EQ 1 AND use_highestimate EQ 0>
-														<cfset saleprice = special_price />
-													<cfelseif productinfo.closeout EQ 1 AND use_highestimate EQ 1>
-														<cfset saleprice = high_estimate />
-													<cfelse>
-														<cfset saleprice = 0 />
-													</cfif>
-													<cfif listlen(manufacturer) gt 1>
-														<cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
-														<cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
-														<cfset artist_name_alt = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
-													<cfelse>
-														<cfset artist_name = manufacturer />
-														<cfset artist_name_url = manufacturer />
-														<cfset artist_name_alt = manufacturer />
-													</cfif>
-												<cfset pc = pc + 1>
-												<div class="list-item">
-													<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#jsStringFormat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
-														<!--- <cfset imageUrl = "http://23.20.226.157/img/thumbnails/#uid#.jpg">--->
-												
-													<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")>
-														<img src="http://23.20.226.157/img/thumbnails/#uid#.jpg" alt="#artist_name_alt# - #name#" title="#artist_name_alt# - #name#" border="0" align="center">
-													<cfelse>
-														<div align="center" style="padding: 20px;">NO IMAGE AVAILABLE#imageUrl#</div>
-													</cfif>	
-													</A>
-													<br>
-													<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#')">#name#</a>
-													<br>
-													<span>BY: <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#ucase(artist_name)#</a></span>
-													<br>
-													<span color="660066" size="1">
-														<p class="mb-2">
-															<cfif retail_price gt 0 and retail_price gt gallery_price>
-																Retail Price: <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#dollarformat(retail_price)#</a>
-															</cfif>
-														</p>
-														<p class="mb-1">
-															<cfif gallery_price EQ 0 OR gallery_price EQ ''>
-																<span style="font-size: 12px; font-weight: bold;">Price On Request</span>
-																305.932.6166
-																<cfelse>
-																<cfif gallery_price neq ''>
-																	Gallery Price: <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#dollarformat(gallery_price)#</a>
-																</cfif>
-															</cfif>
-														</p>
-													</span>
-													<br>
-													Art ID:&nbsp;<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')">#modelno#</a>
-													<br>
-													<span class="pinkText">
-														<b><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="dbl_arrows">MORE INFO</a></b>
-													</span>
-													<div class="e-pricing">
-														<cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>
-														<cfif makeoffer_buttons.show EQ 1>
-															<a href="make_offer.cfm?pid=#uid#&xss=#xss#"><img src="images/make_offer.gif" border="0"></a>
-														<cfelse>
-															<a href="epricing.cfm?pid=#uid#&xss=#xss#"><img src="images/epricing.gif" border="0"></a>
-														</cfif>
-													</div>
-												</div>
-												<cfif pc eq rows>
-												<cfset pc = 0>
-																		
-												</cfif>
-												</cfoutput>
-												<cfset Totalpages = ceiling(#productinfo.recordcount#/ipp)>
-												
-												<cfset nextplace = starton + 1>
-												<cfset preplace = starton - 1>
-												<div class="pagination-section">
-													<cfif parameterexists(pagego) and pagego gt 1>
-														<font face="Arial, Helvetica, sans-serif" size="1"><A HREF="javascript:gonext22('products.cfm?pagego=<cfoutput>#preplace#</cfoutput>')">
-														<i class="fa fa-arrow-left" aria-hidden="true"></i> Previous Page</a></font>
-													</cfif>
-													<form name="pagination_form" class="pagination_form">
-														<cfoutput>
-															<tr bgcolor="ffffff">
-																<td align="right" valign="top" colspan="#rows#"><font face="Arial, Helvetica, sans-serif" size="1">Page #starton# of #Totalpages#</font>
-																&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-																<select name="pagego" onChange="javascript:gonextProduct('products.cfm?pagego=')" style="font-size: 9pt;">
-																<CFLOOP INDEX="pagecount" FROM="1" TO="#Totalpages#" STEP="1">
-																<cfif parameterexists(pagego) and pagego eq pagecount>
-																<option value="#pagecount#" selected>#pagecount#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-																<cfelse>
-																<option value="#pagecount#">#pagecount#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-																
-																</cfif>
-																</CFLOOP>
-																</select>
-																	</td>
-															</tr>
-														</cfoutput> 
-													</form>
-													<cfif starton neq Totalpages>
-														<font face="Arial, Helvetica, sans-serif" size="1"><A HREF="javascript:gonext22('products.cfm?pagego=<cfoutput>#nextplace#</cfoutput>')">
-														Next Page <i class="fa fa-arrow-right" aria-hidden="true"></i>
-													</a></font>
-													</cfif>
-												</div>
-												<cfelse>
-													<center>
-													<cfif parameterexists(keywords) and (productinfo.recordcount lt 1)>
-													<font face="verdana, arial,helvetica" size="3" color="66066"><b>Our records show no listing of <cfoutput>#keywords#</cfoutput>/s in our catalog.<br>Please try another search criteria.</b></font>
-													</center>
-													</cfif>
-													<cfif parameterexists(man) and (productinfo.recordcount lt 1)>
-													<font face="verdana, arial,helvetica" size="3" color="66066"><b>Our records show no listing of artists whose names begin with <cfoutput>"#man#"</cfoutput> in our catalog.<br>Please try another search criteria.</b></font>
-													</center>
-													</cfif>
-												
-												</cfif>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<tr>
-			<td colspan="2" valign="baseline">
-				<cfinclude template="footer_.cfm">
-			</td>
-		</tr>
-	</div>
-</div>
 
-<cfinclude template="frmxss.cfm">
-<script>
-function gonextProduct(url) {
-    var paginationForm = document.forms.pagination_form;
-    if (paginationForm && paginationForm.pagego) {
-        var next = paginationForm.pagego.options[paginationForm.pagego.selectedIndex].value;
-        var urlParams = new URLSearchParams(window.location.search);
-        var styleParam = urlParams.get('Style');
-        var subjectParam = urlParams.get('Subject');
-        var typeParam = urlParams.get('Type');
-        var sizeParam = urlParams.get('Size');
+                                        <cfif isDefined('url.keywords') >
+                                            <h3> Results for <cfoutput>"#url.keywords#"</cfoutput> </h3>
+                                        </cfif>
 
-        var finalURL = url + next;
+                                        <cfif isDefined('url.Size') >
+                                            <h3> Size:  <cfoutput>"#url.Size#"</cfoutput> </h3>
+                                        </cfif>
 
-        if (styleParam) {
-            finalURL += "&Style=" + styleParam;
-        }
-        if (subjectParam) {
-            finalURL += "&Subject=" + subjectParam;
-        }
-        if (typeParam) {
-            finalURL += "&Type=" + typeParam;
-        }
-        if (sizeParam) {
-            finalURL += "&Size=" + sizeParam;
-        }
+                                        <cfif isDefined('url.Subject') >
+                                            <h3> Subject: <cfoutput>"#url.Subject#"</cfoutput> </h3>
+                                        </cfif>
 
-        console.log("Current URL:", window.location.href);
-        console.log("Final URL:", finalURL);
+                                        <cfif isDefined('url.Style') >
+                                            <h3> Style: <cfoutput>"#url.Style#"</cfoutput> </h3>
+                                        </cfif>
 
-        document.frm.action = finalURL;
-        document.frm.submit();
-    } else {
-        console.error('Form or select element not found.');
-    }
-}
+                                        <cfif isDefined('url.Type') >
+                                            <h3> Type: <cfoutput>"#url.Type#"</cfoutput> </h3>
+                                        </cfif>
 
-function gonext22(url){
+                                        
 
-	var urlParams = new URLSearchParams(window.location.search);
+                                        <cfif isDefined('url.man')>
+                                            <cfif getBio.recordCount NEQ 0 >
+                                                <div class="top-heading m-0">
+                                                    <h3>
+                                                        <cfparam name="artistName" default="#getBio.artist#">
+                                                        <cfif find(',',getBio.artist)><cfset artistName = "#listlast(getBio.artist,',')# #listfirst(getBio.artist,',')#" /></cfif>
+                                                        <cfoutput>#artistName#</cfoutput>
+                                                    </h3>
+                                                    <cfset bioImage = reReplace(getBio.bio, ".*?(<img[^>]+>).*", "\1", "ALL")>
+                                                    <cfset bioText = reReplaceNoCase(getBio.bio, "<img[^>]+>", "", "ALL")>
 
-	var styleParam = urlParams.get('Style');
-	var subjectParam = urlParams.get('Subject');
-	var typeParam = urlParams.get('Type');
-	var sizeParam = urlParams.get('Size');
-	var finalURL = url;
-	if (styleParam) {
-            finalURL += "&Style=" + styleParam;
-        }
-	if (subjectParam) {
-		finalURL += "&Subject=" + subjectParam;
-	}
-	if (typeParam) {
-		finalURL += "&Type=" + typeParam;
-	}
-	if (sizeParam) {
-		finalURL += "&Size=" + sizeParam;
-	}
+                                                        <div id="bio-content" >
 
-	url = url + '&Style=Urban%20Art';
-	document.frm.action = finalURL;
-	document.frm.submit();
-}
-</script>
+                                                            <cfif not refind('<img[^>]+>', bioImage)>
+                                                                <cfset bioImage = ''>
+                                                            </cfif>
 
+                                                            <div class="image">
+                                                                <cfoutput>#bioImage#</cfoutput>
+                                                            </div>
+
+                                                            <!-- The content will be truncated using CSS, but the full HTML is present -->
+                                                            <div id="bio-preview" class="bio-preview"  >
+                                                                
+                                                                <p>
+                                                                    <cfoutput>
+                                                                    
+                                                                        #bioText#
+                                                                    </cfoutput>
+                                                                </p>
+                                                            </div>
+                                                            
+                                                            <cfset strippedBioText = REReplaceNoCase(bioText, "<[^>]*>", "", "ALL")>
+                                                            <cfset strippedBioText = Trim(REReplaceNoCase(strippedBioText, "&nbsp;", "", "ALL"))>
+
+                                                            <cfif strippedBioText NEQ "" >
+
+                                                            <p style="font-weight: bold; cursor: pointer;" id="toggle-btn" onclick="toggleBio()">Show More</p>
+
+                                                            </cfif>
+                                                        </div>
+                                                </div>
+                                            <cfelse>
+                                                <h3 class="h3"> <cfoutput>#fullName#</cfoutput></h3>
+                                            </cfif>
+                                        </cfif>
+                                        <cfoutput>
+                                            <div class="search-box">
+                                                <div class="search-form-group">
+                                                    <cfinclude template="gallery_search_products.cfm">
+                                                    
+                                                </div>
+                                            </div>
+                                       </cfoutput>
+
+                                        <div id="product-container" class="gallery-lists">
+                                                <!-- Products will be loaded here -->
+                                            <div id="loading" style="display: none;">Loading...</div>
+                                            
+                                        </div>
+                                        <button type="button" style="display:none;" onclick="gotoTopFunction()" class="btn"  id="myBtn" title="Go to top">
+                                            <i class="fas fa-chevron-up"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+
+
+                    <tr>
+                            <td colspan="2" valign="baseline">
+                                <cfinclude template="footer_.cfm">
+                            </td>
+                        </tr>
+
+                        <cfinclude template="frmxss.cfm">
+
+                        <style>
+                            /* Initially, only show the first 500 characters, hide the rest */
+                            .bio-preview {
+                                display: -webkit-box;
+                                -webkit-line-clamp: 5; /* Limiting the number of lines (adjust as needed) */
+                                -webkit-box-orient: vertical;
+                                overflow: hidden;
+                            }
+
+                            /* .bio-preview p{
+                                text-align: left !important;
+                                display:bloc;
+                            } */
+                        
+                            /* When expanded, show full content */
+                            .bio-preview.expanded {
+                                -webkit-line-clamp: unset;
+                                display: inline;
+                            }
+                            /* .bio-preview.expanded p{
+                                text-align: left !important;
+                                display: inline;
+                            } */
+                            .h3 {
+                                font-size: 25px;
+                                line-height: 30px;
+                                font-weight: 700;
+                                color: #000;
+                                text-align: center;
+                            }
+                            
+                            #myBtn {
+                            display: none;
+                            position: fixed;
+                            bottom: 30px;
+                            right: 30px;
+                            z-index: 100;
+                            width: 50px; /* Small square size */
+                            height: 50px;
+                            background-color: white;
+                            color: black;
+                            border: none;
+                            border-radius: 10px; /* Rounded corners for style */
+                            cursor: pointer;
+                            font-size: 28px; /* Icon size */
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            border: 1px solid black;
+                            }
+                            
+                        </style>
+
+
+                        
+                        <script>
+                            function toggleBio() {
+                                // Get the elements for the preview and the button
+                                var preview = document.getElementById('bio-preview');
+                                var button = document.getElementById('toggle-btn');
+                            
+                                // Toggle between showing truncated and full content
+                                if (preview.classList.contains('expanded')) {
+                                    // If currently showing full content, collapse it
+                                    preview.classList.remove('expanded');
+                                    button.innerText = 'Show More'; // Change the button text
+                                } else {
+                                    // If currently showing truncated content, expand it
+                                    preview.classList.add('expanded');
+                                    button.innerText = 'Show Less';  // Change the button text
+                                }
+                            }
+
+                            window.onscroll = function() {scrollFunction()};
+
+                            function scrollFunction() {
+                            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                                document.getElementById("myBtn").style.display = "block";
+                            } else {
+                                document.getElementById("myBtn").style.display = "none";
+                            }
+                            }
+
+                        </script>
+
+
+                        <script>
+
+                                $(document).ready(function() {
+                                    toastr.options = {
+                                        'closeButton': true,
+                                        'debug': false,
+                                        'newestOnTop': false,
+                                        'progressBar': true,
+                                        'positionClass': 'toast-top-right',
+                                        'preventDuplicates': false,
+                                        'showDuration': '1000',
+                                        'hideDuration': '1000',
+                                        'timeOut': '5000',
+                                        'extendedTimeOut': '1000',
+                                        'showEasing': 'swing',
+                                        'hideEasing': 'linear',
+                                        'showMethod': 'fadeIn',
+                                        'hideMethod': 'fadeOut',
+                                    }
+                                });
+
+                            var page = 1; // Start at page 1
+                            var loading = false; // Flag to prevent multiple requests
+                            var noMoreProducts = false; // Flag to check if there are no more products
+                            var previousData = ''; // Variable to store previously fetched data
+                            let lastkeywords = '';
+                            let lastPriceOrder = '';
+
+                            function gotoTopFunction() {
+                                document.body.scrollTop = 0;
+                                document.documentElement.scrollTop = 0;
+                                e.preventDefault();
+                            }
+                                            
+                            function loadProducts() {
+                                if (loading || noMoreProducts) return;
+                                loading = true;
+                                $('#loading').show();
+                        
+                                let currentUrl = window.location.href;
+                                console.log(currentUrl);
+                        
+                                let url = new URL(window.location.href);
+                                let params = new URLSearchParams(url.search);
+                                
+                                let Manufacturer = params.get('man');
+                                let Size = params.get('Size');
+                                let Subject = params.get('Subject');
+                                let Type = params.get('Type');
+                                let Style = params.get('Style');
+                                // let Artist = params.get('artist');
+                                let Artist = params.get('adv_artist');
+                                let title = params.get('adv_title');
+                                let year = params.get('adv_year');
+                                let path = params.get('adv_medium');
+                                let desc_keyword = params.get('adv_desc_keyword');
+                                let keywords = params.get('keywords'); 
+                                
+                                let priceRange = params.get('adv_price_range');
+
+                                if(priceRange){
+                                    if(priceRange == 1){
+                                        var a = '0';
+                                        var b = '1000';
+                                    }
+                                    else if(priceRange == 2){
+                                        var a = '1000';
+                                        var b = '5000';
+                                    }
+                                    else if(priceRange == 3){
+                                        var a = '5000';
+                                        var b = '10000';
+                                    }
+                                   else if(priceRange == 4){
+                                        var a = '10000';
+                                        var b = '100000';
+                                    }
+                                }
+
+                                // let keywords = document.getElementById('keywords').value;
+                                let priceOrder = document.getElementById('priceOrder').value;
+
+                                if ( keywords || priceOrder) {
+                                    if (keywords!==lastkeywords ||  priceOrder !==lastPriceOrder) {
+                                            page = 1; 
+                                            $('#product-container').empty(); // Clear the product container for new results
+                                            noMoreProducts = false; // Reset the no more products flag
+                                            // lastArtist = Artist; // Update lastArtist to the new artist value
+                                        //   lastpath = path; // Update lastArtist to the new artist value
+                                            lastPriceOrder = priceOrder;
+                                            lastkeywords = keywords;
+                                    }
+                                }
+                        
+                                console.log('Manufacturer:', Manufacturer);
+                        
+                                $.ajax({
+                                    url: 'fetch_products.cfm',
+                                    type: 'GET',
+                                    data: {
+                                        page: page,
+                                        man: Manufacturer,
+                                        Size: Size,
+                                        Title: title,
+                                        Artist: Artist,
+                                        priceOrder: priceOrder,
+                                        Subject: Subject,
+                                        Type: Type,
+                                        Style: Style,
+                                        keywords: keywords,
+                                        year: year,
+                                        path: path,
+                                        desc_keyword: desc_keyword,
+                                        a: a,
+                                        b: b
+                                    },
+                                    success: function(data) {
+                                        if (data.trim() === '') {
+                                    noMoreProducts = true;
+                                    $('#loading').html('No more products').show();
+
+                                        // toastr.warning('No more products');
+                                        // $('#loading').hide();
+
+                                        } else if (data === previousData && page !== 1) {
+                                            // Prevent loading duplicate data on scroll (ignore check for page 1)
+                                            noMoreProducts = true;
+                                            $('#loading').html('No more products').show();
+
+                                        // toastr.warning('No more products');
+                                        // $('#loading').hide();
+
+                                        } else {
+                                            if (page === 1) {
+                                                $('#product-container').empty(); // On first page, replace content
+                                            }
+                                            $('#product-container').append(data); // Append new data
+                                            previousData = data;
+                                            page++; // Increment the page number for the next request
+                                            $('#loading').hide();
+                                        }
+                                        loading = false; // Reset the loading flag
+                                                 },
+                                             error: function() {
+                                            $('#loading').html('Error loading products').show();
+                                            loading = false; // Reset the loading flag on error
+                                            }
+                                        });
+                                    }
+                        
+                            // Load more products when user scrolls near the bottom
+                            $(window).scroll(function () {
+                            if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
+                                if (!noMoreProducts && !loading) {
+                                    loadProducts(); // Load products only if not loading and no more products
+                                }
+                            }
+                            });
+
+                            // Search button click event
+                            $('#searchButton').on('click', function () {
+                                page = 1; // Reset page to 1 when search button is clicked
+                                noMoreProducts = false;
+                                loadProducts(); // Trigger product loading based on search
+
+                            });
+
+							function artistClick() {
+                                page = 1; // Reset page to 1 when search button is clicked
+                                noMoreProducts = false;
+                                loadProducts();
+                            }    
+							                    
+                            // Initial load
+                            loadProducts();
+                        </script>
+
+                      
+                        
 </body>
 </html>
+

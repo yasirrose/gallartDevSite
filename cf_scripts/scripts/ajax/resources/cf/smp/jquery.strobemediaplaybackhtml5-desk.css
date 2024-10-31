@@ -1,0 +1,242 @@
+.html5player{
+	position: relative;
+	background:#000;
+	width: 100%;
+	height: 100%;
+}
+
+.html5player .controls{
+	background-color: #000000;
+	opacity: 0.9;
+	position: absolute;
+	border: 1px solid #404040;
+	z-index: 1000;
+	display:none;
+	height: 32px;
+	bottom:0;
+	margin-left:0.5px;
+	/*bottom: 2px;*/
+        width: 100%;
+}
+
+.html5player .icon{
+	width: 24px;
+	height: 24px;
+	float: left;
+	top: 4px;
+	text-indent: -9999px;
+	cursor:pointer;
+	position: absolute;
+	background: transparent url(jquery.strobemediaplayback.png) no-repeat;
+}
+
+.html5player .progress{
+    opacity: 1;
+    left: 35px;
+    display: block;
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    height: 12px;
+    border: none;
+    margin-top: 13px;
+    /*width: 50%;*/
+}
+
+.html5player .tracks{
+	margin-top: 0;
+	width: 100%;
+	border-left: 0.5px solid #404040;
+	border-right: 0.5px solid #404040;
+	border-top: 0.5px solid #404040;
+	outline: 1px solid #777777;
+	outline-offset: 1px;
+	background: #777777;
+	height: 4px;
+	display: block;
+	position: absolute;
+	z-index: 1;
+	padding-right: 9px;
+	overflow:hidden;
+}
+
+.html5player .tracks .seeking{
+	display:none;
+	position: absolute;
+	width:0;
+	height: 100%;
+	z-index:3;
+	background: url(../html5-images/SMP_Tablet_InCon_ScrubSrch.png) 0 center repeat-x;
+}
+
+.html5player .tracks .played{
+	display: block;
+	background-color: #00ADFC;
+	width: 0;
+	left: 0;
+	position: absolute;
+	z-index: 2;
+        height: inherit;
+}
+
+.html5player .tracks .buffered{
+    display: block;
+    background-color: #557A8E;
+    width: 2px;
+    left: 0;
+    position: absolute;
+    z-index: 2;
+    height: inherit;
+    border-right: 1px solid #ffffff;
+}
+
+.html5player .slider{
+    display: block;
+    position: absolute;
+    width: 3px;
+    height: 7px;
+    left: 0;
+    z-index: 3;
+    margin: 0px;
+    border: 1px solid #000000;
+    background-color: #D0D0D0;
+    padding: 0 1px;
+    margin-top: -2px;
+    opacity: 1;
+}
+.html5player .slider.hover{
+    /*border: 4px solid #000000;*/
+    background-color: #E8E8E8;
+    -moz-box-shadow: 0px 0px 5px #ffffff;
+    -webkit-box-shadow: 0px 0px 5px #ffffff;
+    box-shadow: 0px 0px 5px #ffffff;
+    outline: none;
+}
+
+.html5player .playtoggle{
+	background-position: 0 0;
+}
+.html5player .playtoggle.hover{
+	background-position: 0 -24px;
+}
+
+.html5player .paused{
+	background-position: -24px 0;
+}
+.playtoggle.paused.hover{
+	background-position: -24px -24px;
+}
+
+.html5player .fullview{
+	background-position: -48px -0px;
+	position:absolute;
+	right:7px;
+}
+.html5player .fullview.hover{
+	background-position: -48px -24px;
+}
+
+.html5player .fullview.disabled{
+	background-position: -48px -0px;
+}
+
+.html5player .timestamp{
+	font-size:11px;
+	color:#fff;
+	padding-top:8px;
+	font-family: sans-serif;
+}
+
+.html5player .timestamp.current{
+	position:absolute;
+	right:98px;
+}
+
+.html5player .timestamp.duration{
+	position:absolute;
+	right:64px;
+}
+
+.html5player .timestamp.separator{
+	position:absolute;
+	right:90px;
+}
+
+.html5player .errorwindow{
+	display:none;
+	position: absolute;
+	color: white;
+	width: 100%;
+	text-align: center;
+	background: url(../html5-images/SMP_Tablet_InCon_Background.PNG) left top repeat-x;
+	padding: 10px 0;
+	font-weight: bold;
+}
+
+.html5player.fullscreen{
+	position:absolute;
+	left:0; right:0; top:0; bottom:0;
+	width:100%; height:100%;
+	overflow:hidden;
+	z-index: 10000;
+}
+
+.html5player.fullscreen video{
+	width:100%; height:100%;
+}
+
+.html5player.progressFullscreen{
+    opacity: 1;
+    width: 70%;
+}
+
+/*FULL VIEW*/
+
+.volume.high {
+    background-position: -48px -72px;
+    position: absolute;
+    right: 30px;
+}
+
+.playoverlay {
+    position: absolute;
+    z-index: 1001;
+    width: 116px;
+    height: 107px;
+    background: transparent url(jquery.strobemediaplayback.png) no-repeat;
+    background-position: -93px 0;
+}
+
+.playoverlay:hover, .playoverlay:active {
+    background-position: -94px -107px;
+}
+
+.videotitle {
+	margin-left: 1px;
+}
+
+.volume-slider {
+	display: none;
+	width:6px;
+	left: 5px;
+	bottom: -8px;
+}
+
+.volume-container {
+	display:none;
+	right:38px;
+	position:absolute;
+	top:-92px;
+	width:18px;
+	height: 90px;
+	border: 1px solid #313131;
+	background-color: #111;
+	-moz-border-radius-topleft: 5px; 
+	-webkit-border-top-left-radius: 5px; 
+	-khtml-border-top-left-radius: 5px; 
+	border-top-left-radius: 5px;
+	 -moz-border-radius-topright: 5px; 
+	 -webkit-border-top-right-radius: 5px; 
+	 -khtml-border-top-right-radius: 5px; 
+	 border-top-right-radius: 5px;
+}

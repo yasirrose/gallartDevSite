@@ -20,81 +20,121 @@ order by path
 </cfquery>
 
 <cfoutput>
-<table cellspacing="0" cellpadding="3" border="0" width="100%">
-<form action="products.cfm?xss=#xss#" method="post">
-	<tr>
-		<td>
-			Title
-		</td>
-		<td>
-			<input type="Text" name="adv_title" style="font-family: verdana; font-size: 7pt;">
-		</td>
-		<td>
-			Artist
-		</td>
-		<td>
-			<select name="adv_artist" style="font-family: verdana; font-size: 7pt;">
-				<option value="" selected>ALL
-					<cfloop query="artistinfo">
-						<cfif manufacturer EQ 'MAX, PETER'>
-							<option value="#manufacturer#">MAX, PETER (ALL)
-						<cfelseif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-							<option value="#manufacturer#" <cfif parameterexists(manufact) and manufact eq '#manufacturer#'>Selected</cfif>>#ucase(manufacturer)#
-						</cfif>
-					</cfloop>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Keyword in Description
-		</td>
-		<td>
-			<input type="text" name="adv_desc_keyword" style="font-family: verdana; font-size: 7pt;">
-		</td>
-		<td>
-			Year
-		</td>
-		<td>
-			<input type="text" name="adv_year" style="font-family: verdana; font-size: 7pt;">
-		</td>
-		
-	</tr>
-	<tr>
-		
-		<td>
-			Price Range
-		</td>
-		<td colspan="3">
-			<select name="adv_price_range" style="font-family: verdana; font-size: 7pt;">
-				<option value="">ALL
-				<option value="1">$0 - $1,000
-				<option value="2">$1,000 - $5,000
-				<option value="3">$5,000 - $10,000
-				<option value="4">$10,000 - $100,000
-				<option value="5">over $100,000
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Medium
-		</td>
-		<td colspan="3">
-			<select name="adv_medium" style="font-family: verdana; font-size: 7pt;">
-				<option value="">ALL
-				<cfloop query="cats">
-					<option value="#path#">#ucase(path)#
-				</cfloop>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="4" align="right">
-			<input type="image" src="images/search.gif" style="border: none;"><br>
-			<input style="background:url(images/reset.gif) no-repeat; width: 87px; height: 30px; border: none;" type="reset" value="" />
-		</td>
-	</tr>
-</table>
-</form>
+		<div class="input-form">
+			<form action="products.cfm?xss=#xss#" method="get" id="searchForm">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="input-field">
+							<label>Title</label>
+							<input type="Text" name="adv_title" id="adv_title">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-field">
+							<label>Artist</label>
+							<select name="adv_artist" id="adv_artist" >
+								<option value="" selected>ALL
+									<cfloop query="artistinfo">
+										<cfif manufacturer EQ 'MAX, PETER'>
+											<option value="#manufacturer#">MAX, PETER (ALL)
+										<cfelseif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+											<option value="#manufacturer#" <cfif parameterexists(manufact) and manufact eq '#manufacturer#'>Selected</cfif>>#ucase(manufacturer)#
+										</cfif>
+									</cfloop>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-field">
+							<label>Keyword in Description</label>
+							<input type="text" name="adv_desc_keyword" id="adv_desc_keyword">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-field">
+							<label>Year</label>
+							<input type="text" name="adv_year" id="adv_year">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-field">
+							<label>Price Range</label>
+							<select name="adv_price_range">
+								<option value="">ALL
+								<option value="1">$0 - $1,000
+								<option value="2">$1,000 - $5,000
+								<option value="3">$5,000 - $10,000
+								<option value="4">$10,000 - $100,000
+								<option value="5">over $100,000
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-field">
+							<label>Medium</label>
+							<select name="adv_medium" id="adv_medium">
+								<option value="">ALL
+								<cfloop query="cats">
+									<option value="#path#">#ucase(path)#
+								</cfloop>
+							</select>
+						</div>
+					</div>
+					
+					<div class="col-md-12">
+						<div class="input-button">
+							<input type="hidden" name="xss" value="#xss#">
+							<button type="submit" class="SeeMore" style="margin: 0;"  >Search</button>
+							<button type="reset" value="" class="SeeMore" style="margin: 0;">Reset</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<script>
+			 document.getElementById("searchForm").addEventListener("submit", function(event) {
+            // Loop through each form element and remove empty ones
+            const formElements = event.target.elements;
+            for (let i = formElements.length - 1; i >= 0; i--) {
+                const element = formElements[i];
+                if (element.type !== "submit" && element.type !== "reset" && element.name !== "xss" && element.value === "") {
+                    element.parentNode.removeChild(element); // Remove empty fields except xss
+                }
+            }
+        });
+		</script>
+
 </cfoutput>
+
+
+<!--- <script>
+    function artistClick() {
+        const title = document.getElementById('adv_title').value;
+        const artist = document.getElementById('adv_artist').value;
+        const path = document.getElementById('adv_medium').value;
+        const year = document.getElementById('adv_year').value;
+		const xss = document.getElementById('xss').value;
+
+		console.log('Artist' + artist);
+		// return false;
+
+        $.ajax({
+            url: 'fetch_products.cfm',
+            type: 'post',
+            data: {
+                Title: title,
+                Artist: artist,
+                path: path,
+                year: year
+            },
+            success: function(data) {
+                window.location.href = 'products.cfm?xss=' + encodeURIComponent(xss);
+				alert('data is ok ');
+            },
+            error: function() {
+                alert('data is not ok');
+            }
+        });
+    }
+</script> --->

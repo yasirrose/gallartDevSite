@@ -579,7 +579,7 @@
                     <input type="text" name="captcha" id="captcha" />
 				</div>
 				<div class="input-button">
-					<button type="button" class="SeeMore">Send</button>
+					<button type="submit" class="SeeMore">Send</button>
 				</div>
 				<div align="center" style="padding: 10px 75px 0px 0px;">
 					<a href="quotes/completed_form.cfm" target="_blank" style="font-size: 13px;color: ##dd3a7d; text-decoration: none;">Click here to see a sample form filled out.</a>

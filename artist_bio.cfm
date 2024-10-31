@@ -3,8 +3,9 @@
 
 <cfquery name="getBio" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
     SELECT * from bios
-	WHERE pk_bios = #url.bioId#
+	WHERE 0=0 <cfif isDefined('url.bioid') > and pk_bios = #url.bioId# </cfif>
 </cfquery>
+
 
 <html>
 <head>
@@ -45,28 +46,25 @@
 								<i class="fas fa-bars"></i>
 							</div>
 						</div>
-						<div class="sidebar web-sidebar-modal">	
+						<!--- <div class="sidebar web-sidebar-modal">	
 							<cfinclude template="left_.cfm">
-						</div>
+						</div> --->
 						<div class="content-section">
 							<div class="bottom-content-sec">
 								<div class="banner-section">
 									<div class="art-work-content">
 										<div class="bottom-content">
-											<table cellspacing="0" cellpadding="0" border="0" width="100%">
-												<tr>
-													<td align="center" style="padding-top: 10px;">
-														<cfparam name="artistName" default="#getBio.artist#">
-														<cfif find(',',getBio.artist)><cfset artistName = "#listlast(getBio.artist,',')# #listfirst(getBio.artist,',')#" /></cfif>
-														<h4>ARTIST BIO: #artistName#</h4>
-													</td>
-												</tr>
-												<tr>
-													<td style="padding-top: 10px;">
+											<div class="top-heading m-0">
+												<!--- <h3>
+													<cfparam name="artistName" default="#getBio.artist#">
+													<cfif find(',',getBio.artist)><cfset artistName = "#listlast(getBio.artist,',')# #listfirst(getBio.artist,',')#" /></cfif>
+													ARTIST BIO: #artistName#
+													</h3> --->
+
+													<div class="bio-content" style="text-align: left;">
+														<!-- Output the content from the database -->
 														#getBio.bio#
-													</td>
-												</tr>
-											</table>
+													</div>
 										</div>
 									</div>
 								</div>
@@ -84,6 +82,40 @@
 </tr>
 </cfoutput>
 <cfinclude template="frmxss.cfm">
+
+<style>
+    .bio-content img {
+        display: block;
+        margin: 0; /* Ensures no auto margin on the image that may center it */
+        float: left; /* Aligns the image to the left */
+        max-width: 200px; /* Adjust size as needed */
+        margin-right: 20px; /* Space between image and text */
+    }
+
+    .bio-content p {
+        text-align: left !important; /* Force left alignment for text */
+    }
+</style>
+
+
+<script>
+    function toggleBio() {
+        // Get the elements for the preview and the button
+        var preview = document.getElementById('bio-preview');
+        var button = document.getElementById('toggle-btn');
+    
+        // Toggle between showing truncated and full content
+        if (preview.classList.contains('expanded')) {
+            // If currently showing full content, collapse it
+            preview.classList.remove('expanded');
+            button.innerText = 'Show More'; // Change the button text
+        } else {
+            // If currently showing truncated content, expand it
+            preview.classList.add('expanded');
+            button.innerText = 'Show Less';  // Change the button text
+        }
+    }
+</script>
 
 </body>
 </html>

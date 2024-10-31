@@ -50,6 +50,8 @@
 </script>
 <!-- END ROBLY WIDGET CODE -->
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	<div class="main-container registration-page">
@@ -70,80 +72,56 @@
 								<i class="fas fa-bars"></i>
 							</div>
 						</div>
-						<div class="sidebar web-sidebar-modal">	
+						<!--- <div class="sidebar web-sidebar-modal">	
 							<cfinclude template="left_.cfm">
-						</div>
+						</div> --->
 						<div class="content-section">
 							<div class="bottom-content-sec">
 								<div class="banner-section">
 									<div class="art-work-content">
+
+										<div aria-label="breadcrumb">
+											<ol class="breadcrumb">
+											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item active" aria-current="page">Search</li>
+											</ol>
+										</div>
+
 										<div class="bottom-content">
-											<div align="center"><h2>SEARCH GALLERY ART</h2></div>
-											<table border="0" cellspacing="0" cellpadding="0">
-												<tr>
-													<td style="padding-left: 10px; padding-top: 10px;">
-														<h4>Simple Search</h4>
-														Enter a keyword into the box below, and the system will find art that has that keyword in the title, description, or Artists' name.<br><br>
-														<table border="0" cellspacing="0" cellpadding="0">
-															<form action="products.cfm?xss=#xss#" method="post">
-															<tr>
-																<td>
-																	<input type="text" name="keywords" style="font-size: 7pt; width: 132px; font-family: verdana;">&nbsp;&nbsp;<input type="image" src="images/search.gif" style="border: none;">
-																</td>
-															</tr>
-															</form>
-														</table>
-													</td>
-												</tr>
-												<tr>
-													<td style="border-bottom: 1px dotted #000000;">&nbsp;
-														
-													</td>
-												</tr>
-												<tr>
-													<td style="padding-left: 10px; padding-top: 10px;">
-														<h4>Advanced Search</h4>
-														Use the fields below for a more precise search:<br><br>
-														<cfinclude template="advanced_search.cfm">
-													</td>
-												</tr>
-												<tr>
-													<td style="border-bottom: 1px dotted #000000;">&nbsp;
-														
-													</td>
-												</tr>
-												<tr>
-													<td style="padding-left: 10px; padding-top: 10px;">
-														<h4>Search our Gallery</h4>
-														Use the dropdown below to search for art by Artist.  Simply select an Artist, and the system will take you to a page showing thumbnails of the pieces in our inventory by that Artist.<br><br>
-														<cfinclude template="gallery_search.cfm">
-													</td>
-												</tr>
-												<tr>
-													<td style="border-bottom: 1px dotted #000000;">&nbsp;
-														
-													</td>
-												</tr>
-												<tr>
-													<td style="padding-left: 10px; padding-top: 10px;">
-														<h4>Search our Database</h4>
-														Use the dropdown below to search by Artist.  When you select an Artist, you will be taken to a listing page of all of the art in our inventory by that Artist.  Click on any text to view details.<br><br>
-														<cfinclude template="database_search.cfm">
-													</td>
-												</tr>
-												<tr>
-													<td style="border-bottom: 1px dotted #000000;">&nbsp;
-														
-													</td>
-												</tr>
-												<tr>
-													<td style="padding: 10px 0px 20px 10px;">
-														<h4>Alphabetical Search</h4>
-														Click on a letter of the alphabet below to view art by Artists whose last name begins with that letter.  Then, click on the Artist's name to view art by that Artist.<br><br>
-														<cfinclude template="alpha_search.cfm">
-													</td>
-												</tr>
-											</table>
+											<div class="user-registrations searchpage-sec">
+												<div class="top-heading">
+													<h3>SEARCH GALLERY ART</h3>
+												</div>
+												<h4>Simple Search</h4>
+												<p>Enter a keyword into the box below, and the system will find art that has that keyword in the title, description, or Artists' name.</p>
+												<form action="products.cfm?xss=<cfoutput>#xss#</cfoutput>" method="get" id="simpleSearchForm">
+													<div class="input-form">
+														<div class="input-field">
+															<input type="text" name="keywords">
+														</div>
+														<div class="input-button">
+															<input type="hidden" name="xss" value="<cfoutput>#xss#</cfoutput>">
+															<button type="submit" class="SeeMore">Search</button>
+														</div>
+													</div>
+												</form>
+												<hr style="border-bottom: 1px dotted #000000;">
+												<h4>Advanced Search</h4>
+												<p>Use the fields below for a more precise search:</p>
+												<cfinclude template="advanced_search.cfm">
+												<hr style="border-bottom: 1px dotted #000000;">
+												<h4>Search our Gallery</h4>
+												<p>Use the dropdown below to search for art by Artist.  Simply select an Artist, and the system will take you to a page showing thumbnails of the pieces in our inventory by that Artist.</p>
+												<cfinclude template="gallery_search.cfm">
+												<hr style="border-bottom: 1px dotted #000000;">
+												<h4>Search our Database</h4>
+												<p>Use the dropdown below to search by Artist.  When you select an Artist, you will be taken to a listing page of all of the art in our inventory by that Artist.  Click on any text to view details.</p>
+												<cfinclude template="database_search.cfm">
+												<hr style="border-bottom: 1px dotted #000000;">
+												<h4>Alphabetical Search</h4>
+												<p>Click on a letter of the alphabet below to view art by Artists whose last name begins with that letter.  Then, click on the Artist's name to view art by that Artist.</p>
+												<cfinclude template="alpha_search.cfm">
+											</div>
 										</div>
 									</div>
 								</div>
@@ -161,6 +139,19 @@
 	</tr>
 
 <cfinclude template="frmxss.cfm">
+
+	<script>
+		document.getElementById("simpleSearchForm").addEventListener("submit", function(event) {
+            // Loop through each form element and remove empty ones
+            const formElements = event.target.elements;
+            for (let i = formElements.length - 1; i >= 0; i--) {
+                const element = formElements[i];
+                if (element.type !== "submit" && element.type !== "reset" && element.name !== "xss" && element.value === "") {
+                    element.parentNode.removeChild(element); // Remove empty fields except xss
+                }
+            }
+        });
+	</script>
 
 </body>
 </html>
