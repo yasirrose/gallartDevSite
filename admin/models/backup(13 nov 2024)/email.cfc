@@ -293,7 +293,6 @@
 	</cfif>
 		
 	<cfif qContacts.recordcount>
-		
 		<cftry>
 			<cfif qContacts.fname NEQ ''>
 				<cfset salutation = "Dear #capFirst(qContacts.fname)#," />
@@ -305,10 +304,9 @@
 				<cfset recipient = qContacts.email />
 			</cfif>
 			<cfset closer = "Sincerely,<br>#qContacts.emp_fname# #qContacts.emp_lname#<br><a href='http://www.gallart.com'>Gallart.com</a>" />
-			
 			<cfscript>
 				sendMail	= application.objectFactoryAdmin.getInstance('mailer').sendMail(
-					sender = 'sales@gallart.com',
+					sender = session.userinfo.email,
 					recipient = recipient,
 					subject = "Gallart",
 					body = qTemplate.emailContent,

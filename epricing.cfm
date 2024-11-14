@@ -201,6 +201,7 @@
 														<div>
 															<cfif productinfo.recordcount>
 																<cfoutput>
+																	<!--- <cfdump var="#productinfo.manufacturer#" > --->
 																	<div class="top-heading text-left">
 																		<h3>E-PRICING!</h3>
 																	</div>

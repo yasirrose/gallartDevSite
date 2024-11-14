@@ -129,13 +129,13 @@
                         <div class="content-section">
                            <div class="bottom-content-sec">
                               <div class="banner-section">
-                                 <!--- <div aria-label="breadcrumb">
+                                 <div aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                       <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
                                       <li class="breadcrumb-item"><a href="new_listings.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Recent Acquisitions</a></li>
                                       <li class="breadcrumb-item active" aria-current="page">Alpha Search</li>
                                     </ol>
-                                    </div> --->
+                                    </div>
                                  <div class="container user-registrations item-page">
                                     <div class="row">
                                        <div class="col-md-6 mb-md-5 text-center">

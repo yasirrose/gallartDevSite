@@ -59,10 +59,14 @@ password="re3objec" to="#session.sellerinfo.email#" from="info@gallart.com" subj
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+	<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -91,86 +95,82 @@ password="re3objec" to="#session.sellerinfo.email#" from="info@gallart.com" subj
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <cfoutput>
-<table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="2" width="100%" height="125" valign="top" bgcolor="##000000">
-			<cfinclude template="top.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="100%" valign="top" height="37" bgcolor="##000000">
-			<cfinclude template="navbar.cfm">
-		</td>
-	</tr>
-	<tr height="100%">
-		<td valign="top" width="173" height="100%">
-			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-				<tr height="100%">
-					<td valign="top" height="100%">	
-						<cfinclude template="left.cfm">
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td valign="top" width="627" height="100%">
-			<table cellspacing="0" cellpadding="0" border="0" width="500">
-				<tr>
-					<td align="center" style="padding-top: 10px;">
-						<h4>SUBMIT REQUEST FOR ART</h4>
-					</td>
-				</tr>
-				<cfif not isDefined('session.sellerinfo.fname')>
-				<tr>
-					<td style="padding-top: 10px;">
-						You must be a registered member in order to submit a request.  Please login below or click <a href="requests_registration.cfm?xss=#xss#">HERE </a> to register:<br><br>
-					</td>
-				</tr>
-				<tr>
-					<td style="padding-top: 10px;">
-						<cfinclude template="requests_login.cfm">
-					</td>
-				</tr>
-				<cfelse>
-				<tr>
-					<td style="padding-top: 10px;">
-						Please enter the name of the piece you would like to have listed, and the Artist of the piece.  Both fields are required.  Your listing is subject to approval by Gallery Art.<br><br>
-						<table cellspacing="0" cellpadding="5" border="0" width="300">
-							<cfform method="POST" action="#script_name#?#query_string#">
-							<tr>
-								<td>
-									Title of Piece:
-								</td>
-								<td>
-									<cfinput type="Text" name="title" required="Yes" message="You must enter a title.">
-								</td>
-							</tr>
-							<tr>
-								<td>
-									Artist:
-								</td>
-								<td>
-									<cfinput type="Text" name="artist" required="Yes" message="You must enter an artist.">
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<input type="Submit" value="Submit" name="request_proc" class="pinkSubmit">
-								</td>
-							</tr>
-							</cfform>
-						</table>
-					</td>
-				</tr>
-				</cfif>
-			</table>
-		</td>
-	</tr>
+	<div class="main-container registration-page">
+		<div id="Table_01">
+			<div class="header-section">
+				<div class="top-header">
+					<cfinclude template="top_.cfm">
+				</div>
+				<div class="navbar-section">
+					<cfinclude template="navbar_.cfm">
+				</div>
+			</div>
+			<div class="inner-section forget-password-screen">
+				<div class="container-fluid">
+					<div class="main-content">
+						<div class="content-section">
+							<div class="bottom-content-sec">
+								<div class="banner-section">
+									<div class="art-work-content">
+										<div class="bottom-content">
+											<div aria-label="breadcrumb">
+												<ol class="breadcrumb">
+												  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+												  <li class="breadcrumb-item active" aria-current="page">Requests Submit</li>
+												</ol>
+											</div>
+											<div class="user-registrations forgot-password request-submit">
+												<div class="top-heading text-center">
+													<h3>SUBMIT REQUEST FOR ART</h3>
+												</div>
+												<div class="user-content text-center">
+													<p>You must be a registered member in order to submit a request.  Please login below or click <a href="requests_registration.cfm?xss=#xss#">HERE </a> to register:<br><br></p>
+													<cfif not isDefined('session.sellerinfo.fname')>
+														<tr>
+															<td style="padding-top: 10px;">
+																
+															</td>
+														</tr>
+														<tr>
+															<td style="padding-top: 10px;">
+																<cfinclude template="requests_login.cfm">
+															</td>
+														</tr>
+														<cfelse>
+														<p>Please enter the name of the piece you would like to have listed, and the Artist of the piece.  Both fields are required.  Your listing is subject to approval by Gallery Art.<br><br></p>
+														<cfform method="POST" action="#script_name#?#query_string#">
+															<div class="input-form">
+																<div class="input-field">
+																	<label>Title of Piece:</label>
+																	<cfinput type="Text" name="title" required="Yes" message="You must enter a title.">
+																</div>
+																<div class="input-field">
+																	<label>Artist:</label>
+																	<cfinput type="Text" name="artist" required="Yes" message="You must enter an artist.">
+																</div>
+																<div class="input-button">
+																	<input type="Submit" value="Submit" name="request_proc" class="SeeMore">
+																</div>
+															</div>
+														</cfform>
+													</cfif>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<tr>
 		<td colspan="2" valign="baseline">
-			<cfinclude template="footer.cfm">
+			<cfinclude template="footer_.cfm">
 		</td>
 	</tr>
-</table>
 </cfoutput>
 <cfinclude template="frmxss.cfm">
 

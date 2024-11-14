@@ -37,13 +37,13 @@
 	</form> --->
 	
 </div>
-<!--- <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <cfoutput>
 <form name="db_search" method="post" action="database.cfm?xss=#xss#">
 </cfoutput>
-	<tr>
-		<td width="200">
-			<select name="manufact" onchange="db_search.submit();" style="font-family: verdana; font-size: 7pt;">
+<div class="row input-form">
+	<div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+		<div class="select-option input-field">
+			<select name="manufact" onchange="db_search.submit();" style="margin: 0;appearance: none;">
 				<option value="" selected>PLEASE SELECT ARTIST
 					<cfoutput query="artistinfo">
 						<cfif manufacturer EQ 'MAX, PETER'>
@@ -53,11 +53,10 @@
 						</cfif>
 					</cfoutput>
 			</select>
-		</td>
-		<td style="padding: 0 0 3px 0;">
-			<a href="#TB_inline?height=200&width=300&inlineId=databaseview_help&modal=true" class="thickbox" style="color: ##dd3a7d; text-decoration: underline;"><img src="images/question.jpg" border="0"></a>
-			<!--- <a href="javascript:helpWin('help.cfm?helpID=DatabaseView')"><img src="images/question.jpg" border="0"></a> --->
-		</td>
-	</tr>
+		</div>
+	</div>
+	<div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-2 mb-2 d-flex align-items-center">
+		<a href="#TB_inline?height=200&width=300&inlineId=databaseview_help&modal=true" class="thickbox" style="color: ##dd3a7d; text-decoration: underline;"><img src="images/question.jpg" border="0"></a>
+	</div>
+</div>
 </form>
-</table> --->

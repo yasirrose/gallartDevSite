@@ -179,9 +179,9 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
 
 
 <cfscript>
-	application.mailserver='smtp.sendgrid.net';
-	application.mailserver_un='apikey';
-	application.mailserver_pw='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';
+	application.mailserver='mail2.onlinegalleryart_.com';
+	application.mailserver_un='gallart@onlinegalleryart.com';
+	application.mailserver_pw='re3objeC!P';
 </cfscript>
 
 
