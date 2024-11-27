@@ -180,7 +180,7 @@
                                 <div class="search-box">
                                     <div class="search-form-group">
                                        <div class="row input-form">
-                                       <form name="dropdownSearchForsales">
+                                       <form name="dropdownSearchForsales" id="dropdownSearchForsales">
                                           <div class="row">
 
                                              <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
@@ -201,11 +201,11 @@
                                              <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                  <div class="select-option input-field">
                                                      
-                                                         <select name="artSubject" class="chosen-select m-0" data-placeholder="Search by Subject" onChange="drop('sales.cfm?xss=<cfoutput>#xss#</cfoutput>&Subject=', 'artSubject')">
+                                                         <select name="artSubject" id="artSubject" class="chosen-select m-0" data-placeholder="Search by Subject" onChange="artistClick()">
                                                              <option value="">Search by Subject</option>
                                                              <!--- Loop through the query results to create option tags --->
                                                              <cfloop query="qEmployees">
-                                                                 <option value="#filterName#" <cfif isDefined('url.Subject') and url.Subject EQ filterName >selected</cfif> >#filterName#</option>
+                                                                 <option value="#filterName#"  >#filterName#</option>
                                                              </cfloop>
                                                          </select>
                                                     
@@ -215,10 +215,10 @@
                                              <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                  <div class="select-option input-field">
                                                      
-                                                         <select name="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="drop('sales.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
+                                                         <select name="artStyle" id="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="artistClick()">
                                                              <option value="">Search by Style</option>
                                                              <cfloop query="qGetStyle">
-                                                                 <option value="#filterName#" <cfif isDefined('url.Style') and url.Style EQ filterName >selected</cfif> >#filterName#</option>
+                                                                 <option value="#filterName#" >#filterName#</option>
                                                              </cfloop>
                                                          </select>
                                                     
@@ -228,7 +228,7 @@
                                              <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                  <div class="select-option input-field">
                                                      
-                                                         <select name="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="drop('sales.cfm?xss=<cfoutput>#xss#</cfoutput>&Size=', 'artSize')">
+                                                         <select name="artSize" id="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="artistClick()">
                                                              <option value="">Search by Size</option>
                                                              <cfloop query="qGetSize">
                                                                  <option value="#filterName#" <cfif isDefined('url.Size') and url.Size EQ filterName >selected</cfif> >#filterName#</option>
@@ -242,7 +242,7 @@
                                              <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                  <div class="select-option input-field">
                                                      
-                                                         <select name="artType" class="chosen-select m-0" data-placeholder="Search by Type" onChange="drop('sales.cfm?xss=<cfoutput>#xss#</cfoutput>&Type=', 'artType')">
+                                                         <select name="artType" id="artType" class="chosen-select m-0" data-placeholder="Search by Type" onChange="artistClick()">
                                                              <option value="">Search by Type</option>
                                                              <cfloop query="qGetType">
                                                                  <option value="#filterName#" <cfif isDefined('url.Type') and url.Type EQ filterName >selected</cfif> >#filterName#</option>
@@ -255,7 +255,7 @@
                                              <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                  <div class="select-option">
                                                      <cfoutput>
-                                                         <form >
+                                                        
                                                              <select name="priceOrder" id="priceOrder" onChange="artistClick()">
                                                                  <option value="" >Sort</option>
                                                                  <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>>Date Listed: Old to New</option>
@@ -264,10 +264,15 @@
                                                                   
                                                                   <option value="desc" <cfif isDefined('form.priceOrder') and priceOrder eq 'desc'>selected</cfif>>Price: High to Low</option>
                                                              </select>
-                                                         </form>
+                                                         
                                                      </cfoutput>
                                                  </div>
                                              </div>
+
+                                             <div class="col-12 mt-2 mb-2 text-center">
+                                                <button type="button" class="btn btn-secondary" onclick="clearSearch()">Clear Search</button>
+                                            </div>
+
                                           </div>
                                        </form>
                                     </div>
@@ -331,6 +336,23 @@
                }
             }
 
+             // the below code is use for clear the search values from advanced search form
+
+            const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
+            function clearSearch() {
+               const form = document.getElementById('dropdownSearchForsales');
+               if (form) {
+                     form.reset();
+                     // window.location.href = `sales.cfm?xss=${xssValue}`;
+                     page = 1;
+                     noMoreProducts = false;
+
+                     $('#product-container').empty();
+                     $('#loading').hide();
+                     loadProducts();
+               }
+            }
+
       $(document).ready(function() {
 			toastr.options = {
 				'closeButton': true,
@@ -358,6 +380,10 @@
          // let lastpath = ''; // Variable to store the last selected artist
          let lastPriceOrder = '';
          let lastkeywords = '';
+         let lastartSubject = '';
+         let lastartType = '';
+         let lastartSize = '';
+         let lastartStyle = '';
 
          function gotoTopFunction() {
             document.body.scrollTop = 0;
@@ -376,7 +402,7 @@
          
          let Manufacturer = params.get('man');
          let Size = params.get('Size');
-         let Subject = params.get('Subject');
+         let urlSubject = params.get('Subject');
          let Type = params.get('Type');
          let Style = params.get('Style');
          let urlArtist = params.get('artist');
@@ -385,10 +411,14 @@
          // let path = document.getElementById('path').value;
          let priceOrder = document.getElementById('priceOrder').value;
          let keywords = document.getElementById('keywords').value;
+         let artSubject = document.getElementById('artSubject').value;
+         let artType = document.getElementById('artType').value;
+         let artSize = document.getElementById('artSize').value;
+         let artStyle = document.getElementById('artStyle').value;
          
          // Check if artist or path has changed, reset page and load new data
-         if ( Artist || priceOrder || keywords) {
-            if (Artist !== lastArtist ||  priceOrder !==lastPriceOrder || keywords!==lastkeywords) {
+         if ( Artist || priceOrder || keywords || artSubject) {
+            if (Artist !== lastArtist ||  priceOrder !==lastPriceOrder || keywords!==lastkeywords || artSubject!=lastartSubject || artType !=  lastartType || artSize != lastartSize || artStyle != lastartStyle) {
                     page = 1; 
                     $('#product-container').empty(); // Clear the product container for new results
                     noMoreProducts = false; // Reset the no more products flag
@@ -396,11 +426,15 @@
                   //   lastpath = path; // Update lastArtist to the new artist value
                     lastPriceOrder = priceOrder;
                     lastkeywords = keywords;
+                    lastartSubject = artSubject;
+                    lastartType = artType;
+                    lastartSize = artSize;
+                    lastartStyle = artStyle;
             }
          } else if (urlArtist && !Artist) {
          // If artist is obtained through URL params, set Artist to urlArtist
             Artist = urlArtist;
-         }
+         } 
          
          console.log('Manufacturer:', Manufacturer);
          console.log('Artist:', Artist);
@@ -411,13 +445,13 @@
          data: {
             page: page,
             man: Manufacturer,
-            Size: Size,
+            Size: artSize,
             artist: Artist,
           
             priceOrder: priceOrder,
-            Subject: Subject,
-            Type: Type,
-            Style: Style,
+            Subject: artSubject,
+            Type: artType,
+            Style: artStyle,
             keywords: keywords
          },
          success: function(data) {

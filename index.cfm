@@ -442,6 +442,95 @@ a.SeeMore:hover {
 			</tr>
 		</div>
 	</div>
+
+	<cfif NOT structKeyExists(session, "email") OR session.email EQ "" >
+		<div class="modal onload-modal fade" id="onload" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-head">
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body pt-0">
+						<div class="inner-content">
+							<div class="top-image">
+								<img src="images/G-Logowhite.png" alt="logo" />
+							</div>
+							<h2>Stay in touch</h2>
+							<p>Be the first to know about Gallery Art's upcoming events, recent acquisitions and sales.</p>
+							<div class="email-form">
+								<form id="signupForm" method="POST">
+									<div class="form-floating">
+										<input type="email" name="email" required class="form-control" id="email" placeholder="email">
+										<label for="floatingInput">Email</label>
+									  </div>
+									<div class="privacy-content">
+									  <p>
+										By signing up, you agree to Gallart’s
+										<a href="pns.cfm?xss=<cfoutput>#xss#</cfoutput>">Privacy Policy</a> 
+										and 
+										<a href="shippingpolicy.cfm?xss=<cfoutput>#xss#</cfoutput>">Terms of Use</a>
+									</p>
+									</div>
+									<div class="form-btn">
+										<button  type="submit" class="btn btn-primary">Sign Up</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</cfif>
+	
+
+
+	<cfif isDefined('form.email') and form.email neq ''>
+		<cfset email = trim(FORM.email)>
+		<cfset ipAddress = cgi.remote_addr>
+		<cfset createdAt = now()>
+		
+		<cfquery name="qGetNewsLetterUser" datasource="#application.dsource#">
+			Select * FROM newsLetterUsers where email = '#form.email#'
+		</cfquery>
+		
+		<cfif qGetNewsLetterUser.recordCount EQ 0 >
+				<cfquery name="addNewsLetterUsers" datasource="#application.dsource#">
+					INSERT INTO newsLetterUsers (
+							email, 
+							created_at, 
+							ipAddress
+							)
+					VALUES (
+							<cfqueryparam value="#email#" cfsqltype="cf_sql_varchar">, 
+							<cfqueryparam value="#createdAt#" cfsqltype="cf_sql_timestamp">, 
+							<cfqueryparam value="#ipAddress#" cfsqltype="cf_sql_varchar">
+							)
+				</cfquery>
+			 	<cfset session.email = email>
+					<cfoutput>
+						<script>
+							
+							window.location.href = 'index.cfm?xss=<cfoutput>#xss#</cfoutput>';
+						</script>
+					</cfoutput>
+			<cfelse>
+				<cfset session.email = email>
+				<cfoutput>
+					<script>
+						alert('You are already subscribed.');
+						window.location.href = 'index.cfm?xss=<cfoutput>#xss#</cfoutput>';
+					</script>
+				</cfoutput>
+		</cfif>
+		
+	
+		<!--- <cfelse>
+			<cfoutput>
+				<p style="color: red;">Error: Please fill out all required fields before submitting the form.</p>
+			</cfoutput> --->
+		
+	</cfif>
 	
 
 <cfinclude template="frmxss.cfm">
@@ -470,7 +559,48 @@ a.SeeMore:hover {
   border: 1px solid black;
 }
 </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    // Check if the modal has already been shown using localStorage
+    window.onload = () => {
+        // If modal is not shown yet, show it
+        if (!localStorage.getItem("modalShown")) {
+            $('#onload').modal('show');
+            localStorage.setItem("modalShown", "true"); // Store that modal has been shown
+        }
 
+        // Close the modal when clicking anywhere on the page
+        $(document).click(function (e) {
+            if (!$(e.target).closest('#onload').length) {
+                // If click is outside the modal, hide it and set the localStorage flag
+                $('#onload').modal('hide');
+            }
+        });
+    }
+</script>
+<!--- <script>
+	document.getElementById('signupBtn').addEventListener('click', function (event) {
+	  // Prevent the default anchor navigation
+	  event.preventDefault();
+  
+	  // Get the email input field
+	  const emailInput = document.getElementById('floatingInput');
+	  const emailValue = emailInput.value.trim();
+  
+	  // Email validation regex
+	  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+	  // Validate the email
+	  if (emailValue === '') {
+		alert('Please fill in your email address.');
+	  } else if (!emailRegex.test(emailValue)) {
+		alert('Please enter a valid email address.');
+	  } else {
+		// Navigate to the URL if the email is valid
+		window.location.href = 'mailing_list.cfm?xss=<cfoutput>#xss#</cfoutput>';
+	  }
+	});
+  </script> --->
 <script>
 	 window.onscroll = function() {scrollFunction()};
 
@@ -489,3 +619,5 @@ function gotoTopFunction() {
         }
 
 </script>
+
+

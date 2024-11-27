@@ -249,17 +249,20 @@
 																	</p>
 																</cfif>
 																<p>Please contact us using the form below:</p>
+
+																<span style="color: ##ff0000;">* Required</span><br><br>
+
 																<div class="input-form">
 																	<div class="input-field">
-																		<label><FONT color="000000"><b>FIRST NAME</b></FONT></label>
+																		<label><FONT color="000000"><b>FIRST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label>
 																		<cfinput type="text" size=40 maxsize=50 name="fname" value="#form.fname#" required="Yes" MESSAGE="Please fill in your first name.">
 																	</div>
 																	<div class="input-field">
-																		<label><FONT color="000000"><b>LAST NAME</b></FONT></label>
+																		<label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label>
 																		<cfinput type="text" size=40 maxsize=50 name="lname" value="#form.lname#" required="Yes" MESSAGE="Please fill in your last name.">
 																	</div>
 																	<div class="input-field">
-																		<label><FONT color="000000"><b>E-MAIL ADDRESS</b></FONT></label>
+																		<label><FONT color="000000"><b>E-MAIL ADDRESS &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label>
 																		<cfinput type="text" size=40 maxsize=50 name="email" value="#form.email#" required="Yes" MESSAGE="Please fill in your email address.">
 																	</div>
 																	<div class="input-field">
@@ -276,12 +279,12 @@
 																	</div>
 																	<div class="input-field">
 																		<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier" fontsize="28"/>
-																		<label><FONT color="000000"><b>Please enter the characters in the image above:</b></FONT></label>
+																		<label><FONT color="000000"><b>Please enter the characters in the image above: <span style="color:##ff0000;">*</span></b></FONT></label>
 																		<cfinput type="text" name="captcha" required="true" message="Please enter the characters in the image.">
 																	</div>
 																	<div class="input-button">
 																		<button type="submit" class="SeeMore">Send</button>
-																		<button type="button" class="SeeMore">Reset</button>
+																		<button type="reset" class="SeeMore">Reset</button>
 																	</div>
 																</div>
 															</CFFORM>	

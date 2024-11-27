@@ -292,7 +292,7 @@
 	
 	</cfif>
 		
-	<cfif qContacts.recordcount>
+	<!--- <cfif qContacts.recordcount>
 		
 		<cftry>
 			<cfif qContacts.fname NEQ ''>
@@ -321,6 +321,42 @@
 		
 		</cftry>
 
+	</cfif> --->
+
+	<cfif qContacts.recordcount>
+		<cftry>
+			<!-- Process only the first record -->
+			<cfset contactEmail = qContacts.email />
+			<cfset firstName = qContacts.fname />
+			<cfset empFName = qContacts.emp_fname />
+			<cfset empLName = qContacts.emp_lname />
+			
+			<cfif len(firstName)>
+				<cfset salutation = "Dear #capFirst(firstName)#," />
+			<cfelse>
+				<cfset salutation = "Dear Valued Customer," />
+			</cfif>
+			
+			<cfset recipient = session.userinfo.email />
+			<cfif arguments.mailToMe EQ "">
+				<cfset recipient = contactEmail />
+			</cfif>
+			
+			<cfset closer = "Sincerely,<br>#empFName# #empLName#<br><a href='http://www.gallart.com'>Gallart.com</a>" />
+			
+			<cfscript>
+				sendMail = application.objectFactoryAdmin.getInstance('mailer').sendMail(
+					sender = 'sales@gallart.com',
+					recipient = recipient,
+					subject = "Gallart",
+					body = qTemplate.emailContent,
+					salutation = salutation,
+					closer = closer
+				);
+			</cfscript>
+			
+			<cfcatch></cfcatch>
+		</cftry>
 	</cfif>
 	
 	<cfset returnStruct.recordcount = qContacts.recordcount />

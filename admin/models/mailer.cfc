@@ -42,7 +42,7 @@
 
 		<cftry>
 			<cfmail 
-				to="tldz.dev12@gmail.com" 
+				to="waseem@gallart.com" 
 				from="#arguments.sender#" 
 				subject="#arguments.subject#" 
 				cc="" 

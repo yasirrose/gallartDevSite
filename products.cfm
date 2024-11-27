@@ -81,6 +81,50 @@
     </cfquery>
 </cfif>
 
+
+<cfquery name="getArtists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+    SELECT DISTINCT manufacturer from products
+    WHERE active = 1
+    AND fk_users is not null
+    ORDER by manufacturer 
+</cfquery>
+
+<cfquery name="getMedium" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+    Select path from products
+    WHERE fk_users is not null
+    group by path
+    order by path
+</cfquery>
+
+<cfquery name="qEmployees" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+    SELECT * 
+    FROM filterOption
+    WHERE filterType = 'Subject'
+    ORDER BY filterName ASC
+</cfquery>
+
+<cfquery name="qGetStyle" datasource="#application.dsource#">
+    SELECT * 
+    FROM filterOption
+    WHERE filterType = 'Style'
+    ORDER BY filterName ASC
+</cfquery>
+
+<cfquery name="qGetSize" datasource="#application.dsource#">
+    SELECT * 
+    FROM filterOption
+    WHERE filterType = 'Size'
+    ORDER BY id ASC
+</cfquery>
+
+<cfquery name="qGetType" datasource="#application.dsource#">
+    SELECT * 
+    FROM filterOption
+    WHERE filterType = 'Type'
+    ORDER BY filterName ASC
+</cfquery>
+
+
     <div class="main-container">
         <div id="Table_01">
             <div class="header-section">
@@ -306,6 +350,23 @@
 
                         <script>
 
+                         // the below code is use for clear the search values from advanced search form
+
+                        const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
+                        function clearSearch() {
+                            const form = document.getElementById('dropdownSearchforProducts');
+                                if (form) {
+                                        form.reset();
+                                        // window.location.href = `sales.cfm?xss=${xssValue}`;
+                                        page = 1;
+                                        noMoreProducts = false;
+
+                                        $('#product-container').empty();
+                                        $('#loading').hide();
+                                        loadProducts();
+                                }
+                        }
+
                                 $(document).ready(function() {
                                     toastr.options = {
                                         'closeButton': true,
@@ -331,6 +392,10 @@
                             var previousData = ''; // Variable to store previously fetched data
                             let lastkeywords = '';
                             let lastPriceOrder = '';
+                            let lastartSubject = '';
+                            let lastartType = '';
+                            let lastartSize = '';
+                            let lastartStyle = '';
 
                             function gotoTopFunction() {
                                 document.body.scrollTop = 0;
@@ -361,6 +426,11 @@
                                 let path = params.get('adv_medium');
                                 let desc_keyword = params.get('adv_desc_keyword');
                                 let keywords = params.get('keywords'); 
+
+                                let artSubject = document.getElementById('artSubject').value;
+                                let artType = document.getElementById('artType').value;
+                                let artSize = document.getElementById('artSize').value;
+                                let artStyle = document.getElementById('artStyle').value;
                                 
                                 let priceRange = params.get('adv_price_range');
 
@@ -386,15 +456,21 @@
                                 // let keywords = document.getElementById('keywords').value;
                                 let priceOrder = document.getElementById('priceOrder').value;
 
-                                if ( keywords || priceOrder) {
-                                    if (keywords!==lastkeywords ||  priceOrder !==lastPriceOrder) {
+                                if ( keywords || priceOrder ||  artSubject || artType|| artSize|| artStyle) {
+                                    if (  priceOrder !==lastPriceOrder || keywords!==lastkeywords || artSubject!=lastartSubject || artType !=  lastartType || artSize != lastartSize || artStyle != lastartStyle) {
+                                        
                                             page = 1; 
+                                            
                                             $('#product-container').empty(); // Clear the product container for new results
                                             noMoreProducts = false; // Reset the no more products flag
                                             // lastArtist = Artist; // Update lastArtist to the new artist value
                                         //   lastpath = path; // Update lastArtist to the new artist value
                                             lastPriceOrder = priceOrder;
                                             lastkeywords = keywords;
+                                            lastartSubject = artSubject;
+                                            lastartType = artType;
+                                            lastartSize = artSize;
+                                            lastartStyle = artStyle;
                                     }
                                 }
                         
@@ -406,13 +482,13 @@
                                     data: {
                                         page: page,
                                         man: Manufacturer,
-                                        Size: Size,
+                                        Size: artSize,
                                         Title: title,
                                         Artist: Artist,
                                         priceOrder: priceOrder,
-                                        Subject: Subject,
-                                        Type: Type,
-                                        Style: Style,
+                                        Subject: artSubject,
+                                        Type: artType,
+                                        Style: artStyle,
                                         keywords: keywords,
                                         year: year,
                                         path: path,
@@ -425,8 +501,6 @@
                                     noMoreProducts = true;
                                     $('#loading').html('No more products').show();
 
-                                        // toastr.warning('No more products');
-                                        // $('#loading').hide();
 
                                         } else if (data === previousData && page !== 1) {
                                             // Prevent loading duplicate data on scroll (ignore check for page 1)
