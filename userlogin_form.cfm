@@ -31,30 +31,34 @@
 </cfif>
 
 <cfoutput>
-<div class="text-center">
+<div>
 	<cfif structKeyExists(url,"error")>
-		<p style="color: ##ff0000;">That email address/password is not in the system.  Please try again.</p>
+		<p style="color: ##ff0000;" class="text-center">That email address/password is not in the system.  Please try again.</p>
 	</cfif>
 	<div class="seller-login">
 		<cfform action="#script_name#?#query_string#" method="post">
-			<div class="form-field">
-				<label><strong>Email Address:</strong></label>
-				<cfinput type="text" required="Yes" message="Please enter your email address" name="email">
+			<div class="input-form">
+				<div class="input-field">
+					<label><strong>Email Address:</strong></label>
+					<cfinput type="text" required="Yes" message="Please enter your email address" name="email">
+				</div>
+				<div class="input-field text-left">
+					<label><strong>Password:</strong></label>
+					<cfinput type="password" required="Yes" message="Please enter your password" name="password">
+				</div>
+				<div class="input-button">
+					<input type="submit" value="Sign In" style="margin: auto;" class="SeeMore">
+				</div>
+				<div class="forget-message text-center">
+					<a href="forgot_password.cfm?xss=#xss#">Forget your password?</a>
+				</div>
 			</div>
-			<div class="form-field">
-				<label><strong>Password:</strong></label>
-				<cfinput type="password" required="Yes" message="Please enter your password" name="password">
-			</div>
-			<div class="form-button">
-				<input type="image" src="images/signin.jpg" alt="Sign In." style="border: 1px solid ##ffffff;">
-			</div>
-			<div class="forget-message">
-				<a href="forgot_password.cfm?xss=#xss#">Forget your password?</a>
-			</div>
+			
 		</cfform>
 		<div>
-			<p style="line-height: 1.4;">You must register with Galleryart before you can login and sell your art. You will create a username and password, which you should keep in a safe place.  As soon as you register, you may begin listing your art.  All listings are subject to approval by Gallart.com.</p>
-			<div align="center"><a href="user_registration.cfm?xss=#xss#" style="color: ##d9387c; font-size: 14px; font-weight: bold;">Register Now!</a></div>
+			<p style="line-height: 1.4;" class="text-center">You must register with Galleryart before you can login and sell your art. You will create a username and password, which you should keep in a safe place.  As soon as you register, you may begin listing your art.  All listings are subject to approval by Gallart.com.</p>
+			<div align="center">
+				<a href="user_registration.cfm?xss=#xss#" style="color: ##d9387c; font-size: 14px; font-weight: bold;">Register Now!</a></div>
 		</div>
 	</div>
 </div>

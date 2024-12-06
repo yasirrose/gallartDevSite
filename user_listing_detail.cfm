@@ -350,10 +350,14 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+	<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script LANGUAGE="javascript">
 
 function isValidSize(sText){
@@ -441,196 +445,174 @@ return true;
 </head>
 
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
-			<cfinclude template="top.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="700" valign="top" height="37" align="center">
-			<cfinclude template="navbar_user.cfm">
-		</td>
-	</tr>
-	<tr height="100%">
-		<td valign="top" width="500" height="100%">
-		<!--- start content --->
-			<table cellspacing="0" cellpadding="0" border="0" width="600">
-				<tr>
-					<td align="center" style="padding-top: 5px;">
-						<h4 style="font-style: italic;">SELL YOUR ART ON GALLART.COM!</h4>
-					</td>
-				</tr>
-                <cfif structKeyExists(url,'error')>
-                <tr>
-                	<td align="center" style="color: #ff0000; font-size: 13px;">
-                    	Sorry, but the file that you are attempting to load is too large.  Please reduce your file size to <cfoutput>#fileSizeLimitKb#</cfoutput>.
-                    </td>
-                </tr>
-                </cfif>
-                <cfif sellerArt.recordcount GT 5>
-                <tr>
-                	<td align="center" style="color: #ff0000; font-size: 13px;">
-                    	Sorry, but you are only allowed 5 free uploads.  Please contact <a href="mailto:info@gallart.com" style="color: #ff0000; font-size: 13px; text-decoration:underline;">Gallart.com</a> in order to submit additional listings at $35 apiece.
-                    </td>
-                </tr>
-                <cfelse>
-				<tr>
-					<td style="padding: 10px 0 0 25px;">
-						Use this simple form to list your art.  Remember:<br>
-						<ul>
-							<li>Don't use any personal information in your description, or watermarks in the images.</li>
-							<li>GALLART.COM will charge a 20% fee when you sell your art</li>
-                            <li>You are only allowed 5 free uploads.  Please contact <a href="mailto:info@gallart.com" style="text-decoration:underline;">Gallart.com</a> in order to submit additional listings at $35 apiece.</li>
-						</ul>
-						You may enter as many pieces of art as you like!<br>
-						GALLART.COM will review your listings.  If they are approved, they will be shown on the site.
-						<cfoutput>
-						<form name="frm1" action="user_listing_detail.cfm?xss=#xss#" method="post" enctype="multipart/form-data" onSubmit="javascript:return validEntries(document.frm1);">
-						<input type="Hidden" name="fk_users" value="#session.sellerinfo.pk_users#">
-						<input type="hidden" name="orderable" value="0">
-						<input type="hidden" name="quantity" value="0">
-						<input type="hidden" name="availablity" value="3 - 5 Business Days">
-						<input type="hidden" name="expressair" value="no">
-						<input type="hidden" name="options" value="">
-						<input type="hidden" name="active" value="0">
-						<input type="hidden" name="datestamp" value="#dateformat(now(), 'mm/dd/yyyy')#">
-						<input type="hidden" name="vendor" value="0001">
 
-						<table cellspacing="0" cellpadding="5" border="0" width="100%">
-							<tr>
-								<td colspan="2" style="border-bottom: 2px solid ##000000; height: 2px;">&nbsp;</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><b>Title:</b></td>
-								<td>
-									<input type="text" name="name" value="#replace(detail.Name,'"','&quot;','all')#" size="40">
-								</td>
-							</tr>	
-							<tr class="#this_row()#">
-								<td valign="top"><b>Select Artist:</b></td>
-								<td>
-									<Select name="artistview"  onchange="ArtistView()">
-									<option value="">Select here ...</option>
-									<cfloop query="artists">
-									<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-									<option value="#manufacturer#" <cfif manufacturer is #detail.manufacturer#>Selected</cfif>>#ucase(manufacturer)#
-									</cfif>
-									
-									</cfloop></select>
-									
-								</td>				
-							</tr>
-							<tr class="#this_row()#">
-								<td colspan="2" nowrap>
-									<i>Select an artist from dropdown above, OR type in a new artist:</i>
-									<input type="Text" name="manufacturer" value="#ucase(detail.manufacturer)#" size="40">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><b>Year:</b></td>
-								<td><input type="text" name="year" value="#detail.year#" size="25"></td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><b>Size:</b></td>
-							<td><input type="text" name="size" value="#detail.size#" size="25">&nbsp;<font face="Verdana, Arial,helvetica" size="1">(HEIGHT x WIDTH)</font></td>
-							</tr>
-							<tr class="#this_row()#" nowrap>
-								<td colspan="2"><b>Select Medium:</b>
-									<Select name="category">
-										<option value="">Select here ...</option>
-										<cfloop query="cats">
-											<option value="#path#" <cfif #path# is #detail.path#>Selected</cfif>>#ucase(path)#
-										
-									</cfloop></select>
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><b>Retail Price:</b>
-								</td>
-								<td><input type="text" name="retail_price" value="#dollarformat(detail.retail_price)#" size="25" maxlength="13"></td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><b>Gallery Price:</b>  (selling price)
-								</td>
-								<td><input type="text" name="gallery_price" value="#dollarformat(detail.gallery_price)#" size="25" maxlength="13"></td>
-							</tr>
-							<tr class="#this_row()#">
-								<td colspan="2"><b>Description:</b></td>
-							</tr>
-							<tr>
-								<td colspan="2"><textarea name="caption" cols="90" rows="4">#detail.caption#</textarea></td>
-							</tr>
-							<tr class="#this_row()#">
-								<td colspan="2">
-								<b>Upload New Product Picture</b> <span style="color: ##ff0000; font-size: 8pt;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span><br><br>
-									<table width="100%" border="0" cellspacing="0" cellpadding="0">
-										<tr>
-											<td valign="top" width="50%">
-												<input type="file" name="fileup" size="22" style="font-size: xx-small;">
-											</td>
-											<td align="right">
-												<cfif fileexists("#expandpath('.')#\img\thumbnails\#detail.uid#.jpg")>
-													<img src="http://#server_name#/img/thumbnails/#detail.uid#.jpg?u=#randrange(1,1000)#">
-												</cfif>
-												
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2" style="border-top: 2px solid ##000000; height: 2px;">&nbsp;</td>
-							</tr>
-							<tr>
-								<Td colspan="2" align="center">
-								<cfif isDefined('url.id')>
-								<input type="Hidden" name="process" value="UPDATE">
-								<input type="image" name="process" src="images/update_listing_button.gif" style="border: none;" onClick="javascript:return confirm('Updating your product will temporarily remove it from the site until Gallery Art can review it -- Are You Sure?');"><br>
-								<input style="background:url(images/reset.gif) no-repeat; width: 87px; height: 30px; border: none; cursor: pointer;" type="reset" value="" />
-								<input type="hidden" name="id" value="#url.id#">
-									<Cfif isDefined('returnq')>
-									<input type="hidden" name="returnq" value="#returnq#">
-									</cfif>
-								<input type="hidden" name="uid" value="#detail.uid#"><br><br>
-								
-								<cfelse>
-								<input type="Hidden" name="process" value="ADD">
-								<input type="image" name="process" src="images/add_your_listing_button.gif" style="border: none;">
-									<Cfif isDefined('returnq')>
-									<input type="hidden" name="returnq" value="#returnq#">
-									</cfif>
-								</cfif>
-								</td>
-							</tr>
-							
-						</table>
-						</form>	
-						<form name="frmDelete" action="user_listing_detail.cfm?xss=#xss#" method="post">
-						<input type="Hidden" name="process" value="DELETE">
-						<input type="hidden" name="uid" value="#detail.uid#">
-						<table cellspacing="0" cellpadding="0" border="0" width="100%">
-							<tr>
-								<td align="center">
-									<input type="image" name="process" src="images/delete_button.gif" style="border: none;" onClick="javascript:return confirm('Delete -- Are You Sure?');">
-								</td>
-							</tr>
-						</table>	
-						</form>						
-						</cfoutput>
-					</td>
-				</tr>
-                </cfif>
-			</table>
-			<!--- end content --->
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" valign="baseline">
-			<cfinclude template="footer_user.cfm">
-		</td>
-	</tr>
-</table>
+    <div class="main-container registration-page">
+        <div id="Table_01">
+            <div class="header-section">
+                <div class="top-header">
+                    <cfinclude template="top_.cfm">
+                </div>
+                <div class="navbar-section">
+                    <cfinclude template="navbar_user.cfm">
+                </div>
+            </div>
+            <div class="inner-section">
+                <div class="container-fluid">
+                    <div class="main-content pb-4">
+                        <div class="content-section">
+                            <div class="bottom-content-sec">
+                                <div class="banner-section">
+                                    <div class="art-work-content">
+                                        <div class="bottom-content">
+                                            <div class="user-registrations quotes-page contact-page">
+                                                <div class="top-heading">
+                                                    <cfif structKeyExists(url,'error')>
+                                                        <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">Sorry, but the file that you are attempting to load is too large.  Please reduce your file size to <cfoutput>#fileSizeLimitKb#</cfoutput>.</span>
+                                                    </cfif>
+                                                    <cfif sellerArt.recordcount GT 5>
+                                                        <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">Sorry, but you are only allowed 5 free uploads.  Please contact <a href="mailto:info@gallart.com" style="color: #ff0000; font-size: 13px; text-decoration:underline;">Gallart.com</a> in order to submit additional listings at $35 apiece.</span>
+                                                    </cfif>
+                                                    <h3>SELL YOUR ART ON GALLART.COM!</h3>
+                                                </div>
+                                                <p>Use this simple form to list your art.  Remember:</p>
+                                                <ul>
+                                                    <li>Don't use any personal information in your description, or watermarks in the images.</li>
+                                                    <li>GALLART.COM will charge a 20% fee when you sell your art</li>
+                                                    <li>You are only allowed 5 free uploads.  Please contact <a href="mailto:info@gallart.com" style="text-decoration:underline;">Gallart.com</a> in order to submit additional listings at $35 apiece.</li>
+                                                </ul>
+                                                <p>You may enter as many pieces of art as you like!</p>
+                                                <p>GALLART.COM will review your listings.  If they are approved, they will be shown on the site.</p>
+
+                                                <cfoutput>
+
+                                                    <form name="frm1" action="user_listing_detail.cfm?xss=#xss#" method="post" enctype="multipart/form-data" onSubmit="javascript:return validEntries(document.frm1);">
+                                                        <div class="input-form">
+                                                            <input type="Hidden" name="fk_users" value="#session.sellerinfo.pk_users#">
+                                                            <input type="hidden" name="orderable" value="0">
+                                                            <input type="hidden" name="quantity" value="0">
+                                                            <input type="hidden" name="availablity" value="3 - 5 Business Days">
+                                                            <input type="hidden" name="expressair" value="no">
+                                                            <input type="hidden" name="options" value="">
+                                                            <input type="hidden" name="active" value="0">
+                                                            <input type="hidden" name="datestamp" value="#dateformat(now(), 'mm/dd/yyyy')#">
+                                                            <input type="hidden" name="vendor" value="0001">
+
+                                                            <div class="input-field">
+                                                                <label><b>Title:</b></label>
+                                                                <input type="text" name="name" value="#replace(detail.Name,'"','&quot;','all')#" size="40">
+                                                            </div>
+
+                                                            <div class="input-field">
+                                                                <label><b>Select Artist:</b></label>
+                                                                <Select name="artistview"  onchange="ArtistView()">
+                                                                    <option value="">Select here ...</option>
+                                                                    <cfloop query="artists">
+                                                                    <cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+                                                                    <option value="#manufacturer#" <cfif manufacturer is #detail.manufacturer#>Selected</cfif>>#ucase(manufacturer)#
+                                                                    </cfif>
+                                                                    
+                                                                    </cfloop>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="input-field">
+                                                                <label><b><i>Select an artist from dropdown above, OR type in a new artist:</i></b></label>
+                                                                <input type="Text" name="manufacturer" value="#ucase(detail.manufacturer)#" size="40">
+                                                            </div>
+
+                                                            <div class="input-field">
+                                                                <label><b>Year:</b></label>
+                                                                <input type="text" name="year" value="#detail.year#" size="25">
+                                                            </div>
+
+                                                            <div class="input-field">
+                                                                <label><b>Size:</b>(HEIGHT x WIDTH)</label>
+                                                                <input type="text" name="size" value="#detail.size#" size="25">&nbsp;<font face="Verdana, Arial,helvetica" size="1"></font>
+                                                            </div>
+
+                                                            <div class="input-field">
+                                                                <label><b>Select Medium:</b></label>
+                                                                <Select name="category">
+                                                                    <option value="">Select here ...</option>
+                                                                    <cfloop query="cats">
+                                                                        <option value="#path#" <cfif #path# is #detail.path#>Selected</cfif>>#ucase(path)#
+                                                                    
+                                                                    </cfloop>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="input-field">
+                                                                <label><b>Retail Price:</b></label>
+                                                                <input type="text" name="retail_price" value="#dollarformat(detail.retail_price)#" size="25" maxlength="13">
+                                                            </div>
+
+                                                            <div class="input-field">
+                                                                <label><b>Gallery Price:</b> (selling price)</label>
+                                                                <input type="text" name="gallery_price" value="#dollarformat(detail.gallery_price)#" size="25" maxlength="13">
+                                                            </div>
+
+                                                            <div class="input-field">
+                                                                <label><b>Description:</b></label>
+                                                                <textarea name="caption" cols="90" rows="4">#detail.caption#</textarea>
+                                                            </div>
+
+                                                            <div class="input-field">
+                                                                <label><b>Upload New Product Picture</b> <span style="color: ##ff0000; font-size: 8pt;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span></label>
+                                                                <input type="file" name="fileup" size="22" style="font-size: xx-small;padding: 0;">
+                                                            </div>
+                                                            <div class="input-field">
+                                                                <cfif fileexists("#expandpath('.')#\img\thumbnails\#detail.uid#.jpg")>
+                                                                    <img src="http://#server_name#/img/thumbnails/#detail.uid#.jpg?u=#randrange(1,1000)#">
+                                                                </cfif>
+                                                            </div>
+                                                            <div class="input-button flex-input-btn listing-detail-btns">
+                                                                <cfif isDefined('url.id')>
+                                                                    <input type="Hidden" name="process" value="UPDATE" class="SeeMore">
+                                                                    <input type="button" name="process" class="SeeMore" value="Add Your Listing" onClick="javascript:return confirm('Updating your product will temporarily remove it from the site until Gallery Art can review it -- Are You Sure?');"><br>
+                                                                    <input type="reset" value="Reset" class="SeeMore" />
+                                                                    <input type="hidden" name="id" value="#url.id#">
+                                                                        <Cfif isDefined('returnq')>
+                                                                        <input type="hidden" name="returnq" value="#returnq#">
+                                                                        </cfif>
+                                                                    <input type="hidden" name="uid" value="#detail.uid#"><br><br>
+                                                                    
+                                                                    <cfelse>
+                                                                    <input type="Hidden" name="process" value="ADD">
+                                                                    <input type="button" name="process" class="SeeMore" value="Add Your Listing">
+                                                                        <Cfif isDefined('returnq')>
+                                                                        <input type="hidden" name="returnq" value="#returnq#">
+                                                                        </cfif>
+                                                                    </cfif>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+
+                                                    <form name="frmDelete" action="user_listing_detail.cfm?xss=#xss#" method="post">
+                                                        <div class="input-form">
+                                                            <input type="Hidden" name="process" value="DELETE">
+                                                            <input type="hidden" name="uid" value="#detail.uid#">
+
+                                                            <div class="input-button flex-input-btn listing-detail-btns">
+                                                                <input type="button" name="process" class="SeeMore" value="Delete!" onClick="javascript:return confirm('Delete -- Are You Sure?');">
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                    
+                                                </cfoutput>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-section">
+                <cfinclude template="footer_user.cfm">
+            </div>
+        </div>
+    </div>
 
 <cfinclude template="frmxss.cfm">
 

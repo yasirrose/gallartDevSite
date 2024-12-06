@@ -315,7 +315,7 @@
 						<cfset Uploaded_File_Name = CFFile.ClientFile>
 					</cfif> --->
 					
-					<cfdump var="testing data 2" abort="true">
+					<!--- <cfdump var="testing data 2" abort="true"> --->
 
 					<cfif form.name NEQ '' and form.PHONE NEQ '' and form.EMAIL_PURCHASE NEQ '' and form.ARTIST NEQ '' and form.TITLE NEQ '' and form.size NEQ '' and form.ADDITIONAL_DETAILS NEQ ''>
 						<cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">

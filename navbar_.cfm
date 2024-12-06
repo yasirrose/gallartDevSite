@@ -98,9 +98,9 @@
 			<!--- <li class="nav-item">
 				<a href="alerts.cfm?xss=#xss#" class="nav-link">Alerts</a>
 			</li> --->
-			<li class="nav-item">
+			<!--- <li class="nav-item">
 				<a href="guests.cfm?xss=#xss#" class="nav-link">Guest Book</a>
-			</li>
+			</li> --->
 			<!--- <li class="nav-item">
 				<a href="http://blog.gallart.com/" class="nav-link">Blog</a>
 			</li> --->

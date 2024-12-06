@@ -79,7 +79,9 @@
 										<div class="top-heading">
 											<h3>SELLER LOGIN</h3>
 										</div>
-										<div><cfinclude template="userlogin_form.cfm"></div>
+										<div class="user-registrations">
+											<cfinclude template="userlogin_form.cfm">
+										</div>
 									</div>
 								</div>
 							</div>

@@ -102,6 +102,7 @@
         <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" class="name-hover" >
         #name#
         </a>
+       
         <br>
         By: #ucase(manufacturer)#<Br>
             <font color="660066" size="1">
@@ -169,3 +170,5 @@
 		color:black;
 	}
 </style>
+
+

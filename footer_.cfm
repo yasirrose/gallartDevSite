@@ -7,6 +7,7 @@
 						<div class="col-md-2 col-sm-6 col-12 mb-3 footer-items">
 							<div class="footer-menu">
 								<h3>Main Menu</h3>
+								<!--- <cfdump var="#cookiesAccepted#"> --->
 								<ul>
 									<li> <a href="index.cfm?xss=#xss#">Home</a> </li>
 									<!--- <li> <a href="user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
@@ -164,6 +165,27 @@
 				</div>
 			</div>
 		</div>
+
+		<cfif structKeyExists(cookie, "cookiesAccepted")>
+			<cfset cookiesAccepted = cookie.cookiesAccepted>
+		<cfelse>
+			<cfset cookiesAccepted = "not_set">
+		</cfif>
+
+		
+		
+		<cfif NOT StructKeyExists(cookie, "userConsent")>
+			<div id="cookies-banner" style="display:block;">
+				<div class="cookie-banner-left">
+					<p>This website uses cookies to ensure you get the best experience on our website.</p>
+				</div>
+				<div class="cookie-banner-right">
+					<button class="button button--secondary button--auto-width button--center" id="decline-btn">Decline</button>
+					<button class="button button--primary button--auto-width button--center" id="accept-btn">Accept</button>
+				</div>
+			</div>
+		</cfif>
+		
 	</footer>
 
 	<cfif isDefined('form.footerEmail') and form.footerEmail neq ''>
@@ -214,4 +236,34 @@
 
 	
 	</cfoutput>
+	
+	
+
+	<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check if the cookie consent banner should be displayed
+            if (!document.cookie.split("; ").find(row => row.startsWith("userConsent="))) {
+                document.getElementById("cookies-banner").style.display = "block";
+            }
+
+            // Handle Accept button click
+            document.getElementById("accept-btn").addEventListener("click", function () {
+                document.cookie = "userConsent=accepted; path=/; max-age=" + 60 * 60 * 24 * 365; // 1 year
+                document.getElementById("cookies-banner").style.display = "none";
+            });
+
+            // Handle Decline button click
+            document.getElementById("decline-btn").addEventListener("click", function () {
+                document.cookie = "userConsent=declined; path=/; max-age=" + 60 * 60 * 24 * 365; // 1 year
+                document.getElementById("cookies-banner").style.display = "none";
+            });
+        });
+    </script>
+	
+	<!--- <cfif structKeyExists(url, "action") AND url.action EQ "setCookie">
+		<!-- Set the cookie values based on the URL parameters -->
+		<cfset cookie.cookiesAccepted = url.value>
+		<cfset cookie.cookiesAccepted.expires = createDateTime(year(now()) + 1, month(now()), day(now()), hour(now()), minute(now()), second(now()))>
+		<cfset cookie.cookiesAccepted.path = "/">
+	</cfif> --->
 	
