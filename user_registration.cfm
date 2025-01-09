@@ -221,6 +221,11 @@
 <!-- END ROBLY WIDGET CODE -->
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	<cfif IsDefined( "form.login" )>
@@ -315,6 +320,9 @@
 						<cfset Uploaded_File_Name = CFFile.ClientFile>
 					</cfif> --->
 					
+					
+					
+
 					<!--- <cfdump var="testing data 2" abort="true"> --->
 
 					<cfif form.name NEQ '' and form.PHONE NEQ '' and form.EMAIL_PURCHASE NEQ '' and form.ARTIST NEQ '' and form.TITLE NEQ '' and form.size NEQ '' and form.ADDITIONAL_DETAILS NEQ ''>
@@ -345,6 +353,7 @@
 							)
 							SELECT @@identity as uid 
 						</cfquery>
+						
 						
 		
 						
@@ -451,6 +460,7 @@
 											<cfif FORM.submitted>	
 												<cfif phoneError>
 													<cfoutput>
+														<!--- <cfdump var="testing 1" abort="true"> --->
 														<script language="JavaScript">
 															document.errorFrm.fname.value = '#form.fname#'
 															document.errorFrm.lname.value = '#form.lname#'
@@ -467,6 +477,7 @@
 														</cfoutput>
 												<cfelseif blnIsBot>
 														<cfoutput>
+															<!--- <cfdump var="testing 2" abort="true"> --->
 														<script language="JavaScript">
 															document.errorFrm.fname.value = '#form.fname#'
 															document.errorFrm.lname.value = '#form.lname#'
@@ -505,6 +516,8 @@
 														</cfif>
 
 														
+
+														<!--- <cfdump var="testing 3" abort="true"> --->
 														
 														<cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq '' and form.cellphone neq '' >
 															<cflock name="insertuser" timeout="10">
@@ -529,6 +542,8 @@
 																		
 																	)
 																</cfquery>
+
+																	
 																
 																<!--- getting the last input UID --->
 																<cfquery name="lastUID" datasource="#dsource#" username="#uname#" password="#pword#">
@@ -560,6 +575,30 @@
 																	#getPages.page_content#
 																	<br><br>
 																</cfmail>
+
+																<script>
+																	$(document).ready(function() {
+																		toastr.options = {
+																			'closeButton': true,
+																			'debug': false,
+																			'newestOnTop': false,
+																			'progressBar': true,
+																			'positionClass': 'toast-top-right',
+																			'preventDuplicates': false,
+																			'showDuration': '1000',
+																			'hideDuration': '1000',
+																			'timeOut': '5000',
+																			'extendedTimeOut': '1000',
+																			'showEasing': 'swing',
+																			'hideEasing': 'linear',
+																			'showMethod': 'fadeIn',
+																			'hideMethod': 'fadeOut',
+																		}
+																	});
+
+																	toastr.success('Your Record is added successfully.');
+																</script>
+
 																<cflocation url="user_listing_detail.cfm?xss=#xss#" addtoken="No">
 															<cfelse>
 																<cfoutput>
@@ -622,8 +661,35 @@
 																						<span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span><br><br>
 																					<cfelse>
 																						<cfset remainingEntries = 5 - (entryCount + 1)>
-																						YOUR LISTING HAS BEEN ENTERED SUCCESSFULLY.<br />
+
+																						
+																						
+																						<br />
 																						<cfif remainingEntries LT 5 AND remainingEntries GT 0>
+
+																							<script>
+																								$(document).ready(function() {
+																										toastr.options = {
+																											'closeButton': true,
+																											'debug': false,
+																											'newestOnTop': false,
+																											'progressBar': true,
+																											'positionClass': 'toast-top-right',
+																											'preventDuplicates': false,
+																											'showDuration': '1000',
+																											'hideDuration': '1000',
+																											'timeOut': '5000',
+																											'extendedTimeOut': '1000',
+																											'showEasing': 'swing',
+																											'hideEasing': 'linear',
+																											'showMethod': 'fadeIn',
+																											'hideMethod': 'fadeOut',
+																										}
+																									});
+	
+																									toastr.success('YOUR LISTING HAS BEEN ENTERED SUCCESSFULLY.');
+																							</script>
+
 																							YOU MAY ENTER <cfoutput>#remainingEntries#</cfoutput> MORE ITEMS
 																						<cfelse>
 																							YOU HAVE REACHED THE MAXIMUM NUMBER OF ENTRIES <br />
@@ -634,38 +700,59 @@
 																					<br /><br />
 																				</cfif>
 																				<cfoutput>
-																				<cfform name="frm1" action="#script_name#?xss=#xss#" method="post" enctype="multipart/form-data">
+																				<cfform name="frm1" action="#script_name#?xss=#xss#" method="post" enctype="multipart/form-data" onsubmit="return validateGeneralForm()">
 																				<input	type="hidden" name="captcha_check2"	value="#FORM.captcha_check2#" />
 																				<div class="input-form">
-																					<div class="input-field">
-																						<label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
-																						<cfinput type="text" name="fname" value="#form.fname#" size="30" required="Yes" message="Please enter your first name.">
-																					</div>
-																					<div class="input-field">
-																						<label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
-																						<cfinput type="text" name="lname" value="#form.lname#" size="30" required="Yes" message="Please enter your last name.">
-																					</div>
-																					<div class="input-field">
-																						<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
-																						<cfinput type="text" name="email_purchase" value="#form.email_purchase#" size="30" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >
-																					</div>
-																					<div class="input-field">
-																						<label><b>Phone:</b></label>
-																						<cfinput type="text" name="phone" value="#form.phone#" size="30" required="No"  message="Please enter a phone number." mask="(999) 999-9999">
-																					</div>
-																					<div class="input-field">
-																						<label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
-																						<cfinput type="password" name="password" size="30" required="Yes" message="Please enter a password.">
-																					</div>
-																					<div class="input-field">
-																						<label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
-																						<cfinput type="password" name="password2" size="30" required="Yes" message="Please re-enter your password.">
+																					<div class="row">
+																						<div class="col-md-6">
+																							<div class="input-field">
+																								<label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
+																								<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" >
+																								<span class="error-message" id="G_fnameError"></span>
+																							</div>
+																						</div>
+																						<div class="col-md-6">
+																							<div class="input-field">
+																								<label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
+																								<cfinput type="text" name="lname" id="lname"  value="#form.lname#" size="30" >
+																								<span class="error-message" id="G_lnameError"></span>
+																							</div>
+																						</div>
+																						<div class="col-md-6">
+																							<div class="input-field">
+																								<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
+																								<cfinput type="text" name="email_purchase" id="email_purchase" value="#form.email_purchase#" size="30"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$"  >
+																								<span class="error-message" id="G_email_purchaseError"></span>
+																							</div>
+																						</div>
+																						<div class="col-md-6">
+																							<div class="input-field">
+																								<label><b>Phone:</b></label>
+																								<cfinput type="text" name="phone" id="phone" value="#form.phone#" size="30" required="No"  message="Please enter a phone number." mask="(999) 999-9999">
+																								<span class="error-message" id="G_phoneError"></span>
+																							</div>
+																						</div>
+																						<div class="col-md-6">
+																							<div class="input-field">
+																								<label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
+																								<cfinput type="password" name="password" id="password" size="30">
+																								<span class="error-message" id="G_passwordError"></span>
+																							</div>
+																						</div>
+																						<div class="col-md-6">
+																							<div class="input-field">
+																								<label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
+																								<cfinput type="password" name="password2" id="password2" size="30" >
+																								<span class="error-message" id="G_password2Error"></span>
+																							</div>
+																						</div>
 																					</div>
 																					<div class="input-field">
 																						<cfimage action="captcha" height="75" width="363" text="#strCaptcha2#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
 																						<br><br>
 																						<FONT face="verdana,arial,helvetica" color="000000" size="-2"><b>Please enter the characters in the image above:</b></FONT><br><br>
-																						<cfinput type="text" name="captcha2" required="true" message="Please enter the characters in the image.">
+																						<cfinput type="text" name="captcha2" id="captcha2">
+																						<span class="error-message" id="G_captcha2Error"></span>
 																					</div>
 																					<div class="input-button">
 																						<input type="Hidden" name="process_purchase_consignment">
@@ -708,59 +795,81 @@
 																							#form.errorMsg#
 																						</span><br><br>
 																					</cfif>
-																					<CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST">
+																					<!--- onsubmit="return validateSellerForm()" --->
+																					<CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST" id="sellerForm">
 																						<input type="hidden" name="submitted" value="1" />
 																						<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
 																						<div class="input-form">
-																							<div class="input-field">
-																								<label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="fname" value="#form.fname#" size="30" required="Yes" message="Please enter your first name.">
-																							</div>
-																							<div class="input-field">
-																								<label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="lname" value="#form.lname#" size="30" required="Yes" message="Please enter your last name.">
-																							</div>
-																							<div class="input-field">
-																								<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="Email" value="#form.Email#" size="30" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >
-																							</div>
-																							<div class="input-field">
-																								<label><b>Cell Phone:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="cellphone" value="#form.cellphone#" size="30" required="Yes"  message="Please enter a cell phone number." mask="(999) 999-9999">
-																							</div>
-																							<!--- <div class="input-field">
-																								<label><b>Home Phone:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="Phone" value="#form.Phone#" size="30" required="Yes"  message="Please enter a phone number."  mask="(999) 999-9999">
-																							</div>
-																							<div class="input-field">
-																								<label><b>Business Phone:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="businessphone" value="#form.businessphone#" size="30" required="Yes"  message="Please enter a phone number."  mask="(999) 999-9999">
-																							</div>
-																							<div class="input-field">
-																								<label><b>Phone Number Outside the US:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="otherphone" value="#form.otherphone#" size="30" required="Yes"  message="Please enter a phone number." >
-																							</div>
-																							<div class="input-field">
-																								<label><b>Website:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="website" value="#form.website#" size="30" required="Yes"  message="Please enter a phone number." >
-																							</div> --->
-																							<div class="input-field">
-																								<label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="password" name="password" size="30" required="Yes" message="Please enter a password.">
-																							</div>
-																							<div class="input-field">
-																								<label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="password" name="password2" size="30" required="Yes" message="Please re-enter your password.">
+																							<div class="row">
+																								<div class="col-md-6">
+																									<div class="input-field">
+																										<label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
+																										<cfinput type="text" name="fname" id="S_fname" value="#form.fname#" size="30" >
+																										<span class="error-message" id="S_fnameError"></span>
+																									</div>
+																								</div>
+																								<div class="col-md-6">
+																									<div class="input-field">
+																										<label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
+																										<cfinput type="text" name="lname" id="S_lname" value="#form.lname#" size="30">
+																										<span class="error-message" id="S_lnameError"></span>
+																									</div>
+																								</div>
+																								<div class="col-md-6">
+																									<div class="input-field">
+																										<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
+																										<cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
+																										<span class="error-message" id="S_EmailError"></span>
+																									</div>
+																								</div>
+																								<div class="col-md-6">
+																									<div class="input-field">
+																										<label><b>Cell Phone:<span style="color: ##ff0000;">*</span></b></label>
+																										<cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#" size="30"   message="Please enter a cell phone number." mask="(999) 999-9999">
+																										<span class="error-message" id="S_cellphoneError"></span>
+																									</div>
+																								</div>
+																								<!--- <div class="input-field">
+																									<label><b>Home Phone:<span style="color: ##ff0000;">*</span></b></label>
+																									<cfinput type="text" name="Phone" value="#form.Phone#" size="30" required="Yes"  message="Please enter a phone number."  mask="(999) 999-9999">
+																								</div>
+																								<div class="input-field">
+																									<label><b>Business Phone:<span style="color: ##ff0000;">*</span></b></label>
+																									<cfinput type="text" name="businessphone" value="#form.businessphone#" size="30" required="Yes"  message="Please enter a phone number."  mask="(999) 999-9999">
+																								</div>
+																								<div class="input-field">
+																									<label><b>Phone Number Outside the US:<span style="color: ##ff0000;">*</span></b></label>
+																									<cfinput type="text" name="otherphone" value="#form.otherphone#" size="30" required="Yes"  message="Please enter a phone number." >
+																								</div>
+																								<div class="input-field">
+																									<label><b>Website:<span style="color: ##ff0000;">*</span></b></label>
+																									<cfinput type="text" name="website" value="#form.website#" size="30" required="Yes"  message="Please enter a phone number." >
+																								</div> --->
+																								<div class="col-md-6">
+																									<div class="input-field">
+																										<label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
+																										<cfinput type="password" name="password" id="S_password" size="30" >
+																										<span class="error-message" id="S_passwordError"></span>
+																									</div>
+																								</div>
+																								<div class="col-md-6">
+																									<div class="input-field">
+																										<label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
+																										<cfinput type="password" name="password2" id="S_password2" size="30" >
+																										<span class="error-message" id="S_password2Error"></span>
+																									</div>
+																								</div>
 																							</div>
 																							<div class="input-field">
 																								<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
 																								<br><br>
 																								<FONT face="verdana,arial,helvetica" color="000000"><b>Please enter the characters in the image above:</b></FONT><br><br>
-																								<cfinput type="text" name="captcha" required="true" message="Please enter the characters in the image.">
+																								<cfinput type="text" name="captcha" id="S_captcha">
+																								<span class="error-message" id="S_captchaError"></span>
 																							</div>
 																							<div class="input-button">
 																								<input type="Hidden" name="proc_reg">
-																								<button type="submit" class="SeeMore">Become A Seller</button>
+																								<button type="button" class="SeeMore" onclick="validateSellerForm()">Become A Seller</button>
 																							</div>
 																						</div>
 																					</cfform>
@@ -790,6 +899,144 @@
 		</div>
 	</div>
 
+
+	<script>
+		function validateGeneralForm(){
+
+			let isValid = true;
+
+			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+
+			const fname = document.getElementById('fname').value.trim();
+			const lname = document.getElementById('lname').value.trim();
+			const email_purchase = document.getElementById('email_purchase').value.trim();
+			const phone = document.getElementById('phone').value.trim();
+			const password = document.getElementById('password').value.trim();
+			const password2 = document.getElementById('password2').value.trim();
+			const captcha2 = document.getElementById('captcha2').value.trim();
+
+			if (!fname) {
+				document.getElementById('G_fnameError').textContent = 'Please fill in your first name.';
+				isValid = false;
+			}
+			
+			// Validate LAST NAME
+			if (!lname) {
+				document.getElementById('G_lnameError').textContent = 'Please fill in your last name.';
+				isValid = false;
+			}
+			
+			// Validate EMAIL
+			if (!email_purchase) {
+				document.getElementById('G_email_purchaseError').textContent = 'Please fill in your email address.';
+				isValid = false;
+			} else if (!/\S+@\S+\.\S+/.test(email_purchase)) {
+				document.getElementById('G_email_purchaseError').textContent = 'Please enter a valid email address.';
+				isValid = false;
+			}
+			
+			// Validate CAPTCHA
+			if (!phone) {
+				document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
+				isValid = false;
+			}
+
+			if (!password) {
+				document.getElementById('G_passwordError').textContent = 'Please enter your password.';
+				isValid = false;
+			}
+
+			if (!password2) {
+				document.getElementById('G_password2Error').textContent = 'Please re-enter your password.';
+				isValid = false;
+			}
+
+			if (!captcha2) {
+				document.getElementById('G_captcha2Error').textContent = 'Please enter the characters in the image.';
+				isValid = false;
+			}
+
+
+		 return isValid;
+		}
+
+
+		function validateSellerForm(){
+			// alert('test');
+			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+
+			let isValid = true;
+
+			const S_fname = document.getElementById('S_fname').value.trim();
+			const S_lname = document.getElementById('S_lname').value.trim();
+			const S_email = document.getElementById('S_Email').value.trim();
+			const S_phone = document.getElementById('S_cellphone').value.trim();
+			const S_password = document.getElementById('S_password').value.trim();
+			const S_password2 = document.getElementById('S_password2').value.trim();
+			const S_captcha = document.getElementById('S_captcha').value.trim();
+
+			if (!S_fname) {
+				document.getElementById('S_fnameError').textContent = 'Please fill in your first name.';
+				isValid = false;
+			}
+			
+			// Validate LAST NAME
+			if (!S_lname) {
+				document.getElementById('S_lnameError').textContent = 'Please fill in your last name.';
+				isValid = false;
+			}
+			
+			// Validate EMAIL
+			if (!S_email) {
+				document.getElementById('S_EmailError').textContent = 'Please fill in your email address.';
+				isValid = false;
+			} else if (!/\S+@\S+\.\S+/.test(S_email)) {
+				document.getElementById('S_EmailError').textContent = 'Please enter a valid email address.';
+				isValid = false;
+			}
+			
+			// Validate CAPTCHA
+			if (!S_phone) {
+				document.getElementById('S_cellphoneError').textContent = 'Please enter a phone number.';
+				isValid = false;
+			}
+
+			if (!S_password) {
+				document.getElementById('S_passwordError').textContent = 'Please enter your password.';
+				isValid = false;
+			}
+
+			if (!S_password2) {
+				document.getElementById('S_password2Error').textContent = 'Please re-enter your password.';
+				isValid = false;
+			}
+
+			if (!S_captcha) {
+				document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
+				isValid = false;
+			}
+
+			if (isValid) {
+				// Submit the form
+				document.getElementById('sellerForm').submit();
+			}
+
+			return isValid;
+		}
+
+	</script>
+
+		<style>
+			.error-message {
+			color: #ff0000;
+			font-size: 0.9em;
+			margin-top: 5px;
+			display: block;
+			}
+			.input-field {
+			margin-bottom: 15px;
+			}
+		</style>
 
 <cfinclude template="frmxss.cfm">
 

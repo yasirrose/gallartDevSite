@@ -553,22 +553,25 @@
 															</cfif>
 															<div class="bottom-content">
 																<cfif isDefined('seller_login_error')>
-																	<div align="center" style="color: ##dd3a7d; font-weight: bold;">THAT EMAIL AND/OR PASSWORD<br>IS NOT IN OUR SYSTEM.<br>
+																	<div align="center" style="color: red; font-weight: bold;">
+																		THAT EMAIL AND/OR PASSWORD<br>IS NOT IN OUR SYSTEM.<br>
 																	PLEASE TRY AGAIN:</div>
 																	<cfelse>
 																		<p>If you have already signed up as a seller, please log in here:</p>
 																	</cfif>
 																	<cfoutput>
-																	<cfform name="loginFrm" method="POST" action="#script_name#?#query_string#">
+																	<cfform name="loginFrm" method="POST" action="#script_name#?xss=#xss#" onsubmit="return validateSignForm()">
 																	<input type="Hidden" name="login">
 																	<div class="input-form signin-form">
 																		<div class="input-field">
 																			<label><strong>Email:</strong></label>
-																			<cfinput type="text" required="Yes" message="Please enter your email address" name="email_login" size="20">
+																			<cfinput type="text"  name="email_login" id="email_login" size="20">
+																			<span class="error-message" id="email_loginError"></span>
 																		</div>
 																		<div class="input-field">
 																			<label><strong>Password:</strong></label>
-																			<cfinput type="password" required="Yes" message="Please enter your password" name="password" size="20">
+																			<cfinput type="password"  name="password" id="password" size="20">
+																			<span class="error-message" id="passwordError"></span>
 																		</div>
 																		<div class="forget-pass">
 																			<a href="forgot_password.cfm?xss=#xss#">Forget your password?</a>
@@ -606,6 +609,36 @@
 
 
 <cfinclude template="frmxss.cfm">
+
+	<script>
+		function validateSignForm(){
+			let isValid = true;
+			const email_login = document.getElementById('email_login').value.trim();
+			const password = document.getElementById('password').value.trim();
+
+			if (!email_login) {
+            document.getElementById('email_loginError').textContent = 'Please enter your email address';
+            isValid = false;
+         	}
+
+		 if (!password) {
+            document.getElementById('passwordError').textContent = 'Please enter your password';
+            isValid = false;
+         	}
+
+			 return isValid;
+
+		}
+	</script>
+
+	<style>
+		.error-message {
+			color: #ff0000;
+			font-size: 0.9em;
+			margin-top: 5px;
+			display: block;
+         }
+	</style>
 
 </body>
 </html>

@@ -20,6 +20,74 @@
 <SCRIPT LANGUAGE="JavaScript">
 var formSubmited = 0;
 function validEntries(frm){
+
+			let isValid = true;
+
+			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+
+			const billnamef = document.getElementById('billnamef').value.trim();
+			const BillName = document.getElementById('BillName').value.trim();
+			const BillAddress1 = document.getElementById('BillAddress1').value.trim();
+			const billcity = document.getElementById('billcity').value.trim();
+			const billzip = document.getElementById('billzip').value.trim();
+			const billcountry = document.getElementById('billcountry').value.trim();
+			const cellphone = document.getElementById('cellphone').value.trim();
+			const Email = document.getElementById('Email').value.trim();
+			const cardnum = document.getElementById('cardnum').value.trim();
+
+
+			if (!billnamef) {
+				document.getElementById('billnamefError').textContent = 'We require the billing first name to process the order.';
+				isValid = false;
+			}
+			
+			// Validate LAST NAME
+			if (!BillName) {
+				document.getElementById('BillNameError').textContent = 'We require the billing last name to process the order.';
+				isValid = false;
+			}
+			
+			// Validate EMAIL
+			if (!Email) {
+				document.getElementById('EmailError').textContent = 'Email is required.';
+				isValid = false;
+			} else if (!/\S+@\S+\.\S+/.test(Email)) {
+				document.getElementById('EmailError').textContent = 'Please enter a valid email address.';
+				isValid = false;
+			}
+			
+			// Validate CAPTCHA
+			if (!BillAddress1) {
+				document.getElementById('BillAddress1Error').textContent = 'We require the billing address';
+				isValid = false;
+			}
+
+			if (!billcity) {
+				document.getElementById('billcityError').textContent = 'We require the billing city.';
+				isValid = false;
+			}
+
+			if (!billzip) {
+				document.getElementById('billzipError').textContent = 'We require the billing postal code.';
+				isValid = false;
+			}
+
+			if (!billcountry) {
+				document.getElementById('billcountryError').textContent = 'We require the billing country.';
+				isValid = false;
+			}
+			if (!cellphone) {
+				document.getElementById('cellphoneError').textContent = 'We require your cell phone number in the format (999) 999-9999.';
+				isValid = false;
+			}
+			if (!cardnum) {
+				document.getElementById('cardnumError').textContent = 'You must enter a proper Credit Card Number.';
+				isValid = false;
+			}
+
+
+		 return isValid;
+
 	if(formSubmited == 1) {
 		alert('The form was submited, please wait ...'); return false;
 	}
@@ -30,6 +98,18 @@ function validEntries(frm){
 }
 	
 </SCRIPT>
+
+<style>
+	.error-message {
+	color: #ff0000;
+	font-size: 0.9em;
+	/* margin-top: 5px; */
+	display: block;
+	}
+	.input-field {
+	margin-bottom: 15px;
+	}
+</style>
 
 <link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
@@ -106,7 +186,7 @@ function validEntries(frm){
 													<font face="arial,helvetica" size="2"><b>There are no items in your cart.  Please choose item(s) to purchase before checking out.</b>
 													<cfelse>
 													<cfoutput>
-													<cfform action="review.cfm?xss=#xss#" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);">
+													<cfform action="review.cfm?xss=#xss#" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);" id="checkOutForm">
 													<div class="top-heading text-left">
 														<h3>VIEW CONTENTS OF YOUR CART:</h3>
 													</div>
@@ -173,10 +253,12 @@ function validEntries(frm){
 															<div class="row align-items-center">
 																<div class="col-md-2"><label><span class="required">*</span><b>Name</b> <i>(First Last)</i></label></div>
 																<div class="col-md-5">
-																	<cfinput type="text" name="billnamef" size="15" required="Yes" message="We require the billing first name to process the order.">
+																	<cfinput type="text" name="billnamef" id="billnamef" size="15" >
+																	<span class="error-message" id="billnamefError"></span>
 																</div>
 																<div class="col-md-5">
-																	<cfinput type="text" name="BillName" size="25" required="Yes" message="We require the billing last name to process the order.">
+																	<cfinput type="text" name="BillName" id="BillName" size="25">
+																	<span class="error-message" id="BillNameError"></span>
 																</div>
 															</div>
 														</div>
@@ -186,7 +268,8 @@ function validEntries(frm){
 																	<label><span class="required">*</span><b>Address 1</b></label>
 																</div>
 																<div class="col-md-10">
-																	<cfinput type="text" name="BillAddress1" size="35" required="Yes" message="We require the billing address.">
+																	<cfinput type="text" name="BillAddress1" id="BillAddress1" size="35" >
+																	<span class="error-message" id="BillAddress1Error"></span>
 																</div>
 															</div>
 														</div>
@@ -206,7 +289,8 @@ function validEntries(frm){
 																	<label><span class="required">*</span><b>City, St Zip</b></label>
 																</div>
 																<div class="col-md-4">
-																	<cfinput type="text" name="billcity" size="25" required="Yes" message="We require the billing city.">
+																	<cfinput type="text" name="billcity" id="billcity" size="25" >
+																	<span class="error-message" id="billcityError"></span>
 																</div>
 																<div class="col-md-3">
 																	<select name="billstate">
@@ -217,7 +301,8 @@ function validEntries(frm){
 																	</select>
 																</div>
 																<div class="col-md-3">
-																	<cfinput type="text" name="billzip" size="13" required="Yes" message="We require the billing postal code.">
+																	<cfinput type="text" name="billzip" size="13" id="billzip" >
+																	<span class="error-message" id="billzipError"></span>
 																</div>
 															</div>
 														</div>
@@ -227,11 +312,12 @@ function validEntries(frm){
 																	<label><span class="required">*</span><b>Country:</b></label>
 																</div>
 																<div class="col-md-10">
-																	<select name="billcountry">
+																	<select name="billcountry" id="billcountry">
 																		<cfloop query="countries">
 																			<option value="#CountryCode#">#Country#</option>
 																		</cfloop>
 																	</select>
+																	<span class="error-message" id="billcountryError"></span>
 																</div>
 															</div>
 														</div>
@@ -241,7 +327,8 @@ function validEntries(frm){
 																	<label><span class="required">*</span><b>Cell Phone</b></label>
 																</div>
 																<div class="col-md-10">
-																	<cfinput type="text" name="cellphone" size="35" required="Yes" message="We require your cell phone number in the format (999) 999-9999." validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999">
+																	<cfinput type="text" name="cellphone" id="cellphone" size="35" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999">
+																	<span class="error-message" id="cellphoneError"></span>
 																</div>
 															</div>
 														</div>
@@ -281,7 +368,8 @@ function validEntries(frm){
 																	<label><span class="required">*</span><b>Email</b></label>
 																</div>
 																<div class="col-md-10">
-																	<cfinput type="text" name="Email" size="35" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Email is required." >
+																	<cfinput type="text" name="Email" id="Email" size="35"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" >
+																	<span class="error-message" id="EmailError"></span>
 																</div>
 															</div>
 														</div>
@@ -422,7 +510,8 @@ function validEntries(frm){
 																	<label><span class="required">*</span><b>Card Number</b></label>
 																</div>
 																<div class="col-md-10">
-																	<cfinput type="Text" name="cardnum" message="You must enter a proper Credit Card Number." validate="creditcard" required="Yes" size="16" maxlength="16">
+																	<cfinput type="Text" name="cardnum" id="cardnum"  size="16" maxlength="16">
+																	<span class="error-message" id="cardnumError"></span>
 																</div>
 															</div>
 														</div>
@@ -491,6 +580,10 @@ function validEntries(frm){
 	</td>
 </tr>
 <cfinclude template="frmxss.cfm">
+
+	<script>
+		
+	</script>
 
 </body>
 </html>

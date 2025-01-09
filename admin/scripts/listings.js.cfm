@@ -333,9 +333,9 @@ function gridChange(thisId) {
 			frm.slideshow[i].checked = false;
 		}
 	}
-	editFrame.getElementById('clickEnlarge').href = 'http://<cfoutput>#server_name#</cfoutput>/img/'+thisId+'.jpg?'+new Date().getTime();
-	editFrame.getElementById('mainImg').src = 'http://<cfoutput>#server_name#</cfoutput>/img/thumbnails/'+thisId+'.jpg?'+new Date().getTime();
-	editFrame.getElementById('imageUrl').innerHTML = 'http://<cfoutput>#server_name#</cfoutput>/img/'+thisId+'.jpg';
+	editFrame.getElementById('clickEnlarge').href = 'http://23.20.226.157/img/'+thisId+'.jpg?'+new Date().getTime();
+	editFrame.getElementById('mainImg').src = 'http://23.20.226.157/img/thumbnails/'+thisId+'.jpg?'+new Date().getTime();
+	editFrame.getElementById('imageUrl').innerHTML = 'http://23.20.226.157/img/'+thisId+'.jpg';
 	// trump info
 	trumpLocation = strListing['LOCATION'];
 	if(trumpLocation == 2){
@@ -370,7 +370,8 @@ function gridChange(thisId) {
 		editFrame.getElementById('gridRefreshMsg').style.display = 'none';
 	}
     if (strListing['ADDITIONAL_IMAGES'].length != 0 ){
-        editFrame.getElementById('addImageFrame').src = 'http://www.gallart.com/admin/views/listings/showAdditional.cfm?pid=' + thisId;
+		console.log(thisId);
+        editFrame.getElementById('addImageFrame').src = 'http://23.20.226.157/admin/views/listings/showAdditional.cfm?pid=' + thisId;
     } else {
     	editFrame.getElementById('addImageFrame').src = '';
    	}

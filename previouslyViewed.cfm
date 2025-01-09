@@ -78,9 +78,11 @@
                 <cfoutput query="productData" > --->
                    <div class="container user-registrations item-page new-item-page">
                       <div class="bottom-row">
-                         <h2 class="title">PREVIOUSLY VIEWED</h2>
+
+                        <cfif productData.recordCount GT 0 >
+                           <h2 class="title">PREVIOUSLY VIEWED</h2>
                          <div class="multi-slick-carousel">
-                            <cfif productData.recordCount GT 0 >
+                            <!--- <cfif productData.recordCount GT 0 > --->
                                <cfoutput query="productData" >
                                   <div>
                                      <div class="slide-content">
@@ -118,9 +120,12 @@
                                      </div>
                                   </div>
                                <!--- </cfloop> --->
-                            </cfoutput>
-                         </cfif>
+                              </cfoutput>
+                           <!--- </cfif> --->
                          </div>
+                        </cfif>
+
+                         
                       </div>
                    </div>
                       <!--- <div class="card-item">

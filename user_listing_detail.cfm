@@ -12,10 +12,18 @@
 <cfset fileSizeLimitKb = '200KB' />
 
 <!--- Inserting, Updating or Deleting the Product Information --->
+<!--- <cfdump var="#session.sellerinfo.pk_users#" > --->
 <cfif isDefined('process')>
 
+    <!--- <cfif structKeyExists(form, "process") AND ListFirst(form.process, ",") EQ "ADD">
+        <cfdump var="#form#" abort="true">
+    <cfelse>
+        <cfdump var="form is empty">
+    </cfif> --->
 
-	<cfif process is "ADD">
+	<cfif structKeyExists(form, "process") AND ListFirst(form.process, ",") EQ "ADD">
+
+        <!--- <cfdump var="testing 1" abort="true"> --->
     
 		<cfif cgi.content_length LTE fileSizeLimit>
         
@@ -49,6 +57,8 @@
             </cfif>
             </cfif>
             
+            
+
             <cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
                 INSERT INTO products 
                 (
@@ -166,7 +176,9 @@
 		</cfif>
 		
 	
-	<cfelseif process is "UPDATE">
+	<cfelseif structKeyExists(form, "process") AND ListFirst(form.process, ",") EQ "UPDATE">
+
+        <!--- <cfdump var="testing 2" abort="true"> --->
     
     	<cfif cgi.content_length LTE fileSizeLimit>
 	
@@ -274,7 +286,7 @@
 		
 		
 	
-	<cfelseif process is "DELETE">
+	<cfelseif structKeyExists(form, "process") AND ListFirst(form.process, ",") EQ "DELETE" >
 	
 		<cftry>
 			<cffile action="DELETE" file="#uploaddir#/#form.uid#.jpg">
@@ -470,7 +482,7 @@ return true;
                                                         <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">Sorry, but the file that you are attempting to load is too large.  Please reduce your file size to <cfoutput>#fileSizeLimitKb#</cfoutput>.</span>
                                                     </cfif>
                                                     <cfif sellerArt.recordcount GT 5>
-                                                        <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">Sorry, but you are only allowed 5 free uploads.  Please contact <a href="mailto:info@gallart.com" style="color: #ff0000; font-size: 13px; text-decoration:underline;">Gallart.com</a> in order to submit additional listings at $35 apiece.</span>
+                                                        <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">Sorry, but you are only allowed 5 free uploads.  Please contact <b><a href="mailto:info@gallart.com" style="color: #ff0000; font-size: 13px; text-decoration:underline;">Gallart.com</a></b> in order to submit additional listings at $35 apiece.</span>
                                                     </cfif>
                                                     <h3>SELL YOUR ART ON GALLART.COM!</h3>
                                                 </div>
@@ -478,7 +490,7 @@ return true;
                                                 <ul>
                                                     <li>Don't use any personal information in your description, or watermarks in the images.</li>
                                                     <li>GALLART.COM will charge a 20% fee when you sell your art</li>
-                                                    <li>You are only allowed 5 free uploads.  Please contact <a href="mailto:info@gallart.com" style="text-decoration:underline;">Gallart.com</a> in order to submit additional listings at $35 apiece.</li>
+                                                    <li>You are only allowed 5 free uploads.  Please contact <b> <a href="mailto:info@gallart.com" style="text-decoration:underline;">Gallart.com</a> </b> in order to submit additional listings at $35 apiece.</li>
                                                 </ul>
                                                 <p>You may enter as many pieces of art as you like!</p>
                                                 <p>GALLART.COM will review your listings.  If they are approved, they will be shown on the site.</p>
@@ -568,7 +580,7 @@ return true;
                                                             <div class="input-button flex-input-btn listing-detail-btns">
                                                                 <cfif isDefined('url.id')>
                                                                     <input type="Hidden" name="process" value="UPDATE" class="SeeMore">
-                                                                    <input type="button" name="process" class="SeeMore" value="Add Your Listing" onClick="javascript:return confirm('Updating your product will temporarily remove it from the site until Gallery Art can review it -- Are You Sure?');"><br>
+                                                                    <input type="submit" name="process" class="SeeMore" value="Add Your Listing" onClick="javascript:return confirm('Updating your product will temporarily remove it from the site until Gallery Art can review it -- Are You Sure?');"><br>
                                                                     <input type="reset" value="Reset" class="SeeMore" />
                                                                     <input type="hidden" name="id" value="#url.id#">
                                                                         <Cfif isDefined('returnq')>
@@ -578,7 +590,7 @@ return true;
                                                                     
                                                                     <cfelse>
                                                                     <input type="Hidden" name="process" value="ADD">
-                                                                    <input type="button" name="process" class="SeeMore" value="Add Your Listing">
+                                                                    <input type="submit" name="process" class="SeeMore" value="Add Your Listing">
                                                                         <Cfif isDefined('returnq')>
                                                                         <input type="hidden" name="returnq" value="#returnq#">
                                                                         </cfif>

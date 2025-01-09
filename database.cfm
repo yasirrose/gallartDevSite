@@ -4,7 +4,9 @@
       <cfoutput>
          <title>#companyname# - #titletext#</title>
       </cfoutput>
+
       <cfinclude template="meta.cfm">
+
       <cfoutput>
          <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
          <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
@@ -13,7 +15,9 @@
          <script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
          <script language="JavaScript" src="./js/utils.js"></script>
       </cfoutput>
+
       <link href="stylesheet_.css" rel="stylesheet" type="text/css">
+
    </head>
    <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
       <cfquery name="searchresult" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -25,6 +29,7 @@
          <cfelse>
          )
          </cfif>
+
          AND active = 1
          order by gallery_price desc
       </CFQUERY>
@@ -67,12 +72,40 @@
                                                    <TD COLSPAN="2" align="center">Gallery Price</TD>
                                                 </TR>
                                                 <CFOUTPUT query="SearchResult">
+                                                   <cfif listlen(manufacturer) gt 1>
+                                                      <cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
+                                                      <cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
+                                                  <cfelse>
+                                                      <cfset artist_name = manufacturer />
+                                                      <cfset artist_name_url = manufacturer />
+                                                  </cfif>
+                                                  
                                                    <TR class="#this_row()#">
-                                                      <TD style="font-family: arial; font-size: 8pt;"><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#')">#manufacturer#</a></TD>
-                                                      <TD style="font-family: arial; font-size: 8pt;"><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#')">#replace(path,':','')#</a></TD>
-                                                      <TD style="font-family: arial; font-size: 8pt;"><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#')">#overview#</a></TD>
-                                                      <TD style="font-family: arial; font-size: 8pt;"><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#')">#name#</a></TD>
-                                                      <TD style="font-family: arial; font-size: 8pt;" align="right"><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#')">#dollarformat(gallery_price)#</a>&nbsp;&nbsp;&nbsp;</TD>
+                                                      <TD style="font-family: arial; font-size: 8pt;">
+                                                         <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                            #manufacturer#
+                                                         </a>
+                                                      </TD>
+                                                      <TD style="font-family: arial; font-size: 8pt;">
+                                                         <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                            #replace(path,':','')#
+                                                         </a>
+                                                      </TD>
+                                                      <TD style="font-family: arial; font-size: 8pt;">
+                                                         <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                            #overview#
+                                                         </a>
+                                                      </TD>
+                                                      <TD style="font-family: arial; font-size: 8pt;">
+                                                         <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                            #name#
+                                                         </a>
+                                                      </TD>
+                                                      <TD style="font-family: arial; font-size: 8pt;" align="right">
+                                                         <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                            #dollarformat(gallery_price)#
+                                                         </a>&nbsp;&nbsp;&nbsp;
+                                                      </TD>
                                                       <TD>&nbsp;</td>
                                                    </TR>
                                                 </CFOUTPUT>
@@ -98,5 +131,6 @@
          </td>
       </tr>
       <cfinclude template="frmxss.cfm">
+      
    </body>
 </html>

@@ -66,7 +66,7 @@
       <cfinclude template="meta.cfm">
       <cfoutput>
          <script language="JavaScript" src="./js/utils.js"></script>
-         <!-- <script language="JavaScript" src="./js/jquery-1.2.6.min.js"></script> -->
+         <!--- <script language="JavaScript" src="./js/jquery-1.2.6.min.js"></script> --->
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- Ensure jQuery is loaded first -->
          <script language="JavaScript" src="./js/slimbox2.js"></script>
          <link href="./css/slimbox2.css" rel="stylesheet" type="text/css">
@@ -351,6 +351,13 @@
                            <div class="banner-section">
                               <div class="art-work-content">
                                  <div class="container user-registrations item-page new-item-page">
+                                    <div aria-label="breadcrumb">
+                                       <ol class="breadcrumb">
+                                         <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+                                         <!--- <li class="breadcrumb-item"><a href="new_listings.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Recent Acquisitions</a></li> --->
+                                         <li class="breadcrumb-item active" aria-current="page">Product Details</li>
+                                       </ol>
+                                     </div>
                                     <div class="row slider-top-row">
                                        <div class="col-md-6 mb-md-6">
                                           <div class="thumbnails-slider-sec">
@@ -366,30 +373,57 @@
                                                                   <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
                                                                </cfif>
 
-                                                               <!--- <img src="./img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="gallery-imggg"> --->
                                                                
                                                             </div>
                                                          </div>
+
+                                                         <cfif isDefined("productinfo.additional_images") AND len(trim(productinfo.additional_images))>
+                                                            <cfloop list="#productinfo.additional_images#" delimiters="," index="additionalImage">
+                                                               <div>
+                                                                  <div class="img-sec">
+                                                                     <cfif fileexists("http://23.20.226.157/img/#additionalImage#")>
+                                                                        <img src="./img/#additionalImage#?x=randrange(1,99)" alt="gallery-img">
+                                                                     <cfelse>
+                                                                        <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+                                                                     </cfif>
+                                                                  </div>
+                                                               </div>
+                                                            </cfloop>
+                                                         </cfif>
+                                                      
+
                                                       </div>
                                                       <div class="slider slider-nav">
-                                                         <cfloop query="productinfo">
                                                          <div>
                                                             <div class="nav-slide-item">
                                                                <div class="img-sec">
                                                                   
-                                                                     <cfif fileexists("http://23.20.226.157/img/thumbnails/#productinfo.uid#.jpg") >
+                                                                     <cfif fileexists("http://23.20.226.157/img/#productinfo.uid#.jpg") >
                                                                         <img src="./img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="gallery-img">
                                                                      <cfelse>
                                                                         <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
                                                                      </cfif>
-                                                                     
-                                                                     
-                                                                  
-                                                                  
                                                                </div>
                                                             </div>
                                                          </div>
-                                                         </cfloop>
+                                                         <!--- </cfloop> --->
+
+                                                         <cfif isDefined("productinfo.additional_images") AND len(trim(productinfo.additional_images))>
+                                                            <cfloop list="#productinfo.additional_images#" delimiters="," index="additionalImage">
+                                                               <div>
+                                                                  <div class="nav-slide-item">
+                                                                     <div class="img-sec">
+                                                                        <cfif fileexists("http://23.20.226.157/img/#additionalImage#")>
+                                                                           <img src="./img/#additionalImage#?x=randrange(1,99)" alt="gallery-img">
+                                                                        <cfelse>
+                                                                           <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+                                                                        </cfif>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                            </cfloop>
+                                                         </cfif>
+
                                                       </div>
                                                    </cfoutput>
                                                 </div>
@@ -399,13 +433,7 @@
                                        <div class="col-md-6 mb-md-6">
                                           <div class="right-section">
                                              <cfoutput query="productinfo">
-                                                <div aria-label="breadcrumb">
-                                                   <ol class="breadcrumb">
-                                                      <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-                                                      <!--- <li class="breadcrumb-item"><a href="new_listings.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Recent Acquisitions</a></li> --->
-                                                      <li class="breadcrumb-item active" aria-current="page">Product Details</li>
-                                                   </ol>
-                                                </div>
+                                                
                                                 <div class="item-text-content">
                                                    <div class="top-heading">
                                                       <cfif productinfo.manufacturer gt 0>
@@ -433,34 +461,34 @@
                                                       </cfif>
                                                    </div>
                                                    <div class="table-responsive">
-                                                      <table cellpadding="1" cellspacing="1" border="0" align="Center" width="95%" style="border: 1px solid ##bbbbbb;">
+                                                      <table cellpadding="1" cellspacing="1" border="0" align="Center" width="95%" style="border: 1px solid ##000;">
                                                          <cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and application.showSalePrice EQ 1>
                                                          <Tr>
-                                                            <td align="center">
+                                                            <th align="center">
                                                                <span><b>Retail Price</b></span>
-                                                            </td>
-                                                            <td align="center">
+                                                            </th>
+                                                            <th align="center">
                                                                <span>
                                                                   <b>Gallery Price</b>
                                                                <span>
-                                                            </td>
-                                                            <td align="center">
+                                                            </th>
+                                                            <th align="center">
                                                                <span>
                                                                   <b>Sale Price</b>
                                                                </span>                                                          
-                                                            </td>
-                                                            <td align="center">
+                                                            </th>
+                                                            <th align="center">
                                                                <span>
                                                                   <b>Your Savings</b>
                                                                </span>
-                                                            </td>
+                                                            </th>
                                                          </tr>
                                                          <Tr>
                                                             <td align="center"><span>#dollarformat(productinfo.retail_price)#</span>
                                                             </td>
-                                                            <td align="center"><span>#dollarformat(productinfo.gallery_price)#</span>
+                                                            <td align="center"><span style="font-weight: 600;">#dollarformat(productinfo.gallery_price)#</span>
                                                             </td>
-                                                            <td align="center"><span>#dollarformat(saleprice)#</span>
+                                                            <td align="center"><span style="color: red;">#dollarformat(saleprice)#</span>
                                                             </td>
                                                             <cfset savings = #productinfo.retail_price# - #saleprice#>
                                                             <td align="center"><span color="red"><b>#dollarformat(savings)#</b></span>
@@ -469,14 +497,14 @@
                                                          <cfelse>
                                                          <cfif (productinfo.retail_price gt 0) and (productinfo.gallery_price gt 0) and (productinfo.retail_price gt productinfo.gallery_price)>
                                                          <Tr>
-                                                            <td align="center"><span><b>Retail Price</b></span>
-                                                            </td>
-                                                            <td align="center">
+                                                            <th align="center"><span><b>Retail Price</b></span>
+                                                            </th>
+                                                            <th align="center">
                                                                <span><b>Gallery Price</b>
                                                                <spant>
-                                                            </td>
-                                                            <td align="center"><span><b>Your Savings</b></span>
-                                                            </td>
+                                                            </th>
+                                                            <th align="center"><span><b>Your Savings</b></span>
+                                                            </th>
                                                          </tr>
                                                          <Tr>
                                                             <td align="center"><span>#dollarformat(productinfo.retail_price)#</span>
@@ -507,7 +535,7 @@
                                                          <cfset c_medium = REReplace(medium, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
                                                          <p>Medium: <span>#c_medium#</span></p>
                                                       </cfif>
-                                                      <p>Date: <span>#DateFormat(datestamp, "yyyy")#</span></p>
+                                                      <p>Date: <span>#DateFormat(year, "yyyy")#</span></p>
                                                       <cfif edition gt 0>
                                                          <cfset C_edition = REReplace(edition, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
                                                          <p>Edition: <span>#C_edition#</span></p>
@@ -685,7 +713,7 @@
                                                                         </div>
                                                                         <div class="col-md-6 col-sm-6">
                                                                            <button type="button" class="flex-btn">
-                                                                              <a href="https://api.whatsapp.com/" target="_blank">
+                                                                              <a href="https://wa.me/?text=#fullURL#" target="_blank">
                                                                                  <i class="fab fa-whatsapp"></i>
                                                                                  <span>WhatsApp</span>
                                                                              </a>
@@ -751,7 +779,7 @@
                                                             </button>
                                                          </div>
                                                          <div class="collapse" id="collapseExample">
-                                                            <div class="card card-body" style="border: 1px solid black; background: darkgray">
+                                                            <div class="card card-body" style="border: 1px solid black; background: white;">
                                                                <cfif FORM.submitted>
                                                                   <!--- Check for a bot. --->
                                                                   <cfif phoneError>

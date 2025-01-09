@@ -99,5 +99,11 @@
 	</tr>
 <cfinclude template="frmxss.cfm">
 
+<style>
+	b{
+		color: #EC008C;
+	}
+</style>
+
 </body>
 </html>

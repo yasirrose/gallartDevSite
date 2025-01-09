@@ -179,7 +179,7 @@
 														  <h4>Artist: #ucase(productinfo.manufacturer)#</h4>
 													   </font>
 													</cfif>
-													<cfif productinfo.name gt 0>
+													<!--- <cfif productinfo.name gt 0>
 													   <font size="1" face="arial, helvetica">Title: #productinfo.name#</font>
 													</cfif>
 													<cfif productinfo.retail_price gt 0>
@@ -211,16 +211,16 @@
 													</cfif>
 													<cfif productinfo.caption gt 0>
 													   <font size="1" face="arial, helvetica">Description: #trim(productinfo.caption)#</font>
-													</cfif>
-													<!--- <p>
-													   <table class=" table table-bordered table-striped">
-														   <tr>
+													</cfif> --->
+													<div class="table-responsive">
+													   <table class=" table table-bordered" style="border: 1px solid black;">
+														   <tr style="background: ##ec008c; color: white;">
 															   <th>Title</th>
 															   <th>Retail Price</th>
 															   <th>
 																   <cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
 																	   <cfif application.showSalePrice EQ 1>
-																		   <span style="color: ##ff0000;">Sale Price</span>
+																		   <span style="color: black;">Sale Price</span>
 																	   </cfif>
 																   <cfelseif productinfo.gallery_price gt 0>
 																	   Gallery Price
@@ -230,12 +230,13 @@
 															   <th>Year</th>
 															   <th>Medium</th>
 															   <th>Edition</th>
-															   <th>Description</th>
+															   <!--- <th>Description</th> --->
 														   </tr>
 														   <tr>
 															   <td>
 																   <cfif productinfo.name gt 0>
-																	   #productinfo.name#
+																	<cfset name = REReplace(productinfo.name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+																	   #name#
 																   </cfif>
 															   </td>
 															   <td>
@@ -263,8 +264,11 @@
 																   </cfif>
 															   </td>
 															   <td>
+																<cfset medium=replace(RemoveChars(productinfo.path,len(productinfo.path), 1),":","/","all")>
+																<cfset c_medium = REReplace(medium, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+
 																   <cfif medium gt 0>
-																	   #medium#
+																	   #c_medium#
 																   </cfif>
 															   </td>
 															   <td>
@@ -272,16 +276,22 @@
 																	   #productinfo.edition#
 																   </cfif>
 															   </td>
-															   <td>
+															   <!--- <td>
 																   <cfif productinfo.caption gt 0>
-																	   #trim(productinfo.caption)#
+																	  <p>
+																		#trim(productinfo.caption)#
+																	  </p> 
 																   </cfif>
-															   </td>
+															   </td> --->
 														   </tr>
 													   </table>
+
+													   <p>
+														<b>Description: </b> #trim(productinfo.caption)#
+													   </p>
 													   
 													   
-													   </p> --->
+													</div>
 													<cfif FORM.submitted>
 													   <cfif phoneError>
 														  <cfoutput>
@@ -418,13 +428,14 @@
 													</cfif>
 													<cfelse>
 													<div class="form-section">
-													   <cfform action="" method="post" name="frm1">
+													   <cfform action="" method="post" name="frm1" onsubmit="return validateEpricingForm()">
 														  <input type="hidden" name="submitted" value="1" />
 														  <input type="hidden" name="captcha_check" value="#form.captcha_check#" />
 														  <input type="hidden" name="pid" value="#form.pid#" />
 														  <h5 style="mt-2 mb-4 font-size: 16px; font-weight: bold;">
 															 GET E-PRICING FOR THIS PIECE!SIMPLY SUBMIT THE FORM BELOW:
 														  </h5>
+														  <span style="color: ##ff0000;">* Required</span>
 														  <cfif FORM.captchaError EQ 1>
 															 <span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE
 															 EXACTLY AS YOU SEE THEM</span>
@@ -437,20 +448,22 @@
 														  <div class="input-form">
 															 <div class="input-field">
 																<label><FONT face="" color="000000"><b>FIRST NAME</b></FONT></label>
-																<cfinput type="text" size=40 maxsize=50 name="fname" value="#form.fname#" required="Yes"
-																   MESSAGE="Please fill in your first name.">
+																<cfinput type="text" size=40 maxsize=50 name="fname" id="fname" value="#form.fname#" >&nbsp;<span style="color:##ff0000;">*</span>
+																   <span class="error-message" id="fnameError"></span>
 															 </div>
 															 <div class="input-field">
 																<label>
 																<FONT face="" color="000000"><b>LAST NAME</b></FONT>
 																</label>
-																<cfinput type="text" size=40 maxsize=50 name="lname" value="#form.lname#" required="Yes"
-																   MESSAGE="Please fill in your last name.">
+																<cfinput type="text" size=40 maxsize=50 name="lname" id="lname" value="#form.lname#" >
+																&nbsp;<span style="color:##ff0000;">*</span>
+																   <span class="error-message" id="lnameError"></span>
 															 </div>
 															 <div class="input-field">
 																<label><FONT face="" color="000000"><b>E-MAIL ADDRESS</b></FONT></label>
-																<cfinput type="text" size=40 maxsize=50 name="email" value="#form.email#" required="Yes"
-																   MESSAGE="Please fill in a proper email address." validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
+																<cfinput type="text" size=40 maxsize=50 name="email" id="email" value="#form.email#"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
+																&nbsp;<span style="color:##ff0000;">*</span>
+																   <span class="error-message" id="emailError"></span>
 															 </div>
 															 <div class="input-field">
 																<label>
@@ -490,7 +503,9 @@
 																   fontsize="28" />
 																<label><FONT face="" color="000000"><b>Please enter the characters in the
 																image above:</b></FONT></label>
-																<cfinput type="text" name="captcha" required="true" message="Please enter the characters in the image.">
+																<cfinput type="text" name="captcha" id="captcha" >
+																&nbsp;<span style="color:##ff0000;">*</span>
+																<span class="error-message" id="captchaError"></span>
 															 </div>
 															 <div class="input-button">
 																<button type="submit" class="SeeMore">Submit</button>
@@ -508,7 +523,8 @@
 										   <div>
 											  <cfoutput>
 												 <cfif #similar.recordcount# gt 0>
-												 <font face="arial,helvetica" size="2"><b>You Might Also Like:</b></font>
+												 <font face="arial,helvetica" size="3"><b>You Might Also Like:</b></font>
+												 <br><br>
 												 <cfloop query="similar">
 													<cfset thisFile="#expandpath('.')#\img\#similar.uid#.jpg" />
 													<cfif listlen(manufacturer) gt 1>
@@ -520,13 +536,19 @@
 													</cfif>
 													<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#'
 													)">
+													<ul>
+														<li>
 													<cfif fileExists(thisFile)>
 													   <img src="http://#server_name#/img/thumbnails/#similar.uid#.jpg" alt="#ucase(similar.manufacturer)# - #similar.name#"
 														  border="1">
 													   <cfelse>
 													   #ucase(similar.manufacturer)# - #similar.name#
 													</cfif>
-													<font size="1" face="verdana, arial">#name#</font>
+													<!--- <font size="1" face="verdana, arial">#name#</font> --->
+														
+															 #name# 
+															</li>
+														</ul>
 													</a>
 												 </cfloop>
 												 </cfif>
@@ -552,5 +574,62 @@
 		  </td>
 	   </tr>
 	   <cfinclude template="frmxss.cfm">
+
+	   <script>
+		function validateEpricingForm() {
+         let isValid = true;
+         
+         // Clear previous error messages
+         document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+         
+         // Get form field values
+         const fname = document.getElementById('fname').value.trim();
+         const lname = document.getElementById('lname').value.trim();
+         const email = document.getElementById('email').value.trim();
+         const captcha = document.getElementById('captcha').value.trim();
+         
+         // Validate FIRST NAME
+         if (!fname) {
+            document.getElementById('fnameError').textContent = 'Please fill in your first name.';
+            isValid = false;
+         }
+         
+         // Validate LAST NAME
+         if (!lname) {
+            document.getElementById('lnameError').textContent = 'Please fill in your last name.';
+            isValid = false;
+         }
+         
+         // Validate EMAIL
+         if (!email) {
+            document.getElementById('emailError').textContent = 'Please fill in your email address.';
+            isValid = false;
+         } else if (!/\S+@\S+\.\S+/.test(email)) {
+            document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+            isValid = false;
+         }
+         
+         // Validate CAPTCHA
+         if (!captcha) {
+            document.getElementById('captchaError').textContent = 'Please enter the characters in the image.';
+            isValid = false;
+         }
+         
+         return isValid;
+         }
+	   </script>
+	   
+	    <style>
+			.error-message {
+			color: #ff0000;
+			font-size: 0.9em;
+			margin-top: 5px;
+			display: block;
+			}
+			.input-field {
+			margin-bottom: 15px;
+			}
+		 </style>
+
 	</body>
  </html>

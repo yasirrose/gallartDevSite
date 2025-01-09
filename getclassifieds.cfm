@@ -129,10 +129,10 @@
         <br>
         Art ID:&nbsp;#modelno#<br><br>
 		<span>
-		<a href="make_offer.cfm?pid=#uid#&xss=#xss#">
+		<!--- <a href="make_offer.cfm?pid=#uid#&xss=#xss#">
             <!--- <img src="images/make_offer.gif" border="0" style="width: 120px; height: 30px;"> --->
             <img src="images/question.gif" border="0" style="width: 120px; height: 30px;">
-        </a>
+        </a> --->
 		</span>
 
         <!--- <div class="e-pricing">

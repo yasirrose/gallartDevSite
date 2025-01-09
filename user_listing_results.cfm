@@ -93,7 +93,7 @@
 					<cfinclude template="top_.cfm">
 				</div>
 				<div class="navbar-section">
-					<cfinclude template="navbar_.cfm">
+					<cfinclude template="navbar_user.cfm">
 				</div>
 			</div>
 

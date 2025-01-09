@@ -191,11 +191,11 @@
 					</td>
 					<td>
 						<cfinput type="hidden"  name="activeValue" id="activeValue"  bind="{data.active}"  >
-						<cfselect name="active" id="active"  >
+						<select name="active" id="active" style="height:18px; width: 178px;" >
 							<option value="">Please Select</option>
 							<option value="Yes">Yes</option>
 							<option value="No">No</option>
-						</cfselect>
+						</select>
 					</td>
 				</tr>
 				<tr>

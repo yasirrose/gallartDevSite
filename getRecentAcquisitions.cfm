@@ -111,7 +111,7 @@
         </span><br>
         Art ID:&nbsp;#modelno#<br><br>
 
-        <div class="e-pricing">
+        <!--- <div class="e-pricing">
             <cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>
             <cfif makeoffer_buttons.show EQ 1>
                 <a href="make_offer.cfm?pid=#uid#&xss=#xss#"><img src="images/make_offer.gif" border="0"></a>
@@ -120,7 +120,7 @@
                     <img src="images/question.gif" border="0">
                 </a>
             </cfif>
-        </div>
+        </div> --->
     <cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>
     
     </td>

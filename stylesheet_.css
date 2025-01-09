@@ -571,7 +571,7 @@ a.dbl_arrows {
 	padding: 20px 0;
 }
 .content-section .banner-section .art-work-content {
-	margin-bottom: 80px;
+	margin-bottom: 40px;
 	/* border-bottom: 1px solid #000; */
 }
 .content-section .banner-section .art-work-content .top-heading {
@@ -1081,7 +1081,7 @@ html body .mobile-search {
 }
 .registration-page .content-section .banner-section .art-work-content {
     border: 0;
-    padding-top: 80px;
+    padding-top: 40px;
 }
 .registration-page .content-section .banner-section .art-work-content input,
 .registration-page .content-section .banner-section .art-work-content select{
@@ -1716,6 +1716,8 @@ footer .footer-container .footer-wrapper .footer__newsletter .footer__newsletter
 	font-size: 24px;
     font-weight: 600;
     text-align: left;
+	margin-top: 0;
+    padding: 0;
 }
 .new-item-page .right-section .item-text-content .top-heading h2.title {
 	font-size: 30px;
@@ -1725,21 +1727,32 @@ footer .footer-container .footer-wrapper .footer__newsletter .footer__newsletter
 .new-item-page .right-section .item-text-content .table-responsive {
 	margin: 20px 0;
 }
+.new-item-page .right-section .item-text-content .table-responsive table tr th {
+    text-align: center;
+    border-right: 1px solid #000;
+    padding: 10px 0;
+    background: #ec008c;
+    color: #fff;
+}
 .new-item-page .right-section .item-text-content .table-responsive table tr td {
-	border: 1px solid #000;
-	padding: 5px;
+	border-right: 1px solid #000;
+	padding: 12px 0;
+}
+.new-item-page .right-section .item-text-content .table-responsive table tr th span {
+    font-size: 13px;
+    line-height: normal;
+    text-align: center;
 }
 .new-item-page .right-section .item-text-content .table-responsive table tr td span {
-	font-size: 12px;
+	font-size: 16px;
     line-height: normal;
 }
-
 .new-item-page .right-section .item-text-content .product-description-sec {
 	margin: 20px 0;
 }
 
 .new-item-page .right-section .item-text-content .product-description-sec p {
-	font-size: 16px;
+	font-size: 14px;
     font-weight: 600;
     line-height: normal;
     margin-bottom: 10px;
@@ -1937,15 +1950,15 @@ footer .footer-container .footer-wrapper .footer__newsletter .footer__newsletter
 	text-align: center;
 	line-height: normal;
 	width: 100%;
-	background-color: #fff;
+	background-color: darkgray;
 	color: #000;
 	text-transform: capitalize;
 	box-shadow: none;
 	outline: none;
 }
-.bottom-row-fields .inquire-Button:hover {
+/* .bottom-row-fields .inquire-Button:hover {
 	background-color: #d9d6d2;
-}
+} */
 
 .bio-field .artist-Button {
 	padding: 10px;
@@ -2047,8 +2060,8 @@ footer .footer-container .footer-wrapper .footer__newsletter .footer__newsletter
 .thumbnails-slider-sec .thumbnails-slider .slider.slider-for .slick-list.draggable .slick-slide .img-sec img {
 	height: 100%;
 	width: 100%;
-	object-fit: cover;
-	border-radius: 10px;
+	object-fit: contain;
+	/* border-radius: 10px; */
 }
 .thumbnails-slider-sec .thumbnails-slider .slider.slider-nav .slick-list.draggable .slick-slide {
 	background: #fff;
@@ -2504,6 +2517,9 @@ a, button, input {
     margin: 0;
     padding: 0;
 }
+.simple-search p {
+    min-height: 46px;
+}
 
 @media (max-width: 1600px) {
 	.main-content .content-section {
@@ -2826,9 +2842,9 @@ footer .footer-container .footer-wrapper .top-footer .footer-menu h3 {
 	.productSearch-filed form {
         padding: 0;
     }	
-	.registration-page .content-section .banner-section .art-work-content {
+	/* .registration-page .content-section .banner-section .art-work-content {
 		padding-top: 50px;
-	}	
+	} */
 	.user-registrations .bottom-content {
 		margin: 15px 0 30px;
 	}
@@ -2851,7 +2867,7 @@ footer .footer-container .footer-wrapper .top-footer .footer-menu h3 {
 		margin: 0 auto 20px;
 	}
 	.content-section .banner-section .art-work-content {
-		margin-bottom: 50px;
+		/* margin-bottom: 50px; */
 		border-bottom: 1px solid #000;
 	}
 	.content-section .banner-section .banner-content .content-sec .search-box {
