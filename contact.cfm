@@ -153,6 +153,8 @@
 				   <cfinclude template="navbar_.cfm">
 				</div>
 			 </div>
+			 
+
 			 <div class="inner-section">
 				<div class="container-fluid">
 				   <div class="main-content">
@@ -215,10 +217,13 @@
 												<cftry>
 
 													
-
 													
 													
-													<cfif form.fname neq '' and  form.lname neq '' and form.comments neq '' and form.email neq '' and form.phone neq '' and form.otherphone neq '' >
+													
+													<cfif 
+														form.fname neq '' 
+													and form.lname neq '' 
+													and form.email neq ''>
 														<cfquery name="addgLead" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 															insert into leads (fname,lname, notes, email, phone, otherphone, maillist)
 															values('#form.fname#','#form.lname#', '#form.comments#', '#form.email#', '#form.phone#', '#form.otherphone#', '#form.list#')
@@ -329,7 +334,8 @@
 												<div class="col-md-6">
 													<div class="input-field">
 													   <label><FONT color="000000"><b>PHONE (xxx) xxx-xxxx</b></FONT></label>
-													   <cfinput type="text" size=40 maxsize=50 name="phone" value="#form.phone#" required="No" MESSAGE="Please fill in your email address." mask="(999) 999-9999">
+													   <cfinput type="text" size=40 maxsize=50 name="phone" value="#form.phone#" required="No" mask="(999) 999-9999">
+													   <span class="error-message" id="phoneError"></span>
 													</div>
 												</div>
 												<div class="col-md-12">
@@ -386,7 +392,10 @@
          const fname = document.getElementById('fname').value.trim();
          const lname = document.getElementById('lname').value.trim();
          const email = document.getElementById('email').value.trim();
+         const phone = document.getElementById('phone').value.trim();
          const captcha = document.getElementById('captcha').value.trim();
+
+		 const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
          
          // Validate FIRST NAME
          if (!fname) {
@@ -408,6 +417,12 @@
             document.getElementById('emailError').textContent = 'Please enter a valid email address.';
             isValid = false;
          }
+
+
+		 if (phone && !phoneRegex.test(phone)) {
+			document.getElementById('phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+			isValid = false;
+		}
          
          // Validate CAPTCHA
          if (!captcha) {

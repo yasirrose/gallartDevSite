@@ -93,12 +93,33 @@
         
         <Br>
         <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" class="name-hover" >
-        #name#
+            <cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
+
+            <!--- Split the name into words --->
+            <cfset words = ListToArray(name, " ")>
+            <cfset updatedName = "">
+
+            <cfloop index="word" array="#words#">
+                <!--- Check if the word (before any punctuation) is a Roman numeral --->
+                <cfif ListFindNoCase(romanNumerals, REReplace(word, "[^a-zA-Z]", "", "ALL"))>
+                    <!--- Preserve the Roman numeral as is --->
+                    <cfset updatedName = updatedName & " " & UCase(word)>
+                <cfelse>
+                    <!--- Capitalize the word (convert to Title Case) --->
+                    <cfset updatedName = updatedName & " " & REReplace(word, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                </cfif>
+            </cfloop>
+
+            <cfset updatedName = Trim(updatedName)>
+
+            #updatedName#
         </a>
         <br>
         <span class="bytext">
-        By: #ucase(artist_name)#<Br> </span>
-        <font color="660066" size="2">
+            <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+            By: #capitalize_artistName#<Br>
+        </span>
+        <font color="660066" >
         <cfif retail_price gt 0 and retail_price gt gallery_price>
         Retail Price: #dollarformat(retail_price)#
         </cfif></font><Br>

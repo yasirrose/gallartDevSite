@@ -41,7 +41,7 @@ function helpWin(url) {
 				<div class="mailto-text">
 					<div class="resigter">
 						<ul>
-							<li><a href="/sign_in.cfm"><i class="far fa-user"></i></a></li>
+							<li><a href="/user_login_page.cfm"><i class="far fa-user"></i></a></li>
 							<li><a href="/view.cfm"><i class="fas fa-shopping-cart"></i></a></li>
 						</ul>
 					</div>

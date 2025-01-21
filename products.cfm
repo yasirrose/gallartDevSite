@@ -456,8 +456,17 @@
                                 // let keywords = document.getElementById('keywords').value;
                                 let priceOrder = document.getElementById('priceOrder').value;
 
-                                if ( keywords || priceOrder ||  artSubject || artType|| artSize|| artStyle) {
-                                    if (  priceOrder !==lastPriceOrder || keywords!==lastkeywords || artSubject!=lastartSubject || artType !=  lastartType || artSize != lastartSize || artStyle != lastartStyle) {
+                                // if (artType) {
+                                //     params.delete('Type'); // Remove the previous Size value from the URL
+                                // }
+
+                                let ajaxSize = artSize ? artSize : Size;
+                                let ajaxSubject = artSubject ? artSubject : Subject;
+                                let ajaxStyle = artStyle ? artStyle : Style;
+                                let ajaxType = artType ? artType : Type;
+
+                                if ( keywords || priceOrder ||  ajaxSubject || ajaxType|| ajaxSize|| ajaxStyle) {
+                                    if (  priceOrder !==lastPriceOrder || keywords!==lastkeywords || ajaxSubject!=lastartSubject || ajaxType !=  lastartType || ajaxSize != lastartSize || ajaxStyle != lastartStyle) {
                                         
                                             page = 1; 
                                             
@@ -467,14 +476,14 @@
                                         //   lastpath = path; // Update lastArtist to the new artist value
                                             lastPriceOrder = priceOrder;
                                             lastkeywords = keywords;
-                                            lastartSubject = artSubject;
-                                            lastartType = artType;
-                                            lastartSize = artSize;
-                                            lastartStyle = artStyle;
+                                            lastartSubject = ajaxSubject;
+                                            lastartType = ajaxType;
+                                            lastartSize = ajaxSize;
+                                            lastartStyle = ajaxStyle;
                                     }
                                 }
                         
-                                console.log('Manufacturer:', Manufacturer);
+                                console.log('Manufacturer:', ajaxSize);
                         
                                 $.ajax({
                                     url: 'fetch_products.cfm',
@@ -482,13 +491,13 @@
                                     data: {
                                         page: page,
                                         man: Manufacturer,
-                                        Size: artSize,
+                                        Size: ajaxSize,
                                         Title: title,
                                         Artist: Artist,
                                         priceOrder: priceOrder,
-                                        Subject: artSubject,
-                                        Type: artType,
-                                        Style: artStyle,
+                                        Subject: ajaxSubject,
+                                        Type: ajaxType,
+                                        Style: ajaxStyle,
                                         keywords: keywords,
                                         year: year,
                                         path: path,
@@ -499,17 +508,17 @@
                                     success: function(data) {
                                         if (data.trim() === '') {
                                     noMoreProducts = true;
-                                    // $('#loading').html('No more products').show();
-                                    toastr.warning('No more products');
-                                    $('#loading').hide();
+                                    $('#loading').html('No more products').show();
+                                    // toastr.warning('No more products');
+                                    // $('#loading').hide();
 
                                         } else if (data === previousData && page !== 1) {
                                             // Prevent loading duplicate data on scroll (ignore check for page 1)
                                             noMoreProducts = true;
-                                            // $('#loading').html('No more products').show();
+                                            $('#loading').html('No more products').show();
 
-                                        toastr.warning('No more products');
-                                        $('#loading').hide();
+                                        // toastr.warning('No more products');
+                                        // $('#loading').hide();
 
                                         } else {
                                             if (page === 1) {

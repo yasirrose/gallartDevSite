@@ -67,7 +67,8 @@
       <cfoutput>
          <script language="JavaScript" src="./js/utils.js"></script>
          <!--- <script language="JavaScript" src="./js/jquery-1.2.6.min.js"></script> --->
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- Ensure jQuery is loaded first -->
+         <!--- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- Ensure jQuery is loaded first --> --->
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
          <script language="JavaScript" src="./js/slimbox2.js"></script>
          <link href="./css/slimbox2.css" rel="stylesheet" type="text/css">
          <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -77,6 +78,10 @@
          <script src='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js'></script>
          <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.min.css'>
          <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick-theme.min.css'>
+         <!--- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery.js@2.0.0/dist/css/lightgallery.min.css">
+      <script src="https://cdn.jsdelivr.net/npm/lightgallery.js@2.0.0/dist/js/lightgallery.min.js"></script> --->
+
+      
          <script type="text/javascript">
             // Ensure document is fully loaded before initializing slick
             $(document).ready(function() {
@@ -156,6 +161,11 @@
          })(window, document, 'Robly');
       </script>
       <!-- END ROBLY WIDGET CODE -->
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+      
    </head>
    <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
       <!--- Add Edit or Delete this Item from the Cart --->
@@ -364,35 +374,88 @@
                                              <div class="thumbnails-slider">
                                                 <div class="main">
                                                    <cfoutput>
-                                                      <div class="slider slider-for">
+
+                                                      <div class="slider slider-for" id="sliderBox">
                                                          <div>
                                                             <div class="img-sec">
-                                                               <cfif fileexists("http://23.20.226.157/img/thumbnails/#productinfo.uid#.jpg") >
-                                                                  <img src="./img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="gallery-imggg">
-                                                               <cfelse>
-                                                                  <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
-                                                               </cfif>
+                                                               <!-- Wrapping the image in a div with the class 'lightgallery' -->
+                                                               <!--- <a href="http://23.20.226.157/img/#productinfo.uid#.jpg" target="_blank"> --->
 
-                                                               
+                                                                  <cfif fileexists("http://23.20.226.157/img/#productinfo.uid#.jpg")>
+                                                                     <a data-fancybox="slider-gallery" data-src="./img/#productinfo.uid#.jpg?x=randrange(1,99)" data-caption="Main Image">
+                                                                        <img src="./img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="slider-gallery-img">
+                                                                    </a>
+                                                                  <cfelse>
+                                                                     <a data-fancybox="slider-gallery" data-src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg" data-caption="Main Image">
+                                                                     <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+                                                                     </a>
+                                                                  </cfif>
+
+                                                               <!--- </a> --->
                                                             </div>
                                                          </div>
-
+                                                   
                                                          <cfif isDefined("productinfo.additional_images") AND len(trim(productinfo.additional_images))>
                                                             <cfloop list="#productinfo.additional_images#" delimiters="," index="additionalImage">
                                                                <div>
                                                                   <div class="img-sec">
-                                                                     <cfif fileexists("http://23.20.226.157/img/#additionalImage#")>
-                                                                        <img src="./img/#additionalImage#?x=randrange(1,99)" alt="gallery-img">
-                                                                     <cfelse>
-                                                                        <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
-                                                                     </cfif>
+                                                                     <!-- Wrapping the additional images in a div with the class 'lightgallery' -->
+
+                                                                     <!--- <a href="http://23.20.226.157/img/#additionalImage#" target="_blank"> --->
+
+
+                                                                        <cfif fileexists("http://23.20.226.157/img/#additionalImage#")>
+
+                                                                           
+                                                                           <a data-fancybox="slider-gallery" data-src="./img/#additionalImage#?x=randrange(1,99)" data-caption="Main Image">
+                                                                              <img src="./img/#additionalImage#?x=randrange(1,99)" alt="slider-gallery-img">
+                                                                          </a>
+
+                                                                           <!--- <img src="./img/#additionalImage#?x=randrange(1,99)" alt="gallery-img" class="thumbnail zoom"> --->
+                                                                           
+                                                                        <cfelse>
+                                                                           <a data-fancybox="slider-gallery" data-src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg" data-caption="Main Image">
+                                                                              <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+                                                                              </a>
+                                                                        </cfif>
+
+
+                                                                     <!--- </a> --->
                                                                   </div>
                                                                </div>
                                                             </cfloop>
                                                          </cfif>
-                                                      
-
                                                       </div>
+
+                                                     
+
+
+                                                      <script>
+                                                         $(document).ready(function () {
+                                                             // Initialize FancyBox for the slider images
+                                                             $('slider-for').find('[data-fancybox="slider-gallery"]').fancybox({
+                                                                 buttons: [
+                                                                     "zoom",
+                                                                     "slideShow",
+                                                                     "fullScreen",
+                                                                     "close"
+                                                                 ],
+                                                                 loop: true,
+                                                                 protect: true,
+                                                                 animationEffect: "zoom"
+                                                             });
+                                                         });
+                                                     </script>
+
+                                                      <!--- <script>
+                                                         document.addEventListener('DOMContentLoaded', function() {
+                                                            lightGallery(document.querySelector('.slider-for'), {
+                                                               selector: 'a', // Select images wrapped in <a> tags
+                                                               download: false // Optionally disable the download button
+                                                            });
+                                                         });
+                                                      </script> --->
+                                                      
                                                       <div class="slider slider-nav">
                                                          <div>
                                                             <div class="nav-slide-item">
@@ -456,8 +519,28 @@
                                                       <!--- <h3 class="meta">#ucase(manufacturer)#</h3> --->
                                                       </cfif>
                                                       <cfif productinfo.name gt 0>
-                                                         <cfset title_capitalize = REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-                                                         <h2 class="title">#title_capitalize#</h2>
+                                                         
+                                                         <cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
+
+                                                         <!--- Split the name into words --->
+                                                         <cfset words = ListToArray(name, " ")>
+                                                         <cfset updatedName = "">
+
+                                                         <cfloop index="word" array="#words#">
+                                                            <!--- Check if the word (before any punctuation) is a Roman numeral --->
+                                                            <cfif ListFindNoCase(romanNumerals, REReplace(word, "[^a-zA-Z]", "", "ALL"))>
+                                                               <!--- Preserve the Roman numeral as is --->
+                                                               <cfset updatedName = updatedName & " " & UCase(word)>
+                                                            <cfelse>
+                                                               <!--- Capitalize the word (convert to Title Case) --->
+                                                               <cfset updatedName = updatedName & " " & REReplace(word, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                                                            </cfif>
+                                                         </cfloop>
+
+                                                         <cfset updatedName = Trim(updatedName)>
+
+															            <h2 class="title">#updatedName#</h2>
+
                                                       </cfif>
                                                    </div>
                                                    <div class="table-responsive">
@@ -535,10 +618,14 @@
                                                          <cfset c_medium = REReplace(medium, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
                                                          <p>Medium: <span>#c_medium#</span></p>
                                                       </cfif>
-                                                      <p>Date: <span>#DateFormat(year, "yyyy")#</span></p>
+                                                      <cfif year gt 0 >
+                                                         <p>Date: <span>#DateFormat(year, "yyyy")#</span></p>
+                                                      </cfif>
+                                                      
                                                       <cfif edition gt 0>
-                                                         <cfset C_edition = REReplace(edition, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-                                                         <p>Edition: <span>#C_edition#</span></p>
+                                                         <!--- <cfset C_edition = REReplace(edition, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+                                                         <cfset updatedEdition = REReplace(edition, "\bOF\b", "Of", "ALL")>
+                                                         <p>Edition: <span>#updatedEdition#</span></p>
                                                       </cfif>
                                                       <cfif productinfo.size gt 0>
                                                          <p>Size: <span>#Replace(productinfo.size, "X", "x", "all")# inches</span></p>
@@ -557,7 +644,7 @@
                                                          <cfelse>
                                                          <input type="hidden" name="charge" value="#productinfo.gallery_price#">
                                                          </cfif>
-                                                         <cfif productinfo.gallery_price eq 0 and (productinfo.closeout neq 1 and productinfo.special_price gt 0)>
+                                                         <!--- <cfif productinfo.gallery_price eq 0 and (productinfo.closeout neq 1 and productinfo.special_price gt 0)>
                                                          <p><b>Price On Request</b></p>
                                                          <cfelseif productinfo.closeout eq 1 and saleprice gt 0 and application.showSalePrice EQ 1>
                                                          <p>
@@ -572,7 +659,7 @@
                                                          </p>
                                                          <p>Sale Price: <span>#dollarformat(saleprice)#</span></p>
                                                          <cfelse>
-                                                         </cfif>
+                                                         </cfif> --->
                                                          <cfif len(productinfo.fk_users)>
                                                             <span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span>
                                                          </cfif>
@@ -739,6 +826,8 @@
                                                                </div>
                                                             </div>
                                                          </div>
+
+                                                         
                                                          <cfif productinfo.gallery_price neq 0 or (productinfo.closeout eq 1 and productinfo.special_price gt 0)>
                                                          <input type="HIDDEN" name="qty" value="1">
                                                          <div class="button-group">
@@ -816,16 +905,16 @@
                                                                      <cftry>
                                                                        
                                                                         
-
+                                                                        <cfif 
+                                                                              form.fname neq '' 
+                                                                           and form.lname neq '' 
+                                                                           and form.email neq ''>
                                                                         <cfquery name="addgLead" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
                                                                            insert into leads (fname,lname, notes, email, phone, otherphone, maillist)
                                                                            values('#form.fname#','#form.lname#', '#form.comments#', '#form.email#', '#form.phone#', '#form.otherphone#', '#form.list#')
                                                                         </cfquery>
-                                                                        <cfcatch type="Any">
-                                                                           Sorry - we have encountered a processing error.  Please try again.
-                                                                           <cfabort>
-                                                                        </cfcatch>
-                                                                     </cftry>
+                                                                        
+                                                                       
                                                                      <cfmail 
                                                                         server="#servername#" 
                                                                         username="gallart@onlinegalleryart.com"
@@ -852,6 +941,18 @@
                                                                            . <br><br> Your Email has been sent to the respective personnel. <br><br>   We hope that your visit has been a pleasant experience so far.
                                                                         </b>
                                                                      </p>
+                                                                  <cfelse>
+                                                                     <cfoutput>
+                                                                        <p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
+                                                                     </cfoutput>
+                                                                  </cfif>
+
+                                                                     <cfcatch type="Any">
+                                                                        Sorry - we have encountered a processing error.  Please try again.
+                                                                        <cfabort>
+                                                                     </cfcatch>
+                                                                  </cftry>
+
                                                                   </cfif>
                                                                   <cfelse>
                                                                   <cfoutput>
@@ -889,7 +990,8 @@
                                                                            </div>
                                                                            <div class="input-field">
                                                                               <label><FONT color="000000"><b>PHONE (xxx) xxx-xxxx</b></FONT></label>
-                                                                              <cfinput type="text" name="phone" value="#form.phone#" required="No" MESSAGE="Please fill in your email address." mask="(999) 999-9999">
+                                                                              <cfinput type="text" name="phone" value="#form.phone#" required="No" id="phone" mask="(999) 999-9999">
+                                                                              <span class="error-message" id="phoneError"></span>
                                                                            </div>
                                                                            <div class="input-field">
                                                                               <label><FONT color="000000"><b>PHONE OUTSIDE THE US</b></FONT></label>
@@ -949,6 +1051,7 @@
                                                             </div>
                                                          </div>
                                                       </div>
+                                                      
                                                    </div>
                                                 </div>
                                              </cfoutput>
@@ -1026,6 +1129,9 @@
          const lname = document.getElementById('lname').value.trim();
          const email = document.getElementById('email').value.trim();
          const captcha = document.getElementById('captcha').value.trim();
+         const phone = document.getElementById('phone').value.trim();
+
+         const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
          
          // Validate FIRST NAME
          if (!fname) {
@@ -1047,7 +1153,11 @@
             document.getElementById('emailError').textContent = 'Please enter a valid email address.';
             isValid = false;
          }
-         
+
+         if (phone && !phoneRegex.test(phone)) {
+            document.getElementById('phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+            isValid = false;
+         }
          // Validate CAPTCHA
          if (!captcha) {
             document.getElementById('captchaError').textContent = 'Please enter the characters in the image.';

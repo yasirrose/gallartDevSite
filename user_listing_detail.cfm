@@ -390,37 +390,51 @@ function validEntries(frm) {
 	if(frm.vendor.value == '') {
 		alert('please select Vendor'); return false;
 	}
+    isValid = true;
+    document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
 	if(frm.name.value == ''){
-	alert('You must enter a Title.');
-	frm.name.focus();
-	return false;
+	// alert('You must enter a Title.');
+    document.getElementById('titleError').textContent = 'You must enter a Title.';
+	// frm.name.focus();
+	// return false;
+    isValid = false;
 	}
 	if(frm.retail_price.value == '' || frm.retail_price.value == '$0.00' || frm.retail_price.value == 0){
-	alert('You must enter a Retail Price greater than zero.');
-	frm.retail_price.focus();
-	return false;
+	// alert('You must enter a Retail Price greater than zero.');
+    document.getElementById('RetailPriceError').textContent = 'You must enter a Retail Price greater than zero.';
+	// frm.retail_price.focus();
+	// return false;
+    isValid = false;
 	}
 	if(frm.gallery_price.value == '' || frm.gallery_price.value == '$0.00' || frm.gallery_price.value == 0){
-	alert('You must enter a Gallery Price greater than zero.');
-	frm.gallery_price.focus();
-	return false;
+	// alert('You must enter a Gallery Price greater than zero.');
+    document.getElementById('GalleryPriceError').textContent = 'You must enter a Gallery Price greater than zero.';
+	// frm.gallery_price.focus();
+	// return false;
+    isValid = false;
 	}
 	if(frm.manufacturer.value == ''){
-	alert('You must select an Artist.');
-	frm.manufacturer.focus();
-	return false;
+	// alert('You must select an Artist.');
+    document.getElementById('artistviewError').textContent = 'You must select an Artist.';
+	// frm.manufacturer.focus();
+	// return false;
+    isValid = false;
 	}
 	if(frm.category.value == ''){
-	alert('You must select a Medium.');
-	frm.category.focus();
-	return false;
+	// alert('You must select a Medium.');
+    document.getElementById('MediumError').textContent = 'You must select a Medium.';
+	// frm.category.focus();
+	// return false;
+    isValid = false;
 	}
 	if(!isValidSize(frm.size.value)){
-	alert('You must enter a valid SIZE: only numbers and the letter x');
-	frm.size.focus();
-	return false;
+	// alert('You must enter a valid SIZE: only numbers and the letter x');
+    document.getElementById('SizeError').textContent = 'You must enter a valid SIZE: only numbers and the letter x';
+	// frm.size.focus();
+	// return false;
+    isValid = false;
 	}
-	return true;
+	 return isValid;
 	
 }
 function ArtistView() {
@@ -512,6 +526,7 @@ return true;
                                                             <div class="input-field">
                                                                 <label><b>Title:</b></label>
                                                                 <input type="text" name="name" value="#replace(detail.Name,'"','&quot;','all')#" size="40">
+                                                                <span class="error-message" id="titleError"></span>
                                                             </div>
 
                                                             <div class="input-field">
@@ -520,16 +535,17 @@ return true;
                                                                     <option value="">Select here ...</option>
                                                                     <cfloop query="artists">
                                                                     <cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-                                                                    <option value="#manufacturer#" <cfif manufacturer is #detail.manufacturer#>Selected</cfif>>#ucase(manufacturer)#
+                                                                    <option value="#manufacturer#" <cfif manufacturer is #detail.manufacturer#>Selected</cfif>>#REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
                                                                     </cfif>
                                                                     
                                                                     </cfloop>
                                                                 </select>
+                                                                <span class="error-message" id="artistviewError"></span>
                                                             </div>
 
                                                             <div class="input-field">
                                                                 <label><b><i>Select an artist from dropdown above, OR type in a new artist:</i></b></label>
-                                                                <input type="Text" name="manufacturer" value="#ucase(detail.manufacturer)#" size="40">
+                                                                <input type="Text" name="manufacturer" value="#REReplace(detail.manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#" size="40">
                                                             </div>
 
                                                             <div class="input-field">
@@ -540,6 +556,7 @@ return true;
                                                             <div class="input-field">
                                                                 <label><b>Size:</b>(HEIGHT x WIDTH)</label>
                                                                 <input type="text" name="size" value="#detail.size#" size="25">&nbsp;<font face="Verdana, Arial,helvetica" size="1"></font>
+                                                                <span class="error-message" id="SizeError"></span>
                                                             </div>
 
                                                             <div class="input-field">
@@ -547,20 +564,23 @@ return true;
                                                                 <Select name="category">
                                                                     <option value="">Select here ...</option>
                                                                     <cfloop query="cats">
-                                                                        <option value="#path#" <cfif #path# is #detail.path#>Selected</cfif>>#ucase(path)#
+                                                                        <option value="#path#" <cfif #path# is #detail.path#>Selected</cfif>>#REReplace(path, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
                                                                     
                                                                     </cfloop>
                                                                 </select>
+                                                                <span class="error-message" id="MediumError"></span>
                                                             </div>
 
                                                             <div class="input-field">
                                                                 <label><b>Retail Price:</b></label>
                                                                 <input type="text" name="retail_price" value="#dollarformat(detail.retail_price)#" size="25" maxlength="13">
+                                                                <span class="error-message" id="RetailPriceError"></span>
                                                             </div>
 
                                                             <div class="input-field">
                                                                 <label><b>Gallery Price:</b> (selling price)</label>
                                                                 <input type="text" name="gallery_price" value="#dollarformat(detail.gallery_price)#" size="25" maxlength="13">
+                                                                <span class="error-message" id="GalleryPriceError"></span>
                                                             </div>
 
                                                             <div class="input-field">
@@ -627,6 +647,18 @@ return true;
     </div>
 
 <cfinclude template="frmxss.cfm">
+
+<style>
+    .error-message {
+    color: #ff0000;
+    font-size: 0.9em;
+    margin-top: 5px;
+    display: block;
+    }
+    .input-field {
+    margin-bottom: 15px;
+    }
+ </style>
 
 </body>
 </html>

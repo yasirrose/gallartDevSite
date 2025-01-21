@@ -1,3 +1,58 @@
+<!--- <cfsilent>
+	<cfparam name="FORM.captcha_check"	type="string" default="" />
+	<cfparam name="form.captchaError" default="0">
+
+	   <cftry>
+		<cfparam
+		   name="FORM.submitted"	type="numeric"	default="0"	/>
+ 
+		<cfcatch>
+		   <cfset FORM.submitted = 0 />
+		</cfcatch>
+	 </cftry>
+
+	 <cfif isDefined('form.submit') >
+		<cftry>
+
+		
+			<!--- Decrypt the check value. --->
+			<cfset strCaptcha = Decrypt( FORM.captcha_check, "gallart-is-the-best", "CFMX_COMPAT", "HEX"	) />
+	
+			<cfif (strCaptcha EQ FORM.captcha)>
+	
+			   <cfset blnIsBot = false />
+	
+			</cfif>
+	
+			<cfcatch>
+	
+			   <cfset blnIsBot = true />
+	
+			</cfcatch>
+		 </cftry>
+	 </cfif>
+
+	
+
+	 <cfset arrValidChars = ListToArray(
+	"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z," &
+	"2,3,4,5,6,7,8,9"
+	) />
+
+	<!--- Now, shuffle the array. --->
+	<cfset CreateObject( "java", "java.util.Collections"	).Shuffle(	arrValidChars )	/>
+
+	<cfset strCaptcha = (
+	arrValidChars[ 1 ] &
+	arrValidChars[ 2 ] 
+	) />
+
+	<cfset FORM.captcha_check = Encrypt( strCaptcha,"gallart-is-the-best", "CFMX_COMPAT", "HEX" ) />
+
+</cfsilent> --->
+
+<cfif NOT structKeyExists(session, 'sellerinfo') >
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
 
@@ -10,37 +65,37 @@
 <cfparam name="success" default="false">
 <cfparam name="msg" default="">
 
-<cfif isDefined('proc_pw')>
+<cfif isDefined("proc_pw")>
+    <cfquery name="findUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+        SELECT * FROM users WHERE email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar" maxlength="255">
+    </cfquery>
 
-	<cfquery name="findUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		SELECT * from users
-		where email = '#form.email#'
-	</cfquery>
-	
-	<cfif findUser.recordcount>
-		<cfmail server="#servername#" username="onli16@onlinegalleryart.com"
-password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com" subject="Gallery Art Password Retrieval" type="HTML">
-			<font style="font-size: 10pt; font-family: Arial;">
-			Your Gallery Art Password is:
-			<br><br>
-			#findUser.password#
-			<br><br>
-			Please keep in a safe place.
-			<br><br>
-			Thank you from Gallery Art.
-			</font>
-		</cfmail>	
+    <cfif findUser.recordcount>
+        <cfmail server="#servername#" username="onli16@onlinegalleryart.com"
+            password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com"
+            subject="Gallery Art Password Retrieval" type="HTML">
+            <font style="font-size: 10pt; font-family: Arial;">
+            Your Gallery Art Password is:
+            <br><br>
+            #findUser.password#
+            <br><br>
+            Please keep it in a safe place.
+            <br><br>
+            Thank you from Gallery Art.
+            </font>
+        </cfmail>
 
-		<cfset success = "true" />		
-		<cfset msg = "Your password has been emailed to you." />
-		
-	<cfelse>
-	
-		<cfset msg = "That email address is not in our system.  Please try again." />
-	
-	</cfif>
-
+        <cfoutput>
+            <strong style="color:green;">Your password has been emailed to you.</strong>
+        </cfoutput>
+    <cfelse>
+        <cfoutput>
+            <strong style="color:red;">That email address is not in our system. Please try again.</strong>
+        </cfoutput>
+    </cfif>
+    <cfabort>
 </cfif>
+
 
 <html>
 <head>
@@ -85,6 +140,11 @@ password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com" sub
 </script>
 <!-- END ROBLY WIDGET CODE -->
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	<div class="main-container registration-page">
@@ -108,7 +168,7 @@ password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com" sub
 										<div aria-label="breadcrumb">
 											<ol class="breadcrumb">
 											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-											  <li class="breadcrumb-item"><a href="user_registration.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Sell Your Art</a></li>
+											  <li class="breadcrumb-item"><a href="user_login_page.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Seller Login</a></li>
 											  <li class="breadcrumb-item active" aria-current="page">Forget Password</li>
 											</ol>
 										</div>
@@ -118,31 +178,50 @@ password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com" sub
 												<div class="top-heading text-center">
 													<h3>FORGOT PASSWORD</h3>
 												</div>
-												<cfoutput>
-													<cfif success eq "false">
-													
-														<cfif len(msg)><strong>#msg#</strong></cfif>
+												<!--- <cfoutput> --->
+													<!--- <cfif success eq "false">
+
 														
-														<form method="post" action="#script_name#">
+													
+														<cfif len(msg)><strong>#msg#</strong></cfif> --->
+
+														<!--- <cfif FORM.captchaError>
+															<p style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</p>
+														 </cfif> --->
+
+
+														<div id="responseMessage"></div>
+														<form id="forgetForm" onsubmit="return false;">
+															<!--- <input	type="hidden" name="captcha_check"	
+															value="<cfoutput>#FORM.captcha_check#</cfoutput>" /> --->
 															<div class="user-content text-center">
 																<p>Enter your email address below, and we will email your password to you:</p>
 																<div class="input-form">
 																	<div class="input-field">
-																		<input type="Text" name="email" size="40">
+																		<input type="text" name="email" id="email" size="40"><span style="color: #ff0000;"> * </span>
+																		<span class="error-message" id="email_loginError"></span>
 																	</div>
+
+																	<!--- <div class="input-field">
+																		<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier" fontsize="28"/>
+																		<label><FONT color="000000"><b>Please enter the characters in the image above: <span style="color:##ff0000;">*</span></b></FONT></label>
+																		<input type="text" name="captcha" >
+																		<span class="error-message" id="captchaError"></span>
+																	 </div> --->
+																	
 																	<div class="input-button">
-																		<input type="Submit" value="Send My Password" class="SeeMore" name="proc_pw">
+																		<button type="button" onclick="submitForgetForm()" class="SeeMore">Send My Password</button>
 																	</div>
 																</div>
 															</div>
 														</form>
 														
-													<cfelse>
+													<!--- <cfelse>
 													
 														<cfif len(msg)><strong>#msg#</strong></cfif>
 													
-													</cfif>
-												</cfoutput>
+													</cfif> --->
+												<!--- </cfoutput> --->
 											</div>
 										</div>
 									</div>
@@ -161,5 +240,88 @@ password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com" sub
 </tr>
 <cfinclude template="frmxss.cfm">
 
+<script>
+
+$(document).ready(function() {
+				toastr.options = {
+					'closeButton': true,
+					'debug': false,
+					'newestOnTop': false,
+					'progressBar': true,
+					'positionClass': 'toast-top-right',
+					'preventDuplicates': false,
+					'showDuration': '1000',
+					'hideDuration': '1000',
+					'timeOut': '5000',
+					'extendedTimeOut': '1000',
+					'showEasing': 'swing',
+					'hideEasing': 'linear',
+					'showMethod': 'fadeIn',
+					'hideMethod': 'fadeOut',
+				}
+			});
+
+    function validateForgetForm() {
+        let isValid = true;
+        const email = document.getElementById('email').value.trim();
+        const errorElement = document.getElementById('email_loginError');
+        errorElement.textContent = ''; // Clear previous errors
+
+        if (!email) {
+            errorElement.textContent = 'Please enter your email address';
+            isValid = false;
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            errorElement.textContent = 'Please enter a valid email address.';
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function submitForgetForm() {
+        if (!validateForgetForm()) {
+            return; // Stop submission if validation fails
+        }
+	
+			
+
+			
+        const formData = new FormData();
+        formData.append('email', document.getElementById('email').value);
+        formData.append('proc_pw', true); // Pass this to detect the form submission on the backend
+
+        fetch('forgot_password.cfm', {
+            method: 'POST',
+            body: formData,
+        })
+            .then((response) => response.text())
+            .then((data) => {
+				if (data.toLowerCase().includes('success')) {
+                toastr.success('Your password has been emailed to you.');
+            } else {
+                toastr.error('That email address is not in our system. Please try again.');
+            }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById('responseMessage').innerHTML = `<strong style="color:red;">An error occurred. Please try again later.</strong>`;
+            });
+    }
+</script>
+ <style>
+	.error-message {
+	color: #ff0000;
+	font-size: 0.9em;
+	/* margin-top: 5px; */
+	text-align: left;
+    margin-left: 10px;
+	display: block;
+	}
+ </style>
+
 </body>
 </html>
+
+<cfelse>
+	<cflocation addtoken="No" url="user_listing_detail.cfm?xss=#xss#">
+</cfif>

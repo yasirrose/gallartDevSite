@@ -2,6 +2,11 @@
 <cfajaxproxy bind="javascript:gridChangeFilter({data.id})">
 <cfhtmlhead text='<script type="text/javascript" src="/admin/scripts/banners.js.cfm" language="JavaScript"></script>'>
 
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
 
     <cfif isDefined('form.edit') and form.edit eq 'Add'>
         <cftry>    
@@ -49,7 +54,27 @@
     
             <cfoutput>
                 <script>
-                    alert('Data Added Successfully!');
+                    // alert('Data Added Successfully!');
+					$(document).ready(function() {
+						toastr.options = {
+							'closeButton': true,
+							'debug': false,
+							'newestOnTop': false,
+							'progressBar': true,
+							'positionClass': 'toast-top-right',
+							'preventDuplicates': false,
+							'showDuration': '1000',
+							'hideDuration': '1000',
+							'timeOut': '5000',
+							'extendedTimeOut': '1000',
+							'showEasing': 'swing',
+							'hideEasing': 'linear',
+							'showMethod': 'fadeIn',
+							'hideMethod': 'fadeOut',
+						}
+					});
+
+					toastr.success('Data Updated Successfully');
                 </script>
             </cfoutput>
             
@@ -98,7 +123,28 @@
 	
 			<cfoutput>
 				<script>
-					alert('Data Updated Successfully!');
+					// alert('Data Updateddd Successfully!');
+
+					$(document).ready(function() {
+						toastr.options = {
+							'closeButton': true,
+							'debug': false,
+							'newestOnTop': false,
+							'progressBar': true,
+							'positionClass': 'toast-top-right',
+							'preventDuplicates': false,
+							'showDuration': '1000',
+							'hideDuration': '1000',
+							'timeOut': '5000',
+							'extendedTimeOut': '1000',
+							'showEasing': 'swing',
+							'hideEasing': 'linear',
+							'showMethod': 'fadeIn',
+							'hideMethod': 'fadeOut',
+						}
+					});
+
+					toastr.success('Data Updated Successfully');
 				</script>
 			</cfoutput>
 			

@@ -506,18 +506,18 @@
                         success: function (data) {
                             if (data.trim() === '') {
                                 noMoreProducts = true;
-                                // $('#loading').html('No more products').show();
+                                $('#loading').html('No more products').show();
 
-                                toastr.warning('No more products');
-                                $('#loading').hide();
+                                // toastr.warning('No more products');
+                                // $('#loading').hide();
 
                             } else if (data === previousData && page !== 1) {
                                 // Prevent loading duplicate data on scroll (ignore check for page 1)
                                 noMoreProducts = true;
-                                // $('#loading').html('No more products').show();
+                                $('#loading').html('No more products').show();
 
-                                toastr.warning('No more products');
-                                $('#loading').hide();
+                                // toastr.warning('No more products');
+                                // $('#loading').hide();
 
                             } else {
                                 if (page === 1) {

@@ -87,7 +87,7 @@
 				<a href="featured_events.cfm?xss=#xss#" class="nav-link">Events</a>
 			</li>
 			<li class="nav-item">
-				<a href="user_registration.cfm?xss=#xss#" class="nav-link">Sell Your Art</a>
+				<a href="user_registration.cfm?xss=#xss#" class="nav-link" onclick="clearActiveTab()">Sell Your Art</a>
 			</li>
 			<li class="nav-item">
 				<a href="about.cfm?xss=#xss#" class="nav-link">About</a>
@@ -180,4 +180,12 @@ ul.sub-menu {
 } */
 
 </style>
+
+<script>
+    function clearActiveTab() {
+        // Clear the 'activeTab' key from localStorage
+		console.log('test');
+        localStorage.removeItem('activeTab');
+    }
+</script>
 

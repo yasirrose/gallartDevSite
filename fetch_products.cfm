@@ -5,7 +5,7 @@
 
     <!-- Calculate the starting row -->
     <cfset startrow = ((page - 1) * ipp) + 1>
-	<!--- <cfdump var="#artist#" abort="true"> --->
+	<!--- <cfdump var="#size#" abort="true"> --->
     <!-- Initialize base SQL query -->
 	<cfquery name="productinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 		SELECT gallery_price as pvalue, *
@@ -96,6 +96,17 @@
 		
         <cfoutput query="productinfo">
 			<cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
+
+			<cfif listlen(manufacturer) gt 1>
+				<cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
+				<!--- <cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
+				<cfset artist_name_alt = "#listlast(manufacturer)# #listfirst(manufacturer)#" /> --->
+			<cfelse>
+				<cfset artist_name = manufacturer />
+				<!--- <cfset artist_name_url = manufacturer />
+				<cfset artist_name_alt = manufacturer /> --->
+			</cfif>
+
             <div class="list-item">
                 <a href="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
                     <cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")>
@@ -107,7 +118,30 @@
 						<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
                     </cfif>  
                 </a>
-                <div class="product-name" style="font-weight: 600;">#name#</div>
+                <div class="product-name" style="font-weight: 600;">
+					<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
+
+					<!--- Split the name into words --->
+					<cfset words = ListToArray(name, " ")>
+					<cfset updatedName = "">
+
+					<cfloop index="word" array="#words#">
+						<!--- Check if the word (before any punctuation) is a Roman numeral --->
+						<cfif ListFindNoCase(romanNumerals, REReplace(word, "[^a-zA-Z]", "", "ALL"))>
+							<!--- Preserve the Roman numeral as is --->
+							<cfset updatedName = updatedName & " " & UCase(word)>
+						<cfelse>
+							<!--- Capitalize the word (convert to Title Case) --->
+							<cfset updatedName = updatedName & " " & REReplace(word, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+						</cfif>
+					</cfloop>
+
+					<cfset updatedName = Trim(updatedName)>
+
+					#updatedName#
+				</div>
+				<cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+				By: #capitalize_artistName#<Br>
                 <!--- <div class="product-price">
                     <cfif retail_price neq ''>
                         <span style="font-weight: 600;">BY:</span> #ucase(artist_name)#

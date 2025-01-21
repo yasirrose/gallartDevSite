@@ -286,7 +286,7 @@
 		</form>
 		</cfoutput>
 
-		<!--- <cfdump var="testing data 1" abort="true"> --->
+		
 	
 		<cfif blnIsBot2>
 			
@@ -303,7 +303,7 @@
 				</script>
 				</cfoutput>
 
-			
+				
 		<cfelse>
 	
 			<cfif (getPreviousEntries.recordcount + 1) GTE 5>
@@ -322,20 +322,27 @@
 					
 					
 					
+					<!--- <cfdump var="#form#" abort="true"> --->
+					
 
-					<!--- <cfdump var="testing data 2" abort="true"> --->
+					<cfif 
+						form.name NEQ '' 
+						and form.PHONE NEQ '' 
+						and form.EMAIL_PURCHASE NEQ '' 
+						and form.ARTIST NEQ '' 
+						and form.TITLE NEQ '' 
+						and form.size NEQ '' >
 
-					<cfif form.name NEQ '' and form.PHONE NEQ '' and form.EMAIL_PURCHASE NEQ '' and form.ARTIST NEQ '' and form.TITLE NEQ '' and form.size NEQ '' and form.ADDITIONAL_DETAILS NEQ ''>
+						<cftry>
+						<!--- <cfdump var="#form#" abort="true"> --->
 						<cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 							INSERT INTO purchases_consignments 
 							(
 								NAME,
 								PHONE,
 								EMAIL,
-								IMAGE_NAME,
 								ARTIST,
 								TITLE,
-								
 								SIZE,
 								ADDITIONAL_DETAILS
 							)
@@ -344,10 +351,8 @@
 								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.NAME#">,
 								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.PHONE#">,
 								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.EMAIL_PURCHASE#">,
-								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cffile.serverFile#">,
 								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.ARTIST#">,
 								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.TITLE#">,
-								
 								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.SIZE#">,
 								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.ADDITIONAL_DETAILS#">
 							)
@@ -357,7 +362,7 @@
 						
 		
 						
-						<cftry>
+						
 					
 							<cfmail server="#application.mailserver#" username="#application.mailserver_un#" password="#application.mailserver_pw#" to="#emailsupport#" cc="#emailsupportcc#" from="#form.email_purchase#" subject="GallArt.com <> Buying & Selling Fine Art <> Purchases/Consignments Form" type="HTML">
 						<!--- <cfmail server="#application.mailserver#" username="#application.mailserver_un#" password="#application.mailserver_pw#" to="steverucker@gmail.com" from="#form.email_purchase#" subject="GallArt.com <> Buying & Selling Fine Art <> Purchases/Consignments Form" type="HTML"> --->
@@ -370,14 +375,14 @@
 							<!--- Medium: #form.medium#<br> --->
 							Size: #form.size#<br>
 							Additional Details: #form.additional_details#<br>
-							<cfmailparam 
+							<!--- <cfmailparam 
 								file="#expandpath('.')#/purchases_consignments/images/#Uploaded_File_Name#"
 								contentid="purchase_consignment_image" 
 								disposition="inline"
-							/>
+							/> --->
 							<br><br>
 						</cfmail>
-						
+						<cflocation url="#script_name#?xss=#xss#&processed=true&entryCount=#getPreviousEntries.recordcount#" addtoken="No">
 						<cfcatch type="Any">ERROR!!<cfabort></cfcatch>
 						
 						</cftry>
@@ -389,7 +394,7 @@
 					
 					
 					
-					<cflocation url="#script_name#?xss=#xss#&processed=true&entryCount=#getPreviousEntries.recordcount#" addtoken="No">
+					
 					
 					<cfelse>
 					<cflocation url="#script_name#?xss=#xss#&error=filetoolarge" addtoken="No">
@@ -622,22 +627,24 @@
 															</div>
 															<div class="general-saller-tabs">
 																<div class="tabs-buttons">
-																	<div class="form-check form-check-inline" id="tab-one">
+																	<div class="form-check form-check-inline" id="tab-general">
 																		<input type="radio" name="collapseTabs" id="radio1" class="form-check-input me-2" checked>
-																		<label class="btn" for="radio1" onclick="togglePanels('collapseExample1', 'collapseExample2')">
+																		<!--- <input type="radio" class="btn-check" name="tabs" id="tab-general" checked> --->
+																		<label class="btn" for="radio1" onclick="setActiveTab('general')">
 																			General
 																		</label>
 																	</div>
-																	<div class="form-check form-check-inline" id="tab-two">
+																	<div class="form-check form-check-inline" id="tab-seller">
 																		<input type="radio" name="collapseTabs" id="radio2" class="form-check-input me-2">
-																		<label class="btn" for="radio2" onclick="togglePanels('collapseExample2', 'collapseExample1')">
+																		<!--- <input type="radio" class="btn-check" name="tabs" id="tab-seller"> --->
+																		<label class="btn" for="radio2" onclick="setActiveTab('seller')">
 																			Seller
 																		</label>
 																	</div>
 																</div>
 																
 																<div id="accordionExample">
-																	<div class="collapse-one show" id="collapseExample1">
+																	<div class="collapse-one show" id="generalForm">
 																		<div class="general-salaer-form">
 																			<div class="user-content">
 																				<h4 style="color: #dd3a7d;">WE BUY ART</h4>
@@ -700,22 +707,22 @@
 																					<br /><br />
 																				</cfif>
 																				<cfoutput>
-																				<cfform name="frm1" action="#script_name#?xss=#xss#" method="post" enctype="multipart/form-data" onsubmit="return validateGeneralForm()">
+																				<cfform name="frm1" action="#script_name#?xss=#xss#" method="post" enctype="multipart/form-data" id="generalForm"  onsubmit="return validateGeneralForm()">
 																				<input	type="hidden" name="captcha_check2"	value="#FORM.captcha_check2#" />
 																				<div class="input-form">
 																					<div class="row">
 																						<div class="col-md-6">
 																							<div class="input-field">
-																								<label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" >
-																								<span class="error-message" id="G_fnameError"></span>
+																								<label><b> Name:<span style="color: ##ff0000;">*</span></b></label>
+																								<cfinput type="text" name="name" id="name" value="#form.name#" size="30" >
+																								<span class="error-message" id="G_nameError"></span>
 																							</div>
 																						</div>
 																						<div class="col-md-6">
 																							<div class="input-field">
-																								<label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="lname" id="lname"  value="#form.lname#" size="30" >
-																								<span class="error-message" id="G_lnameError"></span>
+																								<label><b>Artist:<span style="color: ##ff0000;">*</span></b></label>
+																								<cfinput type="text" name="artist" id="artist" value="#form.artist#" size="30"  >
+																								<span class="error-message" id="G_artistError"></span>
 																							</div>
 																						</div>
 																						<div class="col-md-6">
@@ -728,22 +735,30 @@
 																						<div class="col-md-6">
 																							<div class="input-field">
 																								<label><b>Phone:</b></label>
-																								<cfinput type="text" name="phone" id="phone" value="#form.phone#" size="30" required="No"  message="Please enter a phone number." mask="(999) 999-9999">
+																								<cfinput type="text" name="phone" id="phone" value="#form.phone#" size="30"  mask="(999) 999-9999">
 																								<span class="error-message" id="G_phoneError"></span>
 																							</div>
 																						</div>
 																						<div class="col-md-6">
 																							<div class="input-field">
-																								<label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="password" name="password" id="password" size="30">
-																								<span class="error-message" id="G_passwordError"></span>
+																								<label><b>Title:<span style="color: ##ff0000;">*</span></b></label>
+																								<cfinput type="text" name="title" id="title" value="#form.title#" size="30"  >
+																								<span class="error-message" id="G_titleError"></span>
 																							</div>
 																						</div>
 																						<div class="col-md-6">
 																							<div class="input-field">
-																								<label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="password" name="password2" id="password2" size="30" >
-																								<span class="error-message" id="G_password2Error"></span>
+																								<label><b>Size:</b></label>
+																								<cfinput type="text" name="size" value="#form.size#" size="30" id="size">
+																								<span class="error-message" id="G_sizeError"></span>
+																							</div>
+																						</div>
+
+																						<div class="col-md-12">
+																							<div class="input-field">
+																								<label><b>Additional Details:</b></label>
+																								<textarea name="additional_details" id="additional_details" cols="50" rows="4">#form.additional_details#</textarea>
+																								<span class="error-message" id="G_additional_details"></span>
 																							</div>
 																						</div>
 																					</div>
@@ -756,7 +771,7 @@
 																					</div>
 																					<div class="input-button">
 																						<input type="Hidden" name="process_purchase_consignment">
-																						<button type="submit" class="SeeMore">Send</button> 
+																						<button type="submit" class="SeeMore" >Send</button> 
 																					</div>
 																					<div class="any-question">
 																						<p><b>*If you any questions please email <a style="font-size: 10pt;" href="mailto: sales@gallart.com">sales@gallart.com</a> or call 305-932-6166 for further assistance. </b></p>
@@ -768,7 +783,7 @@
 																			</div>
 																		</div>
 																	</div>
-																	<div class="collapse-two" id="collapseExample2">
+																	<div class="collapse-two" id="sellerForm" style="display: none;">
 																		
 																		<div class="general-salaer-form">
 																			<cfoutput>
@@ -796,7 +811,7 @@
 																						</span><br><br>
 																					</cfif>
 																					<!--- onsubmit="return validateSellerForm()" --->
-																					<CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST" id="sellerForm">
+																					<CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST"  id="submitSellerForm">
 																						<input type="hidden" name="submitted" value="1" />
 																						<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
 																						<div class="input-form">
@@ -901,28 +916,62 @@
 
 
 	<script>
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Get active tab from localStorage or default to 'general' if not set
+    const activeTab = localStorage.getItem("activeTab") || "general";
+    setTabVisibility(activeTab);
+});
+
+function setActiveTab(tab) {
+    // Save the active tab to localStorage
+    localStorage.setItem("activeTab", tab);
+    setTabVisibility(tab);
+}
+
+function setTabVisibility(tab) {
+    const generalForm = document.getElementById("generalForm");
+    const sellerForm = document.getElementById("sellerForm");
+    const tabGeneral = document.getElementById("radio1");
+    const tabSeller = document.getElementById("radio2");
+
+    if (tab === "general") {
+        generalForm.style.display = "block";
+        sellerForm.style.display = "none";
+        tabGeneral.checked = true;
+    } else if (tab === "seller") {
+        generalForm.style.display = "none";
+        sellerForm.style.display = "block";
+        tabSeller.checked = true;
+    }
+}
+
 		function validateGeneralForm(){
 
 			let isValid = true;
 
 			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
 
-			const fname = document.getElementById('fname').value.trim();
-			const lname = document.getElementById('lname').value.trim();
+			const name = document.getElementById('name').value.trim();
+			const artist = document.getElementById('artist').value.trim();
 			const email_purchase = document.getElementById('email_purchase').value.trim();
 			const phone = document.getElementById('phone').value.trim();
-			const password = document.getElementById('password').value.trim();
-			const password2 = document.getElementById('password2').value.trim();
+			const title = document.getElementById('title').value.trim();
+			const size = document.getElementById('size').value.trim();
+			// const additional_details = document.getElementById('additional_details').value.trim();
 			const captcha2 = document.getElementById('captcha2').value.trim();
 
-			if (!fname) {
-				document.getElementById('G_fnameError').textContent = 'Please fill in your first name.';
+			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+			if (!name) {
+				document.getElementById('G_nameError').textContent = 'Please fill in your  name.';
 				isValid = false;
 			}
 			
 			// Validate LAST NAME
-			if (!lname) {
-				document.getElementById('G_lnameError').textContent = 'Please fill in your last name.';
+			if (!artist) {
+				document.getElementById('G_artistError').textContent = 'Please enter an artist.';
 				isValid = false;
 			}
 			
@@ -936,25 +985,40 @@
 			}
 			
 			// Validate CAPTCHA
-			if (!phone) {
-				document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
+			// if (!phone) {
+			// 	document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
+			// 	isValid = false;
+			// }
+
+			if (phone && !phoneRegex.test(phone)) {
+				document.getElementById('G_phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
 				isValid = false;
 			}
 
-			if (!password) {
-				document.getElementById('G_passwordError').textContent = 'Please enter your password.';
+			if (!title) {
+				document.getElementById('G_titleError').textContent = 'Please enter the title.';
 				isValid = false;
 			}
 
-			if (!password2) {
-				document.getElementById('G_password2Error').textContent = 'Please re-enter your password.';
+			if (!size) {
+				document.getElementById('G_sizeError').textContent = 'Please enter the size.';
 				isValid = false;
 			}
+
+			// if (!additional_details) {
+			// 	document.getElementById('G_additional_details').textContent = 'Please enter the description.';
+			// 	isValid = false;
+			// }
 
 			if (!captcha2) {
 				document.getElementById('G_captcha2Error').textContent = 'Please enter the characters in the image.';
 				isValid = false;
 			}
+
+			// if (isValid) {
+			// 	// Submit the form
+			// 	document.getElementById('generalForm').submit();
+			// }
 
 
 		 return isValid;
@@ -974,6 +1038,8 @@
 			const S_password = document.getElementById('S_password').value.trim();
 			const S_password2 = document.getElementById('S_password2').value.trim();
 			const S_captcha = document.getElementById('S_captcha').value.trim();
+
+			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
 
 			if (!S_fname) {
 				document.getElementById('S_fnameError').textContent = 'Please fill in your first name.';
@@ -996,8 +1062,16 @@
 			}
 			
 			// Validate CAPTCHA
-			if (!S_phone) {
-				document.getElementById('S_cellphoneError').textContent = 'Please enter a phone number.';
+			// if (!S_phone) {
+			// 	document.getElementById('S_cellphoneError').textContent = 'Please enter a phone number.';
+			// 	isValid = false;
+			// } else if (!phoneRegex.test(S_phone)) {
+			// 	document.getElementById('S_cellphoneError').textContent = 'Please enter your phone number in the format (xxx) xxx-xxxx';
+			// 	isValid false; // Prevent form submission
+			// }
+
+			if (S_phone && !phoneRegex.test(S_phone)) {
+				document.getElementById('S_cellphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
 				isValid = false;
 			}
 
@@ -1011,6 +1085,11 @@
 				isValid = false;
 			}
 
+			if (S_password && S_password2 && S_password !== S_password2) {
+				document.getElementById('S_password2Error').textContent = 'Passwords do not match.';
+				isValid = false;
+			}
+
 			if (!S_captcha) {
 				document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
 				isValid = false;
@@ -1018,7 +1097,7 @@
 
 			if (isValid) {
 				// Submit the form
-				document.getElementById('sellerForm').submit();
+				document.getElementById('submitSellerForm').submit();
 			}
 
 			return isValid;
