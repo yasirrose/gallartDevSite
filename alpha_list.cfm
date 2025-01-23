@@ -132,13 +132,16 @@
 																<cfoutput query="alpha_info">
 																	<li>
 																		<a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
+
+																			<cfset capitalize_artistName = REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+
 																			<cfif len(artist) OR manufacturer EQ 'MAX, PETER'>
 																				<span style="color: ##ff0000; font-size: 14px;">
-																					#ucase(manufacturer)#
+																					#capitalize_artistName#
 																					<cfif manufacturer EQ 'MAX, PETER'> (ALL)</cfif>
 																				</span>
 																			<cfelse>
-																				#ucase(manufacturer)#
+																				#capitalize_artistName#
 																			</cfif>
 																		</a>
 																	</li>
