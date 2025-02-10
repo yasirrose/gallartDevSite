@@ -97,14 +97,29 @@
         <!-- Products will be loaded here -->
         </div>
         <div id="loading" style="display: none;">Loading...</div> --->
-       
 
+
+        <cfquery name="allNewListings" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+            SELECT top 200 <!--- substring(path, 1, PATINDEX('%:%', path)-1) as ccat,  --->*
+            FROM products 
+            WHERE active = 1
+            AND fk_users is null
+            ORDER BY lastedit desc
+        </cfquery>
+        
+        <cfquery name="getArtists" dbtype="query">
+            SELECT DISTINCT manufacturer from allNewListings
+            ORDER BY manufacturer
+        </cfquery>
+       
+       <!--- <cfdump var="#getArtistssss#" abort="true"> --->
+<!--- 
         <cfquery name="getArtists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-            SELECT DISTINCT manufacturer from products
+            SELECT DISTINCT TOP manufacturer from products
             WHERE active = 1
             AND fk_users is not null
             ORDER by manufacturer
-        </cfquery>
+        </cfquery> --->
 
         <!--- <cfquery name="getArtists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
         SELECT DISTINCT manufacturer from allNewListings
@@ -420,7 +435,7 @@
                 var previousData = ''; // Variable to store previously fetched data
                 var lastArtist = ''; // Variable to store the last selected artist
                 // var lastpath = ''; // Variable to store the last selected artist
-                // var lastPriceOrder = '';
+                var lastPriceOrder = '';
                 // let lastkeywords = '';
                 let lastartSubject = '';
                 let lastartType = '';

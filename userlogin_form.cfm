@@ -70,7 +70,7 @@
 			<div>
 				<p style="line-height: 1.4;" class="text-center">You must register with Galleryart before you can login and sell your art. You will create a username and password, which you should keep in a safe place.  As soon as you register, you may begin listing your art.  All listings are subject to approval by Gallart.com.</p>
 				<div align="center">
-					<a href="user_registration.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color: #d9387c; font-size: 14px; font-weight: bold;">Register Now!</a>
+					<a href="new_user_registration.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color: #d9387c; font-size: 14px; font-weight: bold;">Register Now!</a>
 				</div>
 			</div>
 		</div>

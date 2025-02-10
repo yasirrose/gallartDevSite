@@ -60,13 +60,12 @@
 			</cfif>
             <cfif isDefined('Style') AND len(Style)>
 					-- AND artType LIKE '%#Style#%'
-                AND artType LIKE <cfqueryparam value="#Style#" cfsqltype="cf_sql_varchar"> OR
-                artType LIKE <cfqueryparam value="#Style#,%"
-                    cfsqltype="cf_sql_varchar"> OR
-                artType LIKE <cfqueryparam value="%,#Style#"
-                    cfsqltype="cf_sql_varchar"> OR
-                artType LIKE <cfqueryparam value="%,#Style#,%"
-                    cfsqltype="cf_sql_varchar">
+                AND (
+                artType LIKE <cfqueryparam value="#Style#" cfsqltype="cf_sql_varchar"> 
+                OR artType LIKE <cfqueryparam value="#Style#,%" cfsqltype="cf_sql_varchar"> 
+                OR artType LIKE <cfqueryparam value="%,#Style#" cfsqltype="cf_sql_varchar"> 
+                OR artType LIKE <cfqueryparam value="%,#Style#,%" cfsqltype="cf_sql_varchar">
+                )
 			</cfif>
 		) AS Subquery
 		WHERE RowNum BETWEEN #startrow# AND (#startrow# + #ipp# - 1)

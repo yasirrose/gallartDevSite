@@ -23,7 +23,7 @@
 </cfquery>
 
 <cfif not find_cust.recordcount>
-
+	<!--- <cfdump var="test1" abort="true"> --->
 	<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 		INSERT into customers
 		(
@@ -73,7 +73,7 @@
 	<cfset customerId = insert_cust.uid />
 									
 <cfelse>
-
+	<!--- <cfdump var="test2" abort="true"> --->
 	<cfquery name="update_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 		UPDATE customers SET 
 			EMAIL = '#EMAIL#'

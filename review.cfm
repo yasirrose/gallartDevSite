@@ -8,7 +8,16 @@
 
 <cfinclude template="meta.cfm">
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<cfoutput>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<!--- <script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script> --->
+<script language="JavaScript" src="./js/utils.js"></script>
+</cfoutput>
+
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -95,12 +104,12 @@
 <table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
-			<cfinclude template="top.cfm">
+			<cfinclude template="top_.cfm">
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2" width="100%" valign="top" height="37" bgcolor="#000000">
-			<cfinclude template="navbar.cfm">
+			<cfinclude template="navbar_.cfm">
 		</td>
 	</tr>
 	<tr height="100%">
@@ -384,11 +393,24 @@
 							<cfloop collection="#form#" item="idx">
 								<input type="Hidden" name="#idx#" value="#evaluate('form.'&idx)#">
 							</cfloop>
+
+							<!--- <input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="Seemore">
+							<input type="submit" value="Purchase!" class="Seemore"><br><br>
+								<font face="verdana, arial" size="1">
+									<b>
+										Press PURCHASE only Once, or the transaction may fail
+									</b>
+								</font> --->
+							
 							<Tr>
-								<td colspan="2" align="center" style="padding-top: 20px;">
-								<input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="pinkSubmit">&nbsp;&nbsp;
-								<input type="submit" value="Purchase!" class="pinkSubmit"><br><br>
-	<font face="verdana, arial" size="1"><b>Press PURCHASE only Once, or the transaction may fail</b></font>
+								<td>
+								<input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="Seemore">
+								<input type="submit" value="Purchase!" class="Seemore">
+								<font face="verdana, arial" size="1">
+									<b>
+										Press PURCHASE only Once, or the transaction may fail
+									</b>
+								</font>
 								</td>
 							</tr>
 							</form>
@@ -411,7 +433,7 @@
 	</tr>
 	<tr>
 		<td colspan="2" valign="baseline">
-			<cfinclude template="footer.cfm">
+			<cfinclude template="footer_.cfm">
 		</td>
 	</tr>
 </table>

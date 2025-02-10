@@ -581,9 +581,7 @@ function validEntries(frm){
 </tr>
 <cfinclude template="frmxss.cfm">
 
-	<script>
-		
-	</script>
+	
 
 </body>
 </html>

@@ -181,12 +181,24 @@
                                         
 
                                         <cfif isDefined('url.man')>
+                                            <!--- <cfquery name="getArtistName"  datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                                                SELECT manufacturer from products where manufacturer LIKE  '%#url.man#'
+                                            </cfquery>
+
+                                                <cfdump var="#getArtistName.manufacturer#">
+                                                <cfdump var="#getBio.artist#"> --->
+
                                             <cfif getBio.recordCount NEQ 0 >
+
+                                                
                                                 <div class="top-heading m-0">
                                                     <h3>
                                                         <cfparam name="artistName" default="#getBio.artist#">
                                                         <cfif find(',',getBio.artist)><cfset artistName = "#listlast(getBio.artist,',')# #listfirst(getBio.artist,',')#" /></cfif>
                                                         <cfoutput>#artistName#</cfoutput>
+
+                                                        
+
                                                     </h3>
                                                     <cfset bioImage = reReplace(getBio.bio, ".*?(<img[^>]+>).*", "\1", "ALL")>
                                                     <cfset bioText = reReplaceNoCase(getBio.bio, "<img[^>]+>", "", "ALL")>
@@ -413,8 +425,13 @@
                         
                                 let url = new URL(window.location.href);
                                 let params = new URLSearchParams(url.search);
+
+                                let Manufacturer = params.get('man'); // Retrieve 'man' value
+                                if (Manufacturer) {
+                                    Manufacturer = decodeURIComponent(Manufacturer);
+                                }
                                 
-                                let Manufacturer = params.get('man');
+                                // let Manufacturer = params.get('man');
                                 let Size = params.get('Size');
                                 let Subject = params.get('Subject');
                                 let Type = params.get('Type');
@@ -433,6 +450,8 @@
                                 let artStyle = document.getElementById('artStyle').value;
                                 
                                 let priceRange = params.get('adv_price_range');
+
+                                console.log('Manufacturer:', Manufacturer);
 
                                 if(priceRange){
                                     if(priceRange == 1){
@@ -483,7 +502,7 @@
                                     }
                                 }
                         
-                                console.log('Manufacturer:', ajaxSize);
+                                console.log('Manufacturer:', Manufacturer);
                         
                                 $.ajax({
                                     url: 'fetch_products.cfm',

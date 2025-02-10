@@ -29,7 +29,11 @@ function populateForm(thisId){
  	var frm = document.forms["editForm"];
  	strPurchasesConsignments = edit.getPurchasesConsignmentsFromId(thisId);
 	medium = strPurchasesConsignments['MEDIUM'];
-	image = strPurchasesConsignments['IMAGE_NAME'];
+	
+	<!--- image = strPurchasesConsignments['IMAGE_NAME']; --->
+
+	var images = strPurchasesConsignments['IMAGE_NAME'].split(',');
+
 	for(i = 0; i < frm.medium.options.length; i++){
 		if(frm.medium.options[i].value == medium){
 			frm.medium.options[i].selected = true;
@@ -38,10 +42,39 @@ function populateForm(thisId){
 			frm.medium.options[i].selected = false;
 		}
 	}
-	<cfoutput>
-	document.getElementById('mainImg').src = 'http://#server_name#/purchases_consignments/images/'+image;
-	document.getElementById('clickEnlarge').href = 'http://#server_name#/purchases_consignments/images/'+image+'?'+new Date().getTime();
-	</cfoutput>
+
+	var imageDisplay = document.getElementById('imageDisplay');
+    imageDisplay.innerHTML = '';
+
+
+	 images.forEach(function(image, index) {
+        var imgElement = document.createElement('img');
+        imgElement.src = 'http://23.20.226.157/purchases_consignments/images/' + image;
+        imgElement.border = "0";
+        imgElement.width = "100";
+        imgElement.style.marginRight = "10px";
+
+        var linkElement = document.createElement('a');
+        linkElement.href = 'http://23.20.226.157/purchases_consignments/images/' + image + '?' + new Date().getTime();
+        linkElement.target = "_blank";
+        linkElement.innerText = "Click to enlarge";
+
+        var brElement = document.createElement('br');
+
+        // Append elements to the container
+        imageDisplay.appendChild(imgElement);
+        imageDisplay.appendChild(brElement);
+        imageDisplay.appendChild(linkElement);
+        imageDisplay.appendChild(document.createElement('br'));
+        imageDisplay.appendChild(document.createElement('br'));
+    });
+
+
+
+	<!--- <cfoutput>
+	document.getElementById('mainImg').src = 'http://23.20.226.157/purchases_consignments/images/'+image;
+	document.getElementById('clickEnlarge').href = 'http://23.20.226.157/purchases_consignments/images/'+image+'?'+new Date().getTime();
+	</cfoutput> --->
 }
 
   function doEdit(type) {

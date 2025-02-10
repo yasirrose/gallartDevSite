@@ -518,7 +518,7 @@
                                                       </a>
                                                       <!--- <h3 class="meta">#ucase(manufacturer)#</h3> --->
                                                       </cfif>
-                                                      <cfif productinfo.name gt 0>
+                                                      <cfif productinfo.name gt 0 OR productinfo.name NEQ ''>
                                                          
                                                          <cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
@@ -543,7 +543,7 @@
 
                                                       </cfif>
                                                    </div>
-                                                   <div class="table-responsive">
+                                                   <!--- <div class="table-responsive">
                                                       <table cellpadding="1" cellspacing="1" border="0" align="Center" width="95%" style="border: 1px solid ##000;">
                                                          <cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and application.showSalePrice EQ 1>
                                                          <Tr>
@@ -611,16 +611,43 @@
                                                             </tr>
                                                          </cfif>
                                                       </table>
-                                                   </div>
+                                                   </div> --->
+
+                                                   <cfif productinfo.retail_price gt 0 >
+
+                                                      <p style="font-size: 35px;">
+                                                      <cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
+                                                         <cfif application.showSalePrice EQ 1>
+                                                            <del>#DollarFormat(productinfo.retail_price)# </del> &nbsp;
+                                                             <b>
+                                                               <span style="color: ##ff0000;">
+                                                                  #DollarFormat(productinfo.special_price)# Sale
+                                                               </span>
+                                                            </b>
+                                                         </cfif>
+                                                      <cfelseif productinfo.gallery_price gt 0>
+                                                         <del>#DollarFormat(productinfo.retail_price)# </del> &nbsp;
+                                                        <b> #DollarFormat(productinfo.gallery_price)# </b>
+                                                      </cfif>
+
+                                                   </p>
+                                                   </cfif>
+
+                                                   
+
+
                                                    <div class="product-description-sec">
                                                       <cfset medium = replace(RemoveChars(path,len(path), 1),":","/","all")>
                                                       <cfif medium gt 0>
                                                          <cfset c_medium = REReplace(medium, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
                                                          <p>Medium: <span>#c_medium#</span></p>
                                                       </cfif>
-                                                      <cfif year gt 0 >
-                                                         <p>Date: <span>#DateFormat(year, "yyyy")#</span></p>
-                                                      </cfif>
+                                                      <cfif isNumeric(productinfo.year) AND productinfo.year GT 0>
+                                                         <p>Date: <span>#productinfo.year#</span></p>
+                                                         <cfelseif len(trim(productinfo.year))>
+                                                            <!-- Handle cases like "1980/81" or invalid year strings -->
+                                                            <p>Date: <span>#htmlEditFormat(productinfo.year)#</span></p>
+                                                         </cfif>
                                                       
                                                       <cfif edition gt 0>
                                                          <!--- <cfset C_edition = REReplace(edition, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
@@ -833,7 +860,9 @@
                                                          <div class="button-group">
                                                             <button type="submit" class="cart-btn" ><b>Add to Cart</b></button>
                                                             <a class="offer-btn" href="epricing.cfm?pid=#uid#&xss=#xss#"><b>Make An Offer</b></a>
+                                                            <!--- <a class="cart-btn" href="make_offer.cfm?pid=#uid#&xss=#xss#"><b>Make An Offer</b></a> --->
                                                          </div>
+                                                         
                                                          </cfif>
                                                       </cfform>
                                                       <!--- <div class="flex-button-group flex-button-group-bottom">

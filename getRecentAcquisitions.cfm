@@ -9,7 +9,7 @@
     <cfquery name="getRecentAcquisitions" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
         SELECT * 
         FROM (
-            SELECT *, ROW_NUMBER() OVER (
+            SELECT TOP 200 *, ROW_NUMBER() OVER (
                 <cfif isDefined('priceOrder') and len(priceOrder)>
 					<cfif priceOrder EQ 'newest' >
                         ORDER BY uid DESC
@@ -43,13 +43,12 @@
 			</cfif>
             <cfif isDefined('Style') AND len(Style)>
 					-- AND artType LIKE '%#Style#%'
-                AND artType LIKE <cfqueryparam value="#Style#" cfsqltype="cf_sql_varchar"> OR
-                artType LIKE <cfqueryparam value="#Style#,%"
-                    cfsqltype="cf_sql_varchar"> OR
-                artType LIKE <cfqueryparam value="%,#Style#"
-                    cfsqltype="cf_sql_varchar"> OR
-                artType LIKE <cfqueryparam value="%,#Style#,%"
-                    cfsqltype="cf_sql_varchar">
+                AND (
+                artType LIKE <cfqueryparam value="#Style#" cfsqltype="cf_sql_varchar"> 
+                OR artType LIKE <cfqueryparam value="#Style#,%" cfsqltype="cf_sql_varchar"> 
+                OR artType LIKE <cfqueryparam value="%,#Style#" cfsqltype="cf_sql_varchar"> 
+                OR artType LIKE <cfqueryparam value="%,#Style#,%" cfsqltype="cf_sql_varchar">
+                )
 			</cfif>
             AND fk_users IS NULL
         ) AS Subquery
@@ -62,7 +61,7 @@
 	WHERE pk_makeoffer_buttons = 1
 </cfquery>
 
-	<!--- <cfdump var="#productinfo#" abort="true"> --->
+	<!--- <cfdump var="#getRecentAcquisitions.recordcount#" abort="true"> --->
     <!-- Output the products as HTML -->
     <cfif getRecentAcquisitions.recordcount gt 0>
         <cfoutput query="getRecentAcquisitions" >
@@ -142,7 +141,12 @@
                 </a>
             </cfif>
         </div> --->
-    <cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>
+            <cfif len(fk_users)>
+                <span style="font-size: 12px; font-weight: bold; color: ##ff0000;">
+                    PRIVATE LISTING
+                </span>
+                <br><br>
+            </cfif>
     
     </td>
 

@@ -47,14 +47,12 @@
 					AND artTypee LIKE '%#Type#%'
 			</cfif>
             <cfif isDefined('Style') AND len(Style)>
-					-- AND artType LIKE '%#Style#%'
-                AND artType LIKE <cfqueryparam value="#Style#" cfsqltype="cf_sql_varchar"> OR
-                artType LIKE <cfqueryparam value="#Style#,%"
-                    cfsqltype="cf_sql_varchar"> OR
-                artType LIKE <cfqueryparam value="%,#Style#"
-                    cfsqltype="cf_sql_varchar"> OR
-                artType LIKE <cfqueryparam value="%,#Style#,%"
-                    cfsqltype="cf_sql_varchar">
+                AND (
+                artType LIKE <cfqueryparam value="%#Style#%" cfsqltype="cf_sql_varchar">
+                OR artType LIKE <cfqueryparam value="#Style#,%" cfsqltype="cf_sql_varchar">
+                OR artType LIKE <cfqueryparam value="%,#Style#" cfsqltype="cf_sql_varchar"> 
+                OR artType LIKE <cfqueryparam value="%,#Style#,%" cfsqltype="cf_sql_varchar">
+            )
 			</cfif>
             AND closeout = 1
             AND fk_users IS NULL

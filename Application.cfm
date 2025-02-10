@@ -56,7 +56,10 @@
 <cfset imgpath = "https://#server_name#/images">
 
 <!--- all emails will be sent to this email address. To add more, send to an alias and forward to additional accounts. If an address is put into cc, it will be sent as well --->
-<cfset emailsupport = "websitegallart@gallart.com">
+
+
+<!--- <cfset emailsupport = "websitegallart@gallart.com"> --->
+<cfset emailsupport = "sales@gallart.com">
 <cfset emailsupportcc = "KENGALLART@aol.com">
 <!--- This should represent the page which should be used for secure processing.  set to a non secure page while developing, and change when ready --->
 <cfset securepage = "https://#server_name#">

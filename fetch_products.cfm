@@ -5,10 +5,20 @@
 
     <!-- Calculate the starting row -->
     <cfset startrow = ((page - 1) * ipp) + 1>
-	<!--- <cfdump var="#size#" abort="true"> --->
+
+	<!--- <cfif isDefined('url.man')>
+		<cfset mannn = URLDecode(url.man)>
+	</cfif>
+
+	<cfdump var="#url#" abort="true"> --->
+
+	<!--- <cfset cfkeywords = uCase(keywords)>
+
+	<cfdump var="#cfkeywords#" abort="true"> --->
+
     <!-- Initialize base SQL query -->
 	<cfquery name="productinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		SELECT gallery_price as pvalue, *
+		SELECT  *
 		FROM (
 			SELECT *, ROW_NUMBER() OVER (
 				<cfif isDefined('priceOrder') and len(priceOrder)>
@@ -31,7 +41,7 @@
 				  	<cfif man EQ 'Erte'>
 					  AND (manufacturer = 'ERTE' OR manufacturer = 'ERTE, ROMAIN')
 				  	<cfelse>
-					  AND manufacturer LIKE '%#man#%'
+					  AND manufacturer LIKE '#man#%'
 				  	</cfif>
 			  	</cfif>
 			  	<cfif isDefined('Size') and len(trim(Size))>
@@ -42,13 +52,12 @@
 				</cfif>
 				<cfif isDefined('Style') AND len(Style)>
 					-- AND artType LIKE '%#Style#%'
-					AND artType LIKE <cfqueryparam value="#Style#" cfsqltype="cf_sql_varchar"> OR
-					artType LIKE <cfqueryparam value="#Style#,%"
-						cfsqltype="cf_sql_varchar"> OR
-					artType LIKE <cfqueryparam value="%,#Style#"
-						cfsqltype="cf_sql_varchar"> OR
-					artType LIKE <cfqueryparam value="%,#Style#,%"
-						cfsqltype="cf_sql_varchar">
+					AND (
+					artType LIKE <cfqueryparam value="#Style#" cfsqltype="cf_sql_varchar"> 
+					OR artType LIKE <cfqueryparam value="#Style#,%" cfsqltype="cf_sql_varchar"> 
+					OR artType LIKE <cfqueryparam value="%,#Style#" cfsqltype="cf_sql_varchar"> 
+					OR artType LIKE <cfqueryparam value="%,#Style#,%" cfsqltype="cf_sql_varchar">
+					)
 				</cfif>
 				<cfif isDefined('Size') AND len(Size)>
 					AND artSize LIKE '%#Size#%'
@@ -57,7 +66,16 @@
 					AND artTypee LIKE '%#Type#%'
 				</cfif>
 				<cfif isDefined('keywords')>
-					AND (name LIKE '%#keywords#%' OR caption LIKE '%#keywords#%' OR modelno LIKE '#keywords#%' OR manufacturer LIKE '%#keywords#%')
+					<cfset reversedKeyword = ListLast(keywords, " ") & ", " & ListFirst(keywords, " ")>
+					<cfset reversedKeyworddd = ListFirst(keywords, " ") & ", " & ListLast(keywords, " ")>
+					AND (
+						name LIKE '%#keywords#%' 
+						OR caption LIKE '%#keywords#%' 
+						OR modelno LIKE '#keywords#%' 
+						OR manufacturer LIKE '%#keywords#%'
+						OR manufacturer LIKE '%#reversedKeyword#%'
+						OR manufacturer LIKE '%#reversedKeyworddd#%'
+						)
 				</cfif>
 				<cfif isDefined('artist') and len(artist)>
 				AND manufacturer LIKE '%#artist#%'
@@ -159,6 +177,17 @@
                         Price On Request
                     </cfif>
 				</div>
+
+				<cfif len(special_price) and application.showSalePrice EQ 1 and special_price NEQ '0.00' and closeout EQ 1>
+					<div class="product-price">
+						
+							<span style="font-weight: 600; color: ##ff0000" >
+								Sale Price: #dollarFormat(special_price)#
+							</span>
+						
+					</div>
+				</cfif>
+
 				<div class="product-price">
                     <cfif modelno neq ''>
                         <!--- <span style="font-weight: 600;">Art ID:</span> #modelno# --->
@@ -177,7 +206,12 @@
 					<b><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="dbl_arrows">MORE INFO</a></b>
 				</span>
 
-				<cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>
+				<cfif len(fk_users)>
+					<span style="font-size: 12px; font-weight: bold; color: ##ff0000;">
+						PRIVATE LISTING
+					</span>
+					<br><br>
+				</cfif>
 
 				<!--- <div class="e-pricing">
 					

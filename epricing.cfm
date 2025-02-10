@@ -8,6 +8,7 @@
 	<cfparam name="form.best_time" default="">
 	<cfparam name="form.email_only" default="">
 	<cfparam name="form.comments" default="">
+	<cfparam name="form.Offer" default="">
 	<cfparam name="form.captchaError" default="0">
 	<cfparam name="form.errorMsg" default="">
 	<cfparam name="form.errorPhone" default="0">
@@ -129,6 +130,7 @@
 				   <input type="Hidden" name="best_time">
 				   <input type="Hidden" name="email_only">
 				   <input type="Hidden" name="comments">
+				   <input type="Hidden" name="Offer">
 				   <input type="Hidden" name="errorMsg">
 				   <input type="Hidden" name="captchaError" value="0">
 				   <input type="Hidden" name="errorPhone" value="0">
@@ -164,177 +166,10 @@
 										   <div>
 											  <cfif productinfo.recordcount>
 												 <cfoutput>
-													<!--- <cfdump var="#productinfo.manufacturer#" > --->
 													<div class="top-heading text-left">
-														<h3>E-PRICING!</h3>
+														<h3>Make an Offer</h3>
 												 	</div>
-													<div class="row">
-														<div class="col-md-6">
-															
-														 <cfset imgFile=expandpath('.') & '\img\' & productinfo.uid &'.jpg' />
-														 <cfif fileExists(imgFile)>
-																<img src="http://#server_name#/img/#productinfo.uid#.jpg" border="2" width="300">
-																<a href="http://#server_name#/img/#productinfo.uid#.jpg" rel="lightbox">[CLICK]</a> to view 
-																large image size in separate window.
-														 </cfif>
-														 <cfif productinfo.manufacturer gt 0>
-																<font size="1" face="arial, helvetica">
-																 <h4>Artist: #ucase(productinfo.manufacturer)#</h4>
-																</font>
-														 </cfif>
-														 <!--- <cfif productinfo.name gt 0>
-																<font size="1" face="arial, helvetica">Title: #productinfo.name#</font>
-														 </cfif>
-														 <cfif productinfo.retail_price gt 0>
-																<font size="1" face="arial, helvetica">Retail Price:
-																#DollarFormat(productinfo.retail_price)#</font>
-														 </cfif>
-														 <font size="1" face="arial, helvetica">
-																<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
-																 <cfif application.showSalePrice EQ 1><span style="color: ##ff0000;">Sale Price:
-																	#DollarFormat(productinfo.special_price)#</span>
-																 </cfif>
-																 <cfelseif productinfo.gallery_price gt 0>
-																 Gallery Price:
-																 #DollarFormat(productinfo.gallery_price)#
-																</cfif>
-														 </font>
-														 <cfif productinfo.overview gt 0>
-																<font size="1" face="arial, helvetica">Size: #productinfo.overview#</font>
-														 </cfif>
-														 <cfif productinfo.specs gt 0>
-																<font size="1" face="arial, helvetica">Year: #productinfo.specs#</font>
-														 </cfif>
-														 <cfset medium=replace(RemoveChars(productinfo.path,len(productinfo.path), 1),":","/","all")>
-														 <cfif medium gt 0>
-																<font size="1" face="arial, helvetica">Medium: #medium#</font>
-														 </cfif>
-														 <cfif productinfo.edition gt 0>
-																<font size="1" face="arial, helvetica">Edition: #productinfo.edition#</font>
-														 </cfif>
-														 <cfif productinfo.caption gt 0>
-																<font size="1" face="arial, helvetica">Description: #trim(productinfo.caption)#</font>
-														 </cfif> --->
-														 <div class="table-responsive">
-																<table class=" table table-bordered" style="border: 1px solid black;">
-																	<tr style="background: ##ec008c; color: white;">
-																		<th>Title</th>
-																		<th>Retail Price</th>
-																		<th>
-																			<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
-																				<cfif application.showSalePrice EQ 1>
-																					<span style="color: black;">Sale Price</span>
-																				</cfif>
-																			<cfelseif productinfo.gallery_price gt 0>
-																				Gallery Price
-																			</cfif>
-																		</th>
-																		<th>Size</th>
-																		<th>Year</th>
-																		<th>Medium</th>
-																		<th>Edition</th>
-																		<!--- <th>Description</th> --->
-																	</tr>
-																	<tr>
-																		<td>
-																			<cfif productinfo.name gt 0>
-																		 <cfset name = REReplace(productinfo.name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-																				#name#
-																			</cfif>
-																		</td>
-																		<td>
-																			<cfif productinfo.retail_price gt 0>
-																				#DollarFormat(productinfo.retail_price)#
-																			</cfif>
-																		</td>
-																		<td>
-																			<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
-																				<cfif application.showSalePrice EQ 1>
-																					<span style="color: ##ff0000;">#DollarFormat(productinfo.special_price)#</span>
-																				</cfif>
-																			<cfelseif productinfo.gallery_price gt 0>
-																				#DollarFormat(productinfo.gallery_price)#
-																			</cfif>
-																		</td>
-																		<td>
-																			<cfif productinfo.overview gt 0>
-																				#productinfo.overview#
-																			</cfif>
-																		</td>
-																		<td>
-																			<cfif productinfo.specs gt 0>
-																				#productinfo.specs#
-																			</cfif>
-																		</td>
-																		<td>
-																	 <cfset medium=replace(RemoveChars(productinfo.path,len(productinfo.path), 1),":","/","all")>
-																	 <cfset c_medium = REReplace(medium, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-	 
-																			<cfif medium gt 0>
-																				#c_medium#
-																			</cfif>
-																		</td>
-																		<td>
-																			<cfif productinfo.edition gt 0>
-																				#productinfo.edition#
-																			</cfif>
-																		</td>
-																		<!--- <td>
-																			<cfif productinfo.caption gt 0>
-																			 <p>
-																			 #trim(productinfo.caption)#
-																			 </p> 
-																			</cfif>
-																		</td> --->
-																	</tr>
-																</table>
-	 
-																<p>
-															 <b>Description: </b> #trim(productinfo.caption)#
-																</p>
-																
-																
-														 </div>
-														</div>
-														<div class="col-md-6">
-															<div>
-															 <cfoutput>
-																<cfif #similar.recordcount# gt 0>
-																<font face="arial,helvetica" size="3"><b>You Might Also Like:</b></font>
-																<br><br>
-																<cfloop query="similar">
-																 <cfset thisFile="#expandpath('.')#\img\#similar.uid#.jpg" />
-																 <cfif listlen(manufacturer) gt 1>
-																 <cfset artist_name="#listlast(manufacturer)# #listfirst(manufacturer)#" />
-																 <cfset artist_name_url="#listlast(manufacturer)#_#listfirst(manufacturer)#" />
-																 <cfelse>
-																 <cfset artist_name=manufacturer />
-																 <cfset artist_name_url=manufacturer />
-																 </cfif>
-																 <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#'
-																 )">
-																 <ul>
-																	 <li>
-																 <cfif fileExists(thisFile)>
-																		<img src="http://#server_name#/img/thumbnails/#similar.uid#.jpg" alt="#ucase(similar.manufacturer)# - #similar.name#"
-																		 border="1">
-																		<cfelse>
-																		#ucase(similar.manufacturer)# - #similar.name#
-																 </cfif>
-																 <!--- <font size="1" face="verdana, arial">#name#</font> --->
-																	 
-																			#name# 
-																		 </li>
-																	 </ul>
-																 </a>
-																</cfloop>
-																</cfif>
-																<!-- <input type="image" src="images/other_listings.gif" style="border: none;" onClick="location.href='index.cfm?xss=#xss#'"> -->
-																<button type="submit" class="SeeMore" style="max-width: 260px; margin:20px 0 0;" onClick="location.href='index.cfm?xss=#xss#'">Click Here for other listings</button>
-															 </cfoutput>
-															</div>
-														 </div>
-													</div>
+													
 													<cfif FORM.submitted>
 													   <cfif phoneError>
 														  <cfoutput>
@@ -347,6 +182,7 @@
 																document.errorFrm.best_time.value = '#form.best_time#'
 																document.errorFrm.email_only.value = '#form.email_only#'
 																document.errorFrm.comments.value = '#form.comments#'
+																document.errorFrm.Offer.value = '#form.Offer#'
 																document.errorFrm.errorMsg.value = '#errorMsg#'
 																document.errorFrm.errorPhone.value = '1'
 																document.errorFrm.pid.value = '#form.pid#'
@@ -364,6 +200,7 @@
 																document.errorFrm.best_time.value = '#form.best_time#'
 																document.errorFrm.email_only.value = '#form.email_only#'
 																document.errorFrm.comments.value = '#form.comments#'
+																document.errorFrm.Offer.value = '#form.Offer#'
 																document.errorFrm.errorMsg.value = '#errorMsg#'
 																document.errorFrm.captchaError.value = '1'
 																document.errorFrm.pid.value = '#form.pid#'
@@ -371,7 +208,6 @@
 															 </script>
 														  </cfoutput>
 														  <cfelse>
-														  <!-- Insert info into customers table if new customer remove this section if not supported -->
 														  <cfif form.fname neq '' and form.lname neq '' and form.email neq ''>
 														  <cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 															 SELECT * from customers where (email = '#trim(email)#')
@@ -410,168 +246,225 @@
 															 <cfset customerId=find_cust.id />
 														  </cfif>
 														  <cfquery datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-															 INSERT into epricing
+															 INSERT into makeoffer
 															 (
-															 fk_customers,
-															 fk_products,
-															 best_time,
-															 epricing_phone,
-															 email,
-															 comments,
-															 email_only
+																fk_customers,
+																fk_products,
+																offer,
+																makeoffer_phone,
+																best_time
 															 )
 															 VALUES
 															 (
 															 #customerId#,
 															 #productinfo.uid#,
-															 '#form.best_time#',
+															 '#form.Offer#',
 															 '#form.phone#',
-															 '#form.email#',
-															 '#form.comments#',
-															 <cfif isDefined('form.email_only')>
-															 1
-															 <cfelse>
-															 0
-													   </cfif>
-													   )
+															 '#form.best_time#'
+															)
 													   </cfquery>
-													   <cfmail server="#servername#" username="gallart@onlinegalleryart.com" password="re3objeC!P" to="#emailsupport#"
-														  cc="#emailsupportcc#" from="#form.Email#" subject="GallArt.com <> We Buy & Sell Fine Art <> e-Pricing"
-														  type="HTML">
-														  <font style="font-size: 10pt; font-family: Arial;">
-															 The following user submitted an e-Pricing form:
-															 Name: #form.fname# #form.lname#
-															 Email Address: #form.email#
-															 Phone: #form.phone#
-															 <!--- Phone Outside US: #form.otherphone# --->
-															 <cfif form.email_only EQ 1>
-																Email Only
-															 </cfif>
-															 <cfif form.best_time NEQ "">
-																Best time to call: #form.best_time#
-															 </cfif>
-															 Comments: #form.comments#
-															 Artist: #ucase(productinfo.manufacturer)#
-															 Title: #productinfo.name#
-															 Art ID: #productinfo.modelno#
-															 Retail Price: #dollarFormat(productinfo.retail_price)#
-															 Gallery Price: #dollarFormat(productinfo.gallery_price)#
-															 <cfif application.showSalePrice EQ 1>Sale Price: #dollarFormat(productinfo.sale_price)#</cfif>
-															 <cfif productinfo.fk_users GT 1>
-																Seller: #productinfo.fname# #productinfo.lname#
-																Seller Email: #productinfo.email#
-																Seller Phone: #productinfo.phone#
-															 </cfif>
-														  </font>
-													   </cfmail>
-													   <span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">
-													   THANK YOU FOR CONTACTING E-PRICING!WE WILL BE IN TOUCH WITH YOU SHORTLY
-													   <a href="index.cfm?xss=#xss#" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">CLICK
-													   HERE</a> TO MAKE ANOTHER SELECTION
-													   </span>
+													   <cfmail server="#servername#" username="gallart@onlinegalleryart.com"
+													   password="re3objeC!P" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.Email#" subject="GallArt.com <> We Buy & Sell Fine Art <> Make An Offer" type="HTML">
+													   <font style="font-size: 10pt; font-family: Arial;">
+													   The following user made an offer on the piece below:
+													   <br><br>
+													   Name: #form.FNAME# #form.LNAME#<br>
+													   Email Address: #form.Email#<br>
+													   Phone: #form.phone#<br>
+													   Best time to call: #form.best_time#<br>
+													   Offer: $#form.Offer#<br>
+													   Artist: #ucase(productinfo.manufacturer)#<br>
+													   Title: #productinfo.name#<br>
+													   Art ID: #productinfo.modelno#<br>
+													   Retail Price: #dollarFormat(productinfo.retail_price)#<br>
+													   Gallery Price: #dollarFormat(productinfo.gallery_price)#<br>
+													   <!--- removed for make offer 5/6/15 --->
+													   <!--- Sale Price: #dollarFormat(productinfo.sale_price)# --->
+													   <cfif productinfo.fk_users GT 1>
+														   <br>
+														   Seller: #productinfo.fname# #productinfo.lname#<br>
+														   Seller Email: #productinfo.email#<br>
+														   Seller Phone: #productinfo.phone#
+													   </cfif>
+													   <br><br>
+													   </font>
+												   </cfmail>
+													<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">
+															THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY
+															<br><br>
+															<a href="index.cfm?xss=#xss#" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">
+																CLICK HERE
+															</a> TO MAKE ANOTHER OFFER
+														</span>
 													</cfif>
 													</cfif>
 													<cfelse>
-													<div class="form-section">
+													<div class="form-section flex-form-section">
 													   <cfform action="" method="post" name="frm1" onsubmit="return validateEpricingForm()">
-														  <input type="hidden" name="submitted" value="1" />
-														  <input type="hidden" name="captcha_check" value="#form.captcha_check#" />
-														  <input type="hidden" name="pid" value="#form.pid#" />
-														  <h5 style="mt-2 mb-4 font-size: 16px; font-weight: bold;">
-															 GET E-PRICING FOR THIS PIECE!SIMPLY SUBMIT THE FORM BELOW:
-														  </h5>
-														  <span style="color: ##ff0000;">* Required</span>
-														  <cfif FORM.captchaError EQ 1>
-															 <span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE
-															 EXACTLY AS YOU SEE THEM</span>
-														  </cfif>
-														  <cfif FORM.errorPhone EQ 1>
-															 <span style="color: ##ff0000; font-weight: bold;">
-															 #form.errorMsg#
-															 </span>
-														  </cfif>
-														  <div class="input-form">
-																 <div class="row">
-																	<div class="col-md-6">
-																		<div class="input-field">
-																			<label><FONT face="" color="000000"><b>FIRST NAME</b></FONT></label>
-																			<cfinput type="text" size=40 maxsize=50 name="fname" id="fname" value="#form.fname#" >&nbsp;<span style="color:##ff0000;">*</span>
-																				<span class="error-message" id="fnameError"></span>
-																		</div>
-																	</div>
-																	<div class="col-md-6">
-																		<div class="input-field">
-																			<label>
-																			<FONT face="" color="000000"><b>LAST NAME</b></FONT>
-																			</label>
-																			<cfinput type="text" size=40 maxsize=50 name="lname" id="lname" value="#form.lname#" >
-																			&nbsp;<span style="color:##ff0000;">*</span>
-																				<span class="error-message" id="lnameError"></span>
-																		</div>
-																	</div>
-																	<div class="col-md-6">
-																		<div class="input-field">
-																			<label><FONT face="" color="000000"><b>E-MAIL ADDRESS</b></FONT></label>
-																			<cfinput type="text" size=40 maxsize=50 name="email" id="email" value="#form.email#"  >
-																			&nbsp;<span style="color:##ff0000;">*</span>
-																				<span class="error-message" id="emailError"></span>
-																		</div>
-																	</div>
-																	<div class="col-md-6">
-																		<div class="input-field">
-																			<label>
-																			<FONT face="" color="000000"><b>HOME PHONE (xxx) xxx-xxxx</b></FONT>
-																			</label>
-																			<cfinput type="text" size=40 maxsize=50 name="phone" id="phone" value="#form.phone#" required="No"
-																				 mask="(999) 999-9999">
-																				 <span class="error-message" id="phoneError"></span>
-																		</div>
-																	</div>
-																	 <!--- <div class="input-field">
-																		<label><FONT face="" color="000000"><b>PHONE NUMBER OUTSIDE THE US</b></FONT></label>
-																		<cfinput type="text" size=40 maxsize=50 name="otherphone" value="#form.otherphone#" required="No">
-																		</div> --->
-																	<div class="col-md-6">
-																		<div class="input-field">
-																			<label>
-																			<FONT face="" color="000000"><b>BEST TIME TO CALL</b></FONT>
-																			</label>
-																			<cfinput type="text" size=40 maxsize=50 name="best_time" value="#form.best_time#" required="No">
-																		</div>
-																	</div>
-																	<div class="col-md-6">
-																	 <div class="input-field">
-																		<label><FONT face="" color="000000"><b>OR EMAIL ONLY</b></FONT></label>
-																		<div class="checkbox">
-																			 <div class="checkbox-field">
-																				<input
-																				type="checkbox" name="email_only" value="1" 
-																				<cfif form.email_only EQ 1>checked
+														<div class="row top-row">
+															<div class="col-lg-5 col-md-6 col-sm-12">
+																<div class="img-sec">
+																	<!--- <img src="images/Gallery-Art-Map-V2.jpg" alt="image"> --->
+
+																	<cfif fileexists("http://23.20.226.157/img/thumbnails/#productInfo.uid#.jpg")> 
+																		<IMG SRC="./img/#productInfo.uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(productInfo.modelno)#" align="Center">
+																		<cfelse>
+																			<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
+																			<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+																	</cfif>
+
+																</div>
+															</div>
+															<div class="col-lg-7 col-md-6 col-sm-12 border-left">
+																<input type="hidden" name="submitted" value="1" />
+																<input type="hidden" name="captcha_check" value="#form.captcha_check#" />
+																<input type="hidden" name="pid" value="#form.pid#" />
+																<cfif FORM.captchaError EQ 1>
+																   <span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE
+																   EXACTLY AS YOU SEE THEM</span>
+																</cfif>
+																<cfif FORM.errorPhone EQ 1>
+																   <span style="color: ##ff0000; font-weight: bold;">
+																   #form.errorMsg#
+																   </span>
+																</cfif>
+																<div class="input-form">
+
+																	<cfif listlen(productinfo.manufacturer) gt 1>
+																		<cfset artist_name = "#listlast(productinfo.manufacturer)# #listfirst(productinfo.manufacturer)#" />
+																		<cfset artist_name_url = "#listlast(productinfo.manufacturer)#_#listfirst(productinfo.manufacturer)#" />
+																	<cfelse>
+																		<cfset artist_name = productinfo.manufacturer />
+																		<cfset artist_name_url = productinfo.manufacturer />
+																	</cfif>
+																	
+																	<h2 class="title">
+																		<cfset capitalize = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+																		<cfset capitalizeTitle = REReplace(productinfo.name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+																		#capitalize# '#capitalizeTitle#' - 
+																		<span>
+																			<cfif productinfo.retail_price gt 0 >
+
+																				
+																				<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
+																				   <cfif application.showSalePrice EQ 1>
+																					  <del>#DollarFormat(productinfo.special_price)# </del> &nbsp;
+																					   <b>
+																						 <!--- <span style="color: ##ff0000;">
+																							#DollarFormat(productinfo.special_price)# Sale
+																						 </span> --->
+																					  </b>
+																				   </cfif>
+																				<cfelseif productinfo.gallery_price gt 0>
+																				   <del>#DollarFormat(productinfo.gallery_price)# </del> &nbsp;
+																				  <!--- <b> #DollarFormat(productinfo.gallery_price)# </b> --->
 																				</cfif>
-																				/>
+						  
+																			 
+																			 </cfif>
+																		</span> 
+																	</h2>
+																	<div class="row">
+																		<div class="col-md-12">
+																			<div class="input-field">
+																				<cfinput type="text" size=40 maxsize=50 placeholder="First Name" name="fname" id="fname" value="#form.fname#" >
+																					<span class="error-message" id="fnameError"></span>
+																			</div>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="input-field">
+																				<cfinput type="text" size=40 maxsize=50 placeholder="Last Name" name="lname" id="lname" value="#form.lname#" >
+																					<span class="error-message" id="lnameError"></span>
+																			</div>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="input-field">
+																				<cfinput type="text" size=40 maxsize=50 name="email" placeholder="Email Address" id="email" value="#form.email#"  >
+																					<span class="error-message" id="emailError"></span>
+																			</div>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="input-field">
+																				<cfinput type="text" size=40 maxsize=50 name="phone" placeholder="Enter Your Phone Number" id="phone" value="#form.phone#" required="No">
+																						<span class="error-message" id="phoneError"></span>
+																			</div>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="input-field">
+																				<cfinput type="text" size=40 maxsize=50 placeholder="Best Time To Call" name="best_time" id="best_time" value="#form.best_time#" required="No">
+																				<span class="error-message" id="best_timeError"></span>
+																			</div>
+																		</div>
+																		<!--- <div class="col-md-12">
+																			<div class="input-field flex-form-group checkbox-form-group">
+																				<div class="checkbox">
+																						<div class="checkbox-field">
+																							<input
+																								type="checkbox" name="email_only" value="1" 
+																								<cfif form.email_only EQ 1>checked
+																								</cfif>
+																							/>
+																						</div>
+																				</div>
+																				<label><FONT face="">Or Email Only</FONT></label>
+																			</div>
+																			<span class="error-message" ></span>
+																		</div> --->
+																		<div class="col-md-12">
+																			<div class="input-field">
+																				<!--- <TEXTAREA NAME="comments" placeholder="Comments" ROWS=10 COLS=35>#form.comments#</TEXTAREA> --->
+																				<cfinput type="text" name="Offer" size="10" id="Offer" message="Please make an offer - enter a dollar amount, no $ or decimal." placeholder="Please make an offer - enter a dollar amount, no $ or decimal." validate="integer" >
+																				<span class="error-message" id="OfferError"></span>
+																			</div>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="input-field">
+																				<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier,tahoma"
+																				   fontsize="28" />
+																			</div>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="input-field" style="margin-top: 10px;">
+																				<cfinput type="text" placeholder="Please enter the characters in the" name="captcha" id="captcha" >
+																				<span class="error-message" id="captchaError"></span>
+																			</div>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="input-button">
+																				<button type="submit" class="SeeMore">Submit</button>
+																				<button type="reset" class="SeeMore">Reset</button>
 																			 </div>
 																		</div>
-																	 </div>
-																	</div>
+																  	</div>
 																</div>
-															 <div class="input-field">
-																<label><FONT face="" color="000000"><b>COMMENTS</b></FONT></label>
-																<TEXTAREA NAME="comments" ROWS=10 COLS=35>#form.comments#</TEXTAREA>
-															 </div>
-															 <div class="input-field">
-																<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier,tahoma"
-																   fontsize="28" />
-																<label><FONT face="" color="000000"><b>Please enter the characters in the
-																image above:</b></FONT></label>
-																<cfinput type="text" name="captcha" id="captcha" >
-																&nbsp;<span style="color:##ff0000;">*</span>
-																<span class="error-message" id="captchaError"></span>
-															 </div>
-															 <div class="input-button">
-																<button type="submit" class="SeeMore">Submit</button>
-																<button type="button" class="SeeMore">Reset</button>
-															 </div>
-														  </div>
+															</div>
+														</div>
+														<!--- <div class="bottom-row">
+															<div class="content-sec">
+																<p>
+																	<b>How does it work?</b>
+																	It's simple! Tell us the price you are willing to pay and we will accept, reject, or counter
+																	the offer using the email address provided. There are no obligations to purchase, 
+																</p>
+																<div class="input-button">
+																	<button type="button" class="SeeMore">Send Offer</button>
+																</div>
+															</div>
+															<div class="privacy-field">
+																<div class="input-field flex-form-group">
+																	<div class="checkbox">
+																			<div class="checkbox-field">
+																				<input
+																					type="checkbox" name="email_only" value="1" 
+																					<cfif form.email_only EQ 1>checked
+																					</cfif>
+																				/>
+																			</div>
+																	</div>
+																	<label>I agree to <a href="##">Privacy Policy</a></label>
+																</div>
+															</div>
+														</div> --->
 													   </cfform>
 													</div>
 											  </cfif>
@@ -610,8 +503,11 @@
          const email = document.getElementById('email').value.trim();
          const captcha = document.getElementById('captcha').value.trim();
          const phone = document.getElementById('phone').value.trim();
+         const best_time = document.getElementById('best_time').value.trim();
+         const Offer = document.getElementById('Offer').value.trim();
 
 		 const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+		 const integerRegex = /^[0-9]+$/; 
          
          // Validate FIRST NAME
          if (!fname) {
@@ -634,11 +530,27 @@
             isValid = false;
          }
 
-		 if (phone && !phoneRegex.test(phone)) {
-
-			document.getElementById('phoneError').textContent = 'Please enter your home phone number in the format (xxx) xxx-xxxx';
+		 if(!phone){
+			document.getElementById('phoneError').textContent = 'Please enter your home phone number';
 			isValid = false;
-		}
+		 } 
+		//  else if (phone && !phoneRegex.test(phone)) {
+		// 	document.getElementById('phoneError').textContent = 'Please enter your home phone number in the format (xxx) xxx-xxxx';
+		// 	isValid = false;
+		// }
+
+		if (!best_time) {
+            document.getElementById('best_timeError').textContent = 'Best time to call is required.';
+            isValid = false;
+         }
+
+		 if (!Offer) {
+            document.getElementById('OfferError').textContent = 'Please make an offer - enter a dollar amount, no $ or decimal.';
+            isValid = false;
+         } else if (!integerRegex.test(Offer)) {
+			document.getElementById('OfferError').textContent = 'Please enter a dollar amount number (no decimals or special characters).';
+			isValid = false;
+		 }
          
          // Validate CAPTCHA
          if (!captcha) {
@@ -652,13 +564,137 @@
 	   
 	    <style>
 			.error-message {
-			color: #ff0000;
-			font-size: 0.9em;
-			margin-top: 5px;
-			display: block;
+				color: #ff0000;
+				font-size: 0.9em;
+				margin-top: 5px;
+				display: block;
 			}
 			.input-field {
-			margin-bottom: 15px;
+				margin-bottom: 15px;
+			}
+			input, select, textarea {
+				border: 1px solid #bbbbbb;
+				background-color: #ffffff;
+			}
+			.flex-form-group {
+				display: flex;
+				align-items: center;
+			}
+			.flex-form-group label {
+				color: #bbbbbb;
+				margin-left: 6px;
+			}
+			.registration-page .content-section .banner-section .flex-form-section .input-field input, 
+			.registration-page .content-section .banner-section .flex-form-section .input-field textarea, 
+			.registration-page .content-section .banner-section .flex-form-section .input-field img {
+				width: 100% !important;
+			}
+			.flex-form-section .input-field label {
+				font-weight: 400 !important;
+				margin-bottom: 0;
+			}
+			.flex-form-section .input-field label, .flex-form-section .input-field .checkbox-field input {
+				font-weight: 400 !important;
+				margin-bottom: 0 !important;
+			}
+			.flex-form-section .checkbox-form-group {
+				margin-bottom: 10px !important;
+			}
+			.border-left {
+				border-left: 1px solid #bbbbbb;
+			}
+			.flex-form-section input::placeholder, .flex-form-section textarea::placeholder {
+				color: #bbbbbb !important;
+			}
+			.flex-form-section .img-sec {
+				padding: 20px;
+				width: 100%;
+				background-color: #fff;
+				box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+				height: 400px;
+			}
+			.flex-form-section .img-sec img {
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+			}
+			.flex-form-section .row .col-lg-5 {
+				padding: 0 25px 0 12px !important;
+			}
+			.flex-form-section .row .col-lg-7 {
+				padding: 0 12px 0 25px !important;
+			}
+
+			.flex-form-section h2.title {
+				font-size: 28px;
+				line-height: normal;
+				color: #bbbbbb;
+				margin-bottom: 10px;
+			}
+			.flex-form-section h2.title span {
+				color: #ff0000;
+			}
+			.flex-form-section .top-row {
+				padding-bottom: 20px;
+			}
+			.flex-form-section .bottom-row {
+				padding-top: 30px;
+				border-top: 1px solid #bbbbbb;
+			}
+			.flex-form-section .bottom-row .content-sec {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				width: 100%;
+				gap: 10px;
+				margin-bottom: 20px;
+			}
+			.flex-form-section .bottom-row .content-sec p {
+				width: 80%;
+				color: #000;
+				line-height: 1.2;
+			}
+			.flex-form-section .bottom-row .content-sec .input-button button {
+				margin: 0 !important;
+				min-width: 120px;
+				border-radius: 4px !important;
+			}
+			.flex-form-section .bottom-row .privacy-field {
+				display: flex;
+				align-items: center;
+				justify-content: end;
+			}
+			.flex-form-section .bottom-row .privacy-field label {
+				color: #000 !important;
+				font-size: 16px !important;
+			}
+			.flex-form-section .bottom-row .privacy-field label a {
+				color: blue !important;
+			}
+
+			@media (max-width: 767.5px) {
+				.flex-form-section .row .col-lg-5 {
+					padding: 0 12px 30px 12px !important;
+				}
+				.flex-form-section .row .col-lg-7 {
+					padding: 30px 12px 0 !important;
+				}
+				.border-left {
+					border-top: 1px solid #bbbbbb;
+					border-left: none;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.flex-form-section .bottom-row .content-sec {
+					flex-direction: column;
+				}
+				.flex-form-section .bottom-row .content-sec p {
+					width: 100%;
+				}
+				.flex-form-section h2.title {
+					font-size: 24px;
+				}
 			}
 		 </style>
 
