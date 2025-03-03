@@ -4,6 +4,7 @@
 	<title>Gallart - Admin</title>
 <link REL="STYLESHEET" TYPE="text/css" HREF="css/main.css">
 <script src="scripts/functions.js" type="text/javascript"></script>
+<meta name="robots" content="noindex, nofollow">
 </head>
 
 <body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" marginwidth="0" marginheight="0">

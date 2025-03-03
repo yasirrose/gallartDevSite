@@ -19,9 +19,9 @@
         <cfset session.sellerinfo.login = 1>
 
 		<cfif isDefined('xss')>
-			<cfset url_string = "user_listing_search.cfm?xss="&xss />
+			<cfset url_string = "overView.cfm?xss="&xss />
 			<cfelse>
-			<cfset url_string = "user_listing_search.cfm" />
+			<cfset url_string = "overView.cfm" />
 		</cfif>
 
         <cfset result = {
@@ -68,9 +68,9 @@
 				</div>
 			</form>
 			<div>
-				<p style="line-height: 1.4;" class="text-center">You must register with Galleryart before you can login and sell your art. You will create a username and password, which you should keep in a safe place.  As soon as you register, you may begin listing your art.  All listings are subject to approval by Gallart.com.</p>
+				<p style="line-height: 1.4;" class="text-center">Create an account with Gallery Art to track your purchases, create wish lists and sell your artwork</p>
 				<div align="center">
-					<a href="new_user_registration.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color: #d9387c; font-size: 14px; font-weight: bold;">Register Now!</a>
+					<a href="register.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color: #d9387c; font-size: 14px; font-weight: bold;">Create an Account</a>
 				</div>
 			</div>
 		</div>

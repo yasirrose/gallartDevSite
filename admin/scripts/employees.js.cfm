@@ -48,14 +48,17 @@ function doEdit(type) {
 
     edit.setForm("editForm");
     
-    if (type == 'edit'){
-    		
-     if ( edit.editEmployeeFromForm()) {
-         ColdFusion.Grid.refresh('data',true);
-		 toastr.success('Data is Updated Successfully!');
-     } 
-     else { alert( 'There was a problem in the processing.')}
-      }
+   if (type == 'edit') {
+        var result = edit.editEmployeeFromForm(); 
+
+        if (result) {
+		console.log(result);
+            ColdFusion.Grid.refresh('data', true);
+            toastr.success('Data is Updated Successfully!');
+        } else {
+            toastr.error('Your Password is already exist. Please change your password');
+        }
+    }
    else if (type == 'delete'){
    	if ( edit.deleteEmployee()) {
          ColdFusion.Grid.refresh('data',true);

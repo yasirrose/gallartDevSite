@@ -83,7 +83,7 @@
 								<div class="art-work-content">
 									<div class="bottom-content">
 										<div class="top-heading">
-											<h3>SELLER LOGIN</h3>
+											<h3> Login </h3>
 										</div>
 										<div class="user-registrations">
 											<cfinclude template="userlogin_form.cfm">
@@ -107,5 +107,5 @@
 </body>
 </html>
 <cfelse>
-	<cflocation addtoken="No" url="user_listing_detail.cfm?xss=#xss#">
+	<cflocation addtoken="No" url="overView.cfm?xss=#xss#">
 </cfif>

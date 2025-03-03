@@ -52,21 +52,31 @@ function populateForm(thisId){
         imgElement.src = 'http://23.20.226.157/purchases_consignments/images/' + image;
         imgElement.border = "0";
         imgElement.width = "100";
-        imgElement.style.marginRight = "10px";
+        <!--- imgElement.style.marginRight = "10px"; --->
 
         var linkElement = document.createElement('a');
         linkElement.href = 'http://23.20.226.157/purchases_consignments/images/' + image + '?' + new Date().getTime();
         linkElement.target = "_blank";
         linkElement.innerText = "Click to enlarge";
 
-        var brElement = document.createElement('br');
+        <!--- var brElement = document.createElement('br'); --->
+
+		var divElement = document.createElement('div');
+    	divElement.classList.add('image-container');
 
         // Append elements to the container
-        imageDisplay.appendChild(imgElement);
-        imageDisplay.appendChild(brElement);
-        imageDisplay.appendChild(linkElement);
-        imageDisplay.appendChild(document.createElement('br'));
-        imageDisplay.appendChild(document.createElement('br'));
+        <!--- imageDisplay.appendChild(imgElement); --->
+        <!--- imageDisplay.appendChild(brElement); --->
+        <!--- imageDisplay.appendChild(linkElement); --->
+        <!--- imageDisplay.appendChild(document.createElement('br')); --->
+        <!--- imageDisplay.appendChild(document.createElement('br')); --->
+
+		// Append the img and link to the div
+		divElement.appendChild(imgElement);
+		divElement.appendChild(linkElement);
+		
+		// Append the div to the image display container
+		imageDisplay.appendChild(divElement);
     });
 
 

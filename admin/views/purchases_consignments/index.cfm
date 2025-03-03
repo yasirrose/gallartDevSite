@@ -21,6 +21,23 @@ function validEntries(frm) {
 }
 </script>
 
+<style>
+
+	#imageDisplay {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+	#imageDisplay .image-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		margin: 6px;
+		gap: 6px;
+	}
+</style>
+
 <table border = "0" width = "100%" cellpadding = "5" cellspacing = "0">
 	<tr>
     	<td colspan="2" style="font-size: 11px;"><strong>SEARCH BY:</strong></td>
@@ -149,7 +166,7 @@ function validEntries(frm) {
 								</td>
 							</tr>
 							<tr>
-								<td valign="top" style="font-size: 10px;">
+								<td valign="top" style="font-size: 10px; white-space: nowrap;">
 									Additional Details
 								</td>
 								<td>
@@ -157,9 +174,14 @@ function validEntries(frm) {
 								</td>
 							</tr>
 							<tr>
-								<td id="imageDisplay" height="150">
-									<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
-									<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
+								<td  height="150" colspan="2">
+									<div id="imageDisplay">
+										<div class="img-box">
+
+											<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
+											<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge
+										</div>
+									</div>
 								</td>
 							</tr>
 							<tr>

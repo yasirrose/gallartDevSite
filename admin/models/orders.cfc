@@ -1113,10 +1113,12 @@
 		<cfset var success = true />
 
 		<cftry>
-
+			
 		<cfloop collection="#form#" item="idx">
 			<cfset "session.invoiceInfo.#idx#" = evaluate('form.'&idx) />
 		</cfloop>
+
+		<!--- <cfdump var="#session.invoiceInfo#" abort="true"> --->
 
 		<cfif session.invoiceInfo.tobeshipped eq '' OR session.invoiceInfo.tobeshipped EQ 0>
 			<cfset session.invoiceInfo.tobeshipped	= 0 />

@@ -37,7 +37,12 @@
 			getStates	 = application.objectFactoryAdmin.getInstance('orders').getStates();
 		</cfscript>
 
-		<cfinclude template="#ViewPath#/products/product_form.cfm">
+		<cfif session.loggedin EQ true>
+			<!--- <cfdump var="#session#"> --->
+			<cfinclude template="#ViewPath#/products/product_form.cfm">
+		<cfelse>
+			<cflocation url="index.cfm?logout=1" addtoken="No">
+		</cfif>
 
 		<cfinclude template="../views/layout.bottom.cfm" />
 	</cfdefaultcase>
@@ -195,7 +200,11 @@
 
 		</cfif>
 
-		<cfinclude template="#ViewPath#/products/product_form.cfm">
+		<cfif session.loggedin EQ true>
+			<cfinclude template="#ViewPath#/products/product_form.cfm">
+		<cfelse>
+			<cflocation url="index.cfm?logout=1" addtoken="No">
+		</cfif>
 
 		<cfinclude template="../views/layout.bottom.cfm" />
 	</cfcase>

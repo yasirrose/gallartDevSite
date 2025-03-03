@@ -41,7 +41,7 @@
 				  	<cfif man EQ 'Erte'>
 					  AND (manufacturer = 'ERTE' OR manufacturer = 'ERTE, ROMAIN')
 				  	<cfelse>
-					  AND manufacturer LIKE '#man#%'
+					  AND manufacturer LIKE '%#man#'
 				  	</cfif>
 			  	</cfif>
 			  	<cfif isDefined('Size') and len(trim(Size))>

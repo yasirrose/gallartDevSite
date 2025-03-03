@@ -8,22 +8,18 @@
 
 <cfset ship_weight = shipping.shipweight />
 <cfset shipinfo = shipping.shipdesc />
-<cfset fileSizeLimit = 200000 />
-<cfset fileSizeLimitKb = '200KB' />
+<cfset fileSizeLimit = 2000000 />
+<cfset fileSizeLimitKb = '2MB' />
 
 <!--- Inserting, Updating or Deleting the Product Information --->
 <!--- <cfdump var="#session.sellerinfo.pk_users#" > --->
 <cfif isDefined('process')>
 
-    <!--- <cfif structKeyExists(form, "process") AND ListFirst(form.process, ",") EQ "ADD">
-        <cfdump var="#form#" abort="true">
-    <cfelse>
-        <cfdump var="form is empty">
-    </cfif> --->
+
 
 	<cfif structKeyExists(form, "process") AND ListFirst(form.process, ",") EQ "ADD">
 
-        <!--- <cfdump var="testing 1" abort="true"> --->
+        <!--- <cfdump var="#form#" abort="true"> --->
     
 		<cfif cgi.content_length LTE fileSizeLimit>
         
@@ -150,19 +146,31 @@
             
             <cftry>
         
-        	<cfmail server="#application.mailserver#" username="#application.mailserver_un#" password="#application.mailserver_pw#" to="#emailsupport#" cc="#emailsupportcc#" from="#emailsupport#" subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller" type="HTML">
-                <font style="font-size: 10pt; font-family: Arial;">
-                <strong>#session.sellerinfo.fname# #session.sellerinfo.lname#</strong> entered a new product on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
-                Title: #form.name#<br>
-                Artist: #form.manufacturer#<br>
-                Year: #form.year#<br>
-                Size: #form.size#<br>
-                Medium: #form.category#<br>
-                Retail Price: #form.retail_price#<br>
-                Gallery Price: #form.gallery_price#<br>
-                Art ID: #modelno#<br><br>
-                Please review this product in Admin, and update the status to "Active" to show on the site.
-                <br><br>
+        	<cfmail 
+                server="#application.mailserver#" 
+                username="#application.mailserver_un#" 
+                password="#application.mailserver_pw#" 
+                to="#emailsupport#" 
+                cc="#emailsupportcc#" 
+                from="#emailsupport#" 
+                subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller" 
+                type="HTML"
+                >
+                    <font style="font-size: 10pt; font-family: Arial;">
+                    <strong>
+                        #session.sellerinfo.fname# #session.sellerinfo.lname#
+                    </strong> entered a new product on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  
+                    <br><br>
+                    Title: #form.name#<br>
+                    Artist: #form.manufacturer#<br>
+                    Year: #form.year#<br>
+                    Size: #form.size#<br>
+                    Medium: #form.category#<br>
+                    Retail Price: #form.retail_price#<br>
+                    Gallery Price: #form.gallery_price#<br>
+                    Art ID: #modelno#<br><br>
+                    Please review this product in Admin, and update the status to "Active" to show on the site.
+                    <br><br>
             </cfmail>
             
             <cfcatch type="Any">ERROR!!<cfabort></cfcatch>
@@ -218,17 +226,17 @@
         <cfset form.gallery_price 	= rereplace(form.gallery_price, "[^0-9|.]", "", "all")> 
             
         <cfif form.quantity lt 1>
-        <cfset tquantity = 0>
+            <cfset tquantity = 0>
         <Cfelse>
-        <cfset tquantity = form.quantity>
+            <cfset tquantity = form.quantity>
         </cfif>
         
         <cfif category is not "">
-        <cfif right(category,1) neq ":">
-        <cfset category = category&":">
-        <cfelse>
-        <cfset category = category>
-        </cfif>
+            <cfif right(category,1) neq ":">
+                <cfset category = category&":">
+            <cfelse>
+                 <cfset category = category>
+             </cfif>
         </cfif>
         
             <cfquery name="currentaction" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -259,19 +267,31 @@
             
             <cftry>
             
-            <cfmail server="#application.mailserver#" username="#application.mailserver_un#" password="#application.mailserver_pw#" to="#emailsupport#" cc="#emailsupportcc#" from="#emailsupport#" subject="Gallery Art Member Listing Update" type="HTML">
-                <font style="font-size: 10pt; font-family: Arial;">
-                <strong>#session.sellerinfo.fname# #session.sellerinfo.lname#</strong> updated a product on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
-                Title: #form.name#<br>
-                Artist: #form.manufacturer#<br>
-                Year: #form.year#<br>
-                Size: #form.size#<br>
-                Medium: #form.category#<br>
-                Retail Price: #form.retail_price#<br>
-                Gallery Price: #form.gallery_price#<br>
-                <!--- Art ID: #form.modelno#<br><br> --->
-                Please review this product in Admin, and update the status to "Active" to show on the site.
-                <br><br>
+            <cfmail 
+                server="#application.mailserver#" 
+                username="#application.mailserver_un#" 
+                password="#application.mailserver_pw#" 
+                to="#emailsupport#" 
+                cc="#emailsupportcc#" 
+                from="#emailsupport#" 
+                subject="Gallery Art Member Listing Update" 
+                type="HTML"
+                >
+                    <font style="font-size: 10pt; font-family: Arial;">
+                    <strong>
+                        #session.sellerinfo.fname# #session.sellerinfo.lname#
+                    </strong> updated a product on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  
+                    <br><br>
+                    Title: #form.name#<br>
+                    Artist: #form.manufacturer#<br>
+                    Year: #form.year#<br>
+                    Size: #form.size#<br>
+                    Medium: #form.category#<br>
+                    Retail Price: #form.retail_price#<br>
+                    Gallery Price: #form.gallery_price#<br>
+                    <!--- Art ID: #form.modelno#<br><br> --->
+                    Please review this product in Admin, and update the status to "Active" to show on the site.
+                    <br><br>
             </cfmail>
             
             <cfcatch type="Any">ERROR!!<cfabort></cfcatch>
@@ -370,6 +390,12 @@
 </cfoutput>
 
 <link href="stylesheet_.css" rel="stylesheet" type="text/css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
 <script LANGUAGE="javascript">
 
 function isValidSize(sText){
@@ -394,46 +420,58 @@ function validEntries(frm) {
     document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
 	if(frm.name.value == ''){
 	// alert('You must enter a Title.');
-    document.getElementById('titleError').textContent = 'You must enter a Title.';
+    // document.getElementById('titleError').textContent = 'You must enter a Title.';
+    toastr.error('You must enter a Title.');
 	// frm.name.focus();
 	// return false;
     isValid = false;
 	}
 	if(frm.retail_price.value == '' || frm.retail_price.value == '$0.00' || frm.retail_price.value == 0){
 	// alert('You must enter a Retail Price greater than zero.');
-    document.getElementById('RetailPriceError').textContent = 'You must enter a Retail Price greater than zero.';
+    // document.getElementById('RetailPriceError').textContent = 'You must enter a Retail Price greater than zero.';
+    toastr.error('You must enter a Retail Price greater than zero');
 	// frm.retail_price.focus();
 	// return false;
     isValid = false;
 	}
 	if(frm.gallery_price.value == '' || frm.gallery_price.value == '$0.00' || frm.gallery_price.value == 0){
 	// alert('You must enter a Gallery Price greater than zero.');
-    document.getElementById('GalleryPriceError').textContent = 'You must enter a Gallery Price greater than zero.';
+    // document.getElementById('GalleryPriceError').textContent = 'You must enter a Gallery Price greater than zero.';
+    toastr.error('You must enter a Gallery Price greater than zero');
 	// frm.gallery_price.focus();
 	// return false;
     isValid = false;
 	}
 	if(frm.manufacturer.value == ''){
 	// alert('You must select an Artist.');
-    document.getElementById('artistviewError').textContent = 'You must select an Artist.';
+    // document.getElementById('artistviewError').textContent = 'You must select an Artist.';
+    toastr.error('You must select an Artist.');
 	// frm.manufacturer.focus();
 	// return false;
     isValid = false;
 	}
 	if(frm.category.value == ''){
 	// alert('You must select a Medium.');
-    document.getElementById('MediumError').textContent = 'You must select a Medium.';
+    // document.getElementById('MediumError').textContent = 'You must select a Medium.';
+    toastr.error('You must select a Medium.');
 	// frm.category.focus();
 	// return false;
     isValid = false;
 	}
-	if(!isValidSize(frm.size.value)){
-	// alert('You must enter a valid SIZE: only numbers and the letter x');
-    document.getElementById('SizeError').textContent = 'You must enter a valid SIZE: only numbers and the letter x';
-	// frm.size.focus();
-	// return false;
-    isValid = false;
-	}
+	if (frm.size.value.trim() === '') {
+        toastr.error('You must enter a valid SIZE: only numbers and the letter x');
+        // document.getElementById('SizeError').textContent = 'You must enter a valid SIZE: only numbers and the letter x';
+        isValid = false;
+    } else if (!isValidSize(frm.size.value)) {
+        toastr.error('You must enter a valid SIZE: only numbers and the letter x');
+        // document.getElementById('SizeError').textContent = 'You must enter a valid SIZE: only numbers and the letter x';
+        isValid = false;
+    }
+    
+    // if(frm.fileup.value == ''){
+    //     toastr.error('Add the Artwork image');
+    //     isValid = false;
+    // }
 	 return isValid;
 	
 }
@@ -493,10 +531,20 @@ return true;
                                             <div class="user-registrations quotes-page contact-page">
                                                 <div class="top-heading">
                                                     <cfif structKeyExists(url,'error')>
-                                                        <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">Sorry, but the file that you are attempting to load is too large.  Please reduce your file size to <cfoutput>#fileSizeLimitKb#</cfoutput>.</span>
+                                                        <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">
+                                                            Sorry, but the file that you are attempting to load is too large.  
+                                                            Please reduce your file size to <cfoutput>#fileSizeLimitKb#</cfoutput>.
+                                                        </span>
                                                     </cfif>
                                                     <cfif sellerArt.recordcount GT 5>
-                                                        <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">Sorry, but you are only allowed 5 free uploads.  Please contact <b><a href="mailto:info@gallart.com" style="color: #ff0000; font-size: 13px; text-decoration:underline;">Gallart.com</a></b> in order to submit additional listings at $35 apiece.</span>
+                                                        <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">
+                                                            Sorry, but you are only allowed 5 free uploads.  Please contact
+                                                             <b>
+                                                                <a href="mailto:info@gallart.com" style="color: #ff0000; font-size: 13px; text-decoration:underline;">
+                                                                    Gallart.com
+                                                                </a>
+                                                            </b> in order to submit additional listings at $35 apiece.
+                                                        </span>
                                                     </cfif>
                                                     <h3>SELL YOUR ART ON GALLART.COM!</h3>
                                                 </div>
@@ -506,7 +554,7 @@ return true;
                                                     <li>GALLART.COM will charge a 20% fee when you sell your art</li>
                                                     <li>You are only allowed 5 free uploads.  Please contact <b> <a href="mailto:info@gallart.com" style="text-decoration:underline;">Gallart.com</a> </b> in order to submit additional listings at $35 apiece.</li>
                                                 </ul>
-                                                <p>You may enter as many pieces of art as you like!</p>
+                                                <!--- <p>You may enter as many pieces of art as you like!</p> --->
                                                 <p>GALLART.COM will review your listings.  If they are approved, they will be shown on the site.</p>
 
                                                 <cfoutput>
@@ -544,7 +592,7 @@ return true;
                                                             </div>
 
                                                             <div class="input-field">
-                                                                <label><b><i>Select an artist from dropdown above, OR type in a new artist:</i></b></label>
+                                                                <label><b><i>Select an artist from dropdown above, OR type in a new artist below (last name, first name):</i></b></label>
                                                                 <input type="Text" name="manufacturer" value="#REReplace(detail.manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#" size="40">
                                                             </div>
 
@@ -554,13 +602,13 @@ return true;
                                                             </div>
 
                                                             <div class="input-field">
-                                                                <label><b>Size:</b>(HEIGHT x WIDTH)</label>
+                                                                <label><b>Size (height x width) in inches:</b></label>
                                                                 <input type="text" name="size" value="#detail.size#" size="25">&nbsp;<font face="Verdana, Arial,helvetica" size="1"></font>
                                                                 <span class="error-message" id="SizeError"></span>
                                                             </div>
 
                                                             <div class="input-field">
-                                                                <label><b>Select Medium:</b></label>
+                                                                <label><b>Select Medium from dropdown below:</b></label>
                                                                 <Select name="category">
                                                                     <option value="">Select here ...</option>
                                                                     <cfloop query="cats">
@@ -578,7 +626,7 @@ return true;
                                                             </div>
 
                                                             <div class="input-field">
-                                                                <label><b>Gallery Price:</b> (selling price)</label>
+                                                                <label><b>Selling Price (20% fee will be deducted from this price):</b></label>
                                                                 <input type="text" name="gallery_price" value="#dollarformat(detail.gallery_price)#" size="25" maxlength="13">
                                                                 <span class="error-message" id="GalleryPriceError"></span>
                                                             </div>
@@ -587,20 +635,47 @@ return true;
                                                                 <label><b>Description:</b></label>
                                                                 <textarea name="caption" cols="90" rows="4">#detail.caption#</textarea>
                                                             </div>
+                                                            <div class="input-field">
+                                                            <!--- <label><b>Upload New Product Picture</b> <span style="color: ##ff0000; font-size: 8pt;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span></label>
+                                                                <input type="file" name="fileup" size="22" style="font-size: xx-small;padding: 0;"> --->
+                                                                
+                                                                    <div class="input-field image-upload pb-2">
+                                                                        <h3>
+                                                                           UPLOAD IMAGE
+                                                                        </h3>
+                                                                        <ul>
+                                                                            <li>- Please attach an image of the artwork </li>
+                                                                            <li>- The file must be a .JPG  </li>
+                                                                            <li>- Image size maximum <b>2MB</b>. </li>
+                                                                        </ul>
+                                                                     </div>
+                                                                     <!--- <label><b>Upload New Product Picture</b> <span style="color: ##ff0000; font-size: 8pt;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span></label> --->
+                                                                     <div class="file-upload-wrapper sm-file-upload-wrapper">
+                                                                        <label for="file-upload" class="file-upload-label">
+                                                                           <div class="file-upload-icon">
+                                                                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                                                 <path d="M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z"></path>
+                                                                              </svg>
+                                                                           </div>
+                                                                           <div class="file-upload-text"><strong>Browse Files</strong></div>
+                                                                        </label>
+                                                                        <div class="file-upload-custom">
+                                                                            <input type="file" name="fileup" size="22" style="padding: 0;">
+                                                                        </div>
+                                                                        
+                                                                     </div>
 
+
+                                                                 </div>
                                                             <div class="input-field">
-                                                                <label><b>Upload New Product Picture</b> <span style="color: ##ff0000; font-size: 8pt;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span></label>
-                                                                <input type="file" name="fileup" size="22" style="font-size: xx-small;padding: 0;">
-                                                            </div>
-                                                            <div class="input-field">
-                                                                <cfif fileexists("#expandpath('.')#\img\thumbnails\#detail.uid#.jpg")>
-                                                                    <img src="http://#server_name#/img/thumbnails/#detail.uid#.jpg?u=#randrange(1,1000)#">
+                                                                <cfif fileexists("#expandpath('.')#/img/thumbnails/#detail.uid#.jpg")>
+                                                                    <img src="http://23.20.226.157/img/#detail.uid#.jpg?u=#randrange(1,1000)#" style="width: 200px !important;">
                                                                 </cfif>
                                                             </div>
                                                             <div class="input-button flex-input-btn listing-detail-btns">
                                                                 <cfif isDefined('url.id')>
                                                                     <input type="Hidden" name="process" value="UPDATE" class="SeeMore">
-                                                                    <input type="submit" name="process" class="SeeMore" value="Add Your Listing" onClick="javascript:return confirm('Updating your product will temporarily remove it from the site until Gallery Art can review it -- Are You Sure?');"><br>
+                                                                    <input type="submit" name="process" class="SeeMore" value="Update Your Listing" onClick="javascript:return confirm('Updating your product will temporarily remove it from the site until Gallery Art can review it -- Are You Sure?');"><br>
                                                                     <input type="reset" value="Reset" class="SeeMore" />
                                                                     <input type="hidden" name="id" value="#url.id#">
                                                                         <Cfif isDefined('returnq')>
@@ -625,7 +700,7 @@ return true;
                                                             <input type="hidden" name="uid" value="#detail.uid#">
 
                                                             <div class="input-button flex-input-btn listing-detail-btns">
-                                                                <input type="button" name="process" class="SeeMore" value="Delete!" onClick="javascript:return confirm('Delete -- Are You Sure?');">
+                                                                <input type="submit" name="process" class="SeeMore" value="Delete!" onClick="javascript:return confirm('Delete -- Are You Sure?');">
                                                             </div>
                                                         </div>
                                                     </form>
@@ -657,6 +732,77 @@ return true;
     }
     .input-field {
     margin-bottom: 15px;
+    }
+    .input-field.image-upload ul {
+        margin: 0;
+        padding: 0;
+    }
+    ul li {
+        padding: 5px 0;
+         font-size: 16px;
+         line-height: 1.2;
+         color: #212529;
+         font-weight: 400;
+    }
+    .input-field.image-upload ul li  {
+         list-style: none;
+         padding: 5px 0;
+         font-size: 16px;
+         line-height: 1.2;
+         color: #212529;
+         font-weight: 400;
+    } 
+    .file-upload-wrapper {
+      width: 100%;
+	  padding: 20px;
+      background: #f2f2f2;
+		border: 2px dashed lightgray;
+		border-radius: 8px;
+		text-align: center;
+		cursor: pointer;
+		color: #000;
+		margin-bottom: 30px;
+		margin-top: 15px;
+    }
+
+    .file-upload-label {
+      display: block;
+      cursor: pointer;
+    }
+
+    .file-upload-input {
+      display: none;
+    }
+
+    .file-upload-icon {
+      margin-bottom: 10px;
+    }
+
+    .file-upload-icon svg {
+      width: 40px;
+      height: 40px;
+      fill: #666;
+    }
+
+    .file-upload-text strong {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .file-upload-text p {
+      font-size: 14px;
+      color: #666;
+      margin: 5px 0 0;
+    }
+    .registration-page .content-section .banner-section .art-work-content .file-upload-custom input {
+        height: auto !important;
+        margin: 0;
+        background: transparent;
+    }
+    .registration-page .content-section .banner-section .art-work-content .file-upload-custom {
+        border-radius: 10px;
+        border: 1px solid lightgray;
+        padding: 6px 15px;
     }
  </style>
 

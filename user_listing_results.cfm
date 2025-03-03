@@ -82,7 +82,24 @@
   })(window, document, 'Robly');
 </script>
 <!-- END ROBLY WIDGET CODE -->
-
+<style>
+	.user-registrations {
+		max-width: 800px;
+		margin: 0 auto;
+	}
+	.row0 {
+		font-size: 15px;
+	}
+	.table-responsive table td {
+		padding: 5px;
+	}
+	.registration-page .content-section .banner-section .art-work-content table input {
+       margin-bottom: 0px;
+	}
+	.registration-page .content-section .banner-section .art-work-content {
+		min-height: 554px;
+	}
+</style>
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
@@ -107,7 +124,8 @@
                                         <div class="bottom-content">
 											<div class="top-heading">
 												<cfif isDefined('process')>
-													<span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;"><br>
+													<span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">
+														<br>
 														<cfif process EQ 'update'>
 															YOU HAVE SUCCESSFULLY UPDATED YOUR LISTING.
 														<cfelseif process EQ 'delete'>
@@ -118,10 +136,10 @@
 												<h3>SELL YOUR ART ON GALLART.COM!</h3>
 											</div>
 											<div class="user-registrations">
-												<input type="Button" class="SeeMore" onClick="javascript:goxss('user_listing_search.cfm?xss=<cfoutput>#xss#</cfoutput>')" value="New Search" style="margin: 0 auto;" />
+												<input type="Button" class="SeeMore mb-2 me-0" onClick="javascript:goxss('user_listing_search.cfm?xss=<cfoutput>#xss#</cfoutput>')" value="New Search" style="margin: 0 auto;" />
 												<div class="table-responsive">
 													<cfif getProducts.recordcount>
-														<table border="0" cellpadding="2" cellspacing="0" width="700">
+														<table border="0" cellpadding="2" cellspacing="0" width="800">
 															<tr class="row0">
 																<td></td>
 																<td>Artist</td>
@@ -141,7 +159,15 @@
 																<td><font face="arial, helvetica" size="1">#name#</font></td>
 																<td align="right"><font face="arial, helvetica" size="1">#dollarformat(gallery_price)#&nbsp;&nbsp;&nbsp;</font></td>
 																<td>&nbsp;</td>
-																<td><font face="arial, helvetica" size="1"><cfif Active is 1>Active<cfelse>Inactive</cfif></font></td>
+																<td>
+																	<font face="arial, helvetica" size="1">
+																		<cfif Active is 1>
+																			Active
+																		<cfelse>
+																			Inactive
+																		</cfif>
+																	</font>
+																</td>
 																<td align="center"><font face="arial, helvetica" size="1">#dateformat(datestamp)#</font></td>
 															</tr>
 															</CFOUTPUT>

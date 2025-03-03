@@ -157,7 +157,7 @@
                                     </div>
 
 									<div class="bottom-content">
-
+                                        
                                         <cfif isDefined('url.keywords') >
                                             <h3> Results for <cfoutput>"#url.keywords#"</cfoutput> </h3>
                                         </cfif>
@@ -194,8 +194,13 @@
                                                 <div class="top-heading m-0">
                                                     <h3>
                                                         <cfparam name="artistName" default="#getBio.artist#">
-                                                        <cfif find(',',getBio.artist)><cfset artistName = "#listlast(getBio.artist,',')# #listfirst(getBio.artist,',')#" /></cfif>
-                                                        <cfoutput>#artistName#</cfoutput>
+                                                        <cfif find(',',getBio.artist)>
+                                                            <cfset artistName = "#listlast(getBio.artist,',')# #listfirst(getBio.artist,',')#" />
+                                                        </cfif>
+
+                                                        <cfset capitalize_artistName = REReplace(artistName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                                                        
+                                                        <cfoutput>#capitalize_artistName#</cfoutput>
 
                                                         
 
@@ -235,7 +240,12 @@
                                                         </div>
                                                 </div>
                                             <cfelse>
-                                                <h3 class="h3"> <cfoutput>#fullName#</cfoutput></h3>
+                                                <h3 class="h3"> 
+                                                    <cfoutput>
+                                                        <cfset capitalize_artistNameeee = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                                                        #capitalize_artistNameeee#
+                                                    </cfoutput>
+                                                </h3>
                                             </cfif>
                                         </cfif>
                                         <cfoutput>

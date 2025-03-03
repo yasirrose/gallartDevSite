@@ -41,7 +41,19 @@
   })(window, document, 'Robly');
 </script>
 <!-- END ROBLY WIDGET CODE -->
-
+<style>
+	.user-registrations {
+		max-width: 800px;
+		margin: 0 auto;
+	}
+	.user-registrations table tr td {
+		padding: 10px;
+		vertical-align: baseline;
+	}
+	.SeeMore {
+		margin: 10px 0 10 auto;
+	}
+</style>
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 					<!--- Counter for the Back Button --->
@@ -138,7 +150,7 @@ order by Stateabb
 														</tr>
 													</table>
 												<cfelse>
-													<table width="600" border="0" cellspacing="0" cellpadding="2" align="center">
+													<table  border="0" cellspacing="0" cellpadding="2" align="center">
 														<tr>
 															<td colspan="5" height="40">
 																<strong>VIEW CONTENTS OF YOUR CART:</strong>
@@ -149,12 +161,10 @@ order by Stateabb
 															<td width="10%" align="center" style="color: #ffffff;"><b>Qty</b></td>
 															<td width="15%" align="Center" style="color: #ffffff;"><b>Price</b></td>
 															<td width="15%" align="Center" style="color: #ffffff;"><b>Ext.</b></td>
-															<td width="10%">&nbsp;
-																
-															</td>
+															<td width="50%"></td>
 														</tr>
 														<Cfoutput query="contents">
-														<FORM ACTION="#securepage#/view.cfm?xss=#xss#&uid=#uid#&co=y" method="post">
+														<FORM ACTION="http://23.20.226.157/view.cfm?xss=#xss#&uid=#uid#&co=y" method="post">
 														<TR class="#this_row()#">
 														<cfquery name="get_name" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 															SELECT * from products where uid='#pid#'
@@ -172,8 +182,9 @@ order by Stateabb
 															<td align="right" valign="middle">
 																#dollarformat(Ext)#</td>
 																<cfset subtotal = #subtotal# + #ext#>
-															<td align="right" valign="middle">
-																<input type="image" src="/img/update.gif" border="0" style="border: 1px solid ##ffffff;">
+															<td >
+																<!--- <input type="image" src="/img/update.gif" border="0" style="border: 1px solid ##ffffff;"> --->
+																<input type="submit" class="Seemore" value="Update">
 															</td>
 														</tr>
 														</form>
@@ -194,9 +205,9 @@ order by Stateabb
 															<td align="right">
 																<b>#dollarformat(subtotal)#</b>
 															</td>
-															<td>&nbsp;
+															<!--- <td>&nbsp;
 																
-															</td>
+															</td> --->
 														</tr>
 														<tr>
 															<td colspan="5" align="center" style="padding-top:10px;">

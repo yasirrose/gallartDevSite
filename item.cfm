@@ -173,11 +173,58 @@
          <cfif process is "Add" and qty gt 0>
          <cfset opt_name="">
          <cfset opt_value="">
-         <cfquery name="addtocart" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-            Insert into cart (qty, pid, trackerid,charge,options,optionvalues)values(#qty#, '#pid#', '#xss#', #charge#,'#opt_name#','#opt_value#')
+
+         <cfquery name="getCartRecord" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+               SELECT * FROM cart where pid = #pid# and trackerid = '#xss#'
          </cfquery>
-         <cflocation url="checkout_new.cfm?xss=#xss#" addtoken="No">
+
+            <!--- <cfdump var="#getCartRecord.recordCount#" abort="true"> --->
+
+            <cfif getCartRecord.recordCount eq 0>
+               <cfquery name="addtocart" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                  Insert into cart (qty, pid, trackerid,charge,options,optionvalues)values(#qty#, '#pid#', '#xss#', #charge#,'#opt_name#','#opt_value#')
+               </cfquery>
+               
+            </cfif>
+            <cflocation url="checkout_new.cfm?xss=#xss#" addtoken="No">
+         
       </cfif>
+      </cfif>
+
+      <cfif structKeyExists(form, "addData") AND form.addData EQ "AddWishlist">
+         
+
+         <cfquery name="getwishList" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+            SELECT * FROM Wishlist 
+            WHERE product_id = <cfqueryparam value="#form.ProductID#" cfsqltype="cf_sql_integer">
+            AND user_id = <cfqueryparam value="#form.UserID#" cfsqltype="cf_sql_integer">
+        </cfquery>
+
+            <cfif getwishList.recordCount EQ 0>
+               <cfquery name="addtowishList" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                  INSERT INTO Wishlist 
+                  (user_id, product_id, date)
+                  VALUES(
+                     <cfqueryparam value="#form.UserID#" cfsqltype="cf_sql_integer">,
+                     <cfqueryparam value="#form.ProductID#" cfsqltype="cf_sql_integer">,
+                     <cfqueryparam value="#Now()#" cfsqltype="cf_sql_timestamp">
+                  )
+            </cfquery>
+
+                  <cfoutput>
+                     <script>
+                        alert('Your art work is added in your Wishlist Table');
+                     </script>
+                  </cfoutput>
+
+            <cfelse>
+                  <cfoutput>
+                     <script>
+                        alert('This product is already exist in the table');
+                     </script>
+                  </cfoutput>
+            </cfif>
+         
       </cfif>
       <!--- End of Add Items to Cart --->
       <!--- Gather Product Information for product(s) --->
@@ -329,6 +376,9 @@
                }
                // Combine the base URL with the query string
                fullURL = baseURL & "?" & queryString;
+
+               whatsappURL = "https://wa.me/?text=" & URLEncodedFormat(fullURL);
+
             </cfscript>
 
             <form method="post" action="#fullURL#" name="errorFrm">
@@ -513,7 +563,7 @@
                                                          
                                                       </cfif>
                                                       <cfset capitalize = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-                                                      <a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>" >
+                                                      <a href="products.cfm?man=#URLEncodedFormat(manufacturer)#<cfif parameterexists(xss)>&xss=#xss#</cfif>" >
                                                          <h3 class="meta">#capitalize#</h3>
                                                       </a>
                                                       <!--- <h3 class="meta">#ucase(manufacturer)#</h3> --->
@@ -543,75 +593,7 @@
 
                                                       </cfif>
                                                    </div>
-                                                   <!--- <div class="table-responsive">
-                                                      <table cellpadding="1" cellspacing="1" border="0" align="Center" width="95%" style="border: 1px solid ##000;">
-                                                         <cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and application.showSalePrice EQ 1>
-                                                         <Tr>
-                                                            <th align="center">
-                                                               <span><b>Retail Price</b></span>
-                                                            </th>
-                                                            <th align="center">
-                                                               <span>
-                                                                  <b>Gallery Price</b>
-                                                               <span>
-                                                            </th>
-                                                            <th align="center">
-                                                               <span>
-                                                                  <b>Sale Price</b>
-                                                               </span>                                                          
-                                                            </th>
-                                                            <th align="center">
-                                                               <span>
-                                                                  <b>Your Savings</b>
-                                                               </span>
-                                                            </th>
-                                                         </tr>
-                                                         <Tr>
-                                                            <td align="center"><span>#dollarformat(productinfo.retail_price)#</span>
-                                                            </td>
-                                                            <td align="center"><span style="font-weight: 600;">#dollarformat(productinfo.gallery_price)#</span>
-                                                            </td>
-                                                            <td align="center"><span style="color: red;">#dollarformat(saleprice)#</span>
-                                                            </td>
-                                                            <cfset savings = #productinfo.retail_price# - #saleprice#>
-                                                            <td align="center"><span color="red"><b>#dollarformat(savings)#</b></span>
-                                                            </td>
-                                                         </tr>
-                                                         <cfelse>
-                                                         <cfif (productinfo.retail_price gt 0) and (productinfo.gallery_price gt 0) and (productinfo.retail_price gt productinfo.gallery_price)>
-                                                         <Tr>
-                                                            <th align="center"><span><b>Retail Price</b></span>
-                                                            </th>
-                                                            <th align="center">
-                                                               <span><b>Gallery Price</b>
-                                                               <spant>
-                                                            </th>
-                                                            <th align="center"><span><b>Your Savings</b></span>
-                                                            </th>
-                                                         </tr>
-                                                         <Tr>
-                                                            <td align="center"><span>#dollarformat(productinfo.retail_price)#</span>
-                                                            </td>
-                                                            <td align="center"><span>#dollarformat(productinfo.gallery_price)#</span>
-                                                            </td>
-                                                            <cfset savings = #productinfo.retail_price# - #productinfo.gallery_price#>
-                                                            <td align="center"><span color="red"><b>#dollarformat(savings)#</b></span>
-                                                            </td>
-                                                         </tr>
-                                                         </cfif>
-                                                         </cfif>
-                                                         <cfif parameterexists(process)>
-                                                            <Tr>
-                                                               <td colspan="3" align="center">
-                                                                  <p>
-                                                                     <font face="Arial, helvetica" size="1" color="#displaycolor#">
-                                                                        #qty# #productinfo.name#(s) have been added to your list. <br>
-                                                                  <div align="center">Thank you!</div></font>
-                                                               </td>
-                                                            </tr>
-                                                         </cfif>
-                                                      </table>
-                                                   </div> --->
+                                                  
 
                                                    <cfif productinfo.retail_price gt 0 >
 
@@ -664,75 +646,104 @@
                                                          <p>Additional Details: <span>#trim(formatted_caption)#</span></p>
                                                       </cfif>
                                                       <p>Art ID: <span>#productinfo.modelno#</span></p>
-                                                      <cfform action="item.cfm?pid=#pid#&xss=#xss#" method="POST">
-                                                         <input type="hidden" name="process" value="Add">
-                                                         <cfif productinfo.closeout eq 1 and saleprice gt 0 and application.showSalePrice EQ 1>
-                                                         <input type="hidden" name="charge" value="#saleprice#">
-                                                         <cfelse>
-                                                         <input type="hidden" name="charge" value="#productinfo.gallery_price#">
-                                                         </cfif>
-                                                         <!--- <cfif productinfo.gallery_price eq 0 and (productinfo.closeout neq 1 and productinfo.special_price gt 0)>
-                                                         <p><b>Price On Request</b></p>
-                                                         <cfelseif productinfo.closeout eq 1 and saleprice gt 0 and application.showSalePrice EQ 1>
-                                                         <p>
-                                                            Gallery Price: 
-                                                            <span>
-                                                               <cfif productinfo.gallery_price NEQ 0 AND len(productinfo.gallery_price)>
-                                                               #dollarformat(productinfo.gallery_price)#
-                                                               <cfelse>
-                                                               #dollarformat(0)#
-                                                               </cfif>
-                                                            </span>
-                                                         </p>
-                                                         <p>Sale Price: <span>#dollarformat(saleprice)#</span></p>
-                                                         <cfelse>
-                                                         </cfif> --->
+                                                      
+                                                         
                                                          <cfif len(productinfo.fk_users)>
                                                             <span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span>
                                                          </cfif>
                                                          <div class="flex-button-group">
                                                             <button type="button" class="flex-btn" data-bs-toggle="modal" data-bs-target="##staticBackdrop">
-                                                            <i class="fa fa-share"></i>
-                                                            <span>Share</span>
+                                                               <i class="fa fa-share"></i>
+                                                               <span>
+                                                                  Share
+                                                               </span>
                                                             </button>
-                                                            <button type="button" class="flex-btn" id="addWishButton">
-                                                            <i class="fa fa-heart"></i>
-                                                            <span>Add to wishlist</span>
-                                                            </button>
+                                                               <cfif structKeyExists(session, 'sellerinfo')>
+
+                                                                  <cfform action="" method="POST">
+                                                                     <input type="hidden" value="#pid#" name="ProductID">
+                                                                     <input type="hidden" value="#session.sellerinfo.pk_users#" name="UserID">
+                                                                     <input type="hidden" value="AddWishlist" name="addData">
+                                                                     <button type="submit" class="flex-btn" id="addWishButton">
+                                                                        <i class="fa fa-heart"></i>
+                                                                        <span>
+                                                                           Add to wishlist
+                                                                        </span>
+                                                                     </button>
+                                                                  </cfform>
+
+                                                                  
+                                                            <cfelse>
+                                                                  <button type="button" class="flex-btn" id="addWishButtonNotLoggedIn">
+                                                                     <i class="fa fa-heart"></i>
+                                                                     <span>
+                                                                        Add to wishlist
+                                                                     </span>
+                                                                  </button>
+                                                            </cfif>
                                                          </div>
-
-                                                         <!--- <script>
-                                                            document.getElementById("addWishButton").addEventListener("click", function() {
-                                                                // Data to store in the cookie
-                                                                const newProductInfo = {
-                                                            pid: #url.pid#,
-                                                            
-                                                            };
-                                                            
-                                                            const existingCookie = document.cookie.split('; ').find(row => row.startsWith('wishlistItem='))?.split('=')[1];
-                                                            
-                                                                // Convert productInfo to a JSON string
-                                                               let wishlist = existingCookie ? JSON.parse(decodeURIComponent(existingCookie)) : [];
-                                                            
-                                                            // Add the new product to the wishlist array
-                                                            wishlist.push(newProductInfo);
-                                                            
-                                                            // Convert the updated wishlist array back to a JSON string
-                                                            const updatedWishlist = JSON.stringify(wishlist);
-                                                            
-                                                            // Set the updated cookie (valid for 7 days)
-                                                            document.cookie = `wishlistItem=${encodeURIComponent(updatedWishlist)}; path=/; max-age=${7 * 24 * 60 * 60};`;
-                                                            
-                                                                // Optional: Notify the user
-                                                                alert("Item added to wishlist!");
+                                                         
+                                                         <script>
+                                                            document.addEventListener("DOMContentLoaded", function() {
+                                                               // If user is not logged in, show alert
+                                                               document.getElementById("addWishButtonNotLoggedIn")?.addEventListener("click", function() {
+                                                                  alert("Please first login to add items to your wishlist.");
+                                                               })
                                                             });
-                                                         </script> --->
+                                                         </script>
 
-                                                         
-
-                                                         
                                                         
-
+                                                         <!--- <script>
+                                                            document.addEventListener("DOMContentLoaded", function() {
+                                                                // Retrieve `pid` from the URL dynamically using ColdFusion
+                                                                const pid = "<cfoutput>#url.pid#</cfoutput>"; 
+                                                        
+                                                                // Check if the user is logged in
+                                                                const isLoggedIn = "<cfoutput>#structKeyExists(session, 'sellerinfo')#</cfoutput>" === "YES";
+                                                        
+                                                                // If logged in, get `pk_user`
+                                                                let pk_user = null;
+                                                                <cfif structKeyExists(session, 'sellerinfo')>
+                                                                    pk_user = "<cfoutput>#session.sellerinfo.pk_users#</cfoutput>";
+                                                                </cfif>
+                                                        
+                                                                // Function to get wishlist from cookies
+                                                                function getWishlist() {
+                                                                    const existingCookie = document.cookie.split('; ').find(row => row.startsWith('AddWishListlistItem='))?.split('=')[1];
+                                                                    return existingCookie ? JSON.parse(decodeURIComponent(existingCookie)) : [];
+                                                                }
+                                                        
+                                                                // Function to save wishlist to cookies
+                                                                function saveWishlist(wishlist) {
+                                                                    document.cookie = `AddWishListlistItem=${encodeURIComponent(JSON.stringify(wishlist))}; path=/; max-age=${7 * 24 * 60 * 60};`;
+                                                                }
+                                                        
+                                                                // Click event when user is logged in
+                                                                if (isLoggedIn) {
+                                                                    document.getElementById("addWishButton").addEventListener("click", function() {
+                                                                        let wishlist = getWishlist();
+                                                        
+                                                                        // Check if an entry with both `pid` and `pk_user` exists
+                                                                        const entryExists = wishlist.some(item => item.pid === pid && item.pk_user === pk_user);
+                                                        
+                                                                        if (entryExists) {
+                                                                            alert("Already in wishlist!");
+                                                                        } else {
+                                                                            wishlist.push({ pid: pid, pk_user: pk_user }); // Add `pid` & `pk_user`
+                                                                            saveWishlist(wishlist);
+                                                                            alert("Added to wishlist!");
+                                                                        }
+                                                                    });
+                                                                } else {
+                                                                    // If user is not logged in, show an alert
+                                                                    document.getElementById("addWishButtonNotLoggedIn").addEventListener("click", function() {
+                                                                        alert("Please first login");
+                                                                    });
+                                                                }
+                                                            });
+                                                        </script> --->
+                                                        
+                                                        <!--- <cfdump var="#cookie#"> --->
                                                         
                                                          
                                                          <div class="modal fade share-modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -827,8 +838,9 @@
                                                                         </div>
                                                                         <div class="col-md-6 col-sm-6">
                                                                            <button type="button" class="flex-btn">
-                                                                              <a href="https://wa.me/?text=#fullURL#" target="_blank">
+                                                                              <a href="#whatsappURL#" target="_blank">
                                                                                  <i class="fab fa-whatsapp"></i>
+                                                                                 <!--- <cfdump var="#fullURL#"> --->
                                                                                  <span>WhatsApp</span>
                                                                              </a>
                                                                            </button>
@@ -854,6 +866,13 @@
                                                             </div>
                                                          </div>
 
+                                                      <cfform action="item.cfm?pid=#pid#&xss=#xss#" method="POST">
+                                                            <input type="hidden" name="process" value="Add">
+                                                            <cfif productinfo.closeout eq 1 and saleprice gt 0 and application.showSalePrice EQ 1>
+                                                            <input type="hidden" name="charge" value="#saleprice#">
+                                                            <cfelse>
+                                                            <input type="hidden" name="charge" value="#productinfo.gallery_price#">
+                                                            </cfif>
                                                          
                                                          <cfif productinfo.gallery_price neq 0 or (productinfo.closeout eq 1 and productinfo.special_price gt 0)>
                                                          <input type="HIDDEN" name="qty" value="1">
@@ -865,29 +884,7 @@
                                                          
                                                          </cfif>
                                                       </cfform>
-                                                      <!--- <div class="flex-button-group flex-button-group-bottom">
-                                                         <button type="button" class="flex-btn">
-                                                         <i class="fa fa-check-circle"></i>
-                                                         <span>Authentically Guarantee</span>
-                                                         </button>
-                                                         <button type="button" class="flex-btn">
-                                                         <i class="fa fa-lock"></i>
-                                                         <span>Secure Checkout</span>
-                                                         </button>
-                                                         <button type="button" class="flex-btn">
-                                                         <i class="fa fa-undo"></i>
-                                                         <span>14 day returns</span>
-                                                         </button>
-                                                      </div> --->
-                                                      <!---
-                                                         <div class="bottom-row-fields">
-                                                            <select class="form-select" aria-label="Default select example">
-                                                               <option selected>Inquire About this piece</option>
-                                                               <option value="1">One</option>
-                                                               <option value="2">Two</option>
-                                                               <option value="3">Three</option>
-                                                            </select>
-                                                         </div> --->
+                                                     
 
 
                                                       <div class="bottom-row-fields">
@@ -933,14 +930,16 @@
                                                                      <cfelse>
                                                                      <cftry>
                                                                        
+                                                                       <!--- <cfdump var="#productinfo.manufacturer#">
+                                                                       <cfdump var="#productinfo.name#" abort="true"> --->
                                                                         
                                                                         <cfif 
                                                                               form.fname neq '' 
                                                                            and form.lname neq '' 
                                                                            and form.email neq ''>
                                                                         <cfquery name="addgLead" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                                                                           insert into leads (fname,lname, notes, email, phone, otherphone, maillist)
-                                                                           values('#form.fname#','#form.lname#', '#form.comments#', '#form.email#', '#form.phone#', '#form.otherphone#', '#form.list#')
+                                                                           insert into leads (fname,lname, notes, email, phone, otherphone, maillist, artists, titles)
+                                                                           values('#form.fname#','#form.lname#', '#form.comments#', '#form.email#', '#form.phone#', '#form.otherphone#', '#form.list#','#productinfo.manufacturer#','#productinfo.name#')
                                                                         </cfquery>
                                                                         
                                                                        
@@ -1206,6 +1205,20 @@
          }
          .input-field {
          margin-bottom: 15px;
+         }
+         .product-description-sec .flex-button-group form {
+            width: 50%;
+            }
+            .product-description-sec .flex-button-group .flex-btn {
+            width: 50%;
+            }
+            .product-description-sec .flex-button-group form .flex-btn {
+            width: 100%;
+            }
+         @media (max-width: 767px){
+            .row.slider-top-row .col-md-6.mb-md-6:first-child {
+               order: 2;
+            }
          }
       </style>
    </body>

@@ -28,10 +28,10 @@
 	<!--- Check to see if the form has been submitted. --->
 	<cfif FORM.submitted>
 	   <cfset errorMsg="" />
-	   <cfif len(form.phone) AND NOT isValid("regex",form.phone,"^([\(]{1}[0-9]{3}[\)]{1}[
-	   ]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
-	   <cfset errorMsg=errorMsg & "Please enter your home phone number in the format (xxx) xxx-xxxx <br/>" />
-	</cfif>
+	   <!--- <cfif len(form.phone) AND NOT isValid("regex",form.phone,"^([\(]{1}[0-9]{3}[\)]{1}[
+	   		]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
+	   		<cfset errorMsg=errorMsg & "Please enter your home phone number in the format (xxx) xxx-xxxx <br/>" />
+		</cfif> --->
 	<cfif errorMsg NEQ "">
 	   <cfset phoneError=true />
 	   <cfelse>
@@ -341,14 +341,14 @@
 																	<h2 class="title">
 																		<cfset capitalize = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
 																		<cfset capitalizeTitle = REReplace(productinfo.name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-																		#capitalize# '#capitalizeTitle#' - 
+																		<b>#capitalize# '#capitalizeTitle#' </b> - 
 																		<span>
 																			<cfif productinfo.retail_price gt 0 >
 
 																				
 																				<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
 																				   <cfif application.showSalePrice EQ 1>
-																					  <del>#DollarFormat(productinfo.special_price)# </del> &nbsp;
+																					  #DollarFormat(productinfo.special_price)#  &nbsp;
 																					   <b>
 																						 <!--- <span style="color: ##ff0000;">
 																							#DollarFormat(productinfo.special_price)# Sale
@@ -356,7 +356,7 @@
 																					  </b>
 																				   </cfif>
 																				<cfelseif productinfo.gallery_price gt 0>
-																				   <del>#DollarFormat(productinfo.gallery_price)# </del> &nbsp;
+																				   #DollarFormat(productinfo.gallery_price)#  &nbsp;
 																				  <!--- <b> #DollarFormat(productinfo.gallery_price)# </b> --->
 																				</cfif>
 						  
@@ -522,27 +522,38 @@
          }
          
          // Validate EMAIL
-         if (!email) {
-            document.getElementById('emailError').textContent = 'Please fill in your email address.';
-            isValid = false;
-         } else if (!/\S+@\S+\.\S+/.test(email)) {
-            document.getElementById('emailError').textContent = 'Please enter a valid email address.';
-            isValid = false;
-         }
+		 if (!email) {
+        document.getElementById('emailError').textContent = 'Please fill in your email address.';
+        isValid = false;
 
-		 if(!phone){
-			document.getElementById('phoneError').textContent = 'Please enter your home phone number';
-			isValid = false;
-		 } 
+       			 // Only show errors for phone and best_time if email is also empty
+				if (!phone) {
+					document.getElementById('phoneError').textContent = 'Please enter your phone number.';
+					isValid = false;
+				}
+
+				if (!best_time) {
+					document.getElementById('best_timeError').textContent = 'Best time to call is required.';
+					isValid = false;
+				}
+			} else if (!/\S+@\S+\.\S+/.test(email)) {
+				document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+				isValid = false;
+			}
+
+		//  if(!phone){
+		// 	document.getElementById('phoneError').textContent = 'Please enter your phone number';
+		// 	isValid = false;
+		//  } 
 		//  else if (phone && !phoneRegex.test(phone)) {
 		// 	document.getElementById('phoneError').textContent = 'Please enter your home phone number in the format (xxx) xxx-xxxx';
 		// 	isValid = false;
 		// }
 
-		if (!best_time) {
-            document.getElementById('best_timeError').textContent = 'Best time to call is required.';
-            isValid = false;
-         }
+		// if (!best_time) {
+        //     document.getElementById('best_timeError').textContent = 'Best time to call is required.';
+        //     isValid = false;
+        //  }
 
 		 if (!Offer) {
             document.getElementById('OfferError').textContent = 'Please make an offer - enter a dollar amount, no $ or decimal.';
@@ -628,7 +639,7 @@
 			.flex-form-section h2.title {
 				font-size: 28px;
 				line-height: normal;
-				color: #bbbbbb;
+				color: black;
 				margin-bottom: 10px;
 			}
 			.flex-form-section h2.title span {

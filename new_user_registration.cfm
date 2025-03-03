@@ -37,7 +37,7 @@
 
 			<cfset errorMsg = "" />
 
-			<cfif len(form.cellphone) AND NOT isValid("regex",form.cellphone,"^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
+			<!--- <cfif len(form.cellphone) AND NOT isValid("regex",form.cellphone,"^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
 				<cfset errorMsg = "Please enter your cell phone number in the format (xxx) xxx-xxxx <br/>" />
 			</cfif>
 			<cfif len(form.phone) AND NOT isValid("regex",form.phone,"^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
@@ -45,7 +45,7 @@
 			</cfif>
 			<cfif len(form.businessphone) AND NOT isValid("regex",form.businessphone,"^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
 				<cfset errorMsg = errorMsg & "Please enter your business phone number in the format (xxx) xxx-xxxx <br/>" />
-			</cfif>
+			</cfif> --->
 
 			<cfif errorMsg NEQ "">
 				<cfset phoneError = true />
@@ -437,25 +437,11 @@
 					
 					
 					<!--- <cfdump var="#form#" abort="true"> --->
-					<cfset maxFileSize = 1024 * 1024 /> <!--- 2MB in bytes --->
+					<cfset maxFileSize = 5 * 1024 * 1024 /> <!--- 5MB in bytes --->
 					<cfset fileTooLarge = false />
 					<cfset oversizedImages = "">
 
-					<cfloop collection="#form#" item="idx">
-						<cfif left(idx,9) EQ "addImage_">
-							<cfset thisFilefield = idx />
-							
-							<!--- Temporarily upload the file to check size --->
-							<cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" 
-									destination="#expandpath('.')#/purchases_consignments/images/" result="fileCheck">
-							
-							<cfif fileCheck.FileSize GT maxFileSize>
-								<cfset fileTooLarge = true />
-								<cfset oversizedImages = listAppend(oversizedImages, fileCheck.ClientFileName) />
-								<cffile action="delete" file="#fileCheck.ServerDirectory#/#fileCheck.ServerFile#" />
-							</cfif>
-						</cfif>
-					</cfloop>
+					
 
 					
 
@@ -465,6 +451,23 @@
 						and form.EMAIL_PURCHASE NEQ '' 
 						and form.lname NEQ '' 
 						and form.size NEQ '' >
+
+
+						<cfloop collection="#form#" item="idx">
+							<cfif left(idx,9) EQ "addImage_">
+								<cfset thisFilefield = idx />
+								
+								<!--- Temporarily upload the file to check size --->
+								<cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" 
+										destination="#expandpath('.')#/purchases_consignments/images/" result="fileCheck">
+								
+								<cfif fileCheck.FileSize GT maxFileSize>
+									<cfset fileTooLarge = true />
+									<cfset oversizedImages = listAppend(oversizedImages, fileCheck.ClientFileName) />
+									<cffile action="delete" file="#fileCheck.ServerDirectory#/#fileCheck.ServerFile#" />
+								</cfif>
+							</cfif>
+						</cfloop>
 
 							<cfif NOT fileTooLarge>
 								<cftry>
@@ -567,7 +570,7 @@
 
 										<script>
 											var oversizedImages = "#JSStringFormat(oversizedImages)#";
-											alert("The following images exceed 2MB and were not uploaded: " + oversizedImages);
+											alert("The images " + oversizedImages + " exceed 5MB and were not uploaded");
 										</script>
 
 									</cfoutput>
@@ -792,7 +795,7 @@
 																	toastr.success('Your Record is added successfully.');
 																</script>
 
-																<cflocation url="user_listing_detail.cfm?xss=#xss#" addtoken="No">
+																<cflocation url="overView.cfm?xss=#xss#" addtoken="No">
 															<cfelse>
 																<cfoutput>
 																	<p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
@@ -810,13 +813,13 @@
                                                                 <p>
 																	Gallery Art is always looking to add artworks by auction tracked artists to our collection. We offer immediate payment when buying outright. Please note that all purchases are subject to first-hand inspection.
 																</p>
-																<p>Select "Direct Purchase" from the drop down box below and fill out the form. </p>
+																<p>Select "<b>Direct Purchase</b>" from the drop down box below and fill out the form. </p>
 																<h4>Become a Seller:</h4>
 																<p>
 																	List up to 5 artworks on GallArt.com for FREE! Gallery Art will charge a 20% fee when you sell your art. Upon being notified of a sale, the seller is responsible for shipping or delivering the artwork to our gallery. 
 																</p>
 																<p>
-																	Select "Become a Seller" from the drop down box below and fill out the form. 
+																	Select "<b>Become a Seller</b>" from the drop down box below and fill out the form. 
 																</p>
 															</div> 
 														</div> 
@@ -913,36 +916,36 @@
 																				<input	type="hidden" name="captcha_check2"	value="#FORM.captcha_check2#" />
 																				<div class="input-form">
 																					<div class="row">
-																						<div class="col-md-12">
+																						<!--- <div class="col-md-12">
 																							<div class="input-field">
 																								<label><b>Your Name:<span style="color: ##ff0000;">*</span></b></label> 
 																							</div>
-																						</div>
+																						</div> --->
 																						<div class="col-md-6">
 																							<div class="input-field"> 
-																								<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" >
 																								<label><b> First Name</b></label>
+																								<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" >
 																								<span class="error-message" id="G_fnameError"></span>
 																							</div>
 																						</div>
 																						<div class="col-md-6">
 																							<div class="input-field"> 
-																								<cfinput type="text" name="lname" id="lname" value="#form.lname#" size="30"  >
 																								<label><b>Last Name</b></label>
+																								<cfinput type="text" name="lname" id="lname" value="#form.lname#" size="30"  >
 																								<span class="error-message" id="G_lnameError"></span>
 																							</div>
 																						</div>
 																						<div class="col-md-6 pt-4">
 																							<div class="input-field">
-																								<label><b>Your Email<span style="color: ##ff0000;">*</span></b></label>
+																								<label><b>Email<span style="color: ##ff0000;">*</span></b></label>
 																								<cfinput type="text" name="email_purchase" id="email_purchase" value="#form.email_purchase#" size="30"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$"  >
 																								<span class="error-message" id="G_email_purchaseError"></span>
 																							</div>
 																						</div>
 																						<div class="col-md-6 pt-4">
 																							<div class="input-field">
-																								<label><b>Phone Number<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="phone" id="phone" value="#form.phone#" size="30"  mask="(999) 999-9999">
+																								<label><b>Phone Number <span style="color: ##ff0000;">*</span></b></label>
+																								<cfinput type="text" name="phone" id="phone" value="#form.phone#" size="30"  >
 																								<span class="error-message" id="G_phoneError"></span>
 																							</div>
 																						</div>
@@ -971,7 +974,7 @@
 																									<li>- Image of the artwork verso if there is anything there by the artist, studio or publisher. </li>
 																									<li>- Image of the frame verso if there is a provenance label. </li>
 																									<li>- Images of any certificates, documentation or provenance. </li> 
-																									<li>- Image size maximum <b>2MB</b>. </li> 
+																									<li>- Image size maximum <b>5MB</b>. </li> 
 																								</ul>
 																							</div>
 
@@ -1020,6 +1023,10 @@
 																				</cfform>						
 																				</cfoutput>
 																				</cfif>
+
+
+
+
 																			</div>
 																		</div>
 																	</div>
@@ -1033,7 +1040,7 @@
 																					<br><br>
 
 																					<cfif FORM.captchaError>
-																						<span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEMsss</span><br><br>
+																						<span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span><br><br>
 																					</cfif>
 																					<cfif FORM.errorPhone EQ 1>
 																						<span style="color: ##ff0000; font-weight: bold;">
@@ -1070,7 +1077,7 @@
 																								<div class="col-md-6">
 																									<div class="input-field">
 																										<label><b>Cell Phone:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#"  mask="(999) 999-9999" size="30">
+																										<cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#"   size="30">
 																										<span class="error-message" id="S_cellphoneError"></span>
 																									</div>
 																								</div>
@@ -1099,7 +1106,14 @@
 																							</div>
 																							<div class="input-button mt-3">
 																								<input type="Hidden" name="proc_reg">
-																								<button type="button" class="SeeMore" onclick="validateSellerForm()">Become A Seller</button>
+																								<cfif NOT structKeyExists(session, 'sellerinfo') >
+																									<button type="button" class="SeeMore" onclick="validateSellerForm()">Create an account</button>
+																								<cfelse>
+																									<p>
+																										You are already logged in. If you want to add listings, please <b><a href="user_listing_detail.cfm?xss=#xss#">click here</a></b>.
+																									</p>
+																								</cfif>
+																								
 																								<br>
 																								
 																							</div>
@@ -1162,15 +1176,46 @@
 			});
 
 
-		function setActiveTab(tabName) {
-			console.log(`Active tab: ${tabName}`); 
-			document.querySelectorAll('.tab-content').forEach((content) => {
-					content.style.display = content.id === `content-${tabName}` ? 'block' : 'none';
-				});
-		}
+			function setActiveTab(tabName) {
+				console.log(`Active tab: ${tabName}`);
+
+				// Store active tab in localStorage
+				localStorage.setItem("activeTab", tabName);
+
+				// Show/hide the correct tab content
+				setTabVisibility(tabName);
+			}
+
+			function setTabVisibility(tabName) {
+				const generalForm = document.getElementById("content-general");
+				const sellerForm = document.getElementById("content-seller");
+
+				if (tabName === "general") {
+					generalForm.style.display = "block";
+					sellerForm.style.display = "none";
+				} else if (tabName === "seller") {
+					generalForm.style.display = "none";
+					sellerForm.style.display = "block";
+				}
+			}
+
+			// Load the saved tab from localStorage on page load
+			document.addEventListener("DOMContentLoaded", function () {
+				const savedTab = localStorage.getItem("activeTab") || "general";
+				document.getElementById("tabSelector").value = savedTab;
+				setTabVisibility(savedTab);
+			});
 
 		function validateGeneralForm(){
 			let isValid = true;
+
+			let inputs = document.querySelectorAll("#addImageContainer input[type='file']");
+
+			inputs.forEach(function (input) {
+				if (input.files.length === 0) {
+					input.parentNode.remove(); // Remove the file input if it's empty
+				}
+			});
 
 			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
 
@@ -1184,6 +1229,8 @@
 			const captcha2 = document.getElementById('captcha2').value.trim();
 
 			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+			
+			const integerRegex = /^[0-9]+$/;
 
 			// return false;
 
@@ -1208,15 +1255,15 @@
 			}
 
 			// Validate CAPTCHA
-			// if (!phone) {
-			// 	document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
-			// 	isValid = false;
-			// }
-
-			if (phone && !phoneRegex.test(phone)) {
-				document.getElementById('G_phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+			if (!phone) {
+				document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
 				isValid = false;
 			}
+
+			// if (phone && !phoneRegex.test(phone)) {
+			// 	document.getElementById('G_phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+			// 	isValid = false;
+			// }
 
 			// if (!title) {
 			// 	document.getElementById('G_titleError').textContent = 'Please enter the title.';
@@ -1224,7 +1271,10 @@
 			// }
 
 			if (!size) {
-				document.getElementById('G_sizeError').textContent = 'Please enter the size.';
+				document.getElementById('G_sizeError').textContent = 'Please enter the Price.';
+				isValid = false;
+			} else if (!integerRegex.test(size)) {
+				document.getElementById('G_sizeError').textContent = 'Please enter a dollar amount number (no decimals or special characters).';
 				isValid = false;
 			}
 
@@ -1285,18 +1335,19 @@
 			}
 
 			// Validate CAPTCHA
-			// if (!S_phone) {
-			// 	document.getElementById('S_cellphoneError').textContent = 'Please enter a phone number.';
-			// 	isValid = false;
-			// } else if (!phoneRegex.test(S_phone)) {
+			if (!S_phone) {
+				document.getElementById('S_cellphoneError').textContent = 'Please enter a phone number.';
+				isValid = false;
+			} 
+			// else if (!phoneRegex.test(S_phone)) {
 			// 	document.getElementById('S_cellphoneError').textContent = 'Please enter your phone number in the format (xxx) xxx-xxxx';
 			// 	isValid false; // Prevent form submission
 			// }
 
-			if (S_phone && !phoneRegex.test(S_phone)) {
-				document.getElementById('S_cellphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
-				isValid = false;
-			}
+			// if (S_phone && !phoneRegex.test(S_phone)) {
+			// 	document.getElementById('S_cellphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+			// 	isValid = false;
+			// }
 
 			if (!S_password) {
 				document.getElementById('S_passwordError').textContent = 'Please enter your password.';

@@ -25,7 +25,7 @@
 									<li> <a href="sales.cfm?xss=#xss#">Sales</a> </li>
 									<li> <a href="classifieds.cfm?xss=#xss#">Classifieds</a> </li>
 									<li> <a href="featured_events.cfm?xss=#xss#">Events</a> </li>
-									<li> <a href="user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
+									<li> <a href="new_user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
 
 									
 								</ul>

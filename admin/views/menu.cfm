@@ -27,12 +27,19 @@
 			<img src="images/admin_header_small.gif" width="200">
 		</td>
 		<td align="right" width="20%" style="padding-right: 10px; color: white;">
-			<cfif session.loggedin EQ false>
-				<input type="Button" value="LOG IN" onclick="javaScript:doLogin();" />
+			<!--- <cfif session.loggedin EQ false>
+				<!--- <input type="Button" value="LOG IN" onclick="javaScript:doLogin();" /> --->
+				<input type="Button" value="LOG IN" onclick="location.href='login/index.cfm" />
 			<cfelse>
 				<cfoutput><strong>Welcome #session.userinfo.fname# #session.userinfo.lname#</strong></cfoutput>
 				<input type="Button" value="LOG OUT" onclick="location.href='index.cfm?logout=1'" />
+			</cfif> --->
+
+			<cfif session.loggedin EQ true>
+				<cfoutput><strong>Welcome #session.userinfo.fname# #session.userinfo.lname#</strong></cfoutput>
+				<input type="Button" value="LOG OUT" onclick="location.href='index.cfm?logout=1'" />
 			</cfif>
+
 		</td>
 	</tr>
 </table>
@@ -270,7 +277,7 @@
 					<!--- <cfif listFindNoCase(session.userinfo.roles,'orders') OR session.userinfo.sa EQ 1>
 						<li style="border-right:1px white solid;"><a href="index.cfm?event=emailTemplate">Mail Templates</a></li>
 					</cfif> --->
-					<cfif (session.userinfo.sa EQ 1) OR (session.userinfo.emp_email EQ 'waseemgallart@gmail.com')>
+					<cfif (session.userinfo.sa EQ 1) OR (session.userinfo.email EQ 'waseemgallart@gmail.com')>
 						<li style="border-right:1px white solid;"><a href="index.cfm?event=filterOption">Filter</a></li>
 						<li style="border-right:1px white solid;"><a href="index.cfm?event=banners">Banners</a></li>
 						<!--- <li style="border-right:1px white solid;"><a href="index.cfm?event=bulk">Bulk</a></li> --->
@@ -283,13 +290,21 @@
 	</tr>
 </table>
 </cfif>
-<table cellspacing="0" cellpadding="0" border="0" width="100%" height="30" bgcolor="#dd3a7d" height="25" style="border-top: 2px solid #fbe7f0; border-bottom: 2px solid #fbe7f0;">
-	<tr>
-		<td width="50%" align="center" valign="middle">
-			<input type="Button" value="      NEW LEAD      " onclick="location.href='index.cfm?event=leads'" style="font-size: 12px; font-weight: bold;">
-		</td>
-		<td width="50%" align="center" valign="middle">
-			<input type="Button" value="     NEW ORDER     " onclick="location.href='index.cfm?event=orders.newOrder'" style="font-size: 12px; font-weight: bold;">
-		</td>
-	</tr>
-</table>
+
+
+	<table cellspacing="0" cellpadding="0" border="0" width="100%" height="30" bgcolor="#dd3a7d" height="25" style="border-top: 2px solid #fbe7f0; border-bottom: 2px solid #fbe7f0;">
+		
+			<tr>
+				<cfif session.loggedin EQ true >
+				<td width="50%" align="center" valign="middle">
+					<input type="Button" value="      NEW LEAD      " onclick="location.href='index.cfm?event=leads'" style="font-size: 12px; font-weight: bold;">
+				</td>
+				<td width="50%" align="center" valign="middle">
+					<input type="Button" value="     NEW ORDER     " onclick="location.href='index.cfm?event=orders.newOrder'" style="font-size: 12px; font-weight: bold;">
+				</td>
+				</cfif>
+			</tr>
+		
+	</table>
+
+

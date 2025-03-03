@@ -1068,7 +1068,7 @@
 							<cfif session.orderArray[idx][8] EQ 1>YES</cfif>
 						</td>
 						<td align="right">
-							<input type="Text" id="price_#idx#" name="price_#idx#" value="#session.orderArray[idx][6]#" onkeyup="addPrice('#idx#',this.value)" />
+							<input type="Text" id="price_#idx#" name="price_#idx#" value="<cfif NOT Len(Trim(session.orderArray[idx][6]))>0<cfelse>#session.orderArray[idx][6]#</cfif>" onkeyup="addPrice('#idx#',this.value)" />
 						</td>
 						<td align="center">
 							<a onclick="delArt('#idx#');return false;" style="cursor: pointer;"><img src="http://#server_name#/images/trash.gif" border="0" /></a>
