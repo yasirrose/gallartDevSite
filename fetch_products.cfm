@@ -41,7 +41,7 @@
 				  	<cfif man EQ 'Erte'>
 					  AND (manufacturer = 'ERTE' OR manufacturer = 'ERTE, ROMAIN')
 				  	<cfelse>
-					  AND manufacturer LIKE '%#man#'
+					  AND manufacturer LIKE '%#man#%'
 				  	</cfif>
 			  	</cfif>
 			  	<cfif isDefined('Size') and len(trim(Size))>
@@ -144,9 +144,11 @@
 					<cfset updatedName = "">
 
 					<cfloop index="word" array="#words#">
-						<!--- Check if the word (before any punctuation) is a Roman numeral --->
-						<cfif ListFindNoCase(romanNumerals, REReplace(word, "[^a-zA-Z]", "", "ALL"))>
-							<!--- Preserve the Roman numeral as is --->
+						<!--- Remove punctuation for comparison --->
+						<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+					
+						<cfif ListFindNoCase(romanNumerals, cleanWord) OR cleanWord EQ "FS">
+							<!--- Preserve Roman numeral and "FS" in uppercase --->
 							<cfset updatedName = updatedName & " " & UCase(word)>
 						<cfelse>
 							<!--- Capitalize the word (convert to Title Case) --->
@@ -166,19 +168,46 @@
                     </cfif>
                 </div> --->
                 <div class="product-price">
-                    <cfif retail_price neq ''>
-                        <span style="font-weight: 600;">Retail Price:</span> #dollarformat(retail_price)#
-                    </cfif>
+                    <!--- <cfif retail_price neq ''>
+                        <span>Retail Price:</span> #dollarformat(retail_price)#
+                    </cfif> --->
+
+					<cfif productinfo.retail_price gt 0 >
+
+						<cfif productinfo.gallery_price gt 0>
+
+							<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
+								<del>#DollarFormat(productinfo.gallery_price)# </del>
+								&nbsp; 
+								 <br>
+									<b>
+										<span style="color: ##ff0000;">
+										#DollarFormat(productinfo.special_price)# 
+										</span>
+									</b>
+
+									<cfelse>
+										<del> #DollarFormat(productinfo.retail_price)# </del>
+										&nbsp; 
+										 <br>
+										<b> #DollarFormat(productinfo.gallery_price)# </b>
+							</cfif>
+
+						</cfif>
+
+					</cfif>
+
                 </div>
-                <div class="product-price">
+                <!--- <div class="product-price">
                     <cfif gallery_price neq ''>
-                        <span style="font-weight: 600;">Gallery Price:</span> #dollarformat(gallery_price)#
+                        <span>Gallery Price:</span> #dollarformat(gallery_price)#
                     <cfelse>
                         Price On Request
                     </cfif>
-				</div>
+				</div> --->
+				
 
-				<cfif len(special_price) and application.showSalePrice EQ 1 and special_price NEQ '0.00' and closeout EQ 1>
+				<!--- <cfif len(special_price) and application.showSalePrice EQ 1 and special_price NEQ '0.00' and closeout EQ 1>
 					<div class="product-price">
 						
 							<span style="font-weight: 600; color: ##ff0000" >
@@ -186,13 +215,13 @@
 							</span>
 						
 					</div>
-				</cfif>
+				</cfif> --->
 
 				<div class="product-price">
                     <cfif modelno neq ''>
                         <!--- <span style="font-weight: 600;">Art ID:</span> #modelno# --->
 
-						<span style="font-weight: 600;">
+						<span>
 							<a href="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
 								Art ID: #modelno#
 							</a>
@@ -202,9 +231,10 @@
 				</div>
 				
 				<!--- <a>MORE INFO</a> --->
-				<span class="pinkText">
+
+				<!--- <span class="pinkText">
 					<b><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="dbl_arrows">MORE INFO</a></b>
-				</span>
+				</span> --->
 
 				<cfif len(fk_users)>
 					<span style="font-size: 12px; font-weight: bold; color: ##ff0000;">

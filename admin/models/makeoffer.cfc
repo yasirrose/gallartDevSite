@@ -28,7 +28,7 @@
 			INNER JOIN customers c on mo.fk_customers = c.id
 			INNER JOIN products p on mo.fk_products = p.uid
 			LEFT OUTER JOIN users u on p.fk_users = u.pk_users
-			WHERE 0=0
+			WHERE 0=0 and isdeleted is null
 			<cfif arguments.Lname neq ''>
 	      		AND c.lname like '#arguments.Lname#%'
 	      	</cfif>

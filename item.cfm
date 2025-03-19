@@ -78,9 +78,12 @@
          <script src='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js'></script>
          <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.min.css'>
          <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick-theme.min.css'>
-         <!--- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery.js@2.0.0/dist/css/lightgallery.min.css">
-      <script src="https://cdn.jsdelivr.net/npm/lightgallery.js@2.0.0/dist/js/lightgallery.min.js"></script> --->
 
+
+      
+
+         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
       
          <script type="text/javascript">
             // Ensure document is fully loaded before initializing slick
@@ -191,52 +194,9 @@
       </cfif>
       </cfif>
 
-      <cfif structKeyExists(form, "addData") AND form.addData EQ "AddWishlist">
-         
-
-         <cfquery name="getwishList" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-            SELECT * FROM Wishlist 
-            WHERE product_id = <cfqueryparam value="#form.ProductID#" cfsqltype="cf_sql_integer">
-            AND user_id = <cfqueryparam value="#form.UserID#" cfsqltype="cf_sql_integer">
-        </cfquery>
-
-            <cfif getwishList.recordCount EQ 0>
-               <cfquery name="addtowishList" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                  INSERT INTO Wishlist 
-                  (user_id, product_id, date)
-                  VALUES(
-                     <cfqueryparam value="#form.UserID#" cfsqltype="cf_sql_integer">,
-                     <cfqueryparam value="#form.ProductID#" cfsqltype="cf_sql_integer">,
-                     <cfqueryparam value="#Now()#" cfsqltype="cf_sql_timestamp">
-                  )
-            </cfquery>
-
-                  <cfoutput>
-                     <script>
-                        alert('Your art work is added in your Wishlist Table');
-                     </script>
-                  </cfoutput>
-
-            <cfelse>
-                  <cfoutput>
-                     <script>
-                        alert('This product is already exist in the table');
-                     </script>
-                  </cfoutput>
-            </cfif>
-         
-      </cfif>
+      
       <!--- End of Add Items to Cart --->
       <!--- Gather Product Information for product(s) --->
-      <!--- <cfif isDefined('url.pid') >
-         <cfdump var="testing ok " abort="true">
-         <cfelse>
-         <cfdump var="error " abort="true">
-         </cfif> --->
-      <!--- <cfif isDefined('url.pid') > --->
-      <!--- <cfif not isDefined('pid') >
-         <cfset pid = 'test' >
-         </cfif> --->
       <cfif not isDefined('url.pid') >
       <cfset pid = '20338' >
       </cfif>
@@ -249,7 +209,6 @@
          </cfif> 
          And (path <> '') AND (path IS NOT NULL)
       </cfquery>
-      <!--- <cfdump var="#productinfo.uid#" abort="true"> --->
       <cfquery name="bio_info" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
          SELECT * from bios
          WHERE artist = '#productinfo.manufacturer#'
@@ -297,25 +256,25 @@
       <!--- <cfdump var="#listingsForSlider.uid#" abort="true"> --->
       <cfoutput query="listings" >
          <cfif listlen(manufacturer) gt 1>
-         <cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
-         <cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
-         <cfset artist_name_alt = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
+            <cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
+            <cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
+            <cfset artist_name_alt = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
          <cfelse>
-         <cfset artist_name = manufacturer />
-         <cfset artist_name_url = manufacturer />
-         <cfset artist_name_alt = manufacturer />
+            <cfset artist_name = manufacturer />
+            <cfset artist_name_url = manufacturer />
+            <cfset artist_name_alt = manufacturer />
          </cfif>
       </cfoutput>
 
       <cfoutput query="listingsForSlider" >
          <cfif listlen(manufacturer) gt 1>
-         <cfset slider_artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
-         <cfset slider_artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
-         <cfset slider_artist_name_alt = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
+            <cfset slider_artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
+            <cfset slider_artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
+            <cfset slider_artist_name_alt = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
          <cfelse>
-         <cfset slider_artist_name = manufacturer />
-         <cfset slider_artist_name_url = manufacturer />
-         <cfset slider_artist_name_alt = manufacturer />
+            <cfset slider_artist_name = manufacturer />
+            <cfset slider_artist_name_url = manufacturer />
+            <cfset slider_artist_name_alt = manufacturer />
          </cfif>
       </cfoutput>
 
@@ -425,12 +384,10 @@
                                                 <div class="main">
                                                    <cfoutput>
 
-                                                      <div class="slider slider-for" id="sliderBox">
+                                                      <div class="slider slider-for">
                                                          <div>
                                                             <div class="img-sec">
-                                                               <!-- Wrapping the image in a div with the class 'lightgallery' -->
-                                                               <!--- <a href="http://23.20.226.157/img/#productinfo.uid#.jpg" target="_blank"> --->
-
+                                                              
                                                                   <cfif fileexists("http://23.20.226.157/img/#productinfo.uid#.jpg")>
                                                                      <a data-fancybox="slider-gallery" data-src="./img/#productinfo.uid#.jpg?x=randrange(1,99)" data-caption="Main Image">
                                                                         <img src="./img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="slider-gallery-img">
@@ -440,8 +397,7 @@
                                                                      <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
                                                                      </a>
                                                                   </cfif>
-
-                                                               <!--- </a> --->
+                                          
                                                             </div>
                                                          </div>
                                                    
@@ -449,9 +405,7 @@
                                                             <cfloop list="#productinfo.additional_images#" delimiters="," index="additionalImage">
                                                                <div>
                                                                   <div class="img-sec">
-                                                                     <!-- Wrapping the additional images in a div with the class 'lightgallery' -->
 
-                                                                     <!--- <a href="http://23.20.226.157/img/#additionalImage#" target="_blank"> --->
 
 
                                                                         <cfif fileexists("http://23.20.226.157/img/#additionalImage#")>
@@ -460,8 +414,7 @@
                                                                            <a data-fancybox="slider-gallery" data-src="./img/#additionalImage#?x=randrange(1,99)" data-caption="Main Image">
                                                                               <img src="./img/#additionalImage#?x=randrange(1,99)" alt="slider-gallery-img">
                                                                           </a>
-
-                                                                           <!--- <img src="./img/#additionalImage#?x=randrange(1,99)" alt="gallery-img" class="thumbnail zoom"> --->
+                                                                           
                                                                            
                                                                         <cfelse>
                                                                            <a data-fancybox="slider-gallery" data-src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg" data-caption="Main Image">
@@ -469,8 +422,7 @@
                                                                               </a>
                                                                         </cfif>
 
-
-                                                                     <!--- </a> --->
+                                                                    
                                                                   </div>
                                                                </div>
                                                             </cfloop>
@@ -496,15 +448,7 @@
                                                              });
                                                          });
                                                      </script>
-
-                                                      <!--- <script>
-                                                         document.addEventListener('DOMContentLoaded', function() {
-                                                            lightGallery(document.querySelector('.slider-for'), {
-                                                               selector: 'a', // Select images wrapped in <a> tags
-                                                               download: false // Optionally disable the download button
-                                                            });
-                                                         });
-                                                      </script> --->
+                                                   
                                                       
                                                       <div class="slider slider-nav">
                                                          <div>
@@ -597,7 +541,7 @@
 
                                                    <cfif productinfo.retail_price gt 0 >
 
-                                                      <p style="font-size: 35px;">
+                                                      <p style="font-size: 20px;">
                                                       <cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
                                                          <cfif application.showSalePrice EQ 1>
                                                             <del>#DollarFormat(productinfo.retail_price)# </del> &nbsp;
@@ -642,8 +586,8 @@
                                                       <cfif caption gt 0>
                                                          <cfset c_caption = REReplace(caption, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
                                                          <!-- Replace periods followed by spaces with a period and a line break -->
-                                                         <cfset formatted_caption = REReplace(trim(c_caption), "\.\s+", "ALL")>
-                                                         <p>Additional Details: <span>#trim(formatted_caption)#</span></p>
+                                                         
+                                                         <p>Additional Details: <span>#trim(c_caption)#</span></p>
                                                       </cfif>
                                                       <p>Art ID: <span>#productinfo.modelno#</span></p>
                                                       
@@ -658,18 +602,47 @@
                                                                   Share
                                                                </span>
                                                             </button>
+
+
                                                                <cfif structKeyExists(session, 'sellerinfo')>
 
+                                                                  <cfquery name="getwishList" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                                                                     SELECT * FROM Wishlist 
+                                                                     WHERE product_id = <cfqueryparam value="#pid#" cfsqltype="cf_sql_integer">
+                                                                     AND user_id = <cfqueryparam value="#session.sellerinfo.pk_users#" cfsqltype="cf_sql_integer">
+                                                                  </cfquery>
+
                                                                   <cfform action="" method="POST">
-                                                                     <input type="hidden" value="#pid#" name="ProductID">
-                                                                     <input type="hidden" value="#session.sellerinfo.pk_users#" name="UserID">
-                                                                     <input type="hidden" value="AddWishlist" name="addData">
-                                                                     <button type="submit" class="flex-btn" id="addWishButton">
-                                                                        <i class="fa fa-heart"></i>
+                                                                     <cfoutput>
+                                                                        <input type="hidden" id="ProductID" name="ProductID" value="#pid#">
+                                                                        <input type="hidden" id="UserID" name="UserID" value="#session.sellerinfo.pk_users#">
+                                                                        <input type="hidden" id="addData" name="addData" value="AddWishlist">
+                                                                    </cfoutput>
+
+                                                                    <cfif getwishList.recordCount GT 0 >
+                                                                     <input type="hidden" id="wishlist_pk_id_#getwishList.pk_id#" name="wishlist_pk_id" value="#getwishList.pk_id#">
+                                                                     <button type="button" class="flex-btn" id="addWishButton" onclick="deleteWishListRecord('#getwishList.pk_id#')">
+                                                                        <i class="fa fa-heart" id="hearticon"  style="color:red !important;"></i>
                                                                         <span>
                                                                            Add to wishlist
                                                                         </span>
                                                                      </button>
+
+                                                                  <cfelse>
+                                                                     <button type="button" class="flex-btn" id="item_addWishButtonnn" onclick="addWishListRecord()">
+                                                                        <i class="fa fa-heart" id="hearticon"  ></i>
+                                                                        <span>
+                                                                           Add to wishlist
+                                                                        </span>
+                                                                     </button>
+
+                                                                    </cfif>
+                                                                     <!--- <button type="button" class="flex-btn" id="addWishButton" onclick="addWishListRecord()">
+                                                                        <i class="fa fa-heart" id="hearticon"  ></i>
+                                                                        <span>
+                                                                           Add to wishlist
+                                                                        </span>
+                                                                     </button> --->
                                                                   </cfform>
 
                                                                   
@@ -691,6 +664,9 @@
                                                                })
                                                             });
                                                          </script>
+
+
+
 
                                                         
                                                          <!--- <script>
@@ -743,7 +719,7 @@
                                                             });
                                                         </script> --->
                                                         
-                                                        <!--- <cfdump var="#cookie#"> --->
+                                                       
                                                         
                                                          
                                                          <div class="modal fade share-modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -840,7 +816,6 @@
                                                                            <button type="button" class="flex-btn">
                                                                               <a href="#whatsappURL#" target="_blank">
                                                                                  <i class="fab fa-whatsapp"></i>
-                                                                                 <!--- <cfdump var="#fullURL#"> --->
                                                                                  <span>WhatsApp</span>
                                                                              </a>
                                                                            </button>
@@ -879,7 +854,6 @@
                                                          <div class="button-group">
                                                             <button type="submit" class="cart-btn" ><b>Add to Cart</b></button>
                                                             <a class="offer-btn" href="epricing.cfm?pid=#uid#&xss=#xss#"><b>Make An Offer</b></a>
-                                                            <!--- <a class="cart-btn" href="make_offer.cfm?pid=#uid#&xss=#xss#"><b>Make An Offer</b></a> --->
                                                          </div>
                                                          
                                                          </cfif>
@@ -929,9 +903,7 @@
                                                                      </cfoutput>
                                                                      <cfelse>
                                                                      <cftry>
-                                                                       
-                                                                       <!--- <cfdump var="#productinfo.manufacturer#">
-                                                                       <cfdump var="#productinfo.name#" abort="true"> --->
+                                                                     
                                                                         
                                                                         <cfif 
                                                                               form.fname neq '' 
@@ -1048,16 +1020,7 @@
                                                       </div>
                                                          
 
-                                                      <!--- <div class="bio-field">
-                                                         <cfoutput>
-                                                            <cfif isDefined('bio_info') and bio_info.recordcount>
-                                                            <input type="button" class="bio-btn" value="Artist Biography" onClick="location.href='artist_bio.cfm?bioId=#bio_info.pk_bios#'" class="bioButton">
-                                                            </cfif>
-                                                             <cfif isDefined('url.artist') and isDefined('url.pid')>
-                                                            <iframe src="slideshow/index.cfm?artist=#url.artist#&pid=#url.pid#" frameborder="0" width="380" height="300" style="overflow:hidden;"></iframe>
-                                                            </cfif> 
-                                                         </cfoutput>
-                                                         </div> --->
+                                                      
                                                       <div class="bio-field">
                                                          <div>
                                                             <button class="artist-Button" type="button" data-bs-toggle="collapse" data-bs-target="##collapseExample2" aria-expanded="false" aria-controls="collapseExample">
@@ -1127,6 +1090,108 @@
          text-align: left !important; /* Force left alignment for text */
          }
       </style>
+
+      <script>
+         function addWishListRecord() {
+            
+            var productID = $("#ProductID").val();
+            var userID = $("#UserID").val();
+            var addData = $("#addData").val();
+
+            $.ajax({
+               url: "inquiry.cfm", // ColdFusion file handling the request
+               type: "POST",
+               data: {
+                     ProductID: productID,
+                     UserID: userID,
+                     addData: addData
+               },
+               success: function (response) {
+                  console.log(response);
+                  $("#hearticon").css("color", "red");
+                  if(response == 'Your artwork has been added to your Wishlist '){
+                     toastr.success(response);
+
+                     updateWishlistRecord(productID)
+
+                  }else{
+                     toastr.warning(response);
+                  }
+                   // Show response from ColdFusion
+               },
+               error: function () {
+                     // alert("Error adding item to wishlist.");
+                     toastr.error('Error adding item to wishlist.');
+               }
+            });
+         }
+
+         function updateWishlistRecord(id) {
+            console.log(id);
+            $.ajax({
+               url: "inquiry.cfm",
+               type: "POST",
+               data: {
+                  action: "getUpdatedWishlist",
+                  product_id: id
+               },
+               dataType: "json",
+               success: function (response) {
+                  if(response.status == "success") {
+                     console.log("Updated Wishlist IDddd: ", response.pk_id);
+                     // deleteWishListdata(response.pk_id);
+                     $("#item_addWishButtonnn").attr("onclick", "deleteWishListRecord('" + response.pk_id + "')");
+                  }
+               },
+               error: function () {
+                  toastr.error('Error fetching updated wishlist.');
+               }
+            });
+         }
+
+         function deleteWishListRecord(id) {
+           
+
+           // var wishlist_pk_id = $("#wishlist_pk_id_" + id).val();
+           var wishlist_pk_id = id;
+           var userID = $("#User_ID").val();
+
+           // console.log('product_id: ' + productID)
+           // console.log('User_ID: ' + userID)
+           console.log('wishlist_pk_idddddd: ' + wishlist_pk_id)
+
+           $.ajax({
+              url: "inquiry.cfm", // ColdFusion file handling the request
+              type: "POST",
+              data: {
+                    wishlist_pk_id: wishlist_pk_id,
+                    UserID: userID,
+               },
+               dataType: "json",
+              success: function (response) {
+                 console.log(response.message);
+                 
+                
+                 if(response.status == 'success'){
+                    toastr.error('Artwork remove from Your wishlist');
+                    $("#heartIcon").css("color", "black");
+
+                       setTimeout(function () {
+                          location.reload();
+                       }, 1000); 
+                    }
+              
+              },
+              error: function () {
+                   
+                    toastr.error('Error adding item to wishlist.');
+              }
+           });
+
+        }
+
+      </script>
+
       <script>
          function toggleBio() {
              // Get the elements for the preview and the button

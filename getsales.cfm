@@ -105,9 +105,11 @@
             <cfset updatedName = "">
 
             <cfloop index="word" array="#words#">
-                <!--- Check if the word (before any punctuation) is a Roman numeral --->
-                <cfif ListFindNoCase(romanNumerals, REReplace(word, "[^a-zA-Z]", "", "ALL"))>
-                    <!--- Preserve the Roman numeral as is --->
+                <!--- Remove punctuation for comparison --->
+                <cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+            
+                <cfif ListFindNoCase(romanNumerals, cleanWord) OR cleanWord EQ "FS">
+                    <!--- Preserve Roman numeral and "FS" in uppercase --->
                     <cfset updatedName = updatedName & " " & UCase(word)>
                 <cfelse>
                     <!--- Capitalize the word (convert to Title Case) --->

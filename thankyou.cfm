@@ -15,6 +15,42 @@
 
 <cfinclude template="meta.cfm">
 
+<style>
+	table tr td * {
+		font-size: 13px !important;
+	}
+	.billing-section .billing-listing ul li:not(:last-child) {
+		border-bottom: 1px solid #c7c8c9;
+	}
+	.billing-section .billing-listing ul li {
+		padding-bottom: 10px;
+	}
+	.table-cart-detail {
+		background: #F2F2F2;
+		padding: 30px;
+		border-radius: 15px;	
+	}
+	.table-cart-detail {
+		background: #F2F2F2;
+		padding: 30px;
+		border-radius: 15px;	
+	}
+	.table-cart-detail tbody, .table-cart-detail td, .table-cart-detail tfoot, .table-cart-detail th, .table-cart-detail thead, .table-cart-detail tr {
+		border-color: #c7c8c94f; 
+		border-width: 1px;	
+		padding: 10px;
+	}
+	.billing-section .billing-listing ul li * {
+		width: 50%; 
+		min-width: 50%;
+	}
+	@media (max-width: 991px) {
+		.billing-section .billing-listing ul li * {
+			min-width: 50%;
+		}	
+	}
+	</style>
+
 <cfoutput>
 <script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
@@ -47,7 +83,7 @@
 						<div class="content-section">
 							<div class="bottom-content-sec">
 								<div class="banner-section">
-									<div class="art-work-content">
+									<div class="art-work-content mb-5">
 										<div class="bottom-content">
 											<div class="thankyou-screen">
 												<cfif parameterexists(val)>
@@ -75,7 +111,7 @@
 															<div class="billing-section">
 																<cfoutput query="get_order_info">
 																<div class="billing-listing">
-																	<div class="main-title">
+																	<div class="main-title mb-4">
 																		<h2>Billing Information</h2>
 																	</div>
 																	<ul>
@@ -141,10 +177,12 @@
 																	</ul>
 																</div>
 																<div class="billing-listing">
-																	<div class="main-title">
+																	<div class="mb-4">
+																	<div class="main-title mb-4">
 																		<h2>Shipping Information</h2>
 																	</div>
 																	<ul>
+																		
 																		
 																		<li>
 																			<b>Name:</b>
@@ -171,14 +209,35 @@
 																			#shipMethod#
 																		</li>
 																	</ul>
+																</div> 
+																<div>
+																	<div class="main-title">
+																		<h2>Payment Information</h2>
+																	</div>
+																	<ul>
+																		<li>
+																			<b>Card Type:</b>
+																			#payment_method#
+																		</li>
+																		<li>
+																			<b>Card Number:</b>
+																			xxxx-xxxx-xxxx-#Right(CardNumber,4)#
+																		</li>
+																		<li>
+																			<b>Expiration Date:</b>
+																			#CardExpiry#
+																		</li>
+																	</ul>
+																</div> 
 																</div>
 															</div>
+															<div class="table-cart-detail mt-4">
 															<table cellpadding="0" cellspacing="0" border="0" width="100%">
 																</cfoutput>		
-																	<tr>
+																	<!--- <tr>
 																		<td colspan=4 align="center"><hr>
 																		</td>
-																	</tr>
+																	</tr> --->
 																	<tr>
 																		<td width="13%"><font size="1" face="verdana, arial, helvetica"><b>Number</b></font></td>
 																		<td width="55%"><font size="1" face="verdana, arial, helvetica"><b>Name</b></font></td>
@@ -186,10 +245,10 @@
 																		<td align="Center" width="5%"><font size="1" face="verdana, arial, helvetica"><b>Qty</b></font></td>
 																		<td width="20%" align="center"><font size="1" face="verdana, arial, helvetica"><b>Price</b></font></td>
 																	</tr>
-																	<tr>
+																	<!--- <tr>
 																		<td colspan=4 align="center"><hr>
 																		</td>
-																	</tr>
+																	</tr> --->
 																	<cfloop query="get_items">
 																	<cfoutput>
 																		<tr>
@@ -204,10 +263,10 @@
 																</cfoutput>
 															</cfloop>
 															<cfoutput query="get_order_info">
-																<tr>
+																<!--- <tr>
 																	<td colspan=4 align="right"><hr>
 																	</td>
-																</tr>
+																</tr> --->
 																<tr>
 																	<td colspan=4 align="right"><font size="2" color="##ff0000" face="arial, helvetica">We will contact you with the shipping cost.</font>
 																	</td>
@@ -221,11 +280,13 @@
 																	</td>
 																</tr>
 															</cfoutput>
-																<tr>
+																<!--- <tr>
 																	<td colspan=4 align="center"><br><br>
 																	</td>
-																</tr>
+																</tr> --->
 															</table>
+														</div>
+														
 															<cfelse>
 																<table cellpadding="0" cellspacing="0" border="0" width="100%">
 																	<tr>

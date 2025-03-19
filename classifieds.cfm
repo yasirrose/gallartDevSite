@@ -280,12 +280,12 @@
                                                                 <cfoutput>
                                                                     
                                                                         <select name="priceOrder" id="priceOrder" onChange="artistClick()">
-                                                                            <option value="">Sort</option>
-                                                                            <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>>Date Added: New to Old</option>
+                                                                            <option value="">Default Sort</option>
+                                                                            <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>> New to Old</option>
 
-                                                                            <option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Price: Low to High</option>
+                                                                            <!--- <option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Price: Low to High</option>
 
-                                                                            <option value="desc" <cfif isDefined('form.priceOrder') and priceOrder eq 'desc'>selected</cfif>>Price: High to Low</option>
+                                                                            <option value="desc" <cfif isDefined('form.priceOrder') and priceOrder eq 'desc'>selected</cfif>>Price: High to Low</option> --->
                                                                         </select>
                                                                     
                                                                 </cfoutput>

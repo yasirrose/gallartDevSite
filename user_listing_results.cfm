@@ -34,7 +34,8 @@
 </cfif>
 
 <cfquery name="getProducts" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-    SELECT *
+    SELECT REPLACE(REPLACE(REPLACE(path, ': :', ''), ':', ''), ';', '') AS cleaned_path,
+	*
     FROM products
     WHERE #PreserveSingleQuotes(session.sellerinfo.list_searchString)#
 	order by uid
@@ -123,6 +124,8 @@
                                     <div class="art-work-content">
                                         <div class="bottom-content">
 											<div class="top-heading">
+												
+												<h3>SELL YOUR ART ON GALLART.COM!</h3>
 												<cfif isDefined('process')>
 													<span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">
 														<br>
@@ -133,7 +136,6 @@
 														</cfif>
 													</span>
 												</cfif>
-												<h3>SELL YOUR ART ON GALLART.COM!</h3>
 											</div>
 											<div class="user-registrations">
 												<input type="Button" class="SeeMore mb-2 me-0" onClick="javascript:goxss('user_listing_search.cfm?xss=<cfoutput>#xss#</cfoutput>')" value="New Search" style="margin: 0 auto;" />
@@ -155,7 +157,7 @@
 																	<input type="Button" style="background:url(images/view_button.gif) no-repeat; width: 86px; height: 30px; border: none; cursor: pointer;" onClick="javascript:goxss('user_listing_detail.cfm?ID=#URLEncodedFormat(UID)#')" value="" />
 																</td>
 																 <td><font face="arial, helvetica" size="1">#manufacturer#</font></td>
-																<td><font face="arial, helvetica" size="1">#path#</font></td>
+																<td><font face="arial, helvetica" size="1">#cleaned_path#</font></td>
 																<td><font face="arial, helvetica" size="1">#name#</font></td>
 																<td align="right"><font face="arial, helvetica" size="1">#dollarformat(gallery_price)#&nbsp;&nbsp;&nbsp;</font></td>
 																<td>&nbsp;</td>

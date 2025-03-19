@@ -51,7 +51,7 @@
 
 	   	<cfquery name="qListings" datasource="#application.dsource#">
 	      	SELECT CONVERT(CHAR(9),datestamp,6) as listingDate,CONVERT(CHAR(9),lastedit,6) as lasteditDate,'<a href="http://gallart.com/img/'+CAST(uid AS varchar(50))+'.jpg" target="_blank"><img src="http://gallart.com/img/thumbnails/'+CAST(uid AS varchar(50))+'.jpg" border="0" height="50" />' as 'Thumbnail',
-			UPPER(U.lname)+', '+UPPER(U.fname) as full_seller_name,
+			UPPER(U.lname)+', '+UPPER(U.fname) as full_seller_name, 
 			CASE WHEN active = '0' THEN 'Inactive' ELSE 'Active' END AS Status,*
 	      	FROM products P
 			LEFT OUTER JOIN users U on P.fk_users = U.pk_users
@@ -738,7 +738,9 @@
 		<cftry>
 
 		<cfquery name="qMedium" datasource="#application.dsource#">
-           	SELECT path from products
+           	SELECT DISTINCT 
+			   REPLACE(REPLACE(REPLACE(path, ': :', ''), ':', ''), ';', '') AS path
+			    from products
 			GROUP BY path
 			ORDER BY path
         </cfquery>

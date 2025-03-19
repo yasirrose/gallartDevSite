@@ -66,7 +66,7 @@
 	      	SELECT CONVERT(CHAR(9),L.datestamp,6) as leadDate,L.email as leadEmail,E.emp_lname + ', ' + E.emp_fname as emp_name,*
 	      	FROM leads L
 			LEFT OUTER JOIN employees E ON L.fk_employees = E.pk_employees
-			WHERE 0=0
+			WHERE 0=0 and isdeleted is null
 			<cfif arguments.Fname neq ''>
 	      		AND L.fname like '#arguments.Fname#%'
 	      	</cfif>

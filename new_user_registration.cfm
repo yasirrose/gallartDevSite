@@ -923,14 +923,14 @@
 																						</div> --->
 																						<div class="col-md-6">
 																							<div class="input-field"> 
-																								<label><b> First Name</b></label>
+																								<label><b> First Name<span style="color: ##ff0000;">*</span></b></label>
 																								<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" >
 																								<span class="error-message" id="G_fnameError"></span>
 																							</div>
 																						</div>
 																						<div class="col-md-6">
 																							<div class="input-field"> 
-																								<label><b>Last Name</b></label>
+																								<label><b>Last Name<span style="color: ##ff0000;">*</span></b></label>
 																								<cfinput type="text" name="lname" id="lname" value="#form.lname#" size="30"  >
 																								<span class="error-message" id="G_lnameError"></span>
 																							</div>
@@ -958,7 +958,7 @@
 																						</div>
 																						<div class="col-md-12">
 																							<div class="input-field pb-3">
-																								<label><b>Price Desired</b></label>
+																								<label><b>Price Desired<span style="color: ##ff0000;">*</span></b></label>
 																								<cfinput type="text" name="size" value="#form.size#" size="30" id="size" placeholder="e.g $2000">
 																								<span class="error-message" id="G_sizeError"></span>
 																							</div>
@@ -1035,7 +1035,7 @@
 																			<cfoutput>
 																				<div class="user-content"> 
 																					<h3>Create an Account</h3>
-																					<h4> Already have an account? <a href="user_login_page.cfm?xss=#xss#"> <b>Login In </b></a> </h4>
+																					<h4> Already have an account? <a href="user_login_page.cfm?xss=#xss#" style="color: ##EC008C"> <b>Log in </b></a> </h4>
 
 																					<br><br>
 

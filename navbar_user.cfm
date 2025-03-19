@@ -18,7 +18,7 @@
 						<a href="JavaScript:void(0)" class="nav-link" onclick="javascript: window.location.href='user_listing_detail.cfm?xss=#xss#'">Enter New Listing</a>
 					</li>
 					<li class="nav-item">
-						<a href="JavaScript:void(0)" class="nav-link" onclick="javascript:goxss('user_listing_search.cfm?xss=#xss#')">Search Your Listings</a>
+						<a href="JavaScript:void(0)" class="nav-link" onclick="javascript:goxss('overView.cfm?xss=#xss#')">Account Overview</a>
 					</li>
 					<li class="nav-item">
 						<a href="JavaScript:void(0)" class="nav-link" onclick="window.location.href='logout.cfm<cfif parameterexists(xss)>?xss=#xss#</cfif>'">Log Out</a>

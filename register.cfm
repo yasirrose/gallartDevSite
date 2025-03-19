@@ -314,7 +314,7 @@
                                         <cfoutput>
                                            <div class="user-content form-sectiom">
                                               <h3>Create an Account</h3>
-                                              <h4> Already have an account? <a href="user_login_page.cfm?xss=#xss#"> <b>Login In </b></a> </h4>
+                                              <h4> Already have an account? <a href="user_login_page.cfm?xss=#xss#" style="color: ##EC008C"> <b>Login In </b></a> </h4>
                                               <br><br>
                                               <cfif FORM.captchaError>
                                                  <span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span><br><br>

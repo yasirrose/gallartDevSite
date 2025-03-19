@@ -41,6 +41,13 @@
   })(window, document, 'Robly');
 </script>
 <!-- END ROBLY WIDGET CODE -->
+
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
 <style>
 	.user-registrations {
 		max-width: 800px;
@@ -131,6 +138,9 @@ table tr td, table tr td * {
     width: 50%; 
     min-width: 50%;
 }
+table tr td img{
+	max-width: 100px;
+}
 @media (max-width: 991px) {
 	.billing-section .billing-listing ul li * {
 		min-width: 50%;
@@ -146,14 +156,7 @@ table tr td, table tr td * {
 
 	<cfset userID = session.sellerinfo.pk_users>
 
-	<cfif structKeyExists(form, "product_id") AND isNumeric(form.product_id)>
-		<!--- <cfdump var="#form#" abort="true"> --->
-		<cfquery name="deleteWishlistItem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-			DELETE FROM Wishlist
-			WHERE user_id = <cfqueryparam value="#userID#" cfsqltype="cf_sql_integer">
-			AND product_id = <cfqueryparam value="#form.product_id#" cfsqltype="cf_sql_integer">
-		</cfquery>
-	</cfif>
+	
 
     
     <!--- <cfset productIDs = []> --->
@@ -168,7 +171,7 @@ table tr td, table tr td * {
     </cfif> --->
 
 	<cfquery name="wishlistData" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		SELECT p.*
+		SELECT w.pk_id, p.*
 		FROM Wishlist w
 		INNER JOIN products p ON w.product_id = p.uid
 		WHERE w.user_id = <cfqueryparam value="#userID#" cfsqltype="cf_sql_integer">
@@ -179,13 +182,20 @@ table tr td, table tr td * {
 	</cfquery>
 
 	<cfquery name="get_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		SELECT Top 10 items.product_code as pid, items.quantity as qty, * FROM items
-		left join products on products.code =  items.product_code
-		WHERE items.modelno IS NOT NULL
-			order by ID DESC
+		  SELECT 
+        items.product_code AS pid, 
+        items.quantity AS qty, 
+        orders.email AS email, 
+		orders.total as total_price,
+        * 
+		FROM items
+		LEFT JOIN products ON products.code = items.product_code
+		LEFT JOIN orders ON orders.orderUID = items.orderUID
+		WHERE  orders.email = '#session.sellerinfo.email#'
+				order by ID DESC
 	</cfquery>
     
-	<!--- <cfdump var="#productData#" abort="true"> --->
+	<!--- <cfdump var="#get_items#" abort="true"> --->
    
 
     <div class="main-container registration-page">
@@ -210,7 +220,7 @@ table tr td, table tr td * {
 
 
 											<div class="top-heading">
-												<h3>Over View Section</h3>
+												<h3>Account Overview</h3>
 											</div>
 
 
@@ -237,24 +247,43 @@ table tr td, table tr td * {
 
 															<tr>
 																<td valign="center">
-																	#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																	<a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+																		#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																	</a>
+																	
 																</td>
 																<td align="center" valign="middle">
 																	# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
 																</td>
 																<td align="center" valign="middle">
 																	<cfif fileexists("http://23.20.226.157/img/thumbnails/#wishlistData.uid#.jpg")> 
-																		<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#wishlistData.uid#" align="Center">
+																		<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#wishlistData.uid#" align="Center" style="max-height: 100px;">
 																		<cfelse>
 																			<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
 																			<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
 																	</cfif>
 																</td>
-																<td align="center" valign="middle">#dollarformat(gallery_price)#</td>
+																<td align="center" valign="middle">
+																	<cfif special_price gt 0>
+																		<span style="color: ##ff0000;">
+																			#DollarFormat(special_price)# Sale
+																		 </span>
+																		<cfelseif gallery_price GT 0>
+																			#dollarformat(gallery_price)#
+																	<cfelse>
+																		<span>
+																			<b style="color:red;">Price On request</b>
+																		</span>
+
+																	</cfif>
+																	
+																	
+																</td>
 																<td align="center" valign="middle">
 																	<form action="overView.cfm?xss=#xss#" method="post">
-																		<input type="hidden" name="product_id" value="#wishlistData.uid#">
-																		<input type="submit" class="Seemore" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');">
+																		<input type="hidden" name="wishlist_pk_id" id="wishlist_pk_id" value="#wishlistData.PK_ID#">
+																		<input type="hidden" name="product_id" id="product_id" value="#wishlistData.uid#">
+																		<input type="submit" class="Seemore" value="Delete" onclick="deleteWishlist(event, this)">
 																	</form>
 																</td>
 															</tr>
@@ -347,7 +376,8 @@ table tr td, table tr td * {
 															<td width="10%" align="center"><b>Model No.</b></td>
 															<td width="10%" align="center"><b>ID</b></td>
 															<td width="25%" ><b>Artist</b></td>
-															<td width="15%" align="center"><b>Line Total</b></td>
+															<td width="15%" align="center"><b>Total Price</b></td>
+															<td width="15%" align="center"><b>Email</b></td>
 															
 														</tr>
 
@@ -369,77 +399,27 @@ table tr td, table tr td * {
 																<td  >
 																	# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")# 
 																</td>
-																<td align="center" valign="middle">#dollarformat(get_items.linetotal)#</td>
+																<td align="center" valign="middle">#dollarformat(get_items.total_price)#</td>
+																<td align="center" valign="middle">#get_items.email#</td>
 															</tr> 
 														</cfoutput>
 
 													</table> 
+												<cfelse>
+													<table cellspacing="0" cellpadding="0" border="0" width="100%">
+														<tr>
+															<td align="center" style="padding: 25px; font-weight: bold;">
+																Sorry -- no results found.  Please try again.
+															</td>
+														</tr>
+													</table>
 												</cfif>
 
 												
 											</div>
 
 											
-											<!--- <div class="user-registrations">
-
-												<div class="table-responsive">
-													<cfif productData.recordcount GT 0>
-														<table border="0" cellpadding="2" cellspacing="0" width="800">
-															<tr class="row0">
-																<td></td>
-																<td>Artist</td>
-																<td>Medium</td>
-																<td>Title</td>
-																<td COLSPAN="2" align="center">Gallery Price</td>
-																  <td>Status</td>
-																  <td>Last Edited</td>
-															</tr>
-															<cfoutput query="productData">
-															<tr class="#this_row()#">
-																<td width="25">
-																	
-																</td>
-																 <td>
-                                                                    <font face="arial, helvetica" size="1">#manufacturer#</font></td>
-																<td>
-                                                                    <font face="arial, helvetica" size="1">#path#</font>
-                                                                </td>
-																<td>
-                                                                    <font face="arial, helvetica" size="1">#name#</font>
-                                                                </td>
-																<td align="right">
-                                                                    <font face="arial, helvetica" size="1">
-                                                                        #dollarformat(gallery_price)#&nbsp;&nbsp;&nbsp;
-                                                                    </font>
-                                                                </td>
-																<td>&nbsp;</td>
-																<td>
-																	<font face="arial, helvetica" size="1">
-																		<cfif Active eq 1 >
-                                                                            Active
-                                                                        <cfelse>
-                                                                            Inactive
-                                                                        </cfif>
-																	</font>
-																</td>
-																<td align="center">
-                                                                    <font face="arial, helvetica" size="1">#dateformat(datestamp)#</font>
-                                                                </td>
-															</tr>
-														    </cfoutput>
-														</table>
-                                                    <cfelse>
-														<table cellspacing="0" cellpadding="0" border="0" width="100%">
-															<tr>
-																<td align="center" style="padding: 25px; font-weight: bold;">
-																	Sorry -- no results found.  Please try again.
-																</td>
-															</tr>
-														</table>
-                                                        
-													</cfif>
-												</div>
-											</div> --->
+											
 										</div>
 									</div>
 								</div>
@@ -454,6 +434,43 @@ table tr td, table tr td * {
             </div>
 		</div>
 	</div>
+
+
+	<script>
+		function deleteWishlist(event, button){
+
+			event.preventDefault(); // Prevent form submission
+
+			var wishlist_pk_id = $(button).closest("form").find("#wishlist_pk_id").val();
+
+			console.log(wishlist_pk_id);
+
+            if(confirm("Are you sure you want to delete this item?")){
+
+				$.ajax({
+					url: "inquiry.cfm", // ColdFusion file handling the request
+					type: "POST",
+					data: { wishlist_pk_id: wishlist_pk_id },
+					dataType: "json",
+					success: function (response) {
+						if (response.status === "success") {
+							toastr.success(response.message);
+							// Remove the row from the table
+							$(button).closest("tr").fadeOut(300, function () {
+								$(this).remove();
+							});
+						} else {
+							toastr.warning(response.message);
+						}
+					},
+					error: function () {
+						toastr.error("Error deleting item from wishlist.");
+					}
+				});
+
+			}
+		}
+	</script>
 
 <cfinclude template="frmxss.cfm">
 

@@ -252,9 +252,11 @@ a.SeeMore:hover {
 														<cfset updatedName = "">
 
 														<cfloop index="word" array="#words#">
-															<!--- Check if the word (before any punctuation) is a Roman numeral --->
-															<cfif ListFindNoCase(romanNumerals, REReplace(word, "[^a-zA-Z]", "", "ALL"))>
-																<!--- Preserve the Roman numeral as is --->
+
+															<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+
+															<cfif ListFindNoCase(romanNumerals, cleanWord) OR cleanWord EQ "FS">
+																<!--- Preserve Roman numeral and "FS" in uppercase --->
 																<cfset updatedName = updatedName & " " & UCase(word)>
 															<cfelse>
 																<!--- Capitalize the word (convert to Title Case) --->
@@ -264,7 +266,7 @@ a.SeeMore:hover {
 
 														<cfset updatedName = Trim(updatedName)>
 
-													#updatedName#
+													<b>#updatedName#</b>
 
 												
 												</a>
@@ -275,19 +277,69 @@ a.SeeMore:hover {
 												</span>
 
 												<!--- By: #ucase(artist_name)#<Br> </span> --->
-												<font color="660066" >
-												<cfif retail_price gt 0 and retail_price gt gallery_price>
-												Retail Price: #dollarformat(retail_price)#
-												</cfif></font><Br>
+												<!--- <font color="660066" >
+													<cfif retail_price gt 0 and retail_price gt gallery_price>
+														Retail Price: #dollarformat(retail_price)#
+													</cfif>
+												</font>
+												<Br>
 												<span class="pinkText">
-												<cfif gallery_price eq 0>
-												<b>Price On Request</b>
-												<cfelse>
-												Gallery Price: <b>#dollarformat(gallery_price)#</b>
-												</cfif>
-												</span><br>
+													<cfif gallery_price eq 0>
+														<b>Price On Request</b>
+													<cfelse>
+														Gallery Price: <b>#dollarformat(gallery_price)#</b>
+													</cfif>
+												</span>
+												<br>
 												Art ID:&nbsp;#modelno#<br><br>
-											<cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>
+												<cfif len(fk_users)>
+													<span style="font-size: 12px; font-weight: bold; color: ##ff0000;">
+														PRIVATE LISTING
+													</span>
+													<br><br>
+												</cfif> --->
+
+												<div>
+													<cfif retail_price gt 0 and retail_price gt gallery_price>
+
+														<cfif gallery_price gt 0>
+								
+															<cfif closeout eq 1 and special_price gt 0>
+																<del>#DollarFormat(gallery_price)#</del>
+																&nbsp; 
+																 
+																	<b>
+																		<span style="color: ##ff0000;">
+																		#DollarFormat(special_price)# 
+																		</span>
+																	</b>
+								
+																	<cfelse>
+																		<del>#DollarFormat(retail_price)#</del>
+																		&nbsp; 
+																		
+																		<b> #DollarFormat(gallery_price)# </b>
+															</cfif>
+	
+														<cfelse>
+															<span style="color: red;">
+																	Price On Request
+															</span>
+								
+														</cfif>
+													<cfelse>
+														<cfif gallery_price EQ 0 OR gallery_price EQ ''>
+															<span style="color: red;">
+																Price On Request
+															</span>
+														<cfelse>
+															#DollarFormat(retail_price)#
+														</cfif>
+								
+													</cfif>
+												</div>
+
+												
 											
 											</td>
 										
@@ -393,8 +445,10 @@ a.SeeMore:hover {
 
 														<cfloop index="word" array="#words#">
 															<!--- Check if the word (before any punctuation) is a Roman numeral --->
-															<cfif ListFindNoCase(romanNumerals, REReplace(word, "[^a-zA-Z]", "", "ALL"))>
-																<!--- Preserve the Roman numeral as is --->
+															<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+
+															<cfif ListFindNoCase(romanNumerals, cleanWord) OR cleanWord EQ "FS">
+																<!--- Preserve Roman numeral and "FS" in uppercase --->
 																<cfset updatedName = updatedName & " " & UCase(word)>
 															<cfelse>
 																<!--- Capitalize the word (convert to Title Case) --->
@@ -404,7 +458,7 @@ a.SeeMore:hover {
 
 														<cfset updatedName = Trim(updatedName)>
 
-													#updatedName#
+													<b>#updatedName#</b>
 
 													
 													</a>
@@ -414,7 +468,8 @@ a.SeeMore:hover {
 														By: #capitalize_artistName#<Br>
 													</div>
 													<!--- By: #artist_name#<Br> --->
-													<font color="660066" >
+
+													<!--- <font color="660066" >
 													<cfif len(retail_price)>
 													Retail Price: #dollarformat(retail_price)#
 													</cfif></font><Br>
@@ -430,8 +485,50 @@ a.SeeMore:hover {
 													<cfelse>
 												
 													</cfif>
-													</span>
-													<br>
+
+													</span> --->
+
+													<div>
+														<cfif retail_price gt 0 and retail_price gt gallery_price>
+	
+															<cfif gallery_price gt 0>
+									
+																<cfif closeout eq 1 and special_price gt 0>
+																	<del>#DollarFormat(gallery_price)#</del>
+																	&nbsp; 
+																	 
+																		<b>
+																			<span style="color: ##ff0000;">
+																			#DollarFormat(special_price)# 
+																			</span>
+																		</b>
+									
+																		<cfelse>
+																			<del>#DollarFormat(retail_price)#</del>
+																			&nbsp; 
+																			
+																			<b> #DollarFormat(gallery_price)# </b>
+																</cfif>
+		
+															<cfelse>
+																<span style="color: red;">
+																		Price On Request
+																</span>
+									
+															</cfif>
+														<cfelse>
+															<cfif gallery_price EQ 0 OR gallery_price EQ ''>
+																<span style="color: red;">
+																	Price On Request
+																</span>
+															<cfelse>
+																#DollarFormat(retail_price)#
+															</cfif>
+									
+														</cfif>
+													</div>
+
+													
 												Art ID:&nbsp;#modelno#<br><br>
 												<cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br>
 												</cfif>

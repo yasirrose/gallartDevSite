@@ -99,9 +99,11 @@
             <cfset updatedName = "">
 
             <cfloop index="word" array="#words#">
-                <!--- Check if the word (before any punctuation) is a Roman numeral --->
-                <cfif ListFindNoCase(romanNumerals, REReplace(word, "[^a-zA-Z]", "", "ALL"))>
-                    <!--- Preserve the Roman numeral as is --->
+               
+                <cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+            
+                <cfif ListFindNoCase(romanNumerals, cleanWord) OR cleanWord EQ "FS">
+                    <!--- Preserve Roman numeral and "FS" in uppercase --->
                     <cfset updatedName = updatedName & " " & UCase(word)>
                 <cfelse>
                     <!--- Capitalize the word (convert to Title Case) --->
@@ -111,25 +113,74 @@
 
             <cfset updatedName = Trim(updatedName)>
 
-            #updatedName#
+            <b>#updatedName#</b>
         </a>
         <br>
         <span class="bytext">
             <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
             By: #capitalize_artistName#<Br>
         </span>
-        <font color="660066" >
-        <cfif retail_price gt 0 and retail_price gt gallery_price>
-        Retail Price: #dollarformat(retail_price)#
-        </cfif></font><Br>
-        <span class="pinkText">
-        <cfif gallery_price eq 0>
-        <b>Price On Request</b>
-        <cfelse>
-        Gallery Price: <b>#dollarformat(gallery_price)#</b>
-        </cfif>
-        </span><br>
-        Art ID:&nbsp;#modelno#<br><br>
+        <!--- <font color="660066" >
+
+            <cfif retail_price gt 0 and retail_price gt gallery_price>
+                Retail Price: #dollarformat(retail_price)#
+            </cfif>
+        </font>
+        <Br> --->
+
+       
+
+        <div class="product-price">
+            <cfif getRecentAcquisitions.retail_price gt 0 >
+
+                <cfif getRecentAcquisitions.gallery_price gt 0>
+    
+                    <cfif getRecentAcquisitions.closeout eq 1 and getRecentAcquisitions.special_price gt 0>
+                        <del>#DollarFormat(getRecentAcquisitions.gallery_price)# </del>
+                        &nbsp; 
+                            <b>
+                                <span style="color: ##ff0000;">
+                                #DollarFormat(getRecentAcquisitions.special_price)# 
+                                </span>
+                            </b>
+    
+                            <cfelse>
+                                <del> #DollarFormat(getRecentAcquisitions.retail_price)# </del>
+                                &nbsp; 
+                                <b> #DollarFormat(getRecentAcquisitions.gallery_price)# </b>
+                    </cfif>
+
+                    <cfelse>
+
+                        <span style="color: red;">
+                            Price On Request
+                        </span>
+                 </cfif>
+
+                <cfelse>
+
+                    <cfif gallery_price EQ 0 OR gallery_price EQ ''>
+                        <span style="color: red;">
+                            Price On Request
+                        </span>
+                    <cfelse>
+                        #DollarFormat(retail_price)#
+                    </cfif>
+               </cfif>
+        </div>
+        
+        <!--- <span class="pinkText">
+            <cfif gallery_price eq 0>
+                <b>Price On Request</b>
+            </cfif>
+
+        </span> --->
+
+            <div>
+                Art ID:&nbsp;#modelno#<br><br>
+            </div>
+
+        
 
         <!--- <div class="e-pricing">
             <cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br></cfif>

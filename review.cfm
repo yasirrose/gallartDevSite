@@ -42,7 +42,47 @@
   })(window, document, 'Robly');
 </script>
 <!-- END ROBLY WIDGET CODE -->
-
+<style>
+	.SeeMore {
+		max-width: unset;
+	}
+	.billing-section .billing-listing ul li:not(:last-child) {
+		border-bottom: 1px solid #c7c8c9;
+	}
+	.billing-section .billing-listing ul li {
+		padding-bottom: 10px;
+	}
+	.billing-section .billing-listing ul li b i {
+		font-weight: normal;
+	}
+	.table-cart-detail {
+		background: #F2F2F2;
+		padding: 30px;
+		border-radius: 15px;	
+	}
+	.table-cart-detail {
+		background: #F2F2F2;
+		padding: 30px;
+		border-radius: 15px;	
+	}
+	.table-cart-detail tbody, .table-cart-detail td, .table-cart-detail tfoot, .table-cart-detail th, .table-cart-detail thead, .table-cart-detail tr {
+		border-color: #c7c8c94f; 
+		border-width: 1px;	
+		padding: 10px;
+	}
+	table tr td, table tr td * {
+		font-size: 13px !important;
+	}
+	.billing-section .billing-listing ul li * {
+		width: 50%; 
+		min-width: 50%;
+	}
+	@media (max-width: 991px) {
+		.billing-section .billing-listing ul li * {
+			min-width: 50%;
+		}	
+	}
+	</style>
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <!--- Show current cart contents --->
@@ -101,30 +141,29 @@
 
 <CFSET SHIPMETHOD=''>
 
-<table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
-			<cfinclude template="top_.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="100%" valign="top" height="37" bgcolor="#000000">
-			<cfinclude template="navbar_.cfm">
-		</td>
-	</tr>
-	<tr height="100%">
-		<td valign="top" height="100%" align="center">
+<div id="Table_01" >
+	<div class="main-container registration-page">
+		<div class="header-section">
+			<div class="top-header">
+				<cfinclude template="top_.cfm">
+			</div>
+			<div class="navbar-section">
+				<cfinclude template="navbar_.cfm">
+			</div>
+		</div> 
+		<div class="main-content pb-4"> 
+		<div class="content-section"> 
 		<cfif contents.recordcount>
 		<!--- content starts --->
-			<table width="600" border="0" cellspacing="0" cellpadding="2" align="center">
-				<tr>
-					<td>
+		<div class="my-5">
+			<div class="table-cart-detail mt-4">
+			 <h5>	<strong>REVIEW YOUR ORDER:</strong></h5>
 						<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
-							<tr>
+							<!--- <tr>
 								<td colspan="4" height="40">
 									<strong>REVIEW YOUR ORDER:</strong>
 								</td>
-							</tr>
+							</tr> --->
 							<tr bgcolor="#db3a7d">
 								<td width="50%" height="20" style="color: #ffffff;"><b>Name</b></td>
 								<td width="10%" align="center" style="color: #ffffff;"><b>Qty</b></td>
@@ -142,11 +181,11 @@
 								<td align="center" valign="middle">
 									#qty#
 								</td>
-								<td align="right" valign="middle">
+								<td align="center" valign="middle">
 									#dollarformat(charge)#
 								</td>
 								<cfset ext = #charge# * #qty#>
-								<td align="right" valign="middle">
+								<td align="center" valign="middle">
 									#dollarformat(Ext)#</td>
 									<cfset subtotal = #subtotal# + #ext#>
 									
@@ -160,11 +199,11 @@
 								<cfset tax = 0 />
 							</cfif>
 							<Cfset total = tax + insurance + subtotal />
-							<tr>
+							<!--- <tr>
 								<td colspan="4">
 									<hr>
 								</td>
-							</tr>
+							</tr> --->
 							<cfoutput>
 							<tr>
 								<td colspan="2">&nbsp;
@@ -217,176 +256,123 @@
 							</tr>
 							</cfoutput>
 						</table>
-						<cfoutput>
-						<table cellpadding="2" cellspacing="0" border="0" width="100%">
-							<tr>
-								<Td colspan="2" align="Center">
-									<hr>
-								</td>
+							<cfoutput> 
 							</tr>
-							<tr>
-								<Td colspan="2" align="Center">
-									<h5>BILLING INFORMATION</h5>
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Name</b> <i>(First Last)</i>
-								</td>
-								<td>#form.billnamef# #form.BillName#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Address 1</b>
-								</td>
-								<td>#form.BillAddress1#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Address 2</b>
-								</td>
-								<td>#form.BillAddress2#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>City, St Zip</b>
-								</td>
-								<td>
-								#form.billcity#, #form.billstate# #form.billzip#
-								
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Country:</b></td>
-								<td>#form.billcountry#</td>
-							</tr>
-							<Tr>
-								<td><b>Cell Phone</b>
-								</td>
-								<td>#form.cellphone#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Home Phone</b>
-								</td>
-								<td>#form.BillPhone#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Business Phone</b>
-								</td>
-								<td>#form.businessphone#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Phone In The US</b>
-								</td>
-								<td>#form.otherphone#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Email</b>
-								</td>
-								<td>#form.Email#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Website</b>
-								</td>
-								<td>#form.website#
-								</td>
-							</tr>
-							<tr>
-								<Td colspan="2" align="Center" style="padding-top: 20px;">
-									<h5>SHIPPING INFORMATION</h5>
-								</td>
-							</tr>
-							
-							<Tr>
-								<td><b>Name</b> <i>(First Last)</i>
-								</td>
-								<td>#shipNamef# #shipname#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Address 1</b>
-								</td>
-								<td>#shipAddress1#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Address 2</b>
-								</td>
-								<td>#shipAddress2#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>City, St Zip</b>
-								</td>
-								<td>
-								#shipcity#, #shipstate# #shipzip#
-								
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Country:</b></td>
-								<td>#shipcountry#</td>
-							</tr>
-							<Tr>
-								<td><b>Phone</b>
-								</td>
-								<td>#shipPhone#
-								</td>
-							</tr>
+						</table>
+						</div>
+							<div class="billing-section mt-5"> 
+								<div class="billing-listing">
+									<div class="main-title mb-4">
+										<h5>BILLING INFORMATION</h5>
+									</div>
+									<ul>  
+										<li>
+											<b>Name <i>(First Last)</i></b> #form.billnamef# #form.BillName#
+											
+										</li>
+										<li>
+											<b>Address 1</b> #form.BillAddress1#
+											
+										</li>
+										<li>
+											<b>Address 2</b> #form.BillAddress2#
+										</li>
+										<li>
+											<b>City, St Zip</b> #form.billcity#, #form.billstate# #form.billzip#
+										</li>
+										<li>
+											<b>Country:</b> #form.billcountry#
+										</li>
+										<li>
+											<b>Cell Phone</b> #form.cellphone# 
+										</li>
+										<li>
+											<b>Home Phone</b> #form.BillPhone# 
+										</li>
+										<li>
+											<b>Business Phone</b> #form.businessphone#
+										</li>
+										<li>
+											<b>Phone In The US</b> #form.otherphone#
+										</li>
+										<li>
+											<b>Email</b> #form.Email#
+										</li>
+										<li>
+											<b>Website</b> #form.website#
+										</li> 
+										</ul>
+								</div>
+							<div class="billing-listing">
+								<div> 
+							   <div class="main-title mb-4">
+								   <h5>SHIPPING INFORMATION</h5>
+							   </div>
+							   <ul>
+							   <li>
+								   <b>Name <i>(First Last)</i></b> #shipNamef# #shipname#
+							   </li>
+							   <li>
+								   <b>Address 1</b> #shipAddress1# 
+							   </li>
+							   <li>
+								   <b>Address 2</b> #shipAddress2#
+							   </li>
+							   <li>
+								  <b>City, St Zip</b>  
+								   #shipcity#, #shipstate# #shipzip# 
+							   </li>
+							   <li>
+									<b>Country:</b> 
+									#shipcountry# 
+							   </li>
+							   <li>
+									<b>Phone</b> 
+									#shipPhone# 
+							   </li>
 							<!--- <Tr>
 								<td><b>Shipping Method</b>
 								</td>
 								<td>#shipMethod#
 								</td>
 							</tr> --->
+						</ul>
+					</div>
 				
+							<div>
+								<div class="main-title mt-4 mb-4">
+									<h5>PAYMENT INFORMATION</h5>
+								</div> 
 							<cfquery name="coptions" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 								select * from cardtypes
 								where requirenumber = 1
 							</cfquery>
-							<tr>
-								<Td colspan="2" align="Center" style="padding-top: 20px;">
-									<h5>PAYMENT INFORMATION</h5>
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Card Type</b>
-								</td>
-								<td>
-								<cfloop query="coptions">
-									<cfif cardcode eq form.cardtype>#showtype#</cfif>
-								</cfloop>
-							   	
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Card Number</b>
-								</td>
-								<td>
-									xxxx-xxxx-xxxx-#Right(form.cardnum,4)#
-								</td>
-							</tr>
-							<Tr>
-								<td><b>Expiration Date</b>
-								</td>
-								<td>
-									#form.cardexpm#/#form.cardexpy#
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-								<hr>
-								</td>
-							</tr>
-							<Tr>
-								<td colspan="2"><b>Special Instructions:</b><Br>
-							#form.comments#
-								</td>
-							</tr>
+							
+							<ul> 
+								<li>
+									 <b>Card Type</b>  
+									<cfloop query="coptions">
+										<cfif cardcode eq form.cardtype>#showtype#</cfif>
+									</cfloop> 
+								</li>
+								<li>
+									 <b>Card Number</b>  
+										xxxx-xxxx-xxxx-#Right(form.cardnum,4)# 
+								</li>
+								<li>
+									 <b>Expiration Date</b>  
+										#form.cardexpm#/#form.cardexpy# 
+								</li>
+								<!--- <li>
+									<td colspan="2">
+									<hr>
+									</td>
+								</li> --->
+								<li>
+									 <b>Special Instructions:</b> 
+									   #form.comments# 
+								</li>
+							</ul>								
 							<form method="post" action="purchase.cfm?xss=#xss#">
 							<input type="Hidden" name="shipMethod" value="#shipMethod#">
 							<input type="Hidden" name="origin" value="WEBSITE">
@@ -402,23 +388,26 @@
 									</b>
 								</font> --->
 							
-							<Tr>
-								<td>
-								<input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="Seemore">
-								<input type="submit" value="Purchase!" class="Seemore">
+								<div>
+									<div class="d-flex gap-3">
+										<input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="Seemore">
+										<input type="submit" value="Purchase!" class="Seemore">
+									</div> 
 								<font face="verdana, arial" size="1">
 									<b>
 										Press PURCHASE only Once, or the transaction may fail
 									</b>
 								</font>
-								</td>
-							</tr>
+							</div> 
 							</form>
-						</table>
-						</cfoutput>
-					</td>
-				</tr>
-			</table>
+						</div>
+					</div>
+				 
+					
+					</div>
+					</cfoutput>
+				</div>
+
 		<cfelse>
 			<table cellpadding="0" cellspacing="0" border=0 width="600" align="center">
 				<tr>
@@ -428,15 +417,14 @@
 				</tr>
 			</table>
 		</cfif>
-		<!--- content ends --->
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" valign="baseline">
-			<cfinclude template="footer_.cfm">
-		</td>
-	</tr>
-</table>
+			<!--- content ends --->
+	</div>
+</div>
+<div> 
+		<cfinclude template="footer_.cfm"> 
+</div>
+</div>
+</div> 
 
 <cfinclude template="frmxss.cfm">
 

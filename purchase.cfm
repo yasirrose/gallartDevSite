@@ -22,7 +22,7 @@
 	SELECT id as cusid, email, phone, lname, name from customers where (email = '#trim(email)#')
 </cfquery>
 
-	<!--- <cfdump var="#find_cust#" abort="true"> --->
+	<!--- <cfdump var="#form#" abort="true"> --->
 
 <cfif not find_cust.recordcount>
 	<!--- <cfdump var="test1" abort="true"> --->
@@ -301,8 +301,9 @@
 						<cfqueryparam value="#batchproc#" cfsqltype="cf_sql_integer" null="#NOT LEN(TRIM(batchproc))#">,
 						<cfqueryparam value="#ORIGIN#" cfsqltype="cf_sql_varchar">
 					)
-
+					SELECT SCOPE_IDENTITY() AS orderuid
 		</cfquery>
+		<cfset OrderUid = insert_orders.orderuid />
 
 		<cfcatch>
 			<cfdump var="#cfcatch#" abort="true">
@@ -498,10 +499,10 @@
 		<!--- <cfdump var="test6" abort="true"> --->
 
 		<cfquery name="insert_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		INSERT into items
-		(ORDERDATE,COST,CANCELCODE,ORDER_ID,LINE_ID,product_id,PRODUCT_CODE,QUANTITY,UNIT_PRICE,VENDORCODE,EXPSHIP,VENDORACCEPT,DODONE,TRACKREQ,TRACKINGNUMBER,VCAN,CHECKNO,FLAG,PARTNER,LINETOTAL,ITEMEXT,PROCCHOICE)
-		VALUES
-		('#ORDERDATE#',0,'#CANCELCODE#','#ORDER_ID#','#LINE_ID#','Tax','Tax','1',#tax#,'Tax','#EXPSHIP#','1','1','0','','#VCAN#','#CHECKNO#','#FLAG#','#PARTNER#',0,'#ITEMEXT#','#PROCCHOICE#')
+			INSERT into items
+			(ORDERDATE,COST,CANCELCODE,ORDER_ID,LINE_ID,product_id,PRODUCT_CODE,QUANTITY,UNIT_PRICE,VENDORCODE,EXPSHIP,VENDORACCEPT,DODONE,TRACKREQ,TRACKINGNUMBER,VCAN,CHECKNO,FLAG,PARTNER,LINETOTAL,ITEMEXT,PROCCHOICE,OrderUid,MODELNO,PRODUCTUID,TITLE,ARTIST)
+			VALUES
+			('#ORDERDATE#',0,'#CANCELCODE#','#ORDER_ID#','#LINE_ID#','Tax','Tax','1',#tax#,'Tax','#EXPSHIP#','1','1','0','','#VCAN#','#CHECKNO#','#FLAG#','#PARTNER#',0,'#ITEMEXT#','#PROCCHOICE#','#OrderUid#','#MODELNO#','#PRODUCTUID#','#TITLE#','#ARTISTfoo#')
 		</cfquery>
 
 	</cflock>

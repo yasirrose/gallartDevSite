@@ -128,25 +128,71 @@
 
             <cfset updatedName = Trim(updatedName)>
 
-        #updatedName#
+            <b> #updatedName#</b>
         </a>
         <br>
         <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
         By: #capitalize_artistName#<Br>
-        <font color="660066" >
-        <cfif retail_price gt 0 and retail_price gt sale_price>
-        Retail Price: #dollarformat(retail_price)#
-        </cfif></font><Br>
+
+        <!--- <font color="660066" >
+            <cfif retail_price gt 0 and retail_price gt sale_price>
+                Retail Price: #dollarformat(retail_price)#
+            </cfif>
+        </font>
+        <Br>
         <span class="pinkText">
-        <cfif gallery_price EQ 0 OR gallery_price EQ ''>
-        <span style="font-size: 12px; font-weight: bold;">Price On Request</span><br>
-        305.932.6166<br>
-        <cfelse>
-        Gallery Price: <b>#dollarformat(gallery_price)#</b>
-        </cfif>
-        </span>
+            <cfif gallery_price EQ 0 OR gallery_price EQ ''>
+                <span style="font-size: 12px; font-weight: bold;">Price On Request</span><br>
+                 305.932.6166<br>
+                <cfelse>
+                Gallery Price: <b>#dollarformat(gallery_price)#</b>
+            </cfif>
+        </span> --->
+
+        <div>
+            <cfif retail_price gt 0 and retail_price gt gallery_price>
+
+                <cfif gallery_price gt 0>
+
+                    <cfif closeout eq 1 and special_price gt 0>
+                        <del>#DollarFormat(gallery_price)#</del>
+                        &nbsp; 
+                         
+                            <b>
+                                <span style="color: ##ff0000;">
+                                #DollarFormat(special_price)# 
+                                </span>
+                            </b>
+
+                            <cfelse>
+                                <del>#DollarFormat(retail_price)#</del>
+                                &nbsp; 
+                                
+                                <b> #DollarFormat(gallery_price)# </b>
+                    </cfif>
+
+                <cfelse>
+                    <span style="color: red;">
+                            Price On Request
+                    </span>
+
+                </cfif>
+            <cfelse>
+                <cfif gallery_price EQ 0 OR gallery_price EQ ''>
+                    <span style="color: red;">
+                        Price On Request
+                    </span>
+                <cfelse>
+                    #DollarFormat(retail_price)#
+                </cfif>
+
+            </cfif>
+        </div>
+
         <br>
+
         Art ID:&nbsp;#modelno#<br><br>
+
 		<span>
 		<!--- <a href="make_offer.cfm?pid=#uid#&xss=#xss#">
             <!--- <img src="images/make_offer.gif" border="0" style="width: 120px; height: 30px;"> --->

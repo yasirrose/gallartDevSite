@@ -62,7 +62,7 @@
 						<select name="searchMedium">
 							<option value="">All
 							<cfoutput query="getAllMedium">
-								<option value="#path#">#ucase(path)#
+								<option value="#path#">#left(REReplace(path, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL"),50)#
 							</cfoutput>
 						</select>
 					</td>
@@ -275,7 +275,7 @@
 							{cfgridpage}, {cfgridpagesize}, {cfgridsortcolumn}, {cfgridsortdirection}, 
 							
 							)">
-						<cfgridcolumn name="title" header="Title" width="150">
+						<cfgridcolumn name="name" header="Title" width="150">
 						<cfgridcolumn name="manufacturer" header="Artist" width="150">
 						<cfgridcolumn name="gallery_price" header="Gallery Price" width="100">
 						<cfgridcolumn name="listingDate" header="Date" width="75">

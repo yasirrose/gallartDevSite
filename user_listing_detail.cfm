@@ -351,27 +351,36 @@
 </cfquery>
 <Cfif parameterexists(id)>
 <cfquery name="detail" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-    SELECT * FROM products
+    SELECT  REPLACE(REPLACE(REPLACE(path, ': :', ''), ':', ''), ';', '') AS cleaned_path,
+    * FROM products
 	WHERE products.UID = #ID#
 </CFQUERY>
 <cfset modelno = detail.modelno>
 <Cfelse>
 <cfquery name="detail" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-    SELECT * FROM products
+    SELECT REPLACE(REPLACE(REPLACE(path, ': :', ''), ':', ''), ';', '') AS cleaned_path,
+    * FROM products
     WHERE 0=1
 </CFQUERY>
 
 
 </cfif>
+
 <cfquery name="artists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
     SELECT distinct manufacturer FROM products
 	order by manufacturer
 </CFQUERY>
+
 <cfquery name="cats" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-    SELECT path FROM products
-	group by path
-	order by path
-</CFQUERY>
+    SELECT DISTINCT 
+        RTRIM(REPLACE(REPLACE(path, ':', ''), ';', '')) AS cleaned_path
+    FROM products
+    ORDER BY cleaned_path
+</cfquery>
+
+<!--- <cfdump var="#detail#" abort="true"> --->
+
+
 
 <html>
 <head>
@@ -426,14 +435,16 @@ function validEntries(frm) {
 	// return false;
     isValid = false;
 	}
-	if(frm.retail_price.value == '' || frm.retail_price.value == '$0.00' || frm.retail_price.value == 0){
-	// alert('You must enter a Retail Price greater than zero.');
-    // document.getElementById('RetailPriceError').textContent = 'You must enter a Retail Price greater than zero.';
-    toastr.error('You must enter a Retail Price greater than zero');
-	// frm.retail_price.focus();
-	// return false;
-    isValid = false;
-	}
+
+	// if(frm.retail_price.value == '' || frm.retail_price.value == '$0.00' || frm.retail_price.value == 0){
+	// // alert('You must enter a Retail Price greater than zero.');
+    // // document.getElementById('RetailPriceError').textContent = 'You must enter a Retail Price greater than zero.';
+    // toastr.error('You must enter a Retail Price greater than zero');
+	// // frm.retail_price.focus();
+	// // return false;
+    // isValid = false;
+	// }
+
 	if(frm.gallery_price.value == '' || frm.gallery_price.value == '$0.00' || frm.gallery_price.value == 0){
 	// alert('You must enter a Gallery Price greater than zero.');
     // document.getElementById('GalleryPriceError').textContent = 'You must enter a Gallery Price greater than zero.';
@@ -465,6 +476,11 @@ function validEntries(frm) {
     } else if (!isValidSize(frm.size.value)) {
         toastr.error('You must enter a valid SIZE: only numbers and the letter x');
         // document.getElementById('SizeError').textContent = 'You must enter a valid SIZE: only numbers and the letter x';
+        isValid = false;
+    }
+
+    if(frm.caption.value == ''){
+        toastr.error('You must enter a artwork description.');
         isValid = false;
     }
     
@@ -572,13 +588,13 @@ return true;
                                                             <input type="hidden" name="vendor" value="0001">
 
                                                             <div class="input-field">
-                                                                <label><b>Title:</b></label>
+                                                                <label><b>Title:<span style="color: ##ff0000;">*</span></b></label>
                                                                 <input type="text" name="name" value="#replace(detail.Name,'"','&quot;','all')#" size="40">
                                                                 <span class="error-message" id="titleError"></span>
                                                             </div>
 
                                                             <div class="input-field">
-                                                                <label><b>Select Artist:</b></label>
+                                                                <label><b>Select Artist:<span style="color: ##ff0000;">*</span></b></label>
                                                                 <Select name="artistview"  onchange="ArtistView()">
                                                                     <option value="">Select here ...</option>
                                                                     <cfloop query="artists">
@@ -602,17 +618,17 @@ return true;
                                                             </div>
 
                                                             <div class="input-field">
-                                                                <label><b>Size (height x width) in inches:</b></label>
+                                                                <label><b>Size (height x width) in inches:<span style="color: ##ff0000;">*</span></b></label>
                                                                 <input type="text" name="size" value="#detail.size#" size="25">&nbsp;<font face="Verdana, Arial,helvetica" size="1"></font>
                                                                 <span class="error-message" id="SizeError"></span>
                                                             </div>
 
                                                             <div class="input-field">
-                                                                <label><b>Select Medium from dropdown below:</b></label>
+                                                                <label><b>Select Medium from dropdown below:<span style="color: ##ff0000;">*</span></b></label>
                                                                 <Select name="category">
                                                                     <option value="">Select here ...</option>
                                                                     <cfloop query="cats">
-                                                                        <option value="#path#" <cfif #path# is #detail.path#>Selected</cfif>>#REReplace(path, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+                                                                        <option value="#CLEANED_PATH#" <cfif #CLEANED_PATH# is #detail.CLEANED_PATH#>Selected</cfif>>#REReplace(CLEANED_PATH, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
                                                                     
                                                                     </cfloop>
                                                                 </select>
@@ -626,13 +642,13 @@ return true;
                                                             </div>
 
                                                             <div class="input-field">
-                                                                <label><b>Selling Price (20% fee will be deducted from this price):</b></label>
+                                                                <label><b>Selling Price (20% fee will be deducted from this price):<span style="color: ##ff0000;">*</span></b></label>
                                                                 <input type="text" name="gallery_price" value="#dollarformat(detail.gallery_price)#" size="25" maxlength="13">
                                                                 <span class="error-message" id="GalleryPriceError"></span>
                                                             </div>
 
                                                             <div class="input-field">
-                                                                <label><b>Description:</b></label>
+                                                                <label><b>Description:<span style="color: ##ff0000;">*</span></b></label>
                                                                 <textarea name="caption" cols="90" rows="4">#detail.caption#</textarea>
                                                             </div>
                                                             <div class="input-field">

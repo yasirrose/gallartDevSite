@@ -639,9 +639,9 @@ a.dbl_arrows {
 	text-align: center;
 	margin-bottom: 50px;
 }
-.content-section .banner-section .art-work-content .bottom-content .gallery-lists .list-item a {
+/* .content-section .banner-section .art-work-content .bottom-content .gallery-lists .list-item a {
     font-weight: 600;
-}
+} */
 .content-section .banner-section .featured-work-content .top-heading h3 {
 	font-size: 25px;
 	line-height: 30px;
@@ -1610,8 +1610,12 @@ footer .footer-container .footer-wrapper .top-footer .footer-items:first-child .
 .registration-page .content-section .banner-section .art-work-content .user-registrations .form-sectiom textarea {
     border: 0;
     border-bottom: 1px solid #000;
-	padding: 0;
+	padding: 0 10px;
 	outline: none;
+}
+.user-registrations .input-form .input-button.register-btn button.SeeMore {
+    max-width: 200px;
+    margin: 0 auto;
 }
 .registration-page .content-section .banner-section .art-work-content .user-registrations .form-sectiom input[type="file"] {
     border: 0;
@@ -1753,7 +1757,7 @@ footer .footer-container .footer-wrapper .footer__newsletter .footer__newsletter
 
 .new-item-page .right-section .item-text-content .product-description-sec p {
 	font-size: 14px;
-    font-weight: 600;
+    /* font-weight: 600; */
     line-height: normal;
     margin-bottom: 10px;
 }
@@ -2520,6 +2524,57 @@ a, button, input {
 .simple-search p {
     min-height: 46px;
 }
+.welcome-logout {
+    background: #fff;
+	padding: 30px 15px 0;
+}
+.welcome-logout .logout-form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.welcome-logout .logout-form .logout-button {
+    width: 150px;
+}
+.welcome-logout .logout-form .logout-button button.SeeMore {
+    margin: 0;
+}
+.welcome-logout .logout-form .main-heading strong {
+    font-size: 16px;
+}
+.billing-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.billing-section .billing-listing {
+    width: 48%;
+}
+.billing-section .billing-listing .main-title h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+.billing-section .billing-listing ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.billing-section .billing-listing ul li {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+	font-size: 14px;
+	text-align: left;
+}
+.billing-section .billing-listing ul li * {
+    width: 50%;
+    text-align: left;
+}
 
 @media (max-width: 1600px) {
 	.main-content .content-section {
@@ -2991,6 +3046,12 @@ footer .footer-container .footer-wrapper .top-footer .footer-menu h3 {
 	.slider-top-row {
 		flex-direction: column-reverse;
 	}
+	.welcome-logout .logout-form .logout-button {
+		width: 135px;
+	}
+	.billing-section .billing-listing {
+		width: 100%;
+	}
 }
 @media (max-width: 575px) {
 	.content-section.new-listings .search-form-group form .row .col-lg-2 {
@@ -3175,6 +3236,17 @@ footer .footer-container .footer-wrapper .top-footer .footer-menu h3 {
 	.cookie-banner-right .button--auto-width {
 		width: 100%;
 	}
+	.welcome-logout .logout-form{
+		flex-wrap: wrap;
+	}
+	.welcome-logout .logout-form .main-heading {
+		width: 100%;
+		margin-bottom: 15px;
+		text-align: center;
+	}
+	.welcome-logout .logout-form .logout-button {
+		margin: 0 auto;
+	}
 }
 @media (max-width: 480px) {
 	.site-logo img {
@@ -3231,6 +3303,9 @@ footer .footer-container .footer-wrapper .top-footer .footer-menu h3 {
 	}
 }
 @media (max-width: 374px){
+	.billing-section .billing-listing ul li {
+		font-size: 12px;
+	}
 	#top .resigter ul {
 		margin: 0 0 5px;
 	}
