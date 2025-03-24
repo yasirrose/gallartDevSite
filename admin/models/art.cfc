@@ -210,7 +210,10 @@
         <cfargument name="artTypee" type="string" default="">
 		<cfargument name="artSubject" type="string" default="">
 		<cfargument name="artSize" type="string" default="">
+		<cfargument name="promotion" type="string" default="">
         <!---<cfargument name="addImage" type="string" default="">--->
+
+		
 
 	    <cfset var success = true />
 
@@ -259,7 +262,8 @@
 						ARTTYPE,
 						artTypee,
 						artSubject,
-						artSize
+						artSize,
+						promotion
 					)
 					values
 					(
@@ -293,7 +297,8 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTTYPE#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artTypee#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
+						<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">
 					)
 					SELECT @@identity as newId
 	            </cfquery>
@@ -332,7 +337,8 @@
 						ARTTYPE     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTTYPE#">,
 						artTypee     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artTypee#">,
 						artSubject     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
-						artSize     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">
+						artSize     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
+						promotion     = <cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">
 						<cfif form.deactivated EQ 1 AND form.active EQ 1>
 							,ACTIVE_DATE = <cfqueryparam cfsqltype="CF_SQL_DATE" value="#createodbcdate(now())#">
 						</cfif>

@@ -47,7 +47,7 @@
 							<option value="">All
 							<cfoutput query="getAllArtists" group="manufacturer">
 							<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-								<option value="#manufacturer#">#ucase(manufacturer)#
+								<option value="#manufacturer#">#left(REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL"),50)#
 							</cfif>
 							</cfoutput>
 						</select>
@@ -191,8 +191,25 @@
 						<input type="radio" name="searchActive" value="" checked>All
 					</td>
 
+					
+
 				</tr>
+
 				<tr>
+					<td style="font-size: 10px;">
+						Promotion:
+					</td >
+					<td style="font-size: 10px;">
+						<input type="Checkbox" name="promotion">
+						<input type="Hidden" name="promotion">
+					</td>
+
+					
+
+				</tr>
+
+				
+				<!--- <tr>
 					<td colspan="2">
 						<table cellspacing="0" cellpadding="0" border="0" width="100%">
 							<tr>
@@ -230,8 +247,8 @@
 							</tr>
 						</table>
 					</td>
-				</tr>
-				<tr>
+				</tr> --->
+				<!--- <tr>
 					<td colspan="2">
 						<table cellspacing="0" cellpadding="0" border="0" width="100%">
 							<tr>
@@ -255,7 +272,7 @@
 							</tr>
 						</table>
 					</td>
-				</tr>
+				</tr> --->
 				<tr>
 					<td colspan="2" align="center">
 						<input type="Reset"><cfinput type="button" name="searchBtn" id="searchBtn" value="Search" onclick="document.getElementById('showResults').value = 1; ColdFusion.Grid.refresh('data', false);" />

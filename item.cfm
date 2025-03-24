@@ -563,9 +563,10 @@
 
 
                                                    <div class="product-description-sec">
-                                                      <cfset medium = replace(RemoveChars(path,len(path), 1),":","/","all")>
-                                                      <cfif medium gt 0>
-                                                         <cfset c_medium = REReplace(medium, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                                                      <!--- <cfset medium = replace(RemoveChars(path,len(path), 1),":","/","all")>
+                                                      <cfdump var="#medium#"> --->
+                                                      <cfif path gt 0>
+                                                         <cfset c_medium = REReplace(path, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
                                                          <p>Medium: <span>#c_medium#</span></p>
                                                       </cfif>
                                                       <cfif isNumeric(productinfo.year) AND productinfo.year GT 0>

@@ -157,6 +157,21 @@ function gridChange(thisId) {
 			frm.closeout[i].checked = false;
 		}
 	}
+	promotion				= strListing['PROMOTION'];
+
+	
+	
+	for(i = 0; i < frm.promotion.length; i++){
+
+		
+
+		if(frm.promotion[i].value == promotion){
+			frm.promotion[i].checked = true;
+		}
+		else{
+			frm.promotion[i].checked = false;
+		}
+	}
 	frm.low_estimate.value	= strListing['LOW_ESTIMATE'];
 	frm.high_estimate.value	= strListing['HIGH_ESTIMATE'];
 	frm.quantity.value		= strListing['QUANTITY'];
@@ -333,17 +348,43 @@ function gridChange(thisId) {
 			frm.slideshow[i].checked = false;
 		}
 	}
-	editFrame.getElementById('clickEnlarge').href = 'http://23.20.226.157/img/'+thisId+'.jpg?'+new Date().getTime();
+
+
+	<!--- editFrame.getElementById('clickEnlarge').href = 'http://23.20.226.157/img/'+thisId+'.jpg?'+new Date().getTime();
 	editFrame.getElementById('mainImg').src = 'http://23.20.226.157/img/thumbnails/'+thisId+'.jpg?'+new Date().getTime();
-	editFrame.getElementById('imageUrl').innerHTML = 'http://23.20.226.157/img/'+thisId+'.jpg';
-	// trump info
-	trumpLocation = strListing['LOCATION'];
+	editFrame.getElementById('imageUrl').innerHTML = 'http://23.20.226.157/img/'+thisId+'.jpg'; --->
+
+	var imageUrl = 'http://23.20.226.157/img/' + thisId + '.jpg';
+    var thumbnailUrl = 'http://23.20.226.157/img/thumbnails/' + thisId + '.jpg';
+    var defaultImageUrl = 'http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg'; 
+
+    var mainImg = editFrame.getElementById('mainImg');
+    var clickEnlarge = editFrame.getElementById('clickEnlarge');
+    var imageUrlContainer = editFrame.getElementById('imageUrl');
+
+    var img = new Image();
+    img.src = imageUrl + '?' + new Date().getTime();
+
+    img.onload = function() {
+        mainImg.src = thumbnailUrl + '?' + new Date().getTime();
+        clickEnlarge.href = imageUrl + '?' + new Date().getTime();
+        imageUrlContainer.innerHTML = '<a href="' + imageUrl + '" target="_blank">' + imageUrl + '</a>';
+    };
+
+    img.onerror = function() {
+        mainImg.src = defaultImageUrl; // Default no-image show karega
+        clickEnlarge.href = defaultImageUrl; // Default image ka URL show karega
+        imageUrlContainer.innerHTML = '<a href="' + defaultImageUrl + '" target="_blank">' + defaultImageUrl + '</a>';
+    };
+	
+	
+	<!--- trumpLocation = strListing['LOCATION'];
 	if(trumpLocation == 2){
 		frm.location[0].checked = true;
-	}
-	frm.location_price.value 	= formatAsDollars(strListing['LOCATION_PRICE']);
+	} --->
+	<!--- frm.location_price.value 	= formatAsDollars(strListing['LOCATION_PRICE']);
 	frm.location_floor.value 	= strListing['LOCATION_FLOOR'];
-	frm.location_wall.value 	= strListing['LOCATION_WALL'];
+	frm.location_wall.value 	= strListing['LOCATION_WALL']; --->
 	frm.location_notes.value 	= strListing['LOCATION_NOTES'];
 	// auction site
 	auction = strListing['AUCTION'];
@@ -443,6 +484,9 @@ function showNew () {
 	frm.special_price.value	= '';
 	for(i = 0; i < frm.closeout.length; i++){
 		frm.closeout[i].checked = false;
+	}
+	for(i = 0; i < frm.promotion.length; i++){
+		frm.promotion[i].checked = false;
 	}
 	frm.low_estimate.value	= '';
 	frm.high_estimate.value	= '';

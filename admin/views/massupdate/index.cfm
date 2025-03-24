@@ -113,7 +113,7 @@
 										<option value="">All
 										<cfoutput query="getAllArtists" group="manufacturer">
 										<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-											<option value="#manufacturer#">#ucase(manufacturer)#
+											<option value="#manufacturer#">#manufacturer#
 										</cfif>
 										</cfoutput>
 										</select>
@@ -128,7 +128,7 @@
 									<select name="path">
 										<option value="">All
 										<cfoutput query="getAllMedium">
-											<option value="#path#">#ucase(path)#
+											<option value="#path#">#path#
 										
 									</cfoutput></select>
 								</td>

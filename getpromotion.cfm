@@ -27,7 +27,7 @@
             FROM products 
             WHERE (path <> '') 
             AND active = 1
-            AND (path IS NOT NULL)
+            AND (path IS NOT NULL) and promotion = 1
             <cfif isDefined('keywords')>
                 AND (name LIKE '%#keywords#%' OR caption LIKE '%#keywords#%' OR modelno LIKE '#keywords#%' OR manufacturer LIKE '%#keywords#%')
             </cfif>
@@ -55,7 +55,7 @@
             )
 			</cfif>
             AND closeout = 1
-            AND fk_users IS NULL
+            
         ) AS Subquery
         WHERE RowNum BETWEEN #startrow# AND (#startrow# + #ipp# - 1)
     </cfquery>
@@ -145,8 +145,7 @@
             <cfelse>
                 <!--- remove for make offer 4/30/15 --->
             <!--- <cfif application.showSalePrice EQ 1>Sale Price: <b>#dollarformat(special_price)#</b></cfif> --->
-            </cfif>
-        </span> --->
+            </cfif> --->
 
 
             <div>
@@ -190,7 +189,7 @@
             </div>
 
 
-            
+            </span>
             <br>
         Art ID:&nbsp;#modelno#<br><br>
         <cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br>

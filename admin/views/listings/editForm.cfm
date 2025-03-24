@@ -362,10 +362,14 @@ function popupWin(url) {
 						Sale Price:
 					</td>
 					<td>
-						<cfinput type="text" name="special_price" id="special_price" size="20">&nbsp;<input type="Checkbox" name="closeout" value="1">&nbsp;Use sale price
+						<cfinput type="text" name="special_price" id="special_price" size="20">
+						&nbsp;<input type="Checkbox" name="closeout" value="1">&nbsp;Use sale price
+						&nbsp;<input type="Checkbox" name="promotion" value="1">&nbsp;Use promotion
 						<input type="hidden" name="closeout">
+						<input type="hidden" name="promotion">
 					</td>
 				</tr>
+				
 				<tr>
 					<td style="font-size: 10px;">
 						Low Estimate:
@@ -465,7 +469,7 @@ function popupWin(url) {
 				<tr>
 					<td colspan="2">
 						<table border="0" cellpadding="2" cellspacing="0" width="100%">
-							<tr>
+							<!--- <tr>
 								<td colspan="2" width="100%">
 									<hr>
 								</td>
@@ -495,13 +499,13 @@ function popupWin(url) {
 									<td style="font-size: 10px;" valign="top">Wall:</td>
 									<td><input type="text" name="location_wall"></td>
 								</tr>
-							</tr>
+							</tr> --->
 							<tr>
 								<td colspan="2" style="font-size: 10px;" valign="top">Notes:</td>
 							</tr>
 							<tr>
 								<td colspan="2">
-									<textarea name="location_notes" cols="60" rows="5" value=""></textarea>
+									<textarea name="location_notes" id="location_notes" cols="60" rows="5" value=""></textarea>
 								</td>
 							</tr>
 							<tr>
@@ -537,7 +541,7 @@ function popupWin(url) {
 				<tr>
 					<td id="imageDisplay" height="150">
 						<img src="/images/0.gif" name="mainImg" id="mainImg" border="0" width="100"  /><br>
-						<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
+						<a href="" id="clickEnlarge" target="_blank">Click  to enlarge</a><br><br>
 					</td>
 				</tr>
 				<tr>

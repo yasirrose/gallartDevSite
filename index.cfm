@@ -339,7 +339,7 @@ a.SeeMore:hover {
 													</cfif>
 												</div>
 
-												
+												Art ID:&nbsp;#modelno#<br><br>
 											
 											</td>
 										
