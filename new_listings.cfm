@@ -85,6 +85,9 @@
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
             <!--- Toastr CDN  --->
 
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
@@ -230,7 +233,7 @@
                                                                         <div class="select-option">
                                                                             <cfoutput>
                                                                                 <!--- <form name="dropdownSearchForlistings"> --->
-                                                                                    <select name="artist" id="artist" onChange="artistClick()">
+                                                                                    <select name="artist" id="artist" class="select2" onChange="artistClick()">
                                                                                         <option value="">Search By Artist</option>
                                                                                             <cfloop query="getArtists">
                                                                                                 <option value="#manufacturer#">#manufacturer#</option>
@@ -358,38 +361,88 @@
         <cfinclude template="frmxss.cfm">
 
         <style>
-            #myBtn {
-          display: none;
-          position: fixed;
-          bottom: 30px;
-          right: 30px;
-          z-index: 100;
-          width: 50px; /* Small square size */
-          height: 50px;
-          background-color: white;
-          color: black;
-          border: none;
-          border-radius: 10px; /* Rounded corners for style */
-          cursor: pointer;
-          font-size: 28px; /* Icon size */
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border: 1px solid black;
-      }
+                    #myBtn {
+                display: none;
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                z-index: 100;
+                width: 50px; /* Small square size */
+                height: 50px;
+                background-color: white;
+                color: black;
+                border: none;
+                border-radius: 10px; /* Rounded corners for style */
+                cursor: pointer;
+                font-size: 28px; /* Icon size */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid black;
+            }
+
+            body {
+                    overflow-x: hidden;
+                }
+
+            .select2-container--default .select2-selection--single {
+                background-color: #fff;
+                border: 1px solid #C5C5C5;
+                border-radius: 10px;
+                height: 45px;
+                color: #5E5E5E;
+                font-size: 14px;
+                line-height: 20px;
+                font-weight: 800;
+                width: 100%;
+                padding: 10px 25px 10px 10px;
+                appearance: none;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 23px;
+                color: #5E5E5E;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                /* height: 36px;
+                top: 1px;
+                right: 10px;
+                width: 20px; */
+                display: none;
+            }
+
+            /* Ensure full width */
+            .select2-container {
+                width: 100% !important;
+            }
+
+
+            .select2-container--default .select2-search--dropdown .select2-search__field {
+                border: 1px solid #aaa;
+                height: 30px;
+                font-size: 14px;
+            }
+
+
        </style>
 
 
             <script>
 
+
+                $(document).ready(function() {
+                    $('.select2').select2();
+                });
+
             window.onscroll = function() {scrollFunction()};
 
             function scrollFunction() {
-            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                document.getElementById("myBtn").style.display = "block";
-            } else {
-                document.getElementById("myBtn").style.display = "none";
-            }
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                    document.getElementById("myBtn").style.display = "block";
+                } else {
+                    document.getElementById("myBtn").style.display = "none";
+                }
             }
 
 
@@ -401,6 +454,15 @@
                if (form) {
                      form.reset();
                      // window.location.href = `sales.cfm?xss=${xssValue}`;
+
+                     // Reset select2 manually
+                    $('#artist').val(null).trigger('change'); // Clear the Select2 dropdown
+
+                    $('#artType').val(null).trigger('change'); 
+                    $('#artSize').val(null).trigger('change'); 
+                    $('#artStyle').val(null).trigger('change'); 
+                    $('#artSubject').val(null).trigger('change');
+
                      page = 1;
                      noMoreProducts = false;
 

@@ -429,7 +429,7 @@
 																				<span class="error-message" id="captchaError"></span>
 																			</div>
 																		</div>
-																		<div class="col-md-12">
+																		<div class="col-md-12 mt-3">
 																			<div class="input-button">
 																				<button type="submit" class="SeeMore">Submit</button>
 																				<button type="reset" class="SeeMore">Reset</button>
@@ -508,6 +508,7 @@
 
 		 const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
 		 const integerRegex = /^[0-9]+$/; 
+		 
          
          // Validate FIRST NAME
          if (!fname) {
@@ -529,6 +530,9 @@
        			 // Only show errors for phone and best_time if email is also empty
 				if (!phone) {
 					document.getElementById('phoneError').textContent = 'Please enter your phone number.';
+					isValid = false;
+				}else if (phone.length < 5) {
+					document.getElementById('phoneError').textContent = 'Please enter a complete phone number digits.';
 					isValid = false;
 				}
 
@@ -561,6 +565,9 @@
          } else if (!integerRegex.test(Offer)) {
 			document.getElementById('OfferError').textContent = 'Please enter a dollar amount number (no decimals or special characters).';
 			isValid = false;
+		 }  else if (parseInt(Offer, 10) === 0) {
+			document.getElementById('OfferError').textContent = 'Please enter an offer price greater than 0.';
+			isValid = false;
 		 }
          
          // Validate CAPTCHA
@@ -577,7 +584,7 @@
 			.error-message {
 				color: #ff0000;
 				font-size: 0.9em;
-				margin-top: 5px;
+				margin-top: -5px;
 				display: block;
 			}
 			.input-field {

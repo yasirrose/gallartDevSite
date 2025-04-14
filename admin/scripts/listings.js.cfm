@@ -352,7 +352,9 @@ function gridChange(thisId) {
 
 	<!--- editFrame.getElementById('clickEnlarge').href = 'http://23.20.226.157/img/'+thisId+'.jpg?'+new Date().getTime();
 	editFrame.getElementById('mainImg').src = 'http://23.20.226.157/img/thumbnails/'+thisId+'.jpg?'+new Date().getTime();
-	editFrame.getElementById('imageUrl').innerHTML = 'http://23.20.226.157/img/'+thisId+'.jpg'; --->
+	editFrame.getElementById('imageDisplay').style.display = 'inline';
+	editFrame.getElementById('imageUrl').innerHTML = 'http://23.20.226.157/img/'+thisId+'.jpg';
+	editFrame.getElementById('imageUrl').style.display = 'block'; --->
 
 	var imageUrl = 'http://23.20.226.157/img/' + thisId + '.jpg';
     var thumbnailUrl = 'http://23.20.226.157/img/thumbnails/' + thisId + '.jpg';
@@ -369,12 +371,16 @@ function gridChange(thisId) {
         mainImg.src = thumbnailUrl + '?' + new Date().getTime();
         clickEnlarge.href = imageUrl + '?' + new Date().getTime();
         imageUrlContainer.innerHTML = '<a href="' + imageUrl + '" target="_blank">' + imageUrl + '</a>';
+		editFrame.getElementById('imageDisplay').style.display = 'inline';
+		editFrame.getElementById('imageUrl').style.display = 'inline';
     };
 
     img.onerror = function() {
         mainImg.src = defaultImageUrl; // Default no-image show karega
         clickEnlarge.href = defaultImageUrl; // Default image ka URL show karega
         imageUrlContainer.innerHTML = '<a href="' + defaultImageUrl + '" target="_blank">' + defaultImageUrl + '</a>';
+		editFrame.getElementById('imageDisplay').style.display = 'inline';
+		editFrame.getElementById('imageUrl').style.display = 'inline';
     };
 	
 	
@@ -413,7 +419,8 @@ function gridChange(thisId) {
     if (strListing['ADDITIONAL_IMAGES'].length != 0 ){
 		console.log(thisId);
         editFrame.getElementById('addImageFrame').src = 'http://23.20.226.157/admin/views/listings/showAdditional.cfm?pid=' + thisId;
-    } else {
+    } 
+	else {
     	editFrame.getElementById('addImageFrame').src = '';
    	}
 
@@ -470,15 +477,20 @@ function showNew () {
 	frm.manufacturer.value 	= '';
 	frm.path.value			= '';
 	frm.artType.value			= '';
-	frm.artistview.options[0].selected 		= true;
+
+	<!--- frm.artistview.options[0].selected 		= true;
 	frm.artTypes.options[0].selected 		= true;
-	frm.catstringview.options[0].selected 	= true;
+	frm.catstringview.options[0].selected 	= true; --->
+
 	frm.year.value			= '';
 	frm.size.value			= '';
 	frm.edition.value		= '';
 	frm.artTypee.value		= '';
 	frm.artSubject.value		= '';
+
 	frm.artSize.value		= '';
+	
+
 	frm.retail_price.value	= '';
 	frm.gallery_price.value	= '';
 	frm.special_price.value	= '';
@@ -505,13 +517,15 @@ function showNew () {
 	 	editFrame.getElementById('edit').value 	= 'Add';
 	 	editFrame.getElementById('delete').style.display = 'none';
 	editFrame.getElementById('imageDisplay').style.display = 'none';
+	editFrame.getElementById('imageUrl').style.display = 'none';
+	
 	// trump info
-	for(i = 0; i < frm.location.length; i++){
+	<!--- for(i = 0; i < frm.location.length; i++){
 		frm.location[i].checked = false;
-	}
-	frm.location_price.value 	= '';
+	} --->
+	<!--- frm.location_price.value 	= '';
 	frm.location_floor.value 	= '';
-	frm.location_wall.value 	= '';
+	frm.location_wall.value 	= ''; --->
 	frm.location_notes.value 	= '';
 	// auction site
 	for(i = 0; i < frm.auction.length; i++){
@@ -523,8 +537,9 @@ function showNew () {
 	}
 	// hide seller info
 	editFrame.getElementById('displaySellerInfo').style.display = 'none';
-    // hide additional images
-	//editFrame.getElementById('viewAdditionalButton').style.display = 'none';
+    <!--- // hide additional images --->
+	editFrame.getElementById('addImageFrame').src = ''
+	<!--- editFrame.getElementById('imageUrl').src = '' --->
 }
 
 

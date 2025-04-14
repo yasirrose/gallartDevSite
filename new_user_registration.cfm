@@ -1258,6 +1258,9 @@
 			if (!phone) {
 				document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
 				isValid = false;
+			}else if (phone.length < 5) {
+				document.getElementById('G_phoneError').textContent = 'Please enter a complete phone number digits.';
+				isValid = false;
 			}
 
 			// if (phone && !phoneRegex.test(phone)) {
@@ -1275,6 +1278,9 @@
 				isValid = false;
 			} else if (!integerRegex.test(size)) {
 				document.getElementById('G_sizeError').textContent = 'Please enter a dollar amount number (no decimals or special characters).';
+				isValid = false;
+			} else if (parseInt(size, 10) === 0) {
+				document.getElementById('G_sizeError').textContent = 'Please enter an offer price greater than 0.';
 				isValid = false;
 			}
 

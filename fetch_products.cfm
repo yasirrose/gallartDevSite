@@ -139,29 +139,30 @@
                 <div class="product-name" style="font-weight: 600;">
 					<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
-					<!--- Split the name into words --->
-					<cfset words = ListToArray(name, " ")>
-					<cfset updatedName = "">
 
-					<cfloop index="word" array="#words#">
-						<!--- Remove punctuation for comparison --->
-						<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
-					
-						<cfif ListFindNoCase(romanNumerals, cleanWord) OR cleanWord EQ "FS">
-							<!--- Preserve Roman numeral and "FS" in uppercase --->
-							<cfset updatedName = updatedName & " " & UCase(word)>
-						<cfelse>
-							<!--- Capitalize the word (convert to Title Case) --->
-							<cfset updatedName = updatedName & " " & REReplace(word, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-						</cfif>
-					</cfloop>
+						<cfset words = ListToArray(name, " ")>
+						<cfset updatedName = "">
+
+						<cfloop index="word" array="#words#">
+							<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+
+							<cfif cleanWord EQ "FS">
+								<!--- Preserve "FS" in uppercase --->
+								<cfset updatedName = updatedName & " " & UCase(word)>
+							<cfelse>
+								<!--- Keep the original case of other words --->
+								<cfset updatedName = updatedName & " " & word>
+							</cfif>
+						</cfloop>
 
 					<cfset updatedName = Trim(updatedName)>
 
 					#updatedName#
 				</div>
-				<cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-				By: #capitalize_artistName#<Br>
+				<!--- <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+
+				By: #artist_name#<Br>
+				
                 <!--- <div class="product-price">
                     <cfif retail_price neq ''>
                         <span style="font-weight: 600;">BY:</span> #ucase(artist_name)#
@@ -192,9 +193,18 @@
 										 <br>
 										<b> #DollarFormat(productinfo.gallery_price)# </b>
 							</cfif>
+						<cfelse>
+							<span style="color: red;">
+								Price On Request
+							</span>
 
 						</cfif>
-
+					<cfelse>
+						<cfif productinfo.gallery_price EQ 0 OR productinfo.gallery_price EQ ''>
+							<span style="color: red;">
+								Price On Request
+							</span>
+						</cfif>
 					</cfif>
 
                 </div>

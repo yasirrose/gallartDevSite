@@ -166,7 +166,7 @@ function popupWin(url) {
 						<cfoutput query="getAllArtists" group="manufacturer">
 							<!--- <cfset manufacturer = > --->
 							<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-							<option value="#manufacturer#">#REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+							<option value="#manufacturer#">#manufacturer#
 							</cfif>
 						</cfoutput>
 						</select>
@@ -183,7 +183,7 @@ function popupWin(url) {
 						<select name="catstringview"  onchange="CatView()">
 							<option value="">Please Select</option>
 							<cfoutput query="getAllMedium" group="path">
-								<option value="#path#">#left(REReplace(path, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL"),50)#
+								<option value="#path#">#path#
 							</cfoutput>
 						</select>
 						<br><i>Select existing medium from dropdown above, and edit if desired,<br>OR type in a new string.

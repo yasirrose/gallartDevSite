@@ -22,7 +22,7 @@
 	      	SELECT emp_fname,emp_lname,emp_email,pk_employees,emp_phone,password,roles,commission_minus,commission_percent
 	      	FROM employees E
 			LEFT OUTER JOIN employees_roles ER ON E.pk_employees = ER.fk_employees
-			WHERE 0=0
+			WHERE 0=0 and emp_fname !=''
 			<cfif arguments.Lname neq ''>
 	      		AND E.emp_lname like '#arguments.Lname#%'
 	      	</cfif>

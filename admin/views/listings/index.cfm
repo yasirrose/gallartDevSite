@@ -47,7 +47,7 @@
 							<option value="">All
 							<cfoutput query="getAllArtists" group="manufacturer">
 							<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-								<option value="#manufacturer#">#left(REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL"),50)#
+								<option value="#manufacturer#">#manufacturer#
 							</cfif>
 							</cfoutput>
 						</select>
@@ -62,7 +62,7 @@
 						<select name="searchMedium">
 							<option value="">All
 							<cfoutput query="getAllMedium">
-								<option value="#path#">#left(REReplace(path, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL"),50)#
+								<option value="#path#">#path#
 							</cfoutput>
 						</select>
 					</td>
@@ -275,7 +275,8 @@
 				</tr> --->
 				<tr>
 					<td colspan="2" align="center">
-						<input type="Reset"><cfinput type="button" name="searchBtn" id="searchBtn" value="Search" onclick="document.getElementById('showResults').value = 1; ColdFusion.Grid.refresh('data', false);" />
+						<input type="Reset">
+						<cfinput type="button" name="searchBtn" id="searchBtn" value="Search" onclick="document.getElementById('showResults').value = 1; ColdFusion.Grid.refresh('data', false);" />
 						<input type="Submit" value="Ken's Spreadsheet View" />
 					</td>
 				</tr>

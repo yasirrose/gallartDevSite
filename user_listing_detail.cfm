@@ -402,6 +402,9 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
@@ -595,7 +598,7 @@ return true;
 
                                                             <div class="input-field">
                                                                 <label><b>Select Artist:<span style="color: ##ff0000;">*</span></b></label>
-                                                                <Select name="artistview"  onchange="ArtistView()">
+                                                                <Select name="artistview"  onchange="ArtistView()" class="select2">
                                                                     <option value="">Select here ...</option>
                                                                     <cfloop query="artists">
                                                                     <cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
@@ -625,7 +628,7 @@ return true;
 
                                                             <div class="input-field">
                                                                 <label><b>Select Medium from dropdown below:<span style="color: ##ff0000;">*</span></b></label>
-                                                                <Select name="category">
+                                                                <Select name="category" class="select2">
                                                                     <option value="">Select here ...</option>
                                                                     <cfloop query="cats">
                                                                         <option value="#CLEANED_PATH#" <cfif #CLEANED_PATH# is #detail.CLEANED_PATH#>Selected</cfif>>#REReplace(CLEANED_PATH, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
@@ -739,7 +742,97 @@ return true;
 
 <cfinclude template="frmxss.cfm">
 
+
+
+
+<script>
+      $(document).ready(function () {
+        $('.select2').select2({
+            matcher: function(params, data) {
+                if ($.trim(params.term) === '') {
+                    return data;
+                }
+
+                var term = params.term.toLowerCase();
+                var text = data.text.toLowerCase();
+
+                // Exact "starts with" match
+                if (text.startsWith(term)) {
+                    return data;
+                }
+
+                // Contains match – lower priority
+                if (text.indexOf(term) > -1) {
+                    var modifiedData = $.extend({}, data, true);
+                    // Add some metadata to sort later if needed
+                    modifiedData.text = data.text + ' '; // slight tweak to force reordering if needed
+                    return modifiedData;
+                }
+
+                // Otherwise no match
+                return null;
+            },
+
+            // Optional: sorter to ensure "starts with" appears first
+            sorter: function(data) {
+                var term = $('.select2-search__field').val().toLowerCase();
+                return data.sort(function(a, b) {
+                    var aStarts = a.text.toLowerCase().startsWith(term);
+                    var bStarts = b.text.toLowerCase().startsWith(term);
+
+                    // if a starts and b doesn't, a comes first
+                    if (aStarts && !bStarts) return -1;
+                    if (!aStarts && bStarts) return 1;
+                    return 0;
+                });
+            }
+        });
+    });
+</script>
+
 <style>
+
+    body{
+            overflow-x: hidden;
+        }
+
+    .select2-container--default .select2-selection--single {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        height: 38px;
+        padding: 5px 10px;
+        font-size: 14px;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 28px;
+        color: #333;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px;
+        top: 1px;
+        right: 10px;
+        width: 20px;
+    }
+
+    /* Ensure full width */
+    .select2-container {
+        width: 100% !important;
+    }
+
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1px solid #aaa;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    /* Styleing of Select2 dropdown end */
+
     .error-message {
     color: #ff0000;
     font-size: 0.9em;

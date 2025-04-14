@@ -161,12 +161,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	
 		if (!cellphone) {
-			document.getElementById('cellphoneError').textContent = 'We require your cell phone number in the format (xxx) xxx-xxxx.';
+			document.getElementById('cellphoneError').textContent = 'We require your cell phone number ';
 			isValid = false;
-		} else if (!phoneRegex.test(cellphone)) {
-			document.getElementById('cellphoneError').textContent = 'We require your cell phone number in the format (xxx) xxx-xxxx.';
-			isValid = false;
-		}
+		} 
+		// else if (!phoneRegex.test(cellphone)) {
+		// 	document.getElementById('cellphoneError').textContent = 'We require your cell phone number in the format (xxx) xxx-xxxx.';
+		// 	isValid = false;
+		// }
 	
 		if (BillPhone && !phoneRegex.test(BillPhone)) {
 			document.getElementById('BillphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
@@ -375,6 +376,57 @@ document.addEventListener("DOMContentLoaded", function () {
 													</cfform>
 
 													</div>
+
+
+													<!--- <cfform name="addressForm" onsubmit="return validateAddress();">
+														<div class="row align-items-center">
+															<div class="col-md-2">
+																<label><span class="required">*</span><b>Address 1</b></label>
+															</div>
+															<div class="col-md-10">
+																<cfinput type="text" name="dummyaddress" id="dummyaddress" size="35">
+																<span class="error-message" id="dummyaddressError"></span>
+															</div>
+														</div>
+														<input type="submit" name="addressValidation" class="btn btn-primary btn-sm">
+													</cfform>
+
+
+													<script>
+														async function validateAddress() {
+															const address = document.getElementById("dummyaddress").value.trim();
+													
+															if (!address) {
+																alert("Please enter your address.");
+																return false;
+															}
+													
+															try {
+																const response = await fetch("validateAddress.cfm", {
+																	method: "POST",
+																	headers: {
+																		"Content-Type": "application/x-www-form-urlencoded"
+																	},
+																	body: `address=${encodeURIComponent(address)}`
+																});
+													
+																const result = await response.json();
+													
+																if (result.valid) {
+																	return true; // Proceed with form submit
+																} else {
+																	alert("Invalid address. Please enter a valid address.");
+																	return false; // Prevent form submission
+																}
+													
+															} catch (error) {
+																console.error("Address validation error:", error);
+																alert("Error validating address. Please try again.");
+																return false;
+															}
+														}
+													</script> --->
+
 													<cfform action="review.cfm?xss=#xss#" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);" id="checkOutForm">
 													<div class="required-field">
 														<span class="required">* REQUIRED FIELDS</span>
@@ -427,7 +479,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<span class="error-message" id="billcityError"></span>
 																</div>
 																<div class="col-md-3">
-																	<select name="billstate">
+																	<select name="billstate" class="select2">
 																		<option value="">Please Select</option>
 																		<cfloop query="states">
 																			<option value="#stateAbb#">#state#</option>
@@ -446,7 +498,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">*</span><b>Country:</b></label>
 																</div>
 																<div class="col-md-10">
-																	<select name="billcountry" id="billcountry">
+																	<select name="billcountry" id="billcountry" class="select2">
 																		<cfloop query="countries">
 																			<option value="#CountryCode#">#Country#</option>
 																		</cfloop>
@@ -461,7 +513,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">*</span><b>Cell Phone</b></label>
 																</div>
 																<div class="col-md-10">
-																	<cfinput type="text" name="cellphone" id="cellphone" mask="(999) 999-9999">
+																	<cfinput type="text" name="cellphone" id="cellphone" >
 																	<span class="error-message" id="cellphoneError"></span>
 																</div>
 															</div>
@@ -567,7 +619,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<input type="text" name="shipcity" size="25">
 																</div>
 																<div class="col-md-3">
-																	<select name="shipstate">
+																	<select name="shipstate" class="select2">
 																		<cfloop query="states">
 																			<option value="#stateAbb#">#state#</option>
 																		</cfloop>
@@ -584,7 +636,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">&nbsp;</span><b>Country:</b></label>
 																</div>
 																<div class="col-md-10">
-																	<select name="shipcountry">
+																	<select name="shipcountry" class="select2">
 																		<cfloop query="countries">
 																			<option value="#CountryCode#">#Country#</option>
 																		</cfloop>
@@ -717,6 +769,60 @@ document.addEventListener("DOMContentLoaded", function () {
 </tr>
 <cfinclude template="frmxss.cfm">
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+</script>
+
+<style>
+
+	body{
+		overflow-x: hidden;
+	}
+
+	.select2-container--default .select2-selection--single {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        height: 38px;
+        padding: 5px 10px;
+        font-size: 14px;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 28px;
+        color: #333;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px;
+        top: 1px;
+        right: 10px;
+        width: 20px;
+    }
+
+    /* Ensure full width */
+    .select2-container {
+        width: 100% !important;
+    }
+
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1px solid #aaa;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    /* Styleing of Select2 dropdown end */
+</style>
 	
 
 </body>

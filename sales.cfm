@@ -80,6 +80,9 @@
       <!-- END ROBLY WIDGET CODE -->
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+      <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 	   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
@@ -208,7 +211,7 @@
                                                 <div class="select-option">
                                                     <cfoutput>
                                                         
-                                                            <select name="artist" id="artist" onChange="artistClick()">
+                                                            <select name="artist" class="select2" id="artist" onChange="artistClick()">
                                                                 <option value="">Search By Artist</option>
                                                                     <cfloop query="getArtists">
                                                                         <option value="#manufacturer#">#manufacturer#</option>
@@ -343,7 +346,60 @@
         align-items: center;
         border: 1px solid black;
     }
+
+
+
+    body {
+            overflow-x: hidden;
+        }
+
+    .select2-container--default .select2-selection--single {
+      background-color: #fff;
+        border: 1px solid #C5C5C5;
+        border-radius: 10px;
+        height: 45px;
+        color: #5E5E5E;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 800;
+        width: 100%;
+        padding: 10px 25px 10px 10px;
+        appearance: none;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 23px;
+        color: #5E5E5E;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        /* height: 36px;
+        top: 1px;
+        right: 10px;
+        width: 20px; */
+        display: none;
+    }
+
+    /* Ensure full width */
+    .select2-container {
+        width: 100% !important;
+    }
+
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1px solid #aaa;
+        height: 30px;
+        font-size: 14px;
+    }
+
      </style>
+
+
+<script>
+   $(document).ready(function() {
+       $('.select2').select2();
+   });
+</script>
 
       <script>
 
@@ -360,19 +416,31 @@
              // the below code is use for clear the search values from advanced search form
 
             const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
-            function clearSearch() {
+
+           function clearSearch() {
                const form = document.getElementById('dropdownSearchForsales');
                if (form) {
-                     form.reset();
-                     // window.location.href = `sales.cfm?xss=${xssValue}`;
-                     page = 1;
-                     noMoreProducts = false;
+                  form.reset();
 
-                     $('#product-container').empty();
-                     $('#loading').hide();
-                     loadProducts();
+                  // Reset select2 manually
+                  $('#artist').val(null).trigger('change'); // Clear the Select2 dropdown
+
+                  $('#artType').val(null).trigger('change'); 
+                  $('#artSize').val(null).trigger('change'); 
+                  $('#artStyle').val(null).trigger('change'); 
+                  $('#artSubject').val(null).trigger('change'); 
+
+                  // Optional: reset other dropdowns like artSubject if needed
+                  // $('#artSubject').val('').trigger('change');
+
+                  page = 1;
+                  noMoreProducts = false;
+
+                  $('#product-container').empty();
+                  $('#loading').hide();
+                  loadProducts();
                }
-            }
+         }
 
       $(document).ready(function() {
 			toastr.options = {

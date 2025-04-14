@@ -37,7 +37,7 @@
 					<h5 itemprop="name">
 						<a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
 							<cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-							#capitalize_artistName#</a>
+							#artist_name#</a>
 					</h5>
 				</div>
 			</div>

@@ -66,7 +66,7 @@
 									<option value="">Search by Subject</option>
 									<!--- Loop through the query results to create option tags --->
 									<cfoutput query="qEmployees">
-										<option value="#filterName#"  >#filterName#</option>
+										<option value="#filterName#" <cfif isDefined('url.Subject') and url.Subject EQ filterName >selected</cfif> >#filterName#</option>
 									</cfoutput>
 								</select>
 							</div>
@@ -82,7 +82,7 @@
 								<select name="artStyle" id="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="artistClick()">
 									<option value="">Search by Style</option>
 									<cfoutput query="qGetStyle">
-										<option value="#filterName#" >#filterName#</option>
+										<option value="#filterName#" <cfif isDefined('url.Style') and url.Style EQ filterName >selected</cfif>>#filterName#</option>
 									</cfoutput>
 								</select>
 								<!--- <select name="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
@@ -112,7 +112,7 @@
 							<select name="artSize" id="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="artistClick()">
 								<option value="">Search by Size</option>
 								<cfoutput query="qGetSize">
-									<option value="#filterName#" >#filterName#</option>
+									<option value="#filterName#" <cfif isDefined('url.Size') and url.Size EQ filterName >selected</cfif>>#filterName#</option>
 								</cfoutput>
 								<!--- <option value="small">Small (up to 12 inches)</option>
 								<option value="medium">Medium (13 to 36 inches)</option>
@@ -155,7 +155,7 @@
 
 									<option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Price: Low to High</option>
 									
-									<option value="desc" <cfif isDefined('form.priceOrder') and priceOrder eq 'desc'>selected</cfif>>Price: High to Low</option>
+									<option value="desc" selected>Price: High to Low</option>
 							   </select>
 							</div>
 						</div>

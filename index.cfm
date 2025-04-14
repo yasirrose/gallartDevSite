@@ -247,24 +247,26 @@ a.SeeMore:hover {
 
 													<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
-														<!--- Split the name into words --->
+
 														<cfset words = ListToArray(name, " ")>
 														<cfset updatedName = "">
 
 														<cfloop index="word" array="#words#">
-
 															<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
 
-															<cfif ListFindNoCase(romanNumerals, cleanWord) OR cleanWord EQ "FS">
-																<!--- Preserve Roman numeral and "FS" in uppercase --->
+															<cfif cleanWord EQ "FS">
+																<!--- Preserve "FS" in uppercase --->
 																<cfset updatedName = updatedName & " " & UCase(word)>
 															<cfelse>
-																<!--- Capitalize the word (convert to Title Case) --->
-																<cfset updatedName = updatedName & " " & REReplace(word, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+																<!--- Keep the original case of other words --->
+																<cfset updatedName = updatedName & " " & word>
 															</cfif>
 														</cfloop>
 
+														<!--- Trim to remove leading space --->
 														<cfset updatedName = Trim(updatedName)>
+
+														
 
 													<b>#updatedName#</b>
 
@@ -272,8 +274,8 @@ a.SeeMore:hover {
 												</a>
 												<br>
 												<span class="bytext">
-													<cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-														By: #capitalize_artistName#<Br>
+													<!--- <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+														By: #artist_name#<Br>
 												</span>
 
 												<!--- By: #ucase(artist_name)#<Br> </span> --->
@@ -439,20 +441,19 @@ a.SeeMore:hover {
 
 														<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
-														<!--- Split the name into words --->
+
 														<cfset words = ListToArray(name, " ")>
 														<cfset updatedName = "">
 
 														<cfloop index="word" array="#words#">
-															<!--- Check if the word (before any punctuation) is a Roman numeral --->
 															<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
 
-															<cfif ListFindNoCase(romanNumerals, cleanWord) OR cleanWord EQ "FS">
-																<!--- Preserve Roman numeral and "FS" in uppercase --->
+															<cfif cleanWord EQ "FS">
+																<!--- Preserve "FS" in uppercase --->
 																<cfset updatedName = updatedName & " " & UCase(word)>
 															<cfelse>
-																<!--- Capitalize the word (convert to Title Case) --->
-																<cfset updatedName = updatedName & " " & REReplace(word, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+																<!--- Keep the original case of other words --->
+																<cfset updatedName = updatedName & " " & word>
 															</cfif>
 														</cfloop>
 
@@ -464,8 +465,8 @@ a.SeeMore:hover {
 													</a>
 													<br>
 													<div>
-														<cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-														By: #capitalize_artistName#<Br>
+														<!--- <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+														By: #artist_name#<Br>
 													</div>
 													<!--- By: #artist_name#<Br> --->
 

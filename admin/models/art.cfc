@@ -38,6 +38,7 @@
 		<cfargument name="frontShow" required="no" type="string" default="">
 		<cfargument name="bottomHome" required="no" type="string" default="">
 		<cfargument name="active" required="no" type="string" default="">
+		<cfargument name="promotion" required="no" type="string" default="0">
 		<cfargument name="showResults" required="no" type="string" default="1">
 
 		<cfset var qListings='' />
@@ -105,6 +106,14 @@
 					AND fk_users = #arguments.sellerId#
 				</cfif>
 			</cfif>
+
+			<cfif isDefined('arguments.promotion')>
+				<cfif arguments.promotion EQ 1>
+					AND promotion = 1
+				
+				</cfif>
+			</cfif>
+
 			<cfif isDefined('arguments.onSale') AND arguments.onSale EQ 1>
 				AND closeout = 1
 			</cfif>
@@ -396,17 +405,25 @@
                 </cfif>
             </cfif>
 
-            <cfloop collection="#form#" item="idx">
-            	<cfif left(idx,9) EQ "addImage_">
-                	<cfset currImage = evaluate("form." & idx) />
-                    <cfset thisFilefield = idx />
-                    <cfset thisImageId = "#thisId#_#addImageIdx#.jpg" />
-                    <cfset additionalImages = listAppend(additionalImages,thisImageId) />
-                    <cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" destination="#uploaddir#/#thisImageId#" result="fileupload">
-                    <cfset addImageIdx = addImageIdx + 1 />
-                </cfif>
 
-            </cfloop>
+			<cfloop collection="#form#" item="idx">
+				<cfif left(idx,9) EQ "addImage_">
+					<cfset currImage = evaluate("form." & idx) />
+					
+					<!--- Check if the image is empty, null, or undefined --->
+					<cfif len(trim(currImage)) GT 0>
+						<cfset thisFilefield = idx />
+						<cfset thisImageId = "#thisId#_#addImageIdx#.jpg" />
+						<cfset additionalImages = listAppend(additionalImages,thisImageId) />
+						
+						<cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" 
+							destination="#uploaddir#/#thisImageId#" result="fileupload">
+						
+						<cfset addImageIdx = addImageIdx + 1 />
+					</cfif>
+				</cfif>
+			</cfloop>
+			
 
             <cfif additionalImages NEQ "">
                 <cfquery name="editListing" datasource="#application.dsource#">
@@ -745,9 +762,9 @@
 
 		<cfquery name="qMedium" datasource="#application.dsource#">
            	SELECT DISTINCT 
-			   REPLACE(REPLACE(REPLACE(path, ': :', ''), ':', ''), ';', '') AS path
-			    from products
-			GROUP BY path
+			  path
+			   from products
+			
 			ORDER BY path
         </cfquery>
 
@@ -1509,6 +1526,7 @@
 		<cfargument name="artTypee" required="no" type="string" default="">
 		<cfargument name="artSize" required="no" type="string" default="">
 		<cfargument name="artSubject" required="no" type="string" default="">
+		
 
 		<cfset var returnStruct = structNew() />
 		<cfset var qListings='' />

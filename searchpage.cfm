@@ -92,6 +92,8 @@
 												<div class="top-heading">
 													<h3>SEARCH GALLERY ART</h3>
 												</div>
+												<div class="row">
+													<div class="col-md-6 simple-search">
 												<h4>Simple Search</h4>
 												<p>Enter a keyword into the box below, and the system will find art that has that keyword in the title, description, or Artists' name.</p>
 												<form action="products.cfm?xss=<cfoutput>#xss#</cfoutput>" method="get" id="simpleSearchForm">
@@ -105,6 +107,13 @@
 														</div>
 													</div>
 												</form>
+											</div>
+											<div class="col-md-6 simple-search">
+												<h4>Search our Database</h4>
+													<p>Use the dropdown below to search by Artist.  When you select an Artist, you will be taken to a listing page of all of the art in our inventory by that Artist.  Click on any text to view details.</p>
+													<cfinclude template="database_search.cfm">
+												</div>
+										</div>
 												<hr style="border-bottom: 1px dotted #000000;">
 												<h4>Advanced Search</h4>
 												<p>Use the fields below for a more precise search:</p>
@@ -113,10 +122,6 @@
 												<h4>Search our Gallery</h4>
 												<p>Use the dropdown below to search for art by Artist.  Simply select an Artist, and the system will take you to a page showing thumbnails of the pieces in our inventory by that Artist.</p>
 												<cfinclude template="gallery_search.cfm">
-												<hr style="border-bottom: 1px dotted #000000;">
-												<h4>Search our Database</h4>
-												<p>Use the dropdown below to search by Artist.  When you select an Artist, you will be taken to a listing page of all of the art in our inventory by that Artist.  Click on any text to view details.</p>
-												<cfinclude template="database_search.cfm">
 												<hr style="border-bottom: 1px dotted #000000;">
 												<h4>Alphabetical Search</h4>
 												<p>Click on a letter of the alphabet below to view art by Artists whose last name begins with that letter.  Then, click on the Artist's name to view art by that Artist.</p>
