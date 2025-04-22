@@ -166,7 +166,7 @@ function popupWin(url) {
 						<cfoutput query="getAllArtists" group="manufacturer">
 							<!--- <cfset manufacturer = > --->
 							<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-							<option value="#manufacturer#">#manufacturer#
+							<option value="#HTMLEditFormat(manufacturer)#">#manufacturer#
 							</cfif>
 						</cfoutput>
 						</select>

@@ -70,6 +70,9 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
     <!--- Toastr CDN  --->
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
@@ -207,14 +210,12 @@
                                                         <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                            <div class="select-option">
                                                                <cfoutput>
-                                                                   
-                                                                       <select name="artist" id="artist" onChange="artistClick()">
-                                                                           <option value="">Search by Artist</option>
-                                                                               <cfloop query="getArtists">
-                                                                                   <option value="#manufacturer#">#manufacturer#</option>
-                                                                               </cfloop>
-                                                                       </select>
-                                                                   
+                                                                   <select name="artist" class="select2" id="artist" onChange="artistClick()">
+                                                                        <option value="">Search by Artist</option>
+                                                                            <cfloop query="getArtists">
+                                                                                <option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#</option>
+                                                                            </cfloop>
+                                                                    </select>
                                                                </cfoutput>
                                                            </div>
                                                        </div>
@@ -327,139 +328,241 @@
         </div>
 
 
-                    <tr>
-                            <td colspan="2" valign="baseline">
-                                <cfinclude template="footer_.cfm">
-                            </td>
-                        </tr>
+        <tr>
+            <td colspan="2" valign="baseline">
+                <cfinclude template="footer_.cfm">
+            </td>
+        </tr>
 
-                        <cfinclude template="frmxss.cfm">
+        <cfinclude template="frmxss.cfm">
 
-                        <style>
-                            #myBtn {
-                          display: none;
-                          position: fixed;
-                          bottom: 30px;
-                          right: 30px;
-                          z-index: 100;
-                          width: 50px; /* Small square size */
-                          height: 50px;
-                          background-color: white;
-                          color: black;
-                          border: none;
-                          border-radius: 10px; /* Rounded corners for style */
-                          cursor: pointer;
-                          font-size: 28px; /* Icon size */
-                          display: flex;
-                          justify-content: center;
-                          align-items: center;
-                          border: 1px solid black;
-                      }
-                       </style>
+        <style>
+            #myBtn {
+                display: none;
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                z-index: 100;
+                width: 50px; /* Small square size */
+                height: 50px;
+                background-color: white;
+                color: black;
+                border: none;
+                border-radius: 10px; /* Rounded corners for style */
+                cursor: pointer;
+                font-size: 28px; /* Icon size */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid black;
+            }
 
-                        <script>
+            body {
+                overflow-x: hidden;
+            }
 
-                        window.onscroll = function() {scrollFunction()};
+            .select2-container--default .select2-selection--single {
+                background-color: #fff;
+                border: 1px solid #C5C5C5;
+                border-radius: 10px;
+                height: 45px;
+                color: #5E5E5E;
+                font-size: 14px;
+                line-height: 20px;
+                font-weight: 800;
+                width: 100%;
+                padding: 10px 25px 10px 10px;
+                appearance: none;
+            }
 
-                        function scrollFunction() {
-                            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                                document.getElementById("myBtn").style.display = "block";
-                            } else {
-                                document.getElementById("myBtn").style.display = "none";
-                            }
+            .select2-container .select2-selection--single .select2-selection__rendered {
+                display: flex !important;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 23px;
+                color: #5E5E5E;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                /* height: 36px;
+                top: 1px;
+                right: 10px;
+                width: 20px; */
+                display: none;
+            }
+
+            /* Ensure full width */
+            .select2-container {
+                width: 100% !important;
+            }
+
+
+            .select2-container--default .select2-search--dropdown .select2-search__field {
+                border: 1px solid #aaa;
+                height: 30px;
+                font-size: 14px;
+            }
+        </style>
+
+
+
+        <script>
+            $(document).ready(function () {
+                $('.select2').select2({
+                    matcher: function (params, data) {
+                        if ($.trim(params.term) === '') {
+                            return data;
                         }
 
-                       
-                        // the below code is use for clear the search values from advanced search form
-
-                       const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
-                        function clearSearch() {
-                        const form = document.getElementById('dropdownSearchForclassifieds');
-                        if (form) {
-                                form.reset();
-                                // window.location.href = `sales.cfm?xss=${xssValue}`;
-                                page = 1;
-                                noMoreProducts = false;
-
-                                $('#product-container').empty();
-                                $('#loading').hide();
-                                loadProducts();
-                        }
+                        // Prevent matching placeholder during search
+                        if (data.id === '') {
+                            return null;
                         }
 
-                        $(document).ready(function() {
-                            toastr.options = {
-                                'closeButton': true,
-                                'debug': false,
-                                'newestOnTop': false,
-                                'progressBar': true,
-                                'positionClass': 'toast-top-right',
-                                'preventDuplicates': false,
-                                'showDuration': '1000',
-                                'hideDuration': '1000',
-                                'timeOut': '5000',
-                                'extendedTimeOut': '1000',
-                                'showEasing': 'swing',
-                                'hideEasing': 'linear',
-                                'showMethod': 'fadeIn',
-                                'hideMethod': 'fadeOut',
-                            }
+                        var term = params.term.toLowerCase();
+                        var text = data.text.toLowerCase();
+
+                        // Starts with match
+                        if (text.startsWith(term)) {
+                            return data;
+                        }
+
+                        // Contains match (less priority)
+                        if (text.indexOf(term) > -1) {
+                            var modifiedData = $.extend({}, data, true);
+                            modifiedData.text = data.text + ' ';
+                            return modifiedData;
+                        }
+
+                        return null;
+                    },
+
+                    sorter: function (data) {
+                        var term = $('.select2-search__field').val().toLowerCase();
+                        return data.sort(function (a, b) {
+                            var aStarts = a.text.toLowerCase().startsWith(term);
+                            var bStarts = b.text.toLowerCase().startsWith(term);
+
+                            if (aStarts && !bStarts) return -1;
+                            if (!aStarts && bStarts) return 1;
+                            return 0;
                         });
+                    }
+                });
+            });
 
-                        function gotoTopFunction() {
-                            document.body.scrollTop = 0;
-                            document.documentElement.scrollTop = 0;
-                            e.preventDefault();
-                        }
 
-                            var page = 1; // Start at page 1
-                            var loading = false; // Flag to prevent multiple requests
-                            var noMoreProducts = false; // Flag to check if there are no more products
-                            var previousData = ''; // Variable to store previously fetched data
-                            let lastArtist = ''; // Variable to store the last selected artist
-                            // let lastpath = ''; // Variable to store the last selected artist
-                            let lastPriceOrder = '';
-                            // let lastartSubject = '';
-                            let lastkeywords = '';
-                            let lastartSubject = '';
-                            let lastartType = '';
-                            let lastartSize = '';
-                            let lastartStyle = '';
+            window.onscroll = function() {scrollFunction()};
 
-                   function loadProducts() {
-                       if (loading || noMoreProducts) return; // Prevent multiple AJAX calls if already loading or no more products
-                       loading = true; 
-                       $('#loading').show(); 
-                   
-                       let currentUrl = window.location.href;
-                       let url = new URL(currentUrl);
-                       let params = new URLSearchParams(url.search);
-                   
-                       let Manufacturer = params.get('man');
-                       let Size = params.get('Size');
-                       let Subject = params.get('Subject');
-                       let Type = params.get('Type');
-                       let Style = params.get('Style');
-                       let urlArtist = params.get('artist');
+            function scrollFunction() {
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                    document.getElementById("myBtn").style.display = "block";
+                } else {
+                    document.getElementById("myBtn").style.display = "none";
+                }
+            }
 
-                       let artSubject = document.getElementById('artSubject').value;
-                       let artType = document.getElementById('artType').value;
-                       let artSize = document.getElementById('artSize').value;
-                       let artStyle = document.getElementById('artStyle').value;
 
-                      
-                   
-                       let Artist = document.getElementById('artist').value;
+              // the below code is use for clear the search values from advanced search form
+
+            const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
+
+            function clearSearch() {
+                const form = document.getElementById('dropdownSearchForclassifieds');
+                if (form) {
+                        form.reset();
+                        // window.location.href = `sales.cfm?xss=${xssValue}`;
+
+                        $('#artist').val(null).trigger('change'); 
+                        
+                        page = 1;
+                        noMoreProducts = false;
+
+                        $('#product-container').empty();
+                        $('#loading').hide();
+                        loadProducts();
+                }
+            }
+
+
+            $(document).ready(function() {
+                toastr.options = {
+                    'closeButton': true,
+                    'debug': false,
+                    'newestOnTop': false,
+                    'progressBar': true,
+                    'positionClass': 'toast-top-right',
+                    'preventDuplicates': false,
+                    'showDuration': '1000',
+                    'hideDuration': '1000',
+                    'timeOut': '5000',
+                    'extendedTimeOut': '1000',
+                    'showEasing': 'swing',
+                    'hideEasing': 'linear',
+                    'showMethod': 'fadeIn',
+                    'hideMethod': 'fadeOut',
+                }
+            });
+
+
+            function gotoTopFunction() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+                e.preventDefault();
+            }
+
+
+            var page = 1; // Start at page 1
+            var loading = false; // Flag to prevent multiple requests
+            var noMoreProducts = false; // Flag to check if there are no more products
+            var previousData = ''; // Variable to store previously fetched data
+            let lastArtist = ''; // Variable to store the last selected artist
+            // let lastpath = ''; // Variable to store the last selected artist
+            let lastPriceOrder = '';
+            // let lastartSubject = '';
+            let lastkeywords = '';
+            let lastartSubject = '';
+            let lastartType = '';
+            let lastartSize = '';
+            let lastartStyle = '';
+
+
+            function loadProducts() {
+                if (loading || noMoreProducts) return; // Prevent multiple AJAX calls if already loading or no more products
+                    loading = true; 
+                    $('#loading').show(); 
+                
+                    let currentUrl = window.location.href;
+                    let url = new URL(currentUrl);
+                    let params = new URLSearchParams(url.search);
+                
+                    let Manufacturer = params.get('man');
+                    let Size = params.get('Size');
+                    let Subject = params.get('Subject');
+                    let Type = params.get('Type');
+                    let Style = params.get('Style');
+                    let urlArtist = params.get('artist');
+
+                    let artSubject = document.getElementById('artSubject').value;
+                    let artType = document.getElementById('artType').value;
+                    let artSize = document.getElementById('artSize').value;
+                    let artStyle = document.getElementById('artStyle').value;
+
+                    
+                
+                    let Artist = document.getElementById('artist').value;
+
                     //    let path = document.getElementById('path').value;
-                       let priceOrder = document.getElementById('priceOrder').value;
-                    //    let artSubject = document.getElementById('artSubject').value;
-                       let keywords = document.getElementById('keywords').value;
-                   
-                       // Check if artist or path has changed, reset page and load new data
-                       if ( Artist || priceOrder || keywords ) {
-                           if (Artist !== lastArtist ||  priceOrder !==lastPriceOrder || keywords!==lastkeywords || artSubject!=lastartSubject || artType !=  lastartType || artSize != lastartSize || artStyle != lastartStyle) {
-                               page = 1; 
-                               $('#product-container').empty(); 
+                    let priceOrder = document.getElementById('priceOrder').value;
+                        //    let artSubject = document.getElementById('artSubject').value;
+                    let keywords = document.getElementById('keywords').value;
+                
+                    // Check if artist or path has changed, reset page and load new data
+                        if ( Artist || priceOrder || keywords ) {
+                            if (Artist !== lastArtist ||  priceOrder !==lastPriceOrder || keywords!==lastkeywords || artSubject!=lastartSubject || artType !=  lastartType || artSize != lastartSize || artStyle != lastartStyle) {
+                                page = 1; 
+                                $('#product-container').empty(); 
                                 noMoreProducts = false; 
                                 lastArtist = Artist; 
                             //    lastpath = path;
@@ -469,66 +572,65 @@
                                 lastartType = artType;
                                 lastartSize = artSize;
                                 lastartStyle = artStyle;
-                           }
-                       } else if (urlArtist && !Artist) {
-                           
-                           Artist = urlArtist;
-                       }
-                   
-                       console.log('Manufacturer:', Manufacturer);
-                       console.log('Artist:', Artist);
-                   
-                       $.ajax({
-                           url: 'getclassifieds.cfm',
-                           type: 'GET',
-                           data: {
-                            page: page,
-                            man: Manufacturer,
-                            Size: artSize,
-                            artist: Artist,
-                        
-                            priceOrder: priceOrder,
-                            Subject: artSubject,
-                            Type: artType,
-                            Style: artStyle,
-                            keywords: keywords
-                               
-                           },
-                           success: function(data) {
-                               if (data.trim() === '') {
-                                   noMoreProducts = true;
-                                   $('#loading').html('No more products').show();
+                            }
+                        } else if (urlArtist && !Artist) {
+                            
+                            Artist = urlArtist;
+                        }
+                
+                    console.log('Manufacturer:', Manufacturer);
+                    console.log('Artist:', Artist);
+                
+                    $.ajax({
+                        url: 'getclassifieds.cfm',
+                        type: 'GET',
+                        data: {
+                        page: page,
+                        man: Manufacturer,
+                        Size: artSize,
+                        artist: Artist,
+                    
+                        priceOrder: priceOrder,
+                        Subject: artSubject,
+                        Type: artType,
+                        Style: artStyle,
+                        keywords: keywords
+                            
+                        },
+                        success: function(data) {
+                            if (data.trim() === '') {
+                                noMoreProducts = true;
+                                $('#loading').html('No more products').show();
 
-                                // toastr.warning('No more products');
-                                // $('#loading').hide();
+                            // toastr.warning('No more products');
+                            // $('#loading').hide();
 
-                               } else if (data === previousData && page !== 1) {
-                                   // Prevent loading duplicate data on scroll (ignore check for page 1)
-                                   noMoreProducts = true;
-                                   $('#loading').html('No more products').show();
+                            } else if (data === previousData && page !== 1) {
+                                // Prevent loading duplicate data on scroll (ignore check for page 1)
+                                noMoreProducts = true;
+                                $('#loading').html('No more products').show();
 
-                                // toastr.warning('No more products');
-                                // $('#loading').hide();
+                            // toastr.warning('No more products');
+                            // $('#loading').hide();
 
-                               } else {
-                                   if (page === 1) {
-                                       $('#product-container').empty(); // On first page, replace content
-                                   }
-                                   $('#product-container').append(data); // Append new data
-                                   previousData = data;
-                                   page++; // Increment the page number for the next request
-                                   $('#loading').hide();
-                               }
-                               loading = false; // Reset the loading flag
-                           },
-                           error: function() {
-                               $('#loading').html('Error loading products').show();
-                               loading = false; // Reset the loading flag on error
-                           }
-                       });
+                            } else {
+                                if (page === 1) {
+                                    $('#product-container').empty(); // On first page, replace content
+                                }
+                                $('#product-container').append(data); // Append new data
+                                previousData = data;
+                                page++; // Increment the page number for the next request
+                                $('#loading').hide();
+                            }
+                            loading = false; // Reset the loading flag
+                        },
+                        error: function() {
+                            $('#loading').html('Error loading products').show();
+                            loading = false; // Reset the loading flag on error
+                        }
+                    });
                    }
-                   
-                   // Scroll event handler to load more products when near the bottom
+
                    $(window).scroll(function() {
                        if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
                            if (!noMoreProducts && !loading) {
@@ -545,6 +647,9 @@
                        
                    });
 
+                   // Scroll event handler to load more products when near the bottom
+                  
+
                    function artistClick() {
                         page = 1; // Reset page to 1 when search button is clicked
                         noMoreProducts = false;
@@ -553,9 +658,9 @@
                    
                    // Initial load
                    loadProducts();
-                   
-                            
-                         </script>
+
+
+        </script>
                         
 </body>
 </html>

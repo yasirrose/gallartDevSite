@@ -7,22 +7,36 @@
     <cfset startrow = ((page - 1) * ipp) + 1>
     
     <cfquery name="getRecentAcquisitions" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-        SELECT * 
-        FROM (
-            SELECT TOP 200 *, ROW_NUMBER() OVER (
-                <cfif isDefined('priceOrder') and len(priceOrder)>
-					<cfif priceOrder EQ 'newest' >
-                        ORDER BY uid DESC
+         SELECT *
+            FROM (
+                SELECT *, ROW_NUMBER() OVER (
+                    <cfif isDefined('priceOrder') and len(priceOrder)>
+                        <cfif priceOrder EQ 'newest'>
+                            ORDER BY uid DESC
                         <cfelse>
-                            ORDER BY gallery_price #priceOrder# 
+                            ORDER BY gallery_price #priceOrder#
+                        </cfif>
+                    <cfelse>
+                        ORDER BY active_date DESC
                     </cfif>
-				<cfelse>
-					ORDER BY active_date DESC
-				</cfif>
-            ) AS RowNum
-            FROM products
-            WHERE active = 1
-            
+                ) AS RowNum
+                FROM (
+                    SELECT TOP 200 *
+                    FROM products
+                    WHERE active = 1 AND fk_users IS NULL
+                    <cfif isDefined('priceOrder') and len(priceOrder)>
+                        <cfif priceOrder EQ 'newest'>
+                            ORDER BY uid DESC
+                        <cfelse>
+                            ORDER BY gallery_price #priceOrder#
+                        </cfif>
+                    <cfelse>
+                        ORDER BY active_date DESC
+                    </cfif>
+                ) AS Top200
+
+                WHERE 1=1
+
             <cfif isDefined('keywords') and len(trim(keywords))>
                 AND (name LIKE '%#keywords#%' OR caption LIKE '%#keywords#%' OR modelno LIKE '%#keywords#%' OR manufacturer LIKE '%#keywords#%')
             </cfif>
@@ -50,7 +64,7 @@
                 OR artType LIKE <cfqueryparam value="%,#Style#,%" cfsqltype="cf_sql_varchar">
                 )
 			</cfif>
-            AND fk_users IS NULL
+           
         ) AS Subquery
         WHERE RowNum BETWEEN #startrow# AND (#startrow# + #ipp# - 1)
        

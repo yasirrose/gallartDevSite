@@ -236,7 +236,7 @@
                                                                                     <select name="artist" id="artist" class="select2" onChange="artistClick()">
                                                                                         <option value="">Search By Artist</option>
                                                                                             <cfloop query="getArtists">
-                                                                                                <option value="#manufacturer#">#manufacturer#</option>
+                                                                                                <option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#</option>
                                                                                             </cfloop>
                                                                                     </select>
                                                                                 <!--- </form> --->
@@ -399,6 +399,10 @@
                 appearance: none;
             }
 
+            .select2-container .select2-selection--single .select2-selection__rendered {
+                display: inline !important;
+            }
+
             .select2-container--default .select2-selection--single .select2-selection__rendered {
                 line-height: 23px;
                 color: #5E5E5E;
@@ -428,220 +432,263 @@
        </style>
 
 
-            <script>
+       <script>
 
-
-                $(document).ready(function() {
-                    $('.select2').select2();
-                });
-
-            window.onscroll = function() {scrollFunction()};
-
-            function scrollFunction() {
-                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                    document.getElementById("myBtn").style.display = "block";
-                } else {
-                    document.getElementById("myBtn").style.display = "none";
-                }
-            }
-
-
-             // the below code is use for clear the search values from advanced search form
-
-            const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
-            function clearSearch() {
-               const form = document.getElementById('dropdownSearchForlistings');
-               if (form) {
-                     form.reset();
-                     // window.location.href = `sales.cfm?xss=${xssValue}`;
-
-                     // Reset select2 manually
-                    $('#artist').val(null).trigger('change'); // Clear the Select2 dropdown
-
-                    $('#artType').val(null).trigger('change'); 
-                    $('#artSize').val(null).trigger('change'); 
-                    $('#artStyle').val(null).trigger('change'); 
-                    $('#artSubject').val(null).trigger('change');
-
-                     page = 1;
-                     noMoreProducts = false;
-
-                     $('#product-container').empty();
-                     $('#loading').hide();
-                     loadProducts();
-               }
-            }
-
-            $(document).ready(function() {
-                toastr.options = {
-                    'closeButton': true,
-                    'debug': false,
-                    'newestOnTop': false,
-                    'progressBar': true,
-                    'positionClass': 'toast-top-right',
-                    'preventDuplicates': false,
-                    'showDuration': '1000',
-                    'hideDuration': '1000',
-                    'timeOut': '5000',
-                    'extendedTimeOut': '1000',
-                    'showEasing': 'swing',
-                    'hideEasing': 'linear',
-                    'showMethod': 'fadeIn',
-                    'hideMethod': 'fadeOut',
-                }
-            });
-
-                var page = 1; // Start at page 1
-                var loading = false; // Flag to prevent multiple requests
-                var noMoreProducts = false; // Flag to check if there are no more products
-                var previousData = ''; // Variable to store previously fetched data
-                var lastArtist = ''; // Variable to store the last selected artist
-                // var lastpath = ''; // Variable to store the last selected artist
-                var lastPriceOrder = '';
-                // let lastkeywords = '';
-                let lastartSubject = '';
-                let lastartType = '';
-                let lastartSize = '';
-                let lastartStyle = '';
-
-                function gotoTopFunction() {
-                    document.body.scrollTop = 0;
-                    document.documentElement.scrollTop = 0;
-                    e.preventDefault();
-                }
-
-                function submitForm() {
-                    loadProducts(); // Call your JS function
-                    document.getElementById('srchForm').submit(); // Submit the form
-                }
-
-                function loadProducts() {
-                    if (loading || noMoreProducts) return; // Prevent multiple AJAX calls if already loading or no more products
-                    loading = true;
-                    $('#loading').show();
-
-                    let currentUrl = window.location.href;
-                    let url = new URL(currentUrl);
-                    let params = new URLSearchParams(url.search);
-
-                    let Manufacturer = params.get('man');
-                    let Size = params.get('Size');
-                    let Subject = params.get('Subject');
-                    let Type = params.get('Type');
-                    let Style = params.get('Style');
-                    let urlArtist = params.get('artist');
-
-                    var Artist = document.getElementById('artist').value;
-                    // var path = document.getElementById('path').value;
-                    var priceOrder = document.getElementById('priceOrder').value;
-                    var keywords = document.getElementById('keywords').value;
-
-                    let artSubject = document.getElementById('artSubject').value;
-                    let artType = document.getElementById('artType').value;
-                    let artSize = document.getElementById('artSize').value;
-                    let artStyle = document.getElementById('artStyle').value;
-
-                    // Check if artist or path has changed, reset page and load new data
-                    if (Artist || priceOrder || keywords) {
-                        if (Artist !== lastArtist ||  priceOrder !==lastPriceOrder || keywords!==lastkeywords || artSubject!=lastartSubject || artType !=  lastartType || artSize != lastartSize || artStyle != lastartStyle) {
-                            page = 1;
-                            $('#product-container').empty(); // Clear the product container for new results
-                            noMoreProducts = false; // Reset the no more products flag
-                            lastArtist = Artist; // Update lastArtist to the new artist value
-                            // lastpath = path; // Update lastArtist to the new artist value
-                            lastPriceOrder = priceOrder;
-                            lastkeywords = keywords;
-                            lastartSubject = artSubject;
-                            lastartType = artType;
-                            lastartSize = artSize;
-                            lastartStyle = artStyle;
-                        }
-                    } else if (urlArtist && !Artist) {
-                        // If artist is obtained through URL params, set Artist to urlArtist
-                        Artist = urlArtist;
+        $(document).ready(function () {
+            $('.select2').select2({
+                matcher: function (params, data) {
+                    if ($.trim(params.term) === '') {
+                        return data;
                     }
 
-                    console.log('Manufacturer:', Manufacturer);
-                    console.log('Artist:', Artist);
+                    // Prevent matching placeholder during search
+                    if (data.id === '') {
+                        return null;
+                    }
 
-                    $.ajax({
-                        url: 'getRecentAcquisitions.cfm',
-                        type: 'GET',
-                        data: {
-                            page: page,
-                            man: Manufacturer,
-                            Size: artSize,
-                            artist: Artist,
-                            
-                            priceOrder: priceOrder,
-                            Subject: artSubject,
-                            Type: artType,
-                            Style: artStyle,
-                            keywords: keywords
-                            
-                        },
-                        success: function (data) {
-                            if (data.trim() === '') {
-                                noMoreProducts = true;
-                                $('#loading').html('No more products').show();
+                    var term = params.term.toLowerCase();
+                    var text = data.text.toLowerCase();
 
-                                // toastr.warning('No more products');
-                                // $('#loading').hide();
+                    // Starts with match
+                    if (text.startsWith(term)) {
+                        return data;
+                    }
 
-                            } else if (data === previousData && page !== 1) {
-                                // Prevent loading duplicate data on scroll (ignore check for page 1)
-                                noMoreProducts = true;
-                                $('#loading').html('No more products').show();
+                    // Contains match (less priority)
+                    if (text.indexOf(term) > -1) {
+                        var modifiedData = $.extend({}, data, true);
+                        modifiedData.text = data.text + ' ';
+                        return modifiedData;
+                    }
 
-                                // toastr.warning('No more products');
-                                // $('#loading').hide();
+                    return null;
+                },
 
-                            } else {
-                                if (page === 1) {
-                                    $('#product-container').empty(); // On first page, replace content
-                                }
-                                $('#product-container').append(data); // Append new data
-                                previousData = data;
-                                page++; // Increment the page number for the next request
-                                $('#loading').hide();
-                            }
-                            loading = false; // Reset the loading flag
-                        },
-                        error: function () {
-                            $('#loading').html('Error loading products').show();
-                            loading = false; // Reset the loading flag on error
-                        }
+                sorter: function (data) {
+                    var term = $('.select2-search__field').val().toLowerCase();
+                    return data.sort(function (a, b) {
+                        var aStarts = a.text.toLowerCase().startsWith(term);
+                        var bStarts = b.text.toLowerCase().startsWith(term);
+
+                        if (aStarts && !bStarts) return -1;
+                        if (!aStarts && bStarts) return 1;
+                        return 0;
                     });
                 }
+            });
+        });
 
-                // Scroll event handler to load more products when near the bottom
-                $(window).scroll(function () {
-                    if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
-                        if (!noMoreProducts && !loading) {
-                            loadProducts(); // Load products only if not loading and no more products
-                        }
-                    }
-                });
 
-                // Search button click event
-                $('#searchButton').on('click', function () {
-                    page = 1; // Reset page to 1 when search button is clicked
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                document.getElementById("myBtn").style.display = "block";
+            } else {
+                document.getElementById("myBtn").style.display = "none";
+            }
+        }
+
+        // the below code is use for clear the search values from advanced search form
+
+        const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
+        function clearSearch() {
+            const form = document.getElementById('dropdownSearchForlistings');
+            if (form) {
+                    form.reset();
+                    // window.location.href = `sales.cfm?xss=${xssValue}`;
+
+                    // Reset select2 manually
+                $('#artist').val(null).trigger('change'); // Clear the Select2 dropdown
+
+                $('#artType').val(null).trigger('change'); 
+                $('#artSize').val(null).trigger('change'); 
+                $('#artStyle').val(null).trigger('change'); 
+                $('#artSubject').val(null).trigger('change');
+
+                    page = 1;
                     noMoreProducts = false;
-                    loadProducts(); // Trigger product loading based on search
 
-                });
-
-                function artistClick() {
-                    page = 1; // Reset page to 1 when search button is clicked
-                    noMoreProducts = false;
+                    $('#product-container').empty();
+                    $('#loading').hide();
                     loadProducts();
+            }
+        }
+
+
+        $(document).ready(function() {
+            toastr.options = {
+                'closeButton': true,
+                'debug': false,
+                'newestOnTop': false,
+                'progressBar': true,
+                'positionClass': 'toast-top-right',
+                'preventDuplicates': false,
+                'showDuration': '1000',
+                'hideDuration': '1000',
+                'timeOut': '5000',
+                'extendedTimeOut': '1000',
+                'showEasing': 'swing',
+                'hideEasing': 'linear',
+                'showMethod': 'fadeIn',
+                'hideMethod': 'fadeOut',
+            }
+        });
+
+
+        var page = 1; // Start at page 1
+        var loading = false; // Flag to prevent multiple requests
+        var noMoreProducts = false; // Flag to check if there are no more products
+        var previousData = ''; // Variable to store previously fetched data
+        var lastArtist = ''; // Variable to store the last selected artist
+        // var lastpath = ''; // Variable to store the last selected artist
+        var lastPriceOrder = '';
+        // let lastkeywords = '';
+        let lastartSubject = '';
+        let lastartType = '';
+        let lastartSize = '';
+        let lastartStyle = '';
+
+        function gotoTopFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            e.preventDefault();
+        }
+
+        function submitForm() {
+            loadProducts(); // Call your JS function
+            document.getElementById('srchForm').submit(); // Submit the form
+        }
+
+        function loadProducts() {
+            if (loading || noMoreProducts) return; // Prevent multiple AJAX calls if already loading or no more products
+            loading = true;
+            $('#loading').show();
+
+            let currentUrl = window.location.href;
+            let url = new URL(currentUrl);
+            let params = new URLSearchParams(url.search);
+
+            let Manufacturer = params.get('man');
+            let Size = params.get('Size');
+            let Subject = params.get('Subject');
+            let Type = params.get('Type');
+            let Style = params.get('Style');
+            let urlArtist = params.get('artist');
+
+            var Artist = document.getElementById('artist').value;
+            // var path = document.getElementById('path').value;
+            var priceOrder = document.getElementById('priceOrder').value;
+            var keywords = document.getElementById('keywords').value;
+
+            let artSubject = document.getElementById('artSubject').value;
+            let artType = document.getElementById('artType').value;
+            let artSize = document.getElementById('artSize').value;
+            let artStyle = document.getElementById('artStyle').value;
+
+            // Check if artist or path has changed, reset page and load new data
+            if (Artist || priceOrder || keywords) {
+                if (Artist !== lastArtist ||  priceOrder !==lastPriceOrder || keywords!==lastkeywords || artSubject!=lastartSubject || artType !=  lastartType || artSize != lastartSize || artStyle != lastartStyle) {
+                    page = 1;
+                    $('#product-container').empty(); // Clear the product container for new results
+                    noMoreProducts = false; // Reset the no more products flag
+                    lastArtist = Artist; // Update lastArtist to the new artist value
+                    // lastpath = path; // Update lastArtist to the new artist value
+                    lastPriceOrder = priceOrder;
+                    lastkeywords = keywords;
+                    lastartSubject = artSubject;
+                    lastartType = artType;
+                    lastartSize = artSize;
+                    lastartStyle = artStyle;
                 }
+            } else if (urlArtist && !Artist) {
+                // If artist is obtained through URL params, set Artist to urlArtist
+                Artist = urlArtist;
+            }
 
-                // Initial load
-                loadProducts();
+            console.log('Manufacturer:', Manufacturer);
+            console.log('Artist:', Artist);
+
+            $.ajax({
+                url: 'getRecentAcquisitions.cfm',
+                type: 'GET',
+                data: {
+                    page: page,
+                    man: Manufacturer,
+                    Size: artSize,
+                    artist: Artist,
+                    
+                    priceOrder: priceOrder,
+                    Subject: artSubject,
+                    Type: artType,
+                    Style: artStyle,
+                    keywords: keywords
+                    
+                },
+                success: function (data) {
+                    if (data.trim() === '') {
+                        noMoreProducts = true;
+                        $('#loading').html('No more products').show();
+
+                        // toastr.warning('No more products');
+                        // $('#loading').hide();
+
+                    } else if (data === previousData && page !== 1) {
+                        // Prevent loading duplicate data on scroll (ignore check for page 1)
+                        noMoreProducts = true;
+                        $('#loading').html('No more products').show();
+
+                        // toastr.warning('No more products');
+                        // $('#loading').hide();
+
+                    } else {
+                        if (page === 1) {
+                            $('#product-container').empty(); // On first page, replace content
+                        }
+                        $('#product-container').append(data); // Append new data
+                        previousData = data;
+                        page++; // Increment the page number for the next request
+                        $('#loading').hide();
+                    }
+                    loading = false; // Reset the loading flag
+                },
+                error: function () {
+                    $('#loading').html('Error loading products').show();
+                    loading = false; // Reset the loading flag on error
+                }
+            });
+        }
+
+          // Scroll event handler to load more products when near the bottom
+        $(window).scroll(function () {
+            if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
+                if (!noMoreProducts && !loading) {
+                    loadProducts(); // Load products only if not loading and no more products
+                }
+            }
+        });
 
 
-            </script>
+        // Search button click event
+        $('#searchButton').on('click', function () {
+            page = 1; // Reset page to 1 when search button is clicked
+            noMoreProducts = false;
+            loadProducts(); // Trigger product loading based on search
+
+        });
+
+        function artistClick() {
+            page = 1; // Reset page to 1 when search button is clicked
+            noMoreProducts = false;
+            loadProducts();
+        }
+
+        // Initial load
+        loadProducts();
+
+
+       </script>
+
     </body>
 
     </html>

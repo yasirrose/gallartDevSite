@@ -1,3 +1,9 @@
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <div style="text-align: center"><input type="Button" value="Back To Sales Menu" onclick="location.href='index.cfm?event=sales'"></div>
 <table cellspacing="0" cellpadding="0" border="0" width="500" align="left">
     <tr>
@@ -44,7 +50,7 @@
 									<strong>Artist:</strong>
 								</td>
 								<td>
-									<select name="artist">
+									<select name="artist" class="select2">
 										<option value="">All</option>
 										<cfoutput query="getAllArtists" group="manufacturer">
 										<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
@@ -60,7 +66,7 @@
 									<strong>Exclude Artist:</strong>
 								</td>
 								<td>
-									<select name="exclude_artist">
+									<select name="exclude_artist" class="select2">
 										<option value="">All</option>
 										<cfoutput query="getAllArtists" group="manufacturer">
 										<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
@@ -76,7 +82,7 @@
 									<strong>Medium:</strong>
 								</td>
 								<td>
-									<select name="path">
+									<select name="path" class="select2">
 										<option value="">All</option>
 										<cfoutput query="getAllMedium">
 											<option value="#path#">#path#</option>
@@ -186,7 +192,7 @@
 									<strong>Seller:</strong>
 								</td>
 								<td>
-									<select name="SellerId">
+									<select name="SellerId" class="select2">
 										<option value="">All
 										<option value="0">Only Seller Listings
 										<cfoutput query="getAllSellers">
@@ -241,3 +247,50 @@
 		</td>
 	</tr>
 </table>
+
+
+<script>
+	$(document).ready(function () {
+			 $('.select2').select2({
+				 matcher: function (params, data) {
+					 if ($.trim(params.term) === '') {
+						 return data;
+					 }
+
+					 // Prevent matching placeholder during search
+					 if (data.id === '') {
+						 return null;
+					 }
+
+					 var term = params.term.toLowerCase();
+					 var text = data.text.toLowerCase();
+
+					 // Starts with match
+					 if (text.startsWith(term)) {
+						 return data;
+					 }
+
+					 // Contains match (less priority)
+					 if (text.indexOf(term) > -1) {
+						 var modifiedData = $.extend({}, data, true);
+						 modifiedData.text = data.text + ' ';
+						 return modifiedData;
+					 }
+
+					 return null;
+				 },
+
+				 sorter: function (data) {
+					 var term = $('.select2-search__field').val().toLowerCase();
+					 return data.sort(function (a, b) {
+						 var aStarts = a.text.toLowerCase().startsWith(term);
+						 var bStarts = b.text.toLowerCase().startsWith(term);
+
+						 if (aStarts && !bStarts) return -1;
+						 if (!aStarts && bStarts) return 1;
+						 return 0;
+					 });
+				 }
+			 });
+		 });
+</script>

@@ -1,5 +1,13 @@
 <cfhtmlhead text='<script type="text/javascript" src="../js/jquery-1.3.2.js" language="JavaScript"></script>'>
-<cfhtmlhead text='<script type="text/javascript" src="/admin/scripts/sales.js" language="JavaScript"></script>'>
+<cfhtmlhead text='
+
+		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+		<script type="text/javascript" src="/admin/scripts/sales.js" language="JavaScript"></script>
+	
+	'>
 <style>
 	.disabled {
 		border: 0;
@@ -38,11 +46,11 @@
 						<td>
 							<cfform method="post" action="index.cfm?event=sales.saleSearchResults">
 								<strong>Search Artist</strong>
-								<select name="searchArtist" id="searchArtist">
+								<select name="searchArtist" id="searchArtist" class="select2">
 									<option value="">All</option>
 										<cfoutput query="getAllArtists" group="manufacturer">
 										<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-											<option value="#manufacturer#" <cfif isDefined('form.searchArtist') and form.searchArtist EQ manufacturer >selected</cfif> >#ucase(manufacturer)#</option>
+											<option value="#manufacturer#" <cfif isDefined('form.searchArtist') and form.searchArtist EQ manufacturer >selected</cfif> >#manufacturer#</option>
 										</cfif>
 										</cfoutput>
 								</select>
@@ -81,31 +89,41 @@
 							<strong>Compute sale prices as a percentage of the Gallery Price</strong><br />
 							<ul>
 								<li>
-									<input type="text" name="saleDollar" id="saleDollar" size="5" />
-									<input type="button" value="COMPUTE" onclick="setSalePricesFromdoller()" />
+									<select id="discountType" onchange="toggleDiscountType()">
+										<option value="">Select Discount Type</option>
+										<option value="%">%</option>
+										<option value="$">$</option>
+									</select>
             
 								</li>
-								<li>
-									<!--- Enter percentage of Gallery Price to be used as discount: <input type="text" name="salePercent" id="salePercent" size="2">% --->
-									
-									Enter percentage of Gallery Price to be used as discount: <select name="salePercent" id="salePercent"  >
-										<option value="20" >20%</option>
-										<option value="25" >25%</option>
-										<option value="30" >30%</option>
-										<option value="35" >35%</option>
-										<option value="40" >40%</option>
-										<option value="45" >45%</option>
-										<option value="50" >50%</option>
-										<option value="55" >55%</option>
-										<option value="60" >60%</option>
-										<option value="65" >65%</option>
-										<option value="70" >70%</option>
-										<option value="75" >75%</option>
+								<!-- Hide percentage and dollar input sections initially -->
+								<li id="percentageSection" style="display:none;">
+									Enter percentage of Gallery Price to be used as discount: 
+									<select name="salePercent" id="salePercent">
+										<option value="20">20%</option>
+										<option value="25">25%</option>
+										<option value="30">30%</option>
+										<option value="35">35%</option>
+										<option value="40">40%</option>
+										<option value="45">45%</option>
+										<option value="50">50%</option>
+										<option value="55">55%</option>
+										<option value="60">60%</option>
+										<option value="65">65%</option>
+										<option value="70">70%</option>
+										<option value="75">75%</option>
 									</select>
 								</li>
-								<li>
-									Click this button to discount this percentage from Gallery Price and compute new Sales Price: <input type="button" value="COMPUTE" onclick="setSalePricesFromPercentage()" /> <br />
-									(If the result set is large, this could take awhile, and possibly time out.  If possible, keep the result sets small.)
+								<li id="dollarSection" style="display:none;">
+									Enter dollar amount to be used as discount: 
+									<input type="text" name="saleDollar" id="saleDollar" size="5" />
+								</li>
+								<!-- Hide compute button initially -->
+								<li id="computeButtonSection" style="display:none;">
+									Click this button to discount the amount from Gallery Price and compute new Sales Price: 
+									<input type="button" value="COMPUTE" onclick="setSalePricesFromPercentageee()" />
+									 <br />
+									(If the result set is large, this could take a while, and possibly time out. If possible, keep the result sets small.)
 								</li>
 							</ul>
 						</td>
@@ -230,6 +248,95 @@
 		</tr>	
 </table>
 
+<script>
+    // Function to toggle between percentage and dollar input and show the compute button
+    function toggleDiscountType() {
+        var discountType = $("#discountType").val();
+        
+        if (discountType === "%") {
+            $("#percentageSection").show();
+            $("#dollarSection").hide();
+            $("#computeButtonSection").show();
+        } else if (discountType === "$") {
+            $("#percentageSection").hide();
+            $("#dollarSection").show();
+            $("#computeButtonSection").show();
+        } else {
+            // Hide both sections and the compute button if no valid selection is made
+            $("#percentageSection").hide();
+            $("#dollarSection").hide();
+            $("#computeButtonSection").hide();
+        }
+    }
 
+    // Updated setSalePricesFromPercentage function
+    setSalePricesFromPercentageee = function() {
+        var discountType = $("#discountType").val();
+        
+        $("[name=gallery_price]").each(function() {
+            var gallVal = parseFloat($(this).val());
+            var saleClass = "." + $(this).attr("id");
+            var newSaleVal;
+
+            if (discountType === "%") {
+                // Get percentage value
+                var percentVal = parseFloat($("#salePercent").val());
+                newSaleVal = (gallVal - (percentVal * gallVal / 100)).toFixed(2);
+            } else if (discountType === "$") {
+                // Get dollar value
+                var dollarVal = parseFloat($("#saleDollar").val());
+                newSaleVal = (gallVal - dollarVal).toFixed(2);
+            }
+
+            // Set new sale value in the corresponding field
+            $(saleClass).val(newSaleVal);
+        });
+    };
+
+	$(document).ready(function () {
+			 $('.select2').select2({
+				 matcher: function (params, data) {
+					 if ($.trim(params.term) === '') {
+						 return data;
+					 }
+
+					 // Prevent matching placeholder during search
+					 if (data.id === '') {
+						 return null;
+					 }
+
+					 var term = params.term.toLowerCase();
+					 var text = data.text.toLowerCase();
+
+					 // Starts with match
+					 if (text.startsWith(term)) {
+						 return data;
+					 }
+
+					 // Contains match (less priority)
+					 if (text.indexOf(term) > -1) {
+						 var modifiedData = $.extend({}, data, true);
+						 modifiedData.text = data.text + ' ';
+						 return modifiedData;
+					 }
+
+					 return null;
+				 },
+
+				 sorter: function (data) {
+					 var term = $('.select2-search__field').val().toLowerCase();
+					 return data.sort(function (a, b) {
+						 var aStarts = a.text.toLowerCase().startsWith(term);
+						 var bStarts = b.text.toLowerCase().startsWith(term);
+
+						 if (aStarts && !bStarts) return -1;
+						 if (!aStarts && bStarts) return 1;
+						 return 0;
+					 });
+				 }
+			 });
+		 });
+
+</script>
 
 

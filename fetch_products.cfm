@@ -16,6 +16,13 @@
 
 	<cfdump var="#cfkeywords#" abort="true"> --->
 
+	<cfset reversedKeyword = ListLast(keywords, " ") & ", " & ListFirst(keywords, " ")>
+	<cfset reversedKeyworddd = ListFirst(keywords, " ") & ", " & ListLast(keywords, " ")>
+
+	<!--- <cfdump var="#keywords#"><br>
+	<cfdump var="#reversedKeyword#"><br>
+	<cfdump var="#reversedKeyworddd#" abort="true"> --->
+
     <!-- Initialize base SQL query -->
 	<cfquery name="productinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 		SELECT  *
@@ -41,7 +48,7 @@
 				  	<cfif man EQ 'Erte'>
 					  AND (manufacturer = 'ERTE' OR manufacturer = 'ERTE, ROMAIN')
 				  	<cfelse>
-					  AND manufacturer LIKE '%#man#%'
+					  AND manufacturer = '#man#'
 				  	</cfif>
 			  	</cfif>
 			  	<cfif isDefined('Size') and len(trim(Size))>
@@ -125,8 +132,10 @@
 				<cfset artist_name_alt = manufacturer /> --->
 			</cfif>
 
+			<!--- <cfdump var="#artist_name_url#"> --->
+
             <div class="list-item">
-                <a href="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
+                <a href="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
                     <cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")>
                         <img src="http://23.20.226.157/img/#uid#.jpg" alt="#name#" title="#name#" border="0" align="center">
                     <cfelse>
@@ -194,16 +203,20 @@
 										<b> #DollarFormat(productinfo.gallery_price)# </b>
 							</cfif>
 						<cfelse>
+							
 							<span style="color: red;">
 								Price On Request
 							</span>
 
 						</cfif>
 					<cfelse>
+						
 						<cfif productinfo.gallery_price EQ 0 OR productinfo.gallery_price EQ ''>
 							<span style="color: red;">
 								Price On Request
 							</span>
+						<cfelse>
+							<b>#DollarFormat(productinfo.gallery_price)#</b>
 						</cfif>
 					</cfif>
 

@@ -550,9 +550,13 @@ function printImageSheet() {
     imageSheet.setForm("imageSheetForm");
 	strImageTable = imageSheet.getImagesByArtist();
 	imageTable = strImageTable['IMAGESHEETTABLE'];
+	<!--- console.log('test table: ' + imageTable); --->
 	imgRecordcount = strImageTable['RECORDCOUNT'];
     document.getElementById('displaySheet').innerHTML = imageTable;
 	document.getElementById('imgSheetRecordcount').innerHTML = imgRecordcount;
-	window.print();
+	<!--- window.print(); --->
+	setTimeout(function() {
+        window.print();
+    }, 100);
 }
 

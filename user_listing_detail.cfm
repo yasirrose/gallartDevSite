@@ -351,15 +351,13 @@
 </cfquery>
 <Cfif parameterexists(id)>
 <cfquery name="detail" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-    SELECT  REPLACE(REPLACE(REPLACE(path, ': :', ''), ':', ''), ';', '') AS cleaned_path,
-    * FROM products
+    SELECT  * FROM products
 	WHERE products.UID = #ID#
 </CFQUERY>
 <cfset modelno = detail.modelno>
 <Cfelse>
 <cfquery name="detail" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-    SELECT REPLACE(REPLACE(REPLACE(path, ': :', ''), ':', ''), ';', '') AS cleaned_path,
-    * FROM products
+    SELECT * FROM products
     WHERE 0=1
 </CFQUERY>
 
@@ -372,10 +370,9 @@
 </CFQUERY>
 
 <cfquery name="cats" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-    SELECT DISTINCT 
-        RTRIM(REPLACE(REPLACE(path, ':', ''), ';', '')) AS cleaned_path
-    FROM products
-    ORDER BY cleaned_path
+    SELECT DISTINCT path FROM products
+    group by path
+    order by path
 </cfquery>
 
 <!--- <cfdump var="#detail#" abort="true"> --->
@@ -602,7 +599,7 @@ return true;
                                                                     <option value="">Select here ...</option>
                                                                     <cfloop query="artists">
                                                                     <cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-                                                                    <option value="#manufacturer#" <cfif manufacturer is #detail.manufacturer#>Selected</cfif>>#REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+                                                                    <option value="#HTMLEditFormat(manufacturer)#" <cfif HTMLEditFormat(manufacturer) is #HTMLEditFormat(detail.manufacturer)#>Selected</cfif>>#HTMLEditFormat(manufacturer)#
                                                                     </cfif>
                                                                     
                                                                     </cfloop>
@@ -612,7 +609,7 @@ return true;
 
                                                             <div class="input-field">
                                                                 <label><b><i>Select an artist from dropdown above, OR type in a new artist below (last name, first name):</i></b></label>
-                                                                <input type="Text" name="manufacturer" value="#REReplace(detail.manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#" size="40">
+                                                                <input type="Text" name="manufacturer" value="#HTMLEditFormat(detail.manufacturer)#" size="40">
                                                             </div>
 
                                                             <div class="input-field">
@@ -631,7 +628,7 @@ return true;
                                                                 <Select name="category" class="select2">
                                                                     <option value="">Select here ...</option>
                                                                     <cfloop query="cats">
-                                                                        <option value="#CLEANED_PATH#" <cfif #CLEANED_PATH# is #detail.CLEANED_PATH#>Selected</cfif>>#REReplace(CLEANED_PATH, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+                                                                        <option value="#path#" <cfif #path# is #detail.path#>Selected</cfif>>#path#
                                                                     
                                                                     </cfloop>
                                                                 </select>
@@ -746,48 +743,49 @@ return true;
 
 
 <script>
-      $(document).ready(function () {
-        $('.select2').select2({
-            matcher: function(params, data) {
-                if ($.trim(params.term) === '') {
-                    return data;
-                }
+       $(document).ready(function () {
+                $('.select2').select2({
+                    matcher: function (params, data) {
+                        if ($.trim(params.term) === '') {
+                            return data;
+                        }
 
-                var term = params.term.toLowerCase();
-                var text = data.text.toLowerCase();
+                        // Prevent matching placeholder during search
+                        if (data.id === '') {
+                            return null;
+                        }
 
-                // Exact "starts with" match
-                if (text.startsWith(term)) {
-                    return data;
-                }
+                        var term = params.term.toLowerCase();
+                        var text = data.text.toLowerCase();
 
-                // Contains match – lower priority
-                if (text.indexOf(term) > -1) {
-                    var modifiedData = $.extend({}, data, true);
-                    // Add some metadata to sort later if needed
-                    modifiedData.text = data.text + ' '; // slight tweak to force reordering if needed
-                    return modifiedData;
-                }
+                        // Starts with match
+                        if (text.startsWith(term)) {
+                            return data;
+                        }
 
-                // Otherwise no match
-                return null;
-            },
+                        // Contains match (less priority)
+                        if (text.indexOf(term) > -1) {
+                            var modifiedData = $.extend({}, data, true);
+                            modifiedData.text = data.text + ' ';
+                            return modifiedData;
+                        }
 
-            // Optional: sorter to ensure "starts with" appears first
-            sorter: function(data) {
-                var term = $('.select2-search__field').val().toLowerCase();
-                return data.sort(function(a, b) {
-                    var aStarts = a.text.toLowerCase().startsWith(term);
-                    var bStarts = b.text.toLowerCase().startsWith(term);
+                        return null;
+                    },
 
-                    // if a starts and b doesn't, a comes first
-                    if (aStarts && !bStarts) return -1;
-                    if (!aStarts && bStarts) return 1;
-                    return 0;
+                    sorter: function (data) {
+                        var term = $('.select2-search__field').val().toLowerCase();
+                        return data.sort(function (a, b) {
+                            var aStarts = a.text.toLowerCase().startsWith(term);
+                            var bStarts = b.text.toLowerCase().startsWith(term);
+
+                            if (aStarts && !bStarts) return -1;
+                            if (!aStarts && bStarts) return 1;
+                            return 0;
+                        });
+                    }
                 });
-            }
-        });
-    });
+            });
 </script>
 
 <style>

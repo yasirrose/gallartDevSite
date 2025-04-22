@@ -152,3 +152,9 @@ $(function() {
 		})
 });
 </script>
+
+<style>
+	#pagerOrders{
+		position: static !important;
+	}
+</style>

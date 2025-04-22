@@ -128,24 +128,23 @@
 
       
 
-      <!--- <cfquery name="getArtistsName" datasource="#application.dsource#">
-         SELECT * FROM products;
+<!--- <cfquery name="getArtistsName" datasource="#application.dsource#">
+   SELECT * FROM bios;
+</cfquery>
+
+
+   <cfloop query="getArtistsName">
+      <cfset newName = REReplaceNoCase(getArtistsName.artist, "(\b[A-Z])([A-Z]+)", "\1\L\2", "ALL")>
+
+      
+      <!--- <cfdump var="#newPath#" abort="true"> --->
+
+      <cfquery datasource="#application.dsource#">
+         UPDATE bios 
+         SET artist = <cfqueryparam value="#newName#" cfsqltype="CF_SQL_VARCHAR">
+         WHERE pk_bios = <cfqueryparam value="#getArtistsName.pk_bios#" cfsqltype="CF_SQL_INTEGER">
       </cfquery>
-
-
-         <cfloop query="getArtistsName">
-            <cfset newName = REReplaceNoCase(getArtistsName.name, "(\b[A-Z])([A-Z]+)", "\1\L\2", "ALL")>
-
-            <cfset newNamee = REReplaceNoCase(newName, "\b(I|II|III|IV|V|VI|VII|VIII|IX|X)\b", "\U\1", "ALL")>
-            
-            <!--- <cfdump var="#newName#" abort="true"> --->
-
-            <cfquery datasource="#application.dsource#">
-               UPDATE products 
-               SET name = <cfqueryparam value="#newNamee#" cfsqltype="CF_SQL_VARCHAR">
-               WHERE uid = <cfqueryparam value="#getArtistsName.uid#" cfsqltype="CF_SQL_INTEGER">
-            </cfquery>
-         </cfloop> --->
+   </cfloop> --->
 
       <div class="main-container">
       <div id="Table_01">
