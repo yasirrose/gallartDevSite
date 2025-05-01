@@ -2,7 +2,7 @@
 <script type="text/javascript" src="../js/jquery-1.3.2.js"></script>
 <script type="text/javascript" src="../js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="../js/jquery.tablesorter.pager.js"></script>
-<script type="text/javascript">
+<!--- <script type="text/javascript">
 $(function() {
 	$("table")
 		.tablesorter({
@@ -14,7 +14,7 @@ $(function() {
 				tableId: 'removeDupResults'
 			});
 });
-</script>
+</script> --->
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>
 		<td>
@@ -65,6 +65,19 @@ $(function() {
 		</td>
 	</tr>
 </table>
+
+<script>
+	$(function() {
+		$('#removeDupResults.tablesorter').tablesorter({
+			widthFixed: true
+		})
+		.tablesorterPager({
+			container: $("#pager"),
+			size: 25,
+			tableId: 'removeDupResults'
+		})
+	});
+</script>
 
 <style>
 	#pager{

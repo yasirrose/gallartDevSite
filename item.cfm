@@ -506,9 +506,9 @@
                                                          <cfset fullName = trim(manufacturer)>
                                                          
                                                       </cfif>
-                                                      <cfset capitalize = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                                                      <!--- <cfset capitalize = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
                                                       <a href="products.cfm?man=#URLEncodedFormat(manufacturer)#<cfif parameterexists(xss)>&xss=#xss#</cfif>" >
-                                                         <h3 class="meta">#capitalize#</h3>
+                                                         <h3 class="meta">#fullName#</h3>
                                                       </a>
                                                       <!--- <h3 class="meta">#ucase(manufacturer)#</h3> --->
                                                       </cfif>
@@ -539,11 +539,13 @@
                                                    </div>
                                                   
 
-                                                   <cfif productinfo.retail_price gt 0 >
+                                                   <!--- <cfif productinfo.retail_price gt 0 >
 
                                                       <p style="font-size: 20px;">
                                                       <cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
+
                                                          <cfif application.showSalePrice EQ 1>
+
                                                             <del>#DollarFormat(productinfo.retail_price)# </del> &nbsp;
                                                              <b>
                                                                <span style="color: ##ff0000;">
@@ -551,13 +553,83 @@
                                                                </span>
                                                             </b>
                                                          </cfif>
+
                                                       <cfelseif productinfo.gallery_price gt 0>
+                                                         
                                                          <del>#DollarFormat(productinfo.retail_price)# </del> &nbsp;
                                                         <b> #DollarFormat(productinfo.gallery_price)# </b>
                                                       </cfif>
 
                                                    </p>
-                                                   </cfif>
+                                                   </cfif> --->
+
+
+                                                   <p style="font-size: 20px">
+                                                      <cfif retail_price gt 0 and retail_price gt gallery_price>
+                                             
+                                                         <cfif gallery_price gt 0 and  gallery_price gt special_price>
+                                                
+                                                            <cfif closeout eq 1 and special_price gt 0 >
+                                                               <del>#DollarFormat(gallery_price)#</del>
+                                                               &nbsp; 
+                                                                <b>
+                                                                  <span style="color: ##ff0000;">
+                                                                     #DollarFormat(special_price)# 
+                                                                  </span>
+                                                               </b>
+                                                             <cfelse>
+                                                               <del>#DollarFormat(retail_price)#</del>
+                                                               &nbsp; 
+                                                               
+                                                               <b> #DollarFormat(gallery_price)# </b>
+                                                            </cfif>
+                                                
+                                                          <cfelse>
+                                                            <!--- <span style="color: red;">
+                                                                  Price On Request
+                                                            </span> --->
+                                                            <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+                                                               <del>#DollarFormat(retail_price)# </del>
+                                                               &nbsp; 
+                                                                  <b>
+                                                                     <span style="color: ##ff0000;">
+                                                                     #DollarFormat(special_price)# 
+                                                                     </span>
+                                                                  </b>
+                                                
+                                                                  <cfelse>
+                                                                     <b> #DollarFormat(retail_price)# </b>
+                                                            </cfif>
+                                                
+                                                         </cfif>
+                                                       <cfelse>
+                                                         
+                                                         <cfif gallery_price NEQ 0 and gallery_price NEQ ''>
+                                                            
+                                                            
+                                                          
+                                                            <cfif retail_price neq 0 and retail_price LT gallery_price >
+                                                               
+                                                               <b>#DollarFormat(retail_price)#</b>
+                                                             <cfelse>
+                                                               <cfif closeout eq 1 and special_price gt 0 and special_price LT gallery_price>
+                                                                  
+                                                                  <del>#DollarFormat(gallery_price)# </del>
+                                                                  &nbsp; 
+                                                                     <b>
+                                                                        <span style="color: ##ff0000;">
+                                                                        #DollarFormat(special_price)# 
+                                                                        </span>
+                                                                     </b>
+                                                   
+                                                                     <cfelse>
+                                                                        <b>#DollarFormat(gallery_price)#</b>
+                                                               </cfif>
+                                                            </cfif>
+                                                         </cfif>
+                                                
+                                                      </cfif>
+                                                   </p>
 
                                                    
 
@@ -567,30 +639,32 @@
                                                       <cfdump var="#medium#"> --->
                                                       <cfif path gt 0>
                                                          <cfset c_medium = REReplace(path, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-                                                         <p>Medium: <span>#c_medium#</span></p>
+                                                         <p> <b>Medium</b>: <span>#path#</span></p>
                                                       </cfif>
                                                       <cfif isNumeric(productinfo.year) AND productinfo.year GT 0>
-                                                         <p>Date: <span>#productinfo.year#</span></p>
+                                                         <p> <b>Date</b>: <span>#productinfo.year#</span></p>
                                                          <cfelseif len(trim(productinfo.year))>
                                                             <!-- Handle cases like "1980/81" or invalid year strings -->
-                                                            <p>Date: <span>#htmlEditFormat(productinfo.year)#</span></p>
+                                                            <p> <b>Date</b>: <span>#htmlEditFormat(productinfo.year)#</span></p>
                                                          </cfif>
                                                       
                                                       <cfif edition gt 0>
                                                          <!--- <cfset C_edition = REReplace(edition, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
                                                          <cfset updatedEdition = REReplace(edition, "\bOF\b", "Of", "ALL")>
-                                                         <p>Edition: <span>#updatedEdition#</span></p>
+                                                         <p> <b>Edition</b>: <span>#updatedEdition#</span></p>
                                                       </cfif>
                                                       <cfif productinfo.size gt 0>
-                                                         <p>Size: <span>#Replace(productinfo.size, "X", "x", "all")# inches</span></p>
+                                                         <p> <b>Size</b>: <span>#Replace(productinfo.size, "X", "x", "all")# inches</span></p>
                                                       </cfif>
-                                                      <cfif caption gt 0>
-                                                         <cfset c_caption = REReplace(caption, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                                                      <cfif len(trim(caption)) gt 0>
+                                                         <!--- <cfset c_caption = REReplace(caption, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
                                                          <!-- Replace periods followed by spaces with a period and a line break -->
                                                          
-                                                         <p>Additional Details: <span>#trim(c_caption)#</span></p>
+                                                         <p>
+                                                            <b>Additional Details</b>: <span>#trim(caption)#</span>
+                                                         </p>
                                                       </cfif>
-                                                      <p>Art ID: <span>#productinfo.modelno#</span></p>
+                                                      <p> <b> Art ID</b>: <span>#productinfo.modelno#</span></p>
                                                       
                                                          
                                                          <cfif len(productinfo.fk_users)>
@@ -975,32 +1049,32 @@
                                                                         <br><br>
                                                                         <div class="input-form">
                                                                            <div class="input-field">
-                                                                              <label><FONT color="000000"><b>FIRST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label>
-                                                                              <cfinput type="text" id="fname" name="fname" value="#form.fname#" >
+                                                                              <!--- <label><FONT color="000000"><b>FIRST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
+                                                                              <cfinput type="text" id="fname" name="fname" placeholder="First Name" value="#form.fname#" >
                                                                               <span class="error-message" id="fnameError"></span>
                                                                            </div>
                                                                            <div class="input-field">
-                                                                              <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label>
-                                                                              <cfinput type="text" name="lname" value="#form.lname#" id="lname">
+                                                                              <!--- <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
+                                                                              <cfinput type="text" name="lname" value="#form.lname#" placeholder="Last Name" id="lname">
                                                                               <span class="error-message" id="lnameError"></span>
                                                                            </div>
                                                                            <div class="input-field">
-                                                                              <label><FONT color="000000"><b>E-MAIL ADDRESS &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label>
-                                                                              <cfinput type="text" name="email" value="#form.email#" id="email">
+                                                                              <!--- <label><FONT color="000000"><b>E-MAIL ADDRESS &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
+                                                                              <cfinput type="text" name="email" value="#form.email#" placeholder="Email Address" id="email">
                                                                               <span class="error-message" id="emailError"></span>
                                                                            </div>
                                                                            <div class="input-field">
-                                                                              <label><FONT color="000000"><b>PHONE (xxx) xxx-xxxx</b></FONT></label>
-                                                                              <cfinput type="text" name="phone" value="#form.phone#" required="No" id="phone" mask="(999) 999-9999">
+                                                                              <!--- <label><FONT color="000000"><b>PHONE (xxx) xxx-xxxx</b></FONT></label> --->
+                                                                              <cfinput type="text" name="phone" value="#form.phone#" required="No" placeholder="Enter your Phone Number" id="phone" mask="(999) 999-9999">
                                                                               <span class="error-message" id="phoneError"></span>
                                                                            </div>
                                                                            <div class="input-field">
-                                                                              <label><FONT color="000000"><b>PHONE OUTSIDE THE US</b></FONT></label>
-                                                                              <cfinput type="text" name="otherphone" value="#form.otherphone#" required="No" >
+                                                                              <!--- <label><FONT color="000000"><b>PHONE OUTSIDE THE US</b></FONT></label> --->
+                                                                              <cfinput type="text" name="otherphone" value="#form.otherphone#" placeholder="Enter your Outside Phone Number" required="No" >
                                                                            </div>
                                                                            <div class="input-field">
-                                                                              <label><FONT color="000000"><b>COMMENTS</b></FONT></label>
-                                                                              <TEXTAREA NAME="comments" ROWS=10 COLS=35>#form.comments#</TEXTAREA>
+                                                                              <!--- <label><FONT color="000000"><b>COMMENTS</b></FONT></label> --->
+                                                                              <TEXTAREA NAME="comments" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
                                                                            </div>
                                                                            <div class="input-field">
                                                                               <cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier" fontsize="28"/>

@@ -1,6 +1,11 @@
 <cfajaxproxy cfc="admin.models.users" />
 <cfajaxproxy bind="javascript:gridChange({data.pk_users})">
-<cfhtmlhead text='<script type="text/javascript" src="/admin/scripts/sellers.js.cfm" language="JavaScript"></script>'>
+<cfhtmlhead text='
+	<script type="text/javascript" src="/admin/scripts/sellers.js.cfm" language="JavaScript"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+'>
 
 <script type="text/javascript">
 getSellerName = function(){
@@ -90,7 +95,7 @@ getSellerEmail = function(){
 							<option value="">All
 							<cfoutput query="getAllArtists" group="manufacturer">
 							<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-								<option value="#manufacturer#">#ucase(manufacturer)#
+								<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
 							</cfif>
 							</cfoutput>
 						</select>

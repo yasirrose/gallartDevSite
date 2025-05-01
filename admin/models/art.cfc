@@ -1142,6 +1142,8 @@
 
 		<cfset var qListings='' />
 
+		
+
 
 	   	<cfquery name="qListings" datasource="#application.dsource#">
 	      	SELECT CONVERT(CHAR(9),datestamp,6) as listingDate,'<a href="http://gallart.com/img/'+CAST(uid AS varchar(50))+'.jpg" target="_blank"><img src="http://gallart.com/img/thumbnails/'+CAST(uid AS varchar(50))+'.jpg" border="0" height="50" />' as 'Thumbnail',
@@ -1428,11 +1430,12 @@
 	      	SELECT CONVERT(CHAR(9),datestamp,6) as listingDate,*
 	      	FROM products P
 			WHERE active = 1
-			AND
+			
 			<cfif isDefined('arguments.artist') AND arguments.artist neq ''>
+				AND
 				<cfset count = 1>
 				<cfloop list="#arguments.artist#" index="idx">
-					manufacturer LIKE '#idx#%'
+					 manufacturer LIKE '#idx#%'
 					<cfif count LT listLen(arguments.artist)>
 						OR
 					</cfif>

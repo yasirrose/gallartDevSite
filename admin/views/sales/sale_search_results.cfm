@@ -50,7 +50,7 @@
 									<option value="">All</option>
 										<cfoutput query="getAllArtists" group="manufacturer">
 										<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-											<option value="#manufacturer#" <cfif isDefined('form.searchArtist') and form.searchArtist EQ manufacturer >selected</cfif> >#manufacturer#</option>
+											<option value="#HTMLEditFormat(manufacturer)#" <cfif isDefined('form.searchArtist') and HTMLEditFormat(form.searchArtist) EQ HTMLEditFormat(manufacturer) >selected</cfif> >#HTMLEditFormat(manufacturer)#</option>
 										</cfif>
 										</cfoutput>
 								</select>

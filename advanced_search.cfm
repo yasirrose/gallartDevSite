@@ -42,9 +42,9 @@ order by path
 								<option value="" selected>All
 									<cfloop query="artistinfo">
 										<cfif manufacturer EQ 'MAX, PETER'>
-											<option value="#manufacturer#">MAX, PETER (ALL)
+											<option value="#HTMLEditFormat(manufacturer)#">MAX, PETER (ALL)
 										<cfelseif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-											<option value="#manufacturer#" <cfif parameterexists(manufact) and manufact eq '#manufacturer#'>Selected</cfif>>#manufacturer#
+											<option value="#HTMLEditFormat(manufacturer)#" <cfif parameterexists(manufact) and manufact eq '#HTMLEditFormat(manufacturer)#'>Selected</cfif>>#HTMLEditFormat(manufacturer)#
 										</cfif>
 									</cfloop>
 							</select>

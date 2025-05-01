@@ -6,23 +6,6 @@
     <!-- Calculate the starting row -->
     <cfset startrow = ((page - 1) * ipp) + 1>
 
-	<!--- <cfif isDefined('url.man')>
-		<cfset mannn = URLDecode(url.man)>
-	</cfif>
-
-	<cfdump var="#url#" abort="true"> --->
-
-	<!--- <cfset cfkeywords = uCase(keywords)>
-
-	<cfdump var="#cfkeywords#" abort="true"> --->
-
-	<cfset reversedKeyword = ListLast(keywords, " ") & ", " & ListFirst(keywords, " ")>
-	<cfset reversedKeyworddd = ListFirst(keywords, " ") & ", " & ListLast(keywords, " ")>
-
-	<!--- <cfdump var="#keywords#"><br>
-	<cfdump var="#reversedKeyword#"><br>
-	<cfdump var="#reversedKeyworddd#" abort="true"> --->
-
     <!-- Initialize base SQL query -->
 	<cfquery name="productinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 		SELECT  *
@@ -178,49 +161,71 @@
                     </cfif>
                 </div> --->
                 <div class="product-price">
-                    <!--- <cfif retail_price neq ''>
-                        <span>Retail Price:</span> #dollarformat(retail_price)#
-                    </cfif> --->
-
-					<cfif productinfo.retail_price gt 0 >
-
-						<cfif productinfo.gallery_price gt 0>
-
-							<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
-								<del>#DollarFormat(productinfo.gallery_price)# </del>
+					<cfif retail_price gt 0 and retail_price gt gallery_price>
+		
+						<cfif gallery_price gt 0 and  gallery_price gt special_price>
+		
+							<cfif closeout eq 1 and special_price gt 0 >
+								<del>#DollarFormat(gallery_price)#</del>
 								&nbsp; 
-								 <br>
+								 <b>
+									<span style="color: ##ff0000;">
+										#DollarFormat(special_price)# 
+									</span>
+								</b>
+							 <cfelse>
+								<del>#DollarFormat(retail_price)#</del>
+								&nbsp; 
+								
+								<b> #DollarFormat(gallery_price)# </b>
+							</cfif>
+		
+						 <cfelse>
+							<!--- <span style="color: red;">
+									Price On Request
+							</span> --->
+							<cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+								<del>#DollarFormat(retail_price)# </del>
+								&nbsp; 
 									<b>
 										<span style="color: ##ff0000;">
-										#DollarFormat(productinfo.special_price)# 
+										#DollarFormat(special_price)# 
 										</span>
 									</b>
-
+			
 									<cfelse>
-										<del> #DollarFormat(productinfo.retail_price)# </del>
-										&nbsp; 
-										 <br>
-										<b> #DollarFormat(productinfo.gallery_price)# </b>
+										<b> #DollarFormat(retail_price)# </b>
 							</cfif>
-						<cfelse>
+		
+						</cfif>
+					 <cfelse>
+						
+						<cfif gallery_price EQ 0 OR gallery_price EQ ''>
 							
 							<span style="color: red;">
 								Price On Request
 							</span>
-
+						 <cfelse>
+							<cfif retail_price neq 0 and retail_price GT gallery_price >
+								<b>#DollarFormat(retail_price)#</b>
+							 <cfelse>
+								<cfif closeout eq 1 and special_price gt 0 and special_price LT gallery_price>
+									<del>#DollarFormat(gallery_price)# </del>
+									&nbsp; 
+										<b>
+											<span style="color: ##ff0000;">
+											#DollarFormat(special_price)# 
+											</span>
+										</b>
+				
+										<cfelse>
+											<b>#DollarFormat(gallery_price)#</b>
+								</cfif>
+							</cfif>
 						</cfif>
-					<cfelse>
-						
-						<cfif productinfo.gallery_price EQ 0 OR productinfo.gallery_price EQ ''>
-							<span style="color: red;">
-								Price On Request
-							</span>
-						<cfelse>
-							<b>#DollarFormat(productinfo.gallery_price)#</b>
-						</cfif>
+		
 					</cfif>
-
-                </div>
+				</div>
                 <!--- <div class="product-price">
                     <cfif gallery_price neq ''>
                         <span>Gallery Price:</span> #dollarformat(gallery_price)#

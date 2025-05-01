@@ -339,21 +339,39 @@
 																	</cfif>
 																	
 																	<h2 class="title">
-																		<cfset capitalize = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-																		<cfset capitalizeTitle = REReplace(productinfo.name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-																		<b>#capitalize# '#capitalizeTitle#' </b> - 
+																		<!--- <cfset capitalize = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+																		<cfset capitalizeTitle = REReplace(productinfo.name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+
+																		<cfset words = ListToArray(productinfo.name, " ")>
+																		<cfset updatedName = "">
+
+																		<cfloop index="word" array="#words#">
+																			<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+
+																			<cfif cleanWord EQ "FS">
+																				<!--- Preserve "FS" in uppercase --->
+																				<cfset updatedName = updatedName & " " & UCase(word)>
+																			<cfelse>
+																				<!--- Keep the original case of other words --->
+																				<cfset updatedName = updatedName & " " & word>
+																			</cfif>
+																		</cfloop>
+
+																		<cfset updatedName = Trim(updatedName)>
+
+																		<b>#artist_name# '#updatedName#' </b> - 
 																		<span>
-																			<cfif productinfo.retail_price gt 0 >
+																			<!--- <cfif productinfo.retail_price gt 0 > --->
 
 																				
 																				<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
 																				   <cfif application.showSalePrice EQ 1>
-																					  #DollarFormat(productinfo.special_price)#  &nbsp;
-																					   <b>
-																						 <!--- <span style="color: ##ff0000;">
-																							#DollarFormat(productinfo.special_price)# Sale
-																						 </span> --->
-																					  </b>
+																					  <!--- #DollarFormat(productinfo.special_price)#  &nbsp; --->
+																					   <!--- <b> --->
+																						 <span style="color: ##ff0000;">
+																							#DollarFormat(productinfo.special_price)# 
+																						 </span>
+																					  <!--- </b> --->
 																				   </cfif>
 																				<cfelseif productinfo.gallery_price gt 0>
 																				   #DollarFormat(productinfo.gallery_price)#  &nbsp;
@@ -361,7 +379,74 @@
 																				</cfif>
 						  
 																			 
-																			 </cfif>
+																			 <!--- </cfif> --->
+
+																			 <!--- <cfif productinfo.retail_price gt 0 and productinfo.retail_price gt productinfo.gallery_price>
+												
+																				<cfif productinfo.gallery_price gt 0 and  productinfo.gallery_price gt productinfo.special_price>
+																	
+																					<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 >
+																						<!--- <del>#DollarFormat(gallery_price)#</del> --->
+																						&nbsp; 
+																						 <b>
+																							<span style="color: ##ff0000;">
+																								#DollarFormat(productinfo.special_price)# 
+																							</span>
+																						</b>
+																					 <cfelse>
+																						<!--- <del>#DollarFormat(retail_price)#</del> --->
+																						&nbsp; 
+																						
+																						<b> #DollarFormat(productinfo.gallery_price)# </b>
+																					</cfif>
+																	
+																				 <cfelse>
+																					<!--- <span style="color: red;">
+																							Price On Request
+																					</span> --->
+																					<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and productinfo.special_price LT productinfo.retail_price>
+																						<!--- <del>#DollarFormat(retail_price)# </del> --->
+																						&nbsp; 
+																							<b>
+																								<span style="color: ##ff0000;">
+																								#DollarFormat(productinfo.special_price)# 
+																								</span>
+																							</b>
+																	
+																							<cfelse>
+																								<b> #DollarFormat(productinfo.retail_price)# </b>
+																					</cfif>
+																	
+																				</cfif>
+																			 <cfelse>
+																				
+																				<cfif productinfo.gallery_price NEQ 0 and productinfo.gallery_price NEQ ''>
+																					
+																					
+																				 
+																					<cfif productinfo.retail_price neq 0 and productinfo.retail_price LT gallery_price >
+																						
+																						<b>#DollarFormat(productinfo.retail_price)#</b>
+																					 <cfelse>
+																						<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and productinfo.special_price LT productinfo.gallery_price>
+																							
+																							<!--- <del>#DollarFormat(gallery_price)# </del> --->
+																							&nbsp; 
+																								<b>
+																									<span style="color: ##ff0000;">
+																									#DollarFormat(productinfo.special_price)# 
+																									</span>
+																								</b>
+																		
+																								<cfelse>
+																									<b>#DollarFormat(productinfo.gallery_price)#</b>
+																						</cfif>
+																					</cfif>
+																				</cfif>
+																	
+																			</cfif> --->
+
+
 																		</span> 
 																	</h2>
 																	<div class="row">
@@ -524,8 +609,8 @@
          
          // Validate EMAIL
 		 if (!email) {
-        document.getElementById('emailError').textContent = 'Please fill in your email address.';
-        isValid = false;
+			document.getElementById('emailError').textContent = 'Please fill in your email address.';
+			isValid = false;
 
        			 // Only show errors for phone and best_time if email is also empty
 				if (!phone) {
@@ -649,9 +734,9 @@
 				color: black;
 				margin-bottom: 10px;
 			}
-			.flex-form-section h2.title span {
+			/* .flex-form-section h2.title span {
 				color: #ff0000;
-			}
+			} */
 			.flex-form-section .top-row {
 				padding-bottom: 20px;
 			}

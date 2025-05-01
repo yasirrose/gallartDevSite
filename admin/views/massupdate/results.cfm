@@ -433,7 +433,7 @@ function artSizevalue(uid) {
 								<option value="">None</option>
 								<cfloop query="getAllArtists">
 									<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-									<option value="#manufacturer#" <cfif trim(this_manufacturer) eq trim(manufacturer)>selected</cfif>>#manufacturer#
+									<option value="#HTMLEditFormat(manufacturer)#" <cfif trim(HTMLEditFormat(this_manufacturer)) eq trim(HTMLEditFormat(manufacturer))>selected</cfif>>#HTMLEditFormat(manufacturer)#
 									</cfif>
 								</cfloop>
 							</select>

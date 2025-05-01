@@ -12,7 +12,7 @@
                 SELECT *, ROW_NUMBER() OVER (
                     <cfif isDefined('priceOrder') and len(priceOrder)>
                         <cfif priceOrder EQ 'newest'>
-                            ORDER BY uid DESC
+                            ORDER BY active_date DESC
                         <cfelse>
                             ORDER BY gallery_price #priceOrder#
                         </cfif>
@@ -26,7 +26,7 @@
                     WHERE active = 1 AND fk_users IS NULL
                     <cfif isDefined('priceOrder') and len(priceOrder)>
                         <cfif priceOrder EQ 'newest'>
-                            ORDER BY uid DESC
+                            ORDER BY active_date DESC
                         <cfelse>
                             ORDER BY gallery_price #priceOrder#
                         </cfif>
@@ -90,7 +90,7 @@
             
         <!--- <Cfset pc = pc + 1> --->
         <Td valign="top" align="Center">
-        <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+        <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
             <!--- <cfset uidd = '20338'> --->
         <!--- <IMG SRC="http://23.20.226.157/img/#uidd#.jpg?x=randrange(1,99)"  width="100" BORDER="0" ALT="#trim(modelno)#" align="Center"> 
         
@@ -105,7 +105,7 @@
         </A>
         
         <Br>
-        <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" class="name-hover" >
+        <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" class="name-hover" >
             <cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
 
@@ -144,43 +144,73 @@
        
 
         <div class="product-price">
-            <cfif getRecentAcquisitions.retail_price gt 0 >
+            <cfif retail_price gt 0 and retail_price gt gallery_price>
 
-                <cfif getRecentAcquisitions.gallery_price gt 0>
-    
-                    <cfif getRecentAcquisitions.closeout eq 1 and getRecentAcquisitions.special_price gt 0>
-                        <del>#DollarFormat(getRecentAcquisitions.gallery_price)# </del>
+                <cfif gallery_price gt 0 and  gallery_price gt special_price>
+
+                    <cfif closeout eq 1 and special_price gt 0 >
+                        <del>#DollarFormat(gallery_price)#</del>
+                        &nbsp; 
+                         <b>
+                            <span style="color: ##ff0000;">
+                                #DollarFormat(special_price)# 
+                            </span>
+                        </b>
+                     <cfelse>
+                        <del>#DollarFormat(retail_price)#</del>
+                        &nbsp; 
+                        
+                        <b> #DollarFormat(gallery_price)# </b>
+                    </cfif>
+
+                 <cfelse>
+                    <!--- <span style="color: red;">
+                            Price On Request
+                    </span> --->
+                    <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+                        <del>#DollarFormat(retail_price)# </del>
                         &nbsp; 
                             <b>
                                 <span style="color: ##ff0000;">
-                                #DollarFormat(getRecentAcquisitions.special_price)# 
+                                #DollarFormat(special_price)# 
                                 </span>
                             </b>
     
                             <cfelse>
-                                <del> #DollarFormat(getRecentAcquisitions.retail_price)# </del>
-                                &nbsp; 
-                                <b> #DollarFormat(getRecentAcquisitions.gallery_price)# </b>
+                                <b> #DollarFormat(retail_price)# </b>
                     </cfif>
 
-                    <cfelse>
-
-                        <span style="color: red;">
-                            Price On Request
-                        </span>
-                 </cfif>
-
-                <cfelse>
-
-                    <cfif gallery_price EQ 0 OR gallery_price EQ ''>
-                        <span style="color: red;">
-                            Price On Request
-                        </span>
-                    <cfelse>
-                        #DollarFormat(retail_price)#
+                </cfif>
+             <cfelse>
+                
+                <cfif gallery_price EQ 0 OR gallery_price EQ ''>
+                    
+                    <span style="color: red;">
+                        Price On Request
+                    </span>
+                 <cfelse>
+                    <cfif retail_price neq 0 and retail_price GT gallery_price >
+                        <b>#DollarFormat(retail_price)#</b>
+                     <cfelse>
+                        <cfif closeout eq 1 and special_price gt 0 and special_price LT gallery_price>
+                            <del>#DollarFormat(gallery_price)# </del>
+                            &nbsp; 
+                                <b>
+                                    <span style="color: ##ff0000;">
+                                    #DollarFormat(special_price)# 
+                                    </span>
+                                </b>
+        
+                                <cfelse>
+                                    <b>#DollarFormat(gallery_price)#</b>
+                        </cfif>
                     </cfif>
-               </cfif>
+                </cfif>
+
+            </cfif>
         </div>
+
+
         
         <!--- <span class="pinkText">
             <cfif gallery_price eq 0>

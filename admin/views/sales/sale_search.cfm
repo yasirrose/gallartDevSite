@@ -54,7 +54,7 @@
 										<option value="">All</option>
 										<cfoutput query="getAllArtists" group="manufacturer">
 										<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-											<option value="#manufacturer#">#manufacturer#</option>
+											<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#</option>
 										</cfif>
 										</cfoutput>
 									</select>
@@ -70,7 +70,7 @@
 										<option value="">All</option>
 										<cfoutput query="getAllArtists" group="manufacturer">
 										<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-											<option value="#manufacturer#">#manufacturer#</option>
+											<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#</option>
 										</cfif>
 										</cfoutput>
 									</select>

@@ -99,11 +99,9 @@
 	<cfparam name="form.size" default="">
 	<cfparam name="form.additional_details" default="">
 	<cfparam name="form.captchaError2" default="0">
-	<cfparam
-		name="FORM.captcha2" type="string"	default=""	/>
+	<cfparam name="FORM.captcha2" type="string"	default=""	/>
  
-	<cfparam
-		name="FORM.captcha_check2" type="string" default="" />
+	<cfparam name="FORM.captcha_check2" type="string" default="" />
 
  
 	<!--- Set a flag to see if this user is a bot or not. --->
@@ -147,6 +145,11 @@
 		) />
 
 	<cfset FORM.captcha_check2 = Encrypt( strCaptcha2,"gallart-is-the-best", "CFMX_COMPAT", "HEX" ) />
+
+
+
+	
+
  
 </cfsilent>
 
@@ -377,222 +380,281 @@
 	
 	<cfif isDefined('process_purchase_consignment')>
 
-		
-	
-		<cfquery name="getPreviousEntries" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-			SELECT * FROM purchases_consignments
-			where email = '#form.email_purchase#'
-		</CFQUERY>
-	
-		<cfoutput>
-		<form method="post" action="#script_name#?xss=#xss#&processed=true&entryCount=#getPreviousEntries.recordcount#" name="errorFrm2">
-			<input type="Hidden" name="name">
-			<input type="Hidden" name="phone">
-			<input type="Hidden" name="email_purchase">
-			<input type="Hidden" name="artist">
-			<input type="Hidden" name="title">
-			<input type="Hidden" name="size">
-			<input type="Hidden" name="additional_details">
-			<input type="Hidden" name="captchaError2" value="1">
-		</form>
-		</cfoutput>
+		<cfif structKeyExists(FORM, "g-recaptcha-response")>
 
-		
-	
-		<cfif blnIsBot2>
-			
-				<cfoutput>
-				<script language="JavaScript">
-					document.errorFrm2.name.value = '#form.name#'
-					document.errorFrm2.phone.value = '#form.phone#'
-					document.errorFrm2.email_purchase.value = '#form.email_purchase#'
-					document.errorFrm2.artist.value = '#form.artist#'
-					document.errorFrm2.title.value = '#form.title#'
-					document.errorFrm2.size.value = '#form.size#'
-					document.errorFrm2.additional_details.value = '#form.additional_details#'
-					document.errorFrm2.submit();
-				</script>
-				</cfoutput>
+			<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
 
+			<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+				<cfhttpparam type="formField" name="secret" value="#apikey#">
+				<cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+				<cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+			</cfhttp>
 				
-		<cfelse>
+			<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+			
+			<!--- <cfdump var="#captchaResponse.success#" abort="true"> --->
+
+			<cfquery name="getPreviousEntries" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+				SELECT * FROM purchases_consignments
+				where email = '#form.email_purchase#'
+			</CFQUERY>
+		
+			<cfoutput>
+			<form method="post" action="#script_name#?xss=#xss#&processed=true&entryCount=#getPreviousEntries.recordcount#" name="errorFrm2">
+				<input type="Hidden" name="name">
+				<input type="Hidden" name="phone">
+				<input type="Hidden" name="email_purchase">
+				<input type="Hidden" name="artist">
+				<input type="Hidden" name="title">
+				<input type="Hidden" name="size">
+				<input type="Hidden" name="additional_details">
+				<input type="Hidden" name="captchaError2" value="1">
+			</form>
+			</cfoutput>
 	
-			<cfif (getPreviousEntries.recordcount + 1) GTE 5>
-				<cflocation url="#script_name#?xss=#xss#&reachedMax=true" addtoken="No">
-			<cfelse>
+			
+		
+			<cfif captchaResponse.success NEQ 'YES'>
 				
-				<!--- <cfdump var="#cgi.content_length#">
-				<cfdump var="#fileSizeLimit#" abort="true"> --->
-
-				<!--- <cfif cgi.content_length LTE fileSizeLimit> --->
-					
-					<!--- <cfparam name="cffile.serverfile" default="" />
-					<cfparam name="Uploaded_File_Name" default="" />
+					<cfoutput>
+					<script language="JavaScript">
+						document.errorFrm2.name.value = '#form.name#'
+						document.errorFrm2.phone.value = '#form.phone#'
+						document.errorFrm2.email_purchase.value = '#form.email_purchase#'
+						document.errorFrm2.artist.value = '#form.artist#'
+						document.errorFrm2.title.value = '#form.title#'
+						document.errorFrm2.size.value = '#form.size#'
+						document.errorFrm2.additional_details.value = '#form.additional_details#'
+						document.errorFrm2.submit();
+					</script>
+					</cfoutput>
 	
-					<cfif len(thisImage)>
-						<cffile action="UPLOAD" filefield="thisImage" destination="#expandpath('.')#/purchases_consignments/images" nameconflict="MAKEUNIQUE">
-						<cfset Uploaded_File_Name = CFFile.ClientFile>
-					</cfif> --->
 					
+			 <cfelse>
+		
+				<cfif (getPreviousEntries.recordcount + 1) GTE 5>
+					<cflocation url="#script_name#?xss=#xss#&reachedMax=true" addtoken="No">
+				 <cfelse>
 					
-					
-					<!--- <cfdump var="#form#" abort="true"> --->
-					<cfset maxFileSize = 5 * 1024 * 1024 /> <!--- 5MB in bytes --->
-					<cfset fileTooLarge = false />
-					<cfset oversizedImages = "">
-
-					
-
-					
-
-					<cfif 
-						form.fname NEQ '' 
-						and form.PHONE NEQ '' 
-						and form.EMAIL_PURCHASE NEQ '' 
-						and form.lname NEQ '' 
-						and form.size NEQ '' >
-
-
-						<cfloop collection="#form#" item="idx">
-							<cfif left(idx,9) EQ "addImage_">
-								<cfset thisFilefield = idx />
-								
-								<!--- Temporarily upload the file to check size --->
-								<cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" 
-										destination="#expandpath('.')#/purchases_consignments/images/" result="fileCheck">
-								
-								<cfif fileCheck.FileSize GT maxFileSize>
-									<cfset fileTooLarge = true />
-									<cfset oversizedImages = listAppend(oversizedImages, fileCheck.ClientFileName) />
-									<cffile action="delete" file="#fileCheck.ServerDirectory#/#fileCheck.ServerFile#" />
-								</cfif>
-							</cfif>
-						</cfloop>
-
-							<cfif NOT fileTooLarge>
-								<cftry>
-									<!--- <cfdump var="#cffile.serverFile#" abort="true"> --->
-									<cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-										INSERT INTO purchases_consignments 
-										(
-											fname,
-											PHONE,
-											EMAIL,
-											lname,
-											TITLE,
-											SIZE,
-											ADDITIONAL_DETAILS
-											
-										)
-										VALUES
-										(
-											<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.fname#">,
-											<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.PHONE#">,
-											<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.EMAIL_PURCHASE#">,
-											<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.lname#">,
-											<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.TITLE#">,
-											<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.SIZE#">,
-											<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.ADDITIONAL_DETAILS#">
-											
-										)
-										SELECT @@identity as pk_purchases_consignments 
-									</cfquery>
-									
-									<cfset thisId = insertListing.pk_purchases_consignments />
-					
-									<cfset additionalImages = "" />
-									<!--- <cfset uploaddir = "#application.uploaddir#" /> --->
-									<cfset addImageIdx = 1 />
-			
-			
-									<!--- <cfif thisId NEQ 0> --->
-			
-										<cfquery name="getAdditional" datasource="#application.dsource#">
-											SELECT IMAGE_NAME from purchases_consignments
-											WHERE pk_purchases_consignments = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
-										</cfquery>
-										<cfif getAdditional.IMAGE_NAME NEQ "">
-											<cfset addImageIdx = listFirst(listLast(listLast(getAdditional.IMAGE_NAME),'_'),'.') + 1 />
-											<cfset additionalImages = getAdditional.IMAGE_NAME />
-										</cfif>
-									<!--- </cfif> --->
-			
-			
-									<cfloop collection="#form#" item="idx">
-										<cfif left(idx,9) EQ "addImage_">
-											<cfset currImage = evaluate("form." & idx) />
-											<cfset thisFilefield = idx />
-											<cfset thisImageId = "#thisId#_#addImageIdx#.jpg" />
-											<cfset additionalImages = listAppend(additionalImages,thisImageId) />
-											<cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" destination="#expandpath('.')#/purchases_consignments/images/#thisImageId#" result="fileupload">
-											<cfset addImageIdx = addImageIdx + 1 />
-										</cfif>
+					<!--- <cfdump var="#cgi.content_length#">
+					<cfdump var="#fileSizeLimit#" abort="true"> --->
+	
+					<!--- <cfif cgi.content_length LTE fileSizeLimit> --->
 						
-									</cfloop>
-			
-			
-										<cfif additionalImages NEQ "">
-											<cfquery name="editListing" datasource="#application.dsource#">
-												UPDATE purchases_consignments SET
-												IMAGE_NAME 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#additionalImages#">
+						<!--- <cfparam name="cffile.serverfile" default="" />
+						<cfparam name="Uploaded_File_Name" default="" />
+		
+						<cfif len(thisImage)>
+							<cffile action="UPLOAD" filefield="thisImage" destination="#expandpath('.')#/purchases_consignments/images" nameconflict="MAKEUNIQUE">
+							<cfset Uploaded_File_Name = CFFile.ClientFile>
+						</cfif> --->
+						
+						
+						
+						<!--- <cfdump var="#form#" abort="true"> --->
+						<cfset maxFileSize = 5 * 1024 * 1024 /> <!--- 5MB in bytes --->
+						<cfset fileTooLarge = false />
+						<cfset oversizedImages = "">
+	
+						
+
+						<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+						<cfset date = now()>
+						<cfset moduleName = 'purchase_consignment'>
+						
+						<!--- <cfdump var="#ipAddress#" ><br>
+						<cfdump var="#date#" ><br>
+						<cfdump var="#CGI.HTTP_X_FORWARDED_FOR#" abort="true"> --->
+
+						<cfquery name="getLogs" datasource="#application.dsource#">
+							SELECT * From logs where ipAddress = '#ipAddress#' and moduleName = '#moduleName#' and CAST([date] AS DATE) = #date#
+						</cfquery>
+
+						<!--- <cfdump var="#getlogs.recordCount#" abort="true"> --->
+
+					<cfif getlogs.recordCount LT 2>
+	
+						<cfif 
+							form.fname NEQ '' 
+							and form.PHONE NEQ '' 
+							and form.EMAIL_PURCHASE NEQ '' 
+							and form.lname NEQ '' 
+							and form.size NEQ '' >
+	
+	
+								<cfloop collection="#form#" item="idx">
+									<cfif left(idx,9) EQ "addImage_">
+										<cfset thisFilefield = idx />
+										
+										<!--- Temporarily upload the file to check size --->
+										<cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" 
+												destination="#expandpath('.')#/purchases_consignments/images/" result="fileCheck">
+										
+										<cfif fileCheck.FileSize GT maxFileSize>
+											<cfset fileTooLarge = true />
+											<cfset oversizedImages = listAppend(oversizedImages, fileCheck.ClientFileName) />
+											<cffile action="delete" file="#fileCheck.ServerDirectory#/#fileCheck.ServerFile#" />
+										</cfif>
+									</cfif>
+								</cfloop>
+	
+								<cfif NOT fileTooLarge>
+									<cftry>
+										<!--- <cfdump var="#cffile.serverFile#" abort="true"> --->
+										<cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+											INSERT INTO purchases_consignments 
+											(
+												fname,
+												PHONE,
+												EMAIL,
+												lname,
+												TITLE,
+												SIZE,
+												ADDITIONAL_DETAILS
+												
+											)
+											VALUES
+											(
+												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.fname#">,
+												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.PHONE#">,
+												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.EMAIL_PURCHASE#">,
+												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.lname#">,
+												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.TITLE#">,
+												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.SIZE#">,
+												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.ADDITIONAL_DETAILS#">
+												
+											)
+											SELECT @@identity as pk_purchases_consignments 
+										</cfquery>
+										
+										<cfset thisId = insertListing.pk_purchases_consignments />
+						
+										<cfset additionalImages = "" />
+										<!--- <cfset uploaddir = "#application.uploaddir#" /> --->
+										<cfset addImageIdx = 1 />
+				
+				
+										<!--- <cfif thisId NEQ 0> --->
+				
+											<cfquery name="getAdditional" datasource="#application.dsource#">
+												SELECT IMAGE_NAME from purchases_consignments
 												WHERE pk_purchases_consignments = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
 											</cfquery>
-									   </cfif>
-			
+											<cfif getAdditional.IMAGE_NAME NEQ "">
+												<cfset addImageIdx = listFirst(listLast(listLast(getAdditional.IMAGE_NAME),'_'),'.') + 1 />
+												<cfset additionalImages = getAdditional.IMAGE_NAME />
+											</cfif>
+										<!--- </cfif> --->
+				
+				
+										<cfloop collection="#form#" item="idx">
+											<cfif left(idx,9) EQ "addImage_">
+												<cfset currImage = evaluate("form." & idx) />
+												<cfset thisFilefield = idx />
+												<cfset thisImageId = "#thisId#_#addImageIdx#.jpg" />
+												<cfset additionalImages = listAppend(additionalImages,thisImageId) />
+												<cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" destination="#expandpath('.')#/purchases_consignments/images/#thisImageId#" result="fileupload">
+												<cfset addImageIdx = addImageIdx + 1 />
+											</cfif>
+							
+										</cfloop>
+				
+				
+											<cfif additionalImages NEQ "">
+												<cfquery name="editListing" datasource="#application.dsource#">
+													UPDATE purchases_consignments SET
+													IMAGE_NAME 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#additionalImages#">
+													WHERE pk_purchases_consignments = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
+												</cfquery>
+										   </cfif>
+
+										   <cfquery name="addLogs" datasource="#application.dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+												INSERT INTO logs 
+												(
+													moduleName,
+													ipAddress,
+													date
+												)
+												VALUES
+												(
+													'#moduleName#',
+													'#ipAddress#',
+													#date#
+												)
+										   </cfquery>
+				
+										
 									
-								
-										<cfmail server="#application.mailserver#" username="#application.mailserver_un#" password="#application.mailserver_pw#" to="#emailsupport#" cc="#emailsupportcc#" from="#form.email_purchase#" subject="GallArt.com <> Buying & Selling Fine Art <> Purchases/Consignments Form" type="HTML">
-									<!--- <cfmail server="#application.mailserver#" username="#application.mailserver_un#" password="#application.mailserver_pw#" to="steverucker@gmail.com" from="#form.email_purchase#" subject="GallArt.com <> Buying & Selling Fine Art <> Purchases/Consignments Form" type="HTML"> --->
-										<font style="font-size: 10pt; font-family: Arial;">
-										<strong>#form.name#</strong> entered a new product on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
-										Phone: #form.phone#<br>
-										Email: #form.email_purchase#<br>
-										Artist: #form.artist#<br>
-										Title: #form.title#<br>
-										<!--- Medium: #form.medium#<br> --->
-										Size: #form.size#<br>
-										Additional Details: #form.additional_details#<br>
-										<!--- <cfmailparam 
-											file="#expandpath('.')#/purchases_consignments/images/#Uploaded_File_Name#"
-											contentid="purchase_consignment_image" 
-											disposition="inline"
-										/> --->
-										<br><br>
-									</cfmail>
-									<cflocation url="#script_name#?xss=#xss#&processed=true&entryCount=#getPreviousEntries.recordcount#" addtoken="No">
-									<cfcatch type="Any">ERROR!!<cfabort></cfcatch>
-									
-									</cftry>
+											<cfmail server="#application.mailserver#" username="#application.mailserver_un#" password="#application.mailserver_pw#" to="#emailsupport#" cc="#emailsupportcc#" from="#form.email_purchase#" subject="GallArt.com <> Buying & Selling Fine Art <> Purchases/Consignments Form" type="HTML">
+										<!--- <cfmail server="#application.mailserver#" username="#application.mailserver_un#" password="#application.mailserver_pw#" to="steverucker@gmail.com" from="#form.email_purchase#" subject="GallArt.com <> Buying & Selling Fine Art <> Purchases/Consignments Form" type="HTML"> --->
+											<font style="font-size: 10pt; font-family: Arial;">
+											<strong>#form.name#</strong> entered a new product on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
+											Phone: #form.phone#<br>
+											Email: #form.email_purchase#<br>
+											Artist: #form.artist#<br>
+											Title: #form.title#<br>
+											<!--- Medium: #form.medium#<br> --->
+											Size: #form.size#<br>
+											Additional Details: #form.additional_details#<br>
+											<!--- <cfmailparam 
+												file="#expandpath('.')#/purchases_consignments/images/#Uploaded_File_Name#"
+												contentid="purchase_consignment_image" 
+												disposition="inline"
+											/> --->
+											<br><br>
+										</cfmail>
+										<cflocation url="#script_name#?xss=#xss#&processed=true&entryCount=#getPreviousEntries.recordcount#" addtoken="No">
+										<cfcatch type="Any">ERROR!!<cfabort></cfcatch>
+										
+										</cftry>
+	
+									<cfelse>
+										<cfoutput>
+											<!--- <p style="color:red;">Error: The following images exceed 2MB and were not uploaded: <strong>#oversizedImages#</strong></p> --->
+	
+											<script>
+												var oversizedImages = "#JSStringFormat(oversizedImages)#";
+												alert("The images " + oversizedImages + " exceed 5MB and were not uploaded");
+											</script>
+	
+										</cfoutput>
+								</cfif>
+	
+							
+						<cfelse>
+							<cfoutput>
+								<p style="color: red;">Error: Please fill out all required fields before submitting the form.</p>
+							</cfoutput>
+						</cfif>
 
-								<cfelse>
-									<cfoutput>
-										<!--- <p style="color:red;">Error: The following images exceed 2MB and were not uploaded: <strong>#oversizedImages#</strong></p> --->
 
-										<script>
-											var oversizedImages = "#JSStringFormat(oversizedImages)#";
-											alert("The images " + oversizedImages + " exceed 5MB and were not uploaded");
-										</script>
-
-									</cfoutput>
-							</cfif>
-
-						
 					<cfelse>
 						<cfoutput>
-							<p style="color: red;">Error: Please fill out all required fields before submitting the form.</p>
+							<script>
+								// toastr.error('You cannnot add record more than 2 times');
+								alert('You cannnot add record more than 2 times')
+							</script>
 						</cfoutput>
 					</cfif>
-					
-					
-					
-					
-					
-					<!--- <cfelse>
-					<cflocation url="#script_name#?xss=#xss#&error=filetoolarge" addtoken="No">
-				</cfif> --->
-	
+
+
+						
+						
+						
+						
+						
+						<!--- <cfelse>
+						<cflocation url="#script_name#?xss=#xss#&error=filetoolarge" addtoken="No">
+					</cfif> --->
+		
+				</cfif>
 			</cfif>
+
+
 		</cfif>
+		
+	
+		
 	
 	</cfif>
 	
@@ -654,6 +716,19 @@
 
 										<div class="bottom-content">
 											<cfif FORM.submitted>	
+
+												<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+
+												<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+													<cfhttpparam type="formField" name="secret" value="#apikey#">
+													<cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+													<cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+												</cfhttp>
+													
+												<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+
+												<!--- <cfdump var="#captchaResponse#" abort="true"> --->
+
 												<cfif phoneError>
 													<cfoutput>
 														<!--- <cfdump var="testing 1" abort="true"> --->
@@ -671,7 +746,8 @@
 															document.errorFrm.submit();
 														</script>
 														</cfoutput>
-												<cfelseif blnIsBot>
+
+												<cfelseif captchaResponse.success NEQ 'YES'>
 														<cfoutput>
 															<!--- <cfdump var="testing 2" abort="true"> --->
 														<script language="JavaScript">
@@ -739,6 +815,8 @@
 																	)
 																</cfquery>
 
+
+
 																	
 																
 																<!--- getting the last input UID --->
@@ -749,6 +827,7 @@
 																<cfset session.sellerinfo.pk_users = lastUID.uid>
 																<cfset session.sellerinfo.fname = form.fname>
 																<cfset session.sellerinfo.lname = form.lname>
+																<cfset session.sellerinfo.email = form.email>
 																<cfset session.sellerinfo.login = 1 />
 																
 																</cflock>
@@ -803,7 +882,7 @@
 														</cfif>
 														
 												</cfif>	
-											<cfelse>
+											 <cfelse>
 												<div class="main-content-description">
 													<div class="row">
 														<div class="col-md-12">
@@ -825,7 +904,7 @@
 														</div> 
 													</div>
 												</div>
-											<div class="user-registrations new-user-form">
+											 <div class="user-registrations new-user-form">
 												<div class="row">
 													<!---  <div class="col-md-6"> 
 														<div class="main-banner-image">
@@ -1002,12 +1081,17 @@
 																								<div id="addImageContainer" class="flex-img-container"></div>
 																							</div>
 
-																							<div class="input-field">
+																							<!--- <div class="input-field">
 																								<cfimage action="captcha" height="75" width="363" text="#strCaptcha2#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
 																								<br><br>
 																								<FONT face="verdana,arial,helvetica" color="000000" size="-2"><b>Please enter the characters in the image above:</b></FONT><br><br>
 																								<cfinput type="text" name="captcha2" id="captcha2">
 																								<span class="error-message" id="G_captcha2Error"></span>
+																							</div> --->
+
+																							<div class="input-field pt-3">
+																								<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+																								<span class="error-message" id="G_recaptchaError"></span>
 																							</div>
 
 																						</div>
@@ -1097,16 +1181,24 @@
 																									</div>
 																								</div>
 																							</div>
-																							<div class="input-field">
+
+																							<!--- <div class="input-field">
 																								<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
 																								<br><br>
 																								<FONT face="verdana,arial,helvetica" color="000000"><b>Please enter the characters in the image above:</b></FONT><br><br>
 																								<cfinput type="text" name="captcha" id="S_captcha">
 																								<span class="error-message" id="S_captchaError"></span>
+																							</div> --->
+
+																							<div class="input-field pt-3">
+																								<div class="g-recaptcha" id="gRecaptchaSeller" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+																								<span class="error-message" id="S_recaptchaError"></span>
 																							</div>
+
 																							<div class="input-button mt-3">
-																								<input type="Hidden" name="proc_reg">
+																								
 																								<cfif NOT structKeyExists(session, 'sellerinfo') >
+																									<input type="Hidden" name="proc_reg">
 																									<button type="button" class="SeeMore" onclick="validateSellerForm()">Create an account</button>
 																								<cfelse>
 																									<p>
@@ -1150,61 +1242,77 @@
 
 
 	
+	<!--- <script src="https://www.google.com/recaptcha/api.js" async defer></script> --->
 
+	<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 	
 
 <script>
 
 		var addImageIndex = 1;
-			$("#addImageButton").click(function () {
-				if ($(".additionalImage").length < 4) {
-					$("#addImageContainer").append(
-						"<div class='additionalImage'><div class='file-upload-wrapper sm-file-upload-wrapper'>" +
-						"<label for='file-upload' class='file-upload-label'>" +
-						"<div class='file-upload-icon'><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>" +
-						"<path d='M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z' />" +
-						"</svg></div><div class='file-upload-text'><strong>Browse Files</strong></div></label>" +
-						"<input type='File' name='addImage_" + addImageIndex + "' id='addImage_" + addImageIndex + "' />" +
-						"</div></div>"
-					);
-					addImageIndex++;
-				} else {
-					if ($("#maxImageMessage").length === 0) {
-						$("#addImageContainer").after("<p id='maxImageMessage' style='color: red;'>You can upload a maximum of 4 images.</p>");
-					}
-				}
-			});
-
-
-			function setActiveTab(tabName) {
-				console.log(`Active tab: ${tabName}`);
-
-				// Store active tab in localStorage
-				localStorage.setItem("activeTab", tabName);
-
-				// Show/hide the correct tab content
-				setTabVisibility(tabName);
-			}
-
-			function setTabVisibility(tabName) {
-				const generalForm = document.getElementById("content-general");
-				const sellerForm = document.getElementById("content-seller");
-
-				if (tabName === "general") {
-					generalForm.style.display = "block";
-					sellerForm.style.display = "none";
-				} else if (tabName === "seller") {
-					generalForm.style.display = "none";
-					sellerForm.style.display = "block";
+		$("#addImageButton").click(function () {
+			if ($(".additionalImage").length < 4) {
+				$("#addImageContainer").append(
+					"<div class='additionalImage'><div class='file-upload-wrapper sm-file-upload-wrapper'>" +
+					"<label for='file-upload' class='file-upload-label'>" +
+					"<div class='file-upload-icon'><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>" +
+					"<path d='M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z' />" +
+					"</svg></div><div class='file-upload-text'><strong>Browse Files</strong></div></label>" +
+					"<input type='File' name='addImage_" + addImageIndex + "' id='addImage_" + addImageIndex + "' />" +
+					"</div></div>"
+				);
+				addImageIndex++;
+			} else {
+				if ($("#maxImageMessage").length === 0) {
+					$("#addImageContainer").after("<p id='maxImageMessage' style='color: red;'>You can upload a maximum of 4 images.</p>");
 				}
 			}
+		});
 
-			// Load the saved tab from localStorage on page load
-			document.addEventListener("DOMContentLoaded", function () {
-				const savedTab = localStorage.getItem("activeTab") || "general";
-				document.getElementById("tabSelector").value = savedTab;
-				setTabVisibility(savedTab);
+
+		function setActiveTab(tabName) {
+			console.log(`Active tab: ${tabName}`);
+
+			// Store active tab in localStorage
+			localStorage.setItem("activeTab", tabName);
+
+			// Show/hide the correct tab content
+			setTabVisibility(tabName);
+		}
+
+		function setTabVisibility(tabName) {
+			const generalForm = document.getElementById("content-general");
+			const sellerForm = document.getElementById("content-seller");
+
+			if (tabName === "general") {
+				generalForm.style.display = "block";
+				sellerForm.style.display = "none";
+			} else if (tabName === "seller") {
+				generalForm.style.display = "none";
+				sellerForm.style.display = "block";
+			}
+		}
+
+		// Load the saved tab from localStorage on page load
+		document.addEventListener("DOMContentLoaded", function () {
+			const savedTab = localStorage.getItem("activeTab") || "general";
+			document.getElementById("tabSelector").value = savedTab;
+			setTabVisibility(savedTab);
+		});
+
+		var generalWidgetId, sellerWidgetId;
+
+		var onloadCallback = function() {
+			generalWidgetId = grecaptcha.render('gRecaptchaGeneral', {
+				'sitekey': '6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne'
 			});
+
+			sellerWidgetId = grecaptcha.render('gRecaptchaSeller', {
+				'sitekey': '6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne'
+			});
+
+			// console.log(sellerWidgetId);
+		};
 
 		function validateGeneralForm(){
 			let isValid = true;
@@ -1226,22 +1334,30 @@
 			// const title = document.getElementById('title').value.trim();
 			const size = document.getElementById('size').value.trim();
 			// const additional_details = document.getElementById('additional_details').value.trim();
-			const captcha2 = document.getElementById('captcha2').value.trim();
+			// const captcha2 = document.getElementById('captcha2').value.trim();
 
 			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
-			
 			const integerRegex = /^[0-9]+$/;
+			
+			// var recaptcha = grecaptcha.getResponse();
 
-			// return false;
+			let recaptcha = grecaptcha.getResponse(generalWidgetId);
+
+			console.log(recaptcha.length);
+
+			if (recaptcha.length == 0) {
+				document.getElementById("G_recaptchaError").innerText = "Please confirm you are not a robot.";
+				isValid = false;
+			}
 
 			if (!fname) {
-				document.getElementById('G_fnameError').textContent = 'Please fill in your first  name.';
+				document.getElementById('G_fnameError').textContent = 'Please fill in your first name.';
 				isValid = false;
 			}
 
 			// Validate LAST NAME
 			if (!lname) {
-				document.getElementById('G_lnameError').textContent = 'Please fill in your last  name.';
+				document.getElementById('G_lnameError').textContent = 'Please fill in your last name.';
 				isValid = false;
 			}
 
@@ -1289,10 +1405,10 @@
 			// 	isValid = false;
 			// }
 
-			if (!captcha2) {
-				document.getElementById('G_captcha2Error').textContent = 'Please enter the characters in the image.';
-				isValid = false;
-			}
+			// if (!captcha2) {
+			// 	document.getElementById('G_captcha2Error').textContent = 'Please enter the characters in the image.';
+			// 	isValid = false;
+			// }
 
 			// if (isValid) {
 			// 	// Submit the form
@@ -1316,9 +1432,20 @@
 			const S_phone = document.getElementById('S_cellphone').value.trim();
 			const S_password = document.getElementById('S_password').value.trim();
 			const S_password2 = document.getElementById('S_password2').value.trim();
-			const S_captcha = document.getElementById('S_captcha').value.trim();
+			// const S_captcha = document.getElementById('S_captcha').value.trim();
 
 			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+			// var recaptcha = grecaptcha.getResponse();
+
+			let recaptcha = grecaptcha.getResponse(sellerWidgetId);
+
+			console.log(recaptcha.length);
+			
+			if (recaptcha.length == 0) {
+				document.getElementById("S_recaptchaError").innerText = "Please confirm you are not a robot.";
+				isValid = false;
+			}
 
 			if (!S_fname) {
 				document.getElementById('S_fnameError').textContent = 'Please fill in your first name.';
@@ -1370,10 +1497,10 @@
 				isValid = false;
 			}
 
-			if (!S_captcha) {
-				document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
-				isValid = false;
-			}
+			// if (!S_captcha) {
+			// 	document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
+			// 	isValid = false;
+			// }
 
 			if (isValid) {
 				// Submit the form

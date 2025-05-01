@@ -351,7 +351,7 @@
 </cfquery>
 <Cfif parameterexists(id)>
 <cfquery name="detail" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-    SELECT  * FROM products
+    SELECT * FROM products
 	WHERE products.UID = #ID#
 </CFQUERY>
 <cfset modelno = detail.modelno>
@@ -572,7 +572,7 @@ return true;
                                                 </ul>
                                                 <!--- <p>You may enter as many pieces of art as you like!</p> --->
                                                 <p>GALLART.COM will review your listings.  If they are approved, they will be shown on the site.</p>
-
+                                                <!--- <cfdump var="#session.sellerinfo#" abort="true"> --->
                                                 <cfoutput>
 
                                                     <form name="frm1" action="user_listing_detail.cfm?xss=#xss#" method="post" enctype="multipart/form-data" onSubmit="javascript:return validEntries(document.frm1);">

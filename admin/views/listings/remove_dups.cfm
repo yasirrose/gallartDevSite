@@ -2,7 +2,7 @@
 <script type="text/javascript" src="../js/jquery-1.3.2.js"></script>
 <script type="text/javascript" src="../js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="../js/jquery.tablesorter.pager.js"></script>
-<script type="text/javascript">
+<!--- <script type="text/javascript">
 $(function() {
 	$("table")
 		.tablesorter({
@@ -14,7 +14,7 @@ $(function() {
 				tableId: 'removeDupResults'
 			});
 });
-</script>
+</script> --->
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>
 		<td>
@@ -41,8 +41,8 @@ $(function() {
 							<tbody>
 								<cfoutput query="getDups">
 								<tr>
-									<td><a href="index.cfm?event=listings&title=#name#&artist=#manufacturer#" style="color: ##000000; text-decoration: none;" target="_blank">#name#</a></td>
-									<td><a href="index.cfm?event=listings&title=#name#&artist=#manufacturer#" style="color: ##000000; text-decoration: none;" target="_blank">#manufacturer#</a></td>
+									<td><a href="index.cfm?event=listings&title=#URLEncodedFormat(name)#&artist=#URLEncodedFormat(manufacturer)#" style="color: ##000000; text-decoration: none;" target="_blank">#name#</a></td>
+									<td><a href="index.cfm?event=listings&title=#URLEncodedFormat(name)#&artist=#URLEncodedFormat(manufacturer)#" style="color: ##000000; text-decoration: none;" target="_blank">#manufacturer#</a></td>
 								</tr>
 								</cfoutput>
 							</tbody>
@@ -65,6 +65,19 @@ $(function() {
 		</td>
 	</tr>
 </table>
+
+<script>
+	$(function() {
+		$('#removeDupResults.tablesorter').tablesorter({
+			widthFixed: true
+		})
+		.tablesorterPager({
+			container: $("#pager"),
+			size: 25,
+			tableId: 'removeDupResults'
+		})
+	});
+</script>
 
 <style>
 	#pager{

@@ -32,7 +32,7 @@ function gridChange(thisId) {
  	var frm = document.forms["editForm"];
  	strSeller = edit.getUserFromId(thisId);
 	email = strSeller['EMAIL'];
-	document.getElementById('emailLink').innerHTML = '<a href="mailto:'+email+'" style="color: #000000; text-decoration: none;">[SEND EMAIL]</a>';
+	document.getElementById('emailLink').innerHTML = '<a href="mailto:'+email+'" style="color: black; text-decoration: none;">[SEND EMAIL]</a>';
 	sellerListings = strSeller['LISTINGS'];
 	if (sellerListings > 0){
 		document.getElementById('viewListings').innerHTML ='<input type="Button" value="VIEW SELLER LISTINGS" onclick="ColdFusion.Window.show(\'viewListingsWin\');">';
@@ -40,11 +40,60 @@ function gridChange(thisId) {
 	else{
 		document.getElementById('viewListings').innerHTML = 'NO LISTINGS IN SYSTEM';
 	}
+
+	document.getElementById('edit').value = 'Edit';
+	document.getElementById('delete').style.display = '';
+
 	document.getElementById('sellerId').value = thisId;
 	ColdFusion.Grid.refresh('sellerListingsGrid',true);
 }
 
 function doEdit(type) {
+
+	  var fname = document.getElementById('fname').value.trim();
+	  var lname = document.getElementById('lname').value.trim();
+	  var email = document.getElementById('seller_email').value.trim();
+	  var password = document.getElementById('password').value.trim();
+
+		if (fname === '') {
+			toastr.error('First Name is required.');
+			document.getElementById('fname').focus();
+			return false;
+		}
+
+		if (lname === '') {
+			toastr.error('Last Name is required.');
+			document.getElementById('lname').focus();
+			return false;
+		}
+
+		if (email === '') {
+			toastr.error('Email is required.');
+			document.getElementById('seller_email').focus();
+			return false;
+		} else {
+			// Simple email format check using regex
+			var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailPattern.test(email)) {
+				toastr.error('Please enter a valid email address.');
+				document.getElementById('seller_email').focus();
+				return false;
+			}
+		}
+
+		if (password === '') {
+			toastr.error('Password is required.');
+			document.getElementById('password').focus();
+			return false;
+		} else {
+			
+			var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+			if (!passwordPattern.test(password)) {
+				toastr.error('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.');
+				document.getElementById('password').focus();
+				return false;
+			}
+		}
 
     var edit = new admin.models.users();
 
@@ -63,7 +112,7 @@ function doEdit(type) {
      } 
      else { alert( 'There was a problem in the processing.')}
       }
-document.getElementById('edit').value = 'Edit';
+	document.getElementById('edit').value = 'Edit';
 	document.getElementById('delete').style.display = '';
 }
 	
@@ -71,9 +120,11 @@ function showNew () {
    	document.getElementById('pk_users').value = '';
    	document.getElementById('fname').value = '';
    	document.getElementById('lname').value = '';
-   	document.getElementById('email').value = '';
-	document.getElementById('phone').value = '';
+   	document.getElementById('seller_email').value = '';
+	document.getElementById('cellphone').value = '';
 	document.getElementById('password').value = '';
+	document.getElementById('edit').value = 'Add';
+   	document.getElementById('delete').style.display = 'none';
 }
 
 function fillSearchFields(){

@@ -26,7 +26,7 @@
 							<option value="">Please Select
 							<cfoutput query="getAllArtists" group="manufacturer">
 							<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-								<option value="#manufacturer#">#manufacturer#
+								<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
 							</cfif>
 							</cfoutput>
 						</select>

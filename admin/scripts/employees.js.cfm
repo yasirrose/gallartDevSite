@@ -20,7 +20,7 @@ function gridChange(thisId) {
  	var frm = document.forms["editForm"];
  	strEmployee = edit.getEmployeeFromId(thisId);
 	emp_email = strEmployee['EMP_EMAIL'];
-	document.getElementById('emailLink').innerHTML = '<a href="mailto:'+emp_email+'" style="color: #000000; text-decoration: none;">[SEND EMAIL]</a>';
+	document.getElementById('emailLink').innerHTML = '<a href="mailto:'+emp_email+'" style="color: black; text-decoration: none;">[SEND EMAIL]</a>';
 	roles = strEmployee['ROLES'];
 	for(i = 0; i < frm.roles.length; i++){
 		frm.roles[i].checked = false;
@@ -38,11 +38,58 @@ function gridChange(thisId) {
 			}
 		}
 	}
+
+	document.getElementById('edit').value = 'Edit';
+	document.getElementById('delete').style.display = '';
 }
 	
 // edit form functions
 
 function doEdit(type) {
+
+	  var fname = document.getElementById('emp_fname').value.trim();
+	  var lname = document.getElementById('emp_lname').value.trim();
+	  var email = document.getElementById('emp_email').value.trim();
+	  var password = document.getElementById('password').value.trim();
+    if (fname === '') {
+        toastr.error('First Name is required.');
+        document.getElementById('emp_fname').focus();
+        return false;
+    }
+
+	if (lname === '') {
+        toastr.error('Last Name is required.');
+        document.getElementById('emp_lname').focus();
+        return false;
+    }
+
+	if (email === '') {
+		toastr.error('Email is required.');
+		document.getElementById('emp_email').focus();
+		return false;
+	} else {
+		// Simple email format check using regex
+		var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailPattern.test(email)) {
+			toastr.error('Please enter a valid email address.');
+			document.getElementById('emp_email').focus();
+			return false;
+		}
+	}
+
+	if (password === '') {
+		toastr.error('Password is required.');
+		document.getElementById('password').focus();
+		return false;
+	} else {
+		
+		var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+		if (!passwordPattern.test(password)) {
+			toastr.error('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.');
+			document.getElementById('password').focus();
+			return false;
+		}
+	}
 
     var edit = new admin.models.employees();
 

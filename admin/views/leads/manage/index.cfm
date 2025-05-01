@@ -1,7 +1,12 @@
 <cfparam name="fromDate" default="">
 <cfparam name="toDate" default="">
 
-<cfhtmlhead text='<script type="text/javascript" src="/admin/scripts/leads.js.cfm" language="JavaScript"></script>'>
+<cfhtmlhead text='
+	<script type="text/javascript" src="/admin/scripts/leads.js.cfm" language="JavaScript"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	'>
 <script language="javascript" src="../js/jquery-1.3.2.js"></script>
 <script type="text/javascript">
 	function exportLeads(){
@@ -314,7 +319,7 @@
 									Artists:
 								</td>
 								<td>
-									<cftextarea name="theartists" cols="40" rows="3"  bind="{leadGrid.artists}"></cftextarea>
+									<cftextarea name="theartists" id="artists" cols="40" rows="3"  bind="{leadGrid.artists}"></cftextarea>
 								</td>
 							</tr>
 							<tr>
@@ -322,7 +327,7 @@
 									Titles:
 								</td>
 								<td>
-									<cftextarea name="titles" cols="40" rows="3"  bind="{leadGrid.titles}"></cftextarea>
+									<cftextarea name="titles" id="titles" cols="40" rows="3"  bind="{leadGrid.titles}"></cftextarea>
 								</td>
 							</tr>
 							<tr>
@@ -330,7 +335,7 @@
 									Notes:
 								</td>
 								<td>
-									<cftextarea name="notes" cols="40" rows="10" bind="{leadGrid.notes}"></cftextarea>
+									<cftextarea name="notes" id="notes" cols="40" rows="10" bind="{leadGrid.notes}"></cftextarea>
 								</td>
 							</tr>
 							<tr>
