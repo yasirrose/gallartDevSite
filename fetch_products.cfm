@@ -300,6 +300,27 @@
 </cfcatch>
 </cftry>
 
+
+<!--- <script>
+	 let url = new URL(window.location.href);
+	let params = new URLSearchParams(url.search);
+
+	let Manufacturer = params.get('man'); // Retrieve 'man' value
+	if (Manufacturer) {
+		Manufacturer = decodeURIComponent(Manufacturer);
+	}
+
+
+	const artistSlug = Manufacturer.toLowerCase()
+		.replace(/\s*,\s*/g, '-') // replace commas with hyphens
+		.replace(/\s+/g, '-');    // replace spaces with hyphens
+
+	// Create the new URL
+	const newURL = `${window.location.origin}/artists/${artistSlug}/`;
+	console.log(newURL);
+	window.history.pushState({}, '', newURL)
+</script> --->
+
 <style>
 	.add-hover:hover{
 		color: #dd3a7d;

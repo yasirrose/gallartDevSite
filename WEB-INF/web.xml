@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8"?><web-app id="adobe_coldfusion">
+    <display-name>Adobe ColdFusion 2023</display-name>
+    <description>Adobe ColdFusion 2023</description>
+    <distributable/>
+    <context-param id="coldfusion_context_1">
+        <param-name>cftags</param-name>
+        <param-value>/WEB-INF/cftags</param-value>
+        <description>Path to search for built-in tags. Relative to application root.
+            This parameter can only be one path element.</description>
+    </context-param>
+    <context-param id="coldfusion_context_2">
+        <param-name>coldfusion.compiler.outputDir</param-name>
+        <param-value>/WEB-INF/cfclasses</param-value>
+        <description>This is the directory where we will place compiled
+            pages. It must be relative to the webapp root.</description>
+    </context-param>
+    <context-param id="coldfusion_context_4">
+        <param-name>cfx.registry.nativelibrary</param-name>
+        <param-value>cfregistry</param-value>
+        <description>Native library that implements CFX_REGISTRY.
+            Used on Windows only.</description>
+    </context-param>
+	<!-- begin CF Reporting -->
+    <context-param id="coldfusion_context_5">
+        <param-name>cfx.report.nativelibrary</param-name>
+        <param-value>cfreport</param-value>
+        <description>Native library that implements CFX_REPORT.
+            Used on Windows only.</description>
+    </context-param>
+	<!-- end CF Reporting -->
+
+    <context-param id="coldfusion_context_88">
+        <param-name>cf.class.path</param-name>
+        <param-value>
+            ./WEB-INF/../../../classes,./WEB-INF/../../lib/updates,./WEB-INF/../../lib,./WEB-INF/flex/jars,./WEB-INF/cfform/jars,./WEB-INF/../../lib/axis2</param-value>
+    </context-param>
+    <context-param id="coldfusion_context_89">
+        <param-name>cf.lib.path</param-name>
+        <param-value>./WEB-INF/../../lib</param-value>
+    </context-param>
+
+    <!-- CF Monitoring Filter  -->
+    <filter>
+        <filter-name>CFMonitoringFilter</filter-name>
+        <filter-class>coldfusion.bootstrap.BootstrapFilter</filter-class>
+        <init-param>
+            <param-name>filter.class</param-name>
+            <param-value>coldfusion.monitor.event.MonitoringServletFilter</param-value>
+        </init-param>
+    </filter>
+
+	<!-- CF Inspection Filter -->
+    <!-- begin Mobile Debug -->
+	<filter>
+        <filter-name>MobileDeviceDomInspectionFilter</filter-name>
+        <filter-class>coldfusion.bootstrap.BootstrapFilter</filter-class>
+        <init-param>
+            <param-name>filter.class</param-name>
+            <param-value>coldfusion.inspect.weinre.MobileDeviceDomInspectionFilter</param-value>
+        </init-param>
+    </filter>
+	<!-- end Mobile Debug -->
+
+    <!-- CF ClickJacking deny protection Filter  -->
+    <filter>
+        <filter-name>CFClickJackFilterDeny</filter-name>
+        <filter-class>coldfusion.bootstrap.BootstrapFilter</filter-class>
+        <init-param>
+            <param-name>filter.class</param-name>
+            <param-value>coldfusion.filter.ClickjackingProtectionFilter</param-value>
+		</init-param>
+		<init-param>
+			<param-name>mode</param-name>
+            <param-value>DENY</param-value>
+        </init-param>
+    </filter>
+	
+	<!-- CF ClickJacking same origiin protection Filter  -->
+    <filter>
+        <filter-name>CFClickJackFilterSameOrigin</filter-name>
+        <filter-class>coldfusion.bootstrap.BootstrapFilter</filter-class>
+        <init-param>
+            <param-name>filter.class</param-name>
+            <param-value>coldfusion.filter.ClickjackingProtectionFilter</param-value>
+		</init-param>
+		<init-param>
+			<param-name>mode</param-name>
+            <param-value>SAMEORIGIN</param-value>
+        </init-param>
+    </filter>
+
+	<!-- Check if modules are installed  -->
+    <filter>
+        <filter-name>ModuleCheckFilter</filter-name>
+        <filter-class>coldfusion.bootstrap.BootstrapFilter</filter-class>
+        <init-param>
+            <param-name>filter.class</param-name>
+            <param-value>coldfusion.filter.ModuleCheckFilter</param-value>
+		</init-param>
+    </filter>
+	
+	<!-- CF ClickJacking Filter mapppings starts. For ColdFusion Administrator we are allowing sameorigiin frames. Use Deny or some other mode of this filter as appropriate for the application and add required url pattern
+	-->
+	<filter-mapping>
+        <filter-name>CFClickJackFilterSameOrigin</filter-name>
+        <url-pattern>/CFIDE/administrator/*</url-pattern>
+    </filter-mapping>
+	<filter-mapping>
+        <filter-name>ModuleCheckFilter</filter-name>
+        <url-pattern>/CFIDE/administrator/*</url-pattern>
+		<url-pattern>/CFIDE/adminapi/*</url-pattern>
+		<url-pattern>/cfide/administrator/*</url-pattern>
+		<url-pattern>/cfide/adminapi/*</url-pattern>
+    </filter-mapping>
+	<filter-mapping>
+        <filter-name>CFClickJackFilterSameOrigin</filter-name>
+        <url-pattern>/restplay/*</url-pattern>
+    </filter-mapping>
+	<!-- End CF ClickJacking Filter mappings -->
+	
+    <!-- CF Monitoring Filter mappings
+     When new servlets registered in web.xml, it must be ensured that
+     filter mappings are added for this filter as required.
+     Note that the MessageBrokerServlet for the Flex 2 Gateway is not
+     included here. This is because Flex appears to batch invocations
+     for methods invoked close to one another, resulting in the filter
+     being missed for all batched invocations other than the first.
+    -->
+  
+   <!-- begin Mobile Debug -->
+   <filter-mapping>
+        <filter-name>MobileDeviceDomInspectionFilter</filter-name>
+        <servlet-name>CfmServlet</servlet-name>
+    </filter-mapping>
+   
+   <filter-mapping>
+        <filter-name>MobileDeviceDomInspectionFilter</filter-name>
+        <url-pattern>*.htm</url-pattern>
+    </filter-mapping>
+   <filter-mapping>
+        <filter-name>MobileDeviceDomInspectionFilter</filter-name>
+        <url-pattern>*.htm/*</url-pattern>
+    </filter-mapping>
+   <filter-mapping>
+        <filter-name>MobileDeviceDomInspectionFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+   <filter-mapping>
+        <filter-name>MobileDeviceDomInspectionFilter</filter-name>
+        <url-pattern>*.html/*</url-pattern>
+    </filter-mapping>
+   <filter-mapping>
+        <filter-name>MobileDeviceDomInspectionFilter</filter-name>
+        <url-pattern>*.HTM</url-pattern>
+    </filter-mapping>
+      <filter-mapping>
+        <filter-name>MobileDeviceDomInspectionFilter</filter-name>
+        <url-pattern>*.HTM/*</url-pattern>
+    </filter-mapping>
+   <filter-mapping>
+        <filter-name>MobileDeviceDomInspectionFilter</filter-name>
+        <url-pattern>*.HTML</url-pattern>
+    </filter-mapping>
+   <filter-mapping>
+        <filter-name>MobileDeviceDomInspectionFilter</filter-name>
+        <url-pattern>*.HTML/*</url-pattern>
+    </filter-mapping>
+   <!-- end Mobile Debug -->
+
+    <filter-mapping>
+        <filter-name>CFMonitoringFilter</filter-name>
+        <servlet-name>CfmServlet</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CFMonitoringFilter</filter-name>
+        <servlet-name>CFCServlet</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CFMonitoringFilter</filter-name>
+        <servlet-name>CFRestServlet</servlet-name>
+    </filter-mapping>
+    <!-- End CF Monitoring Filter mappings -->
+
+    <servlet>
+        <servlet-name>CFForbiddenServlet</servlet-name>
+        <display-name>Prevents access to files</display-name>
+        <servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+        <init-param>
+            <param-name>servlet.class</param-name>
+            <param-value>coldfusion.ForbiddenServlet</param-value>
+        </init-param>
+    </servlet>
+	
+
+
+    <servlet id="coldfusion_servlet_1">
+        <servlet-name>ColdFusionStartUpServlet</servlet-name>
+        <display-name>Coldfusion MX Startup Servlet</display-name>
+        <description>Initializes ColdFusion</description>
+        <servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+        <init-param id="InitParam_1034013110641">
+            <param-name>servlet.class</param-name>
+            <param-value>coldfusion.server.j2ee.CFStartUpServlet</param-value>
+        </init-param>
+        <init-param id="InitParam_1034013110642">
+            <param-name>cfRootDir</param-name>
+            <param-value>./WEB-INF/cfusion</param-value>
+        </init-param>
+        <init-param id="InitParam_1034013110643">
+            <param-name>appServer</param-name>
+            <param-value>Tomcat</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet id="coldfusion_servlet_3">
+        <servlet-name>CfmServlet</servlet-name>
+        <display-name>CFML Template Processor</display-name>
+        <description>Compiles and executes CFML pages and tags</description>
+        <servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+        <init-param id="InitParam_1034013110656ert">
+            <param-name>servlet.class</param-name>
+            <param-value>coldfusion.CfmServlet</param-value>
+        </init-param>
+        <load-on-startup>4</load-on-startup>
+    </servlet>
+    <servlet id="coldfusion_servlet_5">
+        <servlet-name>CFCServlet</servlet-name>
+        <display-name>CFC Processor</display-name>
+        <description>Compiles and executes CF web components</description>
+        <servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+        <init-param id="InitParam_1034013110657ax">
+            <param-name>servlet.class</param-name>
+            <param-value>coldfusion.xml.rpc.CFCServlet</param-value>
+	   </init-param>
+        <load-on-startup>10</load-on-startup>
+    </servlet>
+
+        <!-- Used in calling OnServerStart, so this should be the last one to get initialized -->
+        <servlet id="coldfusion_servlet_1001">
+            <servlet-name>ServerCFCServlet</servlet-name>
+            <display-name>OnServerStart Servlet</display-name>
+            <description>Invokes OnServerStart</description>
+            <servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+            <init-param id="InitParam_1034013110613">
+                <param-name>servlet.class</param-name>
+                <param-value>coldfusion.cfc.ServerCFCServlet</param-value>
+            </init-param>
+            <init-param id="InitParam_1034013110614">
+                <param-name>cfRootDir</param-name>
+                <param-value>./WEB-INF/cfusion</param-value>
+            </init-param>
+            <load-on-startup>1001</load-on-startup>
+        </servlet>
+		
+		<!-- begin REST -->
+		<servlet id="coldfusion_servlet_6">
+			<servlet-name>CFRestServlet</servlet-name>
+			<display-name>Rest Processor</display-name>
+			<description>Starts and configures rest web components</description>
+			<servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+			<init-param id="InitParam_1034013110657rs">
+				<param-name>servlet.class</param-name>
+				<param-value>coldfusion.rest.servlet.CFRestServlet</param-value>
+		    </init-param>
+		    <init-param>
+				<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+				<param-value>coldfusion.rest.servlet.CFUriConnegFilter;com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;</param-value>
+			</init-param>
+			<init-param>
+				<param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+				<param-value>coldfusion.rest.servlet.CFResponseFilter;com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
+			</init-param>
+			<load-on-startup>11</load-on-startup>
+		</servlet>
+		<!-- end REST -->
+
+        <!-- begin PMS -->
+		<servlet id="coldfusion_servlet_664">
+            <servlet-name>PMSGenericServlet</servlet-name>
+            <display-name>PMS Generic Servlet</display-name>
+            <description>Endpoint for PMS</description>
+            <servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+            <init-param id="InitParam_1034013111651rs">
+                <param-name>servlet.class</param-name>
+                <param-value>coldfusion.monitor.PMSGenericServlet</param-value>
+            </init-param>
+            <load-on-startup>12</load-on-startup>
+        </servlet>
+        <!-- end PMS -->
+
+		<!-- begin Security Analyzer -->
+		<servlet id="coldfusion_servlet_666">
+			<servlet-name>CFSecurityAnalyzerServlet</servlet-name>
+			<display-name>Rest Processor</display-name>
+			<description>Starts and configures rest web components</description>
+			<servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+			<init-param id="InitParam_1034013110657sa">
+				<param-name>servlet.class</param-name>
+				<param-value>coldfusion.securityanalyzer.SecurityAnalyzerServlet</param-value>
+		    </init-param>
+		   
+			<load-on-startup>111</load-on-startup>
+		</servlet>
+		<!-- end Security Analyzer -->
+
+		<!-- begin CCS Refresh -->
+		<servlet id="coldfusion_servlet_668">
+			<servlet-name>CCSRefreshServlet</servlet-name>
+			<display-name>CCSRefresh</display-name>
+			<description>Starts and configures CCS refresh servlet</description>
+			<servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+			<init-param id="InitParam_1034013110657sa">
+				<param-name>servlet.class</param-name>
+				<param-value>coldfusion.centralconfig.client.CentralConfigRefreshServlet</param-value>
+		    </init-param>
+		   
+			<load-on-startup>111</load-on-startup>
+		</servlet>
+		<!-- end Security Analyzer -->
+
+		<!-- begin mobile servlet -->
+		<servlet id="coldfusion_servlet_667">
+			<servlet-name>CFMobileServlet</servlet-name>
+			<display-name>Mobile Processor</display-name>
+			<description>Starts and configures mobile components</description>
+			<servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+			<init-param id="InitParam_1034013110657mobile">
+				<param-name>servlet.class</param-name>
+				<param-value>coldfusion.mobile.MobileServlet</param-value>
+		    </init-param>
+		   
+			<load-on-startup>112</load-on-startup>
+		</servlet>
+		<!-- end mobile servlet -->
+
+		
+    
+    <!-- begin RDS -->
+    <servlet id="coldfusion_servlet_8789">
+        <servlet-name>RDSServlet</servlet-name>
+        <display-name>RDS Servlet</display-name>
+        <servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+        <init-param id="InitParam_103401311065856789">
+            <param-name>servlet.class</param-name>
+            <param-value>coldfusion.rds.RdsFrontEndServlet</param-value>
+        </init-param>
+    </servlet>
+    <!-- end RDS -->
+
+    <!-- begin JS Debug -->
+    <servlet id="coldfusion_servlet_9000">
+        <servlet-name>JSDebugServlet</servlet-name>
+        <display-name>JSDebugServlet</display-name>
+        <servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+        <init-param id="InitParam_103401311065856790">
+            <param-name>servlet.class</param-name>
+            <param-value>coldfusion.debugger.js.JSDebuggingServlet</param-value>
+        </init-param>
+    </servlet>
+    <!-- end JS Debug -->
+    
+    <servlet>
+        <servlet-name>CFFileServlet</servlet-name>
+        <display-name>Serves files for cfpresentation,cfreport,captcha etc</display-name>
+        <servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+        <init-param>
+            <param-name>servlet.class</param-name>
+            <param-value>coldfusion.util.CFFileServlet</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Connector</servlet-name>
+        <display-name>Serves Connector Metrics</display-name>
+        <servlet-class>coldfusion.bootstrap.BootstrapServlet</servlet-class>
+         <init-param>
+            <param-name>servlet.class</param-name>
+            <param-value>coldfusion.ConnectorServlet</param-value>
+        </init-param>
+         <load-on-startup>1001</load-on-startup>
+    </servlet>
+ 
+    <servlet-mapping id="coldfusion_mapping_3">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.cfm</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_16">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.CFM</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_17">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.Cfm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping id="coldfusion_mapping_4">
+        <servlet-name>CFCServlet</servlet-name>
+        <url-pattern>*.cfc</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_18">
+        <servlet-name>CFCServlet</servlet-name>
+        <url-pattern>*.CFC</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_19">
+        <servlet-name>CFCServlet</servlet-name>
+        <url-pattern>*.Cfc</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping id="coldfusion_mapping_5">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.cfml</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_20">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.CFML</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_21">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.Cfml</url-pattern>
+    </servlet-mapping>
+    <!-- Please leave these .cfm/* mappings in.
+          They are included to support Search Engine Safe (SES) URL types. 
+    -->
+    <!-- begin SES -->
+    <servlet-mapping id="coldfusion_mapping_6">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.cfml/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_24">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.CFML/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_25">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.Cfml/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping id="coldfusion_mapping_7">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.cfm/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_26">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.CFM/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_27">
+        <servlet-name>CfmServlet</servlet-name>
+        <url-pattern>*.Cfm/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping id="coldfusion_mapping_8">
+        <servlet-name>CFCServlet</servlet-name>
+        <url-pattern>*.cfc/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_28">
+        <servlet-name>CFCServlet</servlet-name>
+        <url-pattern>*.CFC/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_29">
+        <servlet-name>CFCServlet</servlet-name>
+        <url-pattern>*.Cfc/*</url-pattern>
+    </servlet-mapping>
+    <!-- end SES -->
+    <!-- begin RDS -->
+    <servlet-mapping id="coldfusion_mapping_9">
+        <servlet-name>RDSServlet</servlet-name>
+        <url-pattern>/CFIDE/main/ide.cfm</url-pattern>
+    </servlet-mapping>
+    <!-- end RDS -->
+    <!-- begin JS Debug -->
+    <servlet-mapping id="coldfusion_mapping_22">
+        <servlet-name>JSDebugServlet</servlet-name>
+        <url-pattern>/JSDebugServlet/*</url-pattern>
+    </servlet-mapping>
+    <!-- end JS Debug -->
+	<!-- begin JWS -->
+    <servlet-mapping id="coldfusion_mapping_10">
+        <servlet-name>CFCServlet</servlet-name>
+        <url-pattern>*.jws</url-pattern>
+    </servlet-mapping>
+	<!-- end JWS -->
+	<!-- begin CF Reporting -->
+    <servlet-mapping id="coldfusion_mapping_12">
+        <servlet-name>CFCServlet</servlet-name>
+        <url-pattern>*.cfr</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_30">
+        <servlet-name>CFCServlet</servlet-name>
+        <url-pattern>*.CFR</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_31">
+        <servlet-name>CFCServlet</servlet-name>
+        <url-pattern>*.Cfr</url-pattern>
+    </servlet-mapping>
+	<!-- end CF Reporting -->
+
+    <servlet-mapping id="coldfusion_mapping_14">
+        <servlet-name>CFFileServlet</servlet-name>
+        <url-pattern>/CFFileServlet/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping id="coldfusion_mapping_rest">
+        <servlet-name>CFRestServlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+<!--<servlet-mapping id="coldfusion_mapping_mobile">
+        <servlet-name>CFMobileServlet</servlet-name>
+<url-pattern>/cfmobile/*</url-pattern>
+    </servlet-mapping>-->
+	<servlet-mapping id="coldfusion_mapping_pms">
+        <servlet-name>PMSGenericServlet</servlet-name>
+        <url-pattern>/pms</url-pattern>
+    </servlet-mapping>
+	
+	<!-- Mapping for the REST application which is a UI for testing REST apps would pull apis using this 	-->
+	
+	<servlet-mapping id="coldfusion_mapping_rest_1">
+        <servlet-name>CFRestServlet</servlet-name>
+        <url-pattern>/restapps/*</url-pattern>
+    </servlet-mapping>
+	
+	<!-- begin Security Analyzer -->
+	<servlet-mapping id="coldfusion_mapping_23">
+        <servlet-name>CFSecurityAnalyzerServlet</servlet-name>
+        <url-pattern>/securityanalyzer/*</url-pattern>
+    </servlet-mapping>
+	<!-- end Security Analyzer -->
+
+	<!-- begin CCS refresh -->
+	<servlet-mapping id="coldfusion_mapping_24">
+        <servlet-name>CCSRefreshServlet</servlet-name>
+        <url-pattern>/ccs/*</url-pattern>
+    </servlet-mapping>
+	<!-- end CCSrefresh -->
+	
+	
+
+    <servlet-mapping id="coldfusion_mapping_16">
+        <servlet-name>CFRestServlet</servlet-name>
+        <url-pattern>/cfapiresources/*</url-pattern>
+    </servlet-mapping>
+	
+    <servlet-mapping>
+        <servlet-name>CFForbiddenServlet</servlet-name>
+        <url-pattern>*.hbmxml</url-pattern>
+    </servlet-mapping>
+	
+    <servlet-mapping>
+        <servlet-name>Connector</servlet-name>
+        <url-pattern>/__cf_connector_heartbeat__</url-pattern>
+    </servlet-mapping>
+    
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+    
+    <welcome-file-list id="WelcomeFileList_1034013110672">
+        <welcome-file>index.cfm</welcome-file>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+    </welcome-file-list>
+
+</web-app>

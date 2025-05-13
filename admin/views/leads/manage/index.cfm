@@ -150,8 +150,9 @@
 							<tr>
 								<td colspan="3">
 									<cfgrid format="html" name="leadGrid" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.leads.getLeads({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchFname},{searchLname},{searchEmail},{searchAreacode},{searchCity},{searchState},{searchEmployeeId},{searchComments},{searchFromDate},{searchToDate},{searchKeywords})">
-									    <cfgridcolumn name="fname" header="First Name" width="80">
-										<cfgridcolumn name="lname" header="Last Name" width="80">
+									    <!--- <cfgridcolumn name="fname" header="First Name" width="80"> --->
+										<!--- <cfgridcolumn name="lname" header="Last Name" width="80"> --->
+										<cfgridcolumn name="user_name" header="Name" width="80">
 										<cfgridcolumn name="leadEmail" header="Email" width="175">
 										<cfgridcolumn name="leadDate" header="Date" width="80">
 									</cfgrid>
@@ -161,7 +162,9 @@
 						</cfform>
 					</td>
 					<td valign="top">
-						<input type="button" value="New" onclick="showNew()">
+						
+						<input type="button" value="New" onclick="showNew()"> <br><br>
+						<span style="color: #ff0000;"><b>* Required</b></span><br><br>
 						<cfform name="editForm">
 						<cfinput type="hidden" name="pk_leads" id="pk_leads" bind="{leadGrid.pk_leads}">
 						<table border = "0" width = "550" cellpadding = "5" cellspacing = "0" class="editBox">
@@ -193,7 +196,7 @@
 								</td>
 							</tr>
 							</cfif>
-							<tr>
+							<!--- <tr>
 								<td width="100" style="font-size: 10px;">
 									First Name:
 								</td>
@@ -208,10 +211,18 @@
 								<td>
 									<cfinput type="text" name="lname" id="lname"  bind="{leadGrid.lname}" size="30">
 								</td>
+							</tr> --->
+							<tr>
+								<td style="font-size: 10px;">
+									<b> Name*:</b>
+								</td>
+								<td>
+									<cfinput type="text" name="name" id="name"  bind="{leadGrid.user_name}" size="30">
+								</td>
 							</tr>
 							<tr>
 								<td style="font-size: 10px;">
-									Email:
+									<b>Email *:</b>
 								</td>
 								<td>
 									<cfinput type="text" name="leadEmail" id="leadEmail"  bind="{leadGrid.leadEmail}" size="30">&nbsp;

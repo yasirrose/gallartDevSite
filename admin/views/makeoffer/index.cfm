@@ -68,7 +68,8 @@
 					<td colspan="3">
 						<cfgrid format="html" name="data" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.makeoffer.getMakeoffer({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchLname},{searchEmail},{searchTitle},{searchFromDate},{searchToDate})">
 						    <cfgridcolumn name="name" header="Title" width="200">
-							<cfgridcolumn name="customer_lname" header="Last Name" width="80">
+							<!--- <cfgridcolumn name="customer_lname" header="Last Name" width="80"> --->
+							<cfgridcolumn name="combine_customer_name" header=" Name" width="80">
 							<cfgridcolumn name="customer_email" header="Email" width="175">
 							<cfgridcolumn name="seller_lname" header="Seller" width="80">
 							<cfgridcolumn name="offerdate" header="Date" width="75">
@@ -97,6 +98,14 @@
 					</td>
 					<td>
 						<cfinput type="text" name="lname" id="lname"  bind="{data.customer_lname}" size="30">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						 Name:
+					</td>
+					<td>
+						<cfinput type="text" name="name" id="name"  bind="{data.combine_customer_name}" size="30">
 					</td>
 				</tr>
 				<tr>

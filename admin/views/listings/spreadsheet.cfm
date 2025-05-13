@@ -39,13 +39,13 @@
 				<cfinput type="Hidden" name="searchSellerId" size="10" value="#form.searchSellerId#" />
 
 				<cfinput type="Hidden" name="searchActive" value="#form.searchActive#" />
-				<input type="Checkbox" name="searchOnSale" <cfif form.searchOnSale EQ 'on'>checked</cfif> style="display: none;">
+				<input type="Checkbox" name="searchOnSale" <cfif isDefined('searchOnSale') and form.searchOnSale EQ 'on'>checked</cfif> style="display: none;">
 				<input type="Hidden" name="searchOnSale">
-				<input type="Checkbox" name="searchTrump" <cfif form.searchTrump EQ 'on'>checked</cfif> style="display: none;">
+				<input type="Checkbox" name="searchTrump" <cfif isDefined('searchTrump') and form.searchTrump EQ 'on'>checked</cfif> style="display: none;">
 				<input type="Hidden" name="searchTrump">
-				<input type="Checkbox" name="searchAuction" <cfif form.searchAuction EQ 'on'>checked</cfif> style="display: none;">
+				<input type="Checkbox" name="searchAuction" <cfif isDefined('searchAuction') and form.searchAuction EQ 'on'>checked</cfif> style="display: none;">
 				<input type="Hidden" name="searchAuction">
-				<input type="Checkbox" name="searchSlideshow" <cfif form.searchSlideshow EQ 'on'>checked</cfif> style="display: none;">
+				<input type="Checkbox" name="searchSlideshow" <cfif isDefined('searchSlideshow') and form.searchSlideshow EQ 'on'>checked</cfif> style="display: none;">
 				<input type="Hidden" name="searchSlideshow">
 
 				<cfgrid format="html" name="data" pagesize="250" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.art.getListings({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchSellerId},{searchModelno},{searchTitle},{searchArtist},{searchMedium},{searchYear},{searchHeight},{searchWidth},{searchDescription},{searchFromPrice},{searchToPrice},{searchFromDate},{searchToDate},{searchFromLastedit},{searchToLastedit},{searchOnSale},{searchTrump},{searchAuction},{searchSlideshow},{searchActive})">

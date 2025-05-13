@@ -63,7 +63,9 @@
 		<cfset session.qLeads.keywords = arguments.keywords />
 		
 	   	<cfquery name="qLeads" datasource="#application.dsource#">
-	      	SELECT CONVERT(CHAR(9),L.datestamp,6) as leadDate,L.email as leadEmail,E.emp_lname + ', ' + E.emp_fname as emp_name,*
+	      	SELECT CONVERT(CHAR(9),L.datestamp,6) as leadDate,L.email as leadEmail,E.emp_lname + ', ' + E.emp_fname as emp_name,
+			CASE WHEN L.name IS NULL OR L.name = '' THEN L.fname + ' ' + L.lname 
+			ELSE L.name END AS user_name, L.*
 	      	FROM leads L
 			LEFT OUTER JOIN employees E ON L.fk_employees = E.pk_employees
 			WHERE 0=0 and isdeleted is null
@@ -183,8 +185,13 @@
 	    <cfargument name="notes" type="string" default="">
 		<cfargument name="password" type="string" default="">
 		<cfargument name="maillist" type="string" default="">
+		<cfargument name="name" type="string" default="">
+
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 	    
 	    <cfset var success = true />
+
+
    
 	    <cftry>
 	    	
@@ -196,6 +203,7 @@
 						fk_employees,
 	                	fname,
 	                	lname,
+						name,
 	                	email,
 						cellphone,
 						phone,
@@ -219,6 +227,7 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fk_employees#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.name#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.leadEmail#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.cellphone#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.phone#">,
@@ -253,6 +262,7 @@
 					fk_employees 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fk_employees#">,
 	                fname 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
 	                lname 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
+	                name 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.name#">,
 					email 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.leadEmail#">,
 					cellphone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.cellphone#">,
 					phone 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.phone#">,

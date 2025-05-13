@@ -66,33 +66,52 @@
 <cfparam name="msg" default="">
 
 <cfif isDefined("proc_pw")>
-    <cfquery name="findUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-        SELECT * FROM users WHERE email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar" maxlength="255">
-    </cfquery>
 
-    <cfif findUser.recordcount>
-        <cfmail server="#servername#" username="onli16@onlinegalleryart.com"
-            password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com"
-            subject="Gallery Art Password Retrieval" type="HTML">
-            <font style="font-size: 10pt; font-family: Arial;">
-            Your Gallery Art Password is:
-            <br><br>
-            #findUser.password#
-            <br><br>
-            Please keep it in a safe place.
-            <br><br>
-            Thank you from Gallery Art.
-            </font>
-        </cfmail>
+	<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+    <cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+        <cfhttpparam type="formField" name="secret" value="#apikey#">
+        <cfhttpparam type="formField" name="response" value="#form['g-recaptcha-response']#">
+        <cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+    </cfhttp>
 
-        <cfoutput>
-            <strong style="color:green;">Your password has been emailed to you.</strong>
-        </cfoutput>
-    <cfelse>
-        <cfoutput>
-            <strong style="color:red;">That email address is not in our system. Please try again.</strong>
-        </cfoutput>
-    </cfif>
+    <cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+
+	<cfif captchaResponse.success >
+		<cfquery name="findUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+			SELECT * FROM users WHERE email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar" maxlength="255">
+		</cfquery>
+	
+		<cfif findUser.recordcount>
+			<cfmail server="#servername#" username="onli16@onlinegalleryart.com"
+				password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com"
+				subject="Gallery Art Password Retrieval" type="HTML">
+				<font style="font-size: 10pt; font-family: Arial;">
+				Your Gallery Art Password is:
+				<br><br>
+				#findUser.password#
+				<br><br>
+				Please keep it in a safe place.
+				<br><br>
+				Thank you from Gallery Art.
+				</font>
+			</cfmail>
+	
+			<cfoutput>
+				<strong style="color:green;">Your password has been emailed to you.</strong>
+			</cfoutput>
+		<cfelse>
+			<cfoutput>
+				<strong style="color:red;">That email address is not in our system. Please try again.</strong>
+			</cfoutput>
+		</cfif>
+	<cfelse>
+		<cfoutput>
+			<strong style="color:red;">reCAPTCHA verification failed. Please try again.</strong>
+		</cfoutput>
+
+	</cfif>
+
+   
     <cfabort>
 </cfif>
 
@@ -198,7 +217,7 @@
 																<p>Enter your email address below, and we will email your password to you:</p>
 																<div class="input-form">
 																	<div class="input-field">
-																		<input type="text" name="email" id="email" size="40"><span style="color: #ff0000;"> * </span>
+																		<input type="text" name="email" id="email" size="40"><span class="star"> * </span>
 																		<span class="error-message" id="email_loginError"></span>
 																	</div>
 
@@ -208,6 +227,11 @@
 																		<input type="text" name="captcha" >
 																		<span class="error-message" id="captchaError"></span>
 																	 </div> --->
+
+																	 <div class="input-field pt-3">
+																		<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+																		<span class="error-message" id="recaptchaError"></span>
+																	</div>
 																	
 																	<div class="input-button">
 																		<button type="button" onclick="submitForgetForm()" class="SeeMore">Send My Password</button>
@@ -240,32 +264,41 @@
 </tr>
 <cfinclude template="frmxss.cfm">
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <script>
 
-$(document).ready(function() {
-				toastr.options = {
-					'closeButton': true,
-					'debug': false,
-					'newestOnTop': false,
-					'progressBar': true,
-					'positionClass': 'toast-top-right',
-					'preventDuplicates': false,
-					'showDuration': '1000',
-					'hideDuration': '1000',
-					'timeOut': '5000',
-					'extendedTimeOut': '1000',
-					'showEasing': 'swing',
-					'hideEasing': 'linear',
-					'showMethod': 'fadeIn',
-					'hideMethod': 'fadeOut',
-				}
-			});
+	$(document).ready(function() {
+		toastr.options = {
+			'closeButton': true,
+			'debug': false,
+			'newestOnTop': false,
+			'progressBar': true,
+			'positionClass': 'toast-top-right',
+			'preventDuplicates': false,
+			'showDuration': '1000',
+			'hideDuration': '1000',
+			'timeOut': '5000',
+			'extendedTimeOut': '1000',
+			'showEasing': 'swing',
+			'hideEasing': 'linear',
+			'showMethod': 'fadeIn',
+			'hideMethod': 'fadeOut',
+		}
+	});
 
     function validateForgetForm() {
         let isValid = true;
         const email = document.getElementById('email').value.trim();
         const errorElement = document.getElementById('email_loginError');
         errorElement.textContent = ''; // Clear previous errors
+
+		const recaptchaResponse = grecaptcha.getResponse();
+
+		if (!recaptchaResponse) {
+			document.getElementById('recaptchaError').textContent = 'Please verify reCAPTCHA.';
+			isValid = false;
+		}
 
         if (!email) {
             errorElement.textContent = 'Please enter your email address';
@@ -287,6 +320,7 @@ $(document).ready(function() {
 
 			
         const formData = new FormData();
+		formData.append('g-recaptcha-response', recaptchaResponse);
         formData.append('email', document.getElementById('email').value);
         formData.append('proc_pw', true); // Pass this to detect the form submission on the backend
 
@@ -310,12 +344,22 @@ $(document).ready(function() {
 </script>
  <style>
 	.error-message {
-	color: #ff0000;
-	font-size: 0.9em;
-	/* margin-top: 5px; */
-	text-align: left;
-    margin-left: 10px;
-	display: block;
+		color: #ff0000;
+		font-size: 0.9em;
+		/* margin-top: 5px; */
+		text-align: left;
+		margin-left: 10px;
+		display: block;
+	}
+	.input-field {
+		margin-bottom: 15px;
+		position: relative;
+	}
+	.star{
+		color: red;
+		position: absolute;
+		top: -10;
+		right: 10
 	}
  </style>
 

@@ -2,6 +2,7 @@
 <cfsilent>
 	<cfparam name="form.fname" default="">
 	<cfparam name="form.lname" default="">
+	<cfparam name="form.name" default="">
 	<cfparam name="form.comments" default="">
 	<cfparam name="form.email" default="">
 	<cfparam name="form.phone" default="">
@@ -11,15 +12,12 @@
 	<cfparam name="form.errorMsg" default="">
 	<cfparam name="form.errorPhone" default="0">
 
-	<cfparam
-	   name="FORM.captcha"	type="string"	default=""	/>
+	<cfparam name="FORM.captcha"	type="string"	default=""	/>
 
-	<cfparam
-	   name="FORM.captcha_check"	type="string" default="" />
+	<cfparam name="FORM.captcha_check"	type="string" default="" />
 
 	<cftry>
-	   <cfparam
-		  name="FORM.submitted"	type="numeric"	default="0"	/>
+	   <cfparam name="FORM.submitted"	type="numeric"	default="0"	/>
 
 	   <cfcatch>
 		  <cfset FORM.submitted = 0 />
@@ -135,6 +133,7 @@
 			 <form method="post" action="#script_name#?xss=#xss#" name="errorFrm">
 				<input type="Hidden" name="fname">
 				<input type="Hidden" name="lname">
+				<input type="Hidden" name="name">
 				<input type="Hidden" name="email">
 				<input type="Hidden" name="phone">
 				<input type="Hidden" name="otherphone">
@@ -182,12 +181,24 @@
 									 <div class="user-registrations quotes-page contact-page">
 										<cfif FORM.submitted>
 
+											<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+
+											<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+												<cfhttpparam type="formField" name="secret" value="#apikey#">
+												<cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+												<cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+											</cfhttp>
+													
+											<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+
+
 										   <!--- Check for a bot. --->
 										   <cfif phoneError>
 											  <cfoutput>
 												 <script language="JavaScript">
 													document.errorFrm.fname.value = '#form.fname#'
 													document.errorFrm.lname.value = '#form.lname#'
+													document.errorFrm.name.value = '#form.name#'
 													document.errorFrm.email.value = '#form.email#'
 													document.errorFrm.phone.value = '#form.phone#'
 													document.errorFrm.otherphone.value = '#form.otherphone#'
@@ -197,11 +208,12 @@
 													document.errorFrm.submit();
 												 </script>
 											  </cfoutput>
-											  <cfelseif blnIsBot>
+											  <cfelseif captchaResponse.success NEQ 'YES'>
 											  <cfoutput>
 												 <script language="JavaScript">
 													document.errorFrm.fname.value = '#form.fname#'
 													document.errorFrm.lname.value = '#form.lname#'
+													document.errorFrm.name.value = '#form.name#'
 													document.errorFrm.email.value = '#form.email#'
 													document.errorFrm.phone.value = '#form.phone#'
 													document.errorFrm.otherphone.value = '#form.otherphone#'
@@ -218,15 +230,12 @@
 
 													
 													
+													<!--- <cfdump var="#form#" abort="true"> --->
 													
-													
-													<cfif 
-														form.fname neq '' 
-													and form.lname neq '' 
-													and form.email neq ''>
+													<cfif form.name neq '' and form.email neq ''>
 														<cfquery name="addgLead" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-															insert into leads (fname,lname, notes, email, phone, otherphone, maillist)
-															values('#form.fname#','#form.lname#', '#form.comments#', '#form.email#', '#form.phone#', '#form.otherphone#', '#form.list#')
+															insert into leads (name, notes, email, phone, otherphone, maillist)
+															values('#form.name#', '#form.comments#', '#form.email#', '#form.phone#', '#form.otherphone#', '#form.list#')
 														</cfquery>
 
 													
@@ -256,113 +265,138 @@
 
 													
 											  
-											  <cfmail server="#servername#" username="gallart@onlinegalleryart.com"
-												 password="re3objeC!P" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.email#" subject="GallArt.com <> Buying & Selling Fine Art <> Contact Form" type="HTML">
-												 <font style="font-size: 10pt; font-family: Arial;">
-												 Client Information:
-												 <br><br>
-												 Name: #form.fname# #form.lname#<br>
-												 Email Address: #form.email#<br>
-												 Phone: #form.phone#<br>
-												 Phone Outside the US: #form.otherphone#<br>
-												 Comments: #form.comments#<br>
-												 <br><br>
-												 </font>
-											  </cfmail>
+															<cfmail server="#servername#" username="gallart@onlinegalleryart.com"
+																password="re3objeC!P" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.email#" subject="GallArt.com <> Buying & Selling Fine Art <> Contact Form" type="HTML">
+																<font style="font-size: 10pt; font-family: Arial;">
+																Client Information:
+																<br><br>
+																<!--- Name: #form.fname# #form.lname#<br> --->
+																Name: #form.name#<br>
+																Email Address: #form.email#<br>
+																Phone: #form.phone#<br>
+																Phone Outside the US: #form.otherphone#<br>
+																Comments: #form.comments#<br>
+																<br><br>
+																</font>
+															</cfmail>
 
-											  <p>
-												 <b>
-													Thank you 
-													<cfoutput>#form.fname# #form.lname#</cfoutput>
-													. <br><br> Your Email has been sent to the respective personnel. <br><br>   We hope that your visit has been a pleasant experience so far.
-												 </b>
-											  </p>
-											<cfelse>
-												<cfoutput>
-													<p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
-												</cfoutput>
-											</cfif>
-											<cfcatch type="Any">
-												Sorry - we have encountered a processing error.  Please try again.
-												<cfabort>
-											</cfcatch>
-										</cftry>
+															<p>
+																<b>
+																	Thank you 
+																	<!--- <cfoutput>#form.fname# #form.lname#</cfoutput> --->
+																	<cfoutput>#form.name# </cfoutput>
+																	. <br><br> Your Email has been sent to the respective personnel. <br><br>   We hope that your visit has been a pleasant experience so far.
+																</b>
+															</p>
+													 <cfelse>
+														<cfoutput>
+															<p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
+														</cfoutput>
+													</cfif>
+													<cfcatch type="Any">
+														Sorry - we have encountered a processing error.  Please try again.
+														<cfabort>
+													</cfcatch>
+												</cftry>
 										   </cfif>
-										   <cfelse>
-										   <cfoutput>
-											  <CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST" name="guestFrm" onsubmit="return validateForm()">
-												 <input type="hidden" name="submitted" value="1" />
-												 <input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
-												 <div class="top-heading">
-													<h3>CONTACT US</h3>
-												 </div>
-												 <cfif FORM.captchaError>
-													<p style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</p>
-												 </cfif>
-												 <cfif FORM.errorPhone EQ 1>
-													<p style="color: ##ff0000; font-weight: bold;">
-													   #form.errorMsg#
-													</p>
-												 </cfif>
-												 <p>Please contact us using the form below:</p>
+										 <cfelse>
+											<cfoutput>
+												<CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST" name="guestFrm" onsubmit="return validateForm()">
+													<input type="hidden" name="submitted" value="1" />
+													<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
+													<div class="top-heading">
+														<h3>CONTACT US</h3>
+													</div>
+													<cfif FORM.captchaError>
+														<p style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</p>
+													</cfif>
+													<cfif FORM.errorPhone EQ 1>
+														<p style="color: ##ff0000; font-weight: bold;">
+														#form.errorMsg#
+														</p>
+													</cfif>
+													<p>Please contact us using the form below:</p>
 
-												 <span style="color: ##ff0000;">* Required</span><br><br>
+													<span style="color: ##ff0000;">* Required</span><br><br>
 
-												 <div class="input-form">
-													<div class="row">
-														<div class="col-md-6">
-													<div class="input-field">
-													   <label><FONT color="000000"><b>FIRST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label>
-													   <cfinput type="text" size=40 maxsize=50 name="fname" value="#form.fname#">
-													   <span class="error-message" id="fnameError"></span>
+													<div class="input-form">
+														<div class="row">
+															<!--- <div class="col-md-6">
+																<div class="input-field">
+																	<!--- <label><FONT color="000000"><b>FIRST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
+																	<cfinput type="text" size=40 maxsize=50 name="fname" placeholder="First Name*" value="#form.fname#">
+																	<!--- <span class="star">*</span> --->
+																	<span class="error-message" id="fnameError"></span>
+																</div>
+															</div> --->
+
+															<!--- <div class="col-md-6">
+																<div class="input-field">
+																<!--- <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
+																<cfinput type="text" size=40 maxsize=50 name="lname" placeholder="Enter your Name*" value="#form.lname#" >
+																<!--- <span class="star">*</span> --->
+																<span class="error-message" id="lnameError"></span>
+																</div>
+															</div> --->
+
+															<div class="col-md-4">
+																<div class="input-field">
+																<!--- <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
+																<cfinput type="text" size=40 maxsize=50 name="name" id="name" placeholder="Enter your Name*" value="#form.name#" >
+																<!--- <span class="star">*</span> --->
+																<span class="error-message" id="nameError"></span>
+																</div>
+															</div>
+
+															<div class="col-md-4">
+																<div class="input-field">
+																<!--- <label><FONT color="000000"><b>E-MAIL ADDRESS &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
+																<cfinput type="text" size=40 maxsize=50 name="email" placeholder="Enter your Email Address*" value="#form.email#" >
+																<!--- <span class="star">*</span> --->
+																<span class="error-message" id="emailError"></span>
+																</div>
+															</div>
+
+															<div class="col-md-4">
+																<div class="input-field">
+																<!--- <label><FONT color="000000"><b>PHONE (xxx) xxx-xxxx</b></FONT></label> --->
+																<cfinput type="text" size=40 maxsize=50 name="phone" placeholder="Enter your Phone (xxx) xxx-xxxx" value="#form.phone#" required="No" mask="(999) 999-9999">
+																<span class="error-message" id="phoneError"></span>
+																</div>
+															</div>
+
+															<!--- <div class="col-md-6">
+																<div class="input-field">
+																<!--- <label><FONT color="000000"><b>PHONE OUTSIDE THE US</b></FONT></label> --->
+																<cfinput type="text" size=40 maxsize=50 name="otherphone" placeholder="Enter your Outside Phone Number" value="#form.otherphone#" required="No" >
+																</div>
+															</div> --->
+														</div>
+														<div class="input-field">
+														<!--- <label><FONT color="000000"><b>COMMENTS</b></FONT></label> --->
+														<TEXTAREA NAME="comments" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
+														</div>
+
+														<!--- <div class="input-field">
+														<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier" fontsize="28"/>
+														<label><FONT color="000000"><b>Please enter the characters in the image above: <span style="color:##ff0000;">*</span></b></FONT></label>
+														<cfinput type="text" name="captcha" >
+														<span class="error-message" id="captchaError"></span>
+														</div> --->
+
+														<div class="input-field pt-3">
+															<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+															<span class="error-message" id="recaptchaError"></span>
+														</div>
+
+														<div class="input-button">
+														<button type="submit" class="SeeMore">Send</button>
+														<button type="reset" class="SeeMore">Reset</button>
+														</div>
 													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="input-field">
-													   <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label>
-													   <cfinput type="text" size=40 maxsize=50 name="lname" value="#form.lname#" >
-													   <span class="error-message" id="lnameError"></span>
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="input-field">
-													   <label><FONT color="000000"><b>E-MAIL ADDRESS &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label>
-													   <cfinput type="text" size=40 maxsize=50 name="email" value="#form.email#" >
-													   <span class="error-message" id="emailError"></span>
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="input-field">
-													   <label><FONT color="000000"><b>PHONE (xxx) xxx-xxxx</b></FONT></label>
-													   <cfinput type="text" size=40 maxsize=50 name="phone" value="#form.phone#" required="No" mask="(999) 999-9999">
-													   <span class="error-message" id="phoneError"></span>
-													</div>
-												</div>
-												<div class="col-md-12">
-													<div class="input-field">
-													   <label><FONT color="000000"><b>PHONE OUTSIDE THE US</b></FONT></label>
-													   <cfinput type="text" size=40 maxsize=50 name="otherphone" value="#form.otherphone#" required="No" >
-													</div>
-												</div>
-											</div>
-													<div class="input-field">
-													   <label><FONT color="000000"><b>COMMENTS</b></FONT></label>
-													   <TEXTAREA NAME="comments" ROWS=10 COLS=35>#form.comments#</TEXTAREA>
-													</div>
-													<div class="input-field">
-													   <cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier" fontsize="28"/>
-													   <label><FONT color="000000"><b>Please enter the characters in the image above: <span style="color:##ff0000;">*</span></b></FONT></label>
-													   <cfinput type="text" name="captcha" >
-													   <span class="error-message" id="captchaError"></span>
-													</div>
-													<div class="input-button">
-													   <button type="submit" class="SeeMore">Send</button>
-													   <button type="reset" class="SeeMore">Reset</button>
-													</div>
-												 </div>
-											  </CFFORM>
-										   </cfoutput>
-									 </div>
+												</CFFORM>
+											</cfoutput>
+									 	</div>
 									 </cfif>	
 								  </div>
 							   </div>
@@ -381,68 +415,92 @@
 	   </tr>
 	   <cfinclude template="frmxss.cfm">
 
+	   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 	   <script>
 		 function validateForm() {
-         let isValid = true;
-         
-         // Clear previous error messages
-         document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
-         
-         // Get form field values
-         const fname = document.getElementById('fname').value.trim();
-         const lname = document.getElementById('lname').value.trim();
-         const email = document.getElementById('email').value.trim();
-         const phone = document.getElementById('phone').value.trim();
-         const captcha = document.getElementById('captcha').value.trim();
+			let isValid = true;
+			
+			// Clear previous error messages
+			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+			
+			// Get form field values
+			//  const fname = document.getElementById('fname').value.trim();
+			//  const lname = document.getElementById('lname').value.trim();
+			const name = document.getElementById('name').value.trim();
+			const email = document.getElementById('email').value.trim();
+			const phone = document.getElementById('phone').value.trim();
+			// const captcha = document.getElementById('captcha').value.trim();
 
-		 const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
-         
-         // Validate FIRST NAME
-         if (!fname) {
-            document.getElementById('fnameError').textContent = 'Please fill in your first name.';
-            isValid = false;
-         }
-         
-         // Validate LAST NAME
-         if (!lname) {
-            document.getElementById('lnameError').textContent = 'Please fill in your last name.';
-            isValid = false;
-         }
-         
-         // Validate EMAIL
-         if (!email) {
-            document.getElementById('emailError').textContent = 'Please fill in your email address.';
-            isValid = false;
-         } else if (!/\S+@\S+\.\S+/.test(email)) {
-            document.getElementById('emailError').textContent = 'Please enter a valid email address.';
-            isValid = false;
-         }
+			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+			var recaptcha = grecaptcha.getResponse();
+			console.log(recaptcha.length);
+			
+
+			if (recaptcha.length == 0) {
+				document.getElementById("recaptchaError").innerText = "Please confirm you are not a robot.";
+				isValid = false;
+			}
+			
+			// Validate FIRST NAME
+			//  if (!fname) {
+			//     document.getElementById('fnameError').textContent = 'Please fill in your first name.';
+			//     isValid = false;
+			//  }
+			
+			//  // Validate LAST NAME
+			//  if (!lname) {
+			//     document.getElementById('lnameError').textContent = 'Please fill in your last name.';
+			//     isValid = false;
+			//  }
+
+			if (!name) {
+				document.getElementById('nameError').textContent = 'Please enter your name.';
+				isValid = false;
+			}
+			
+			// Validate EMAIL
+			if (!email) {
+				document.getElementById('emailError').textContent = 'Please fill in your email address.';
+				isValid = false;
+			} else if (!/\S+@\S+\.\S+/.test(email)) {
+				document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+				isValid = false;
+			}
 
 
-		 if (phone && !phoneRegex.test(phone)) {
-			document.getElementById('phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
-			isValid = false;
-		}
-         
-         // Validate CAPTCHA
-         if (!captcha) {
-            document.getElementById('captchaError').textContent = 'Please enter the characters in the image.';
-            isValid = false;
-         }
-         
-         return isValid;
+			if (phone && !phoneRegex.test(phone)) {
+				document.getElementById('phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+				isValid = false;
+			}
+			
+			// Validate CAPTCHA
+			// if (!captcha) {
+			// 	document.getElementById('captchaError').textContent = 'Please enter the characters in the image.';
+			// 	isValid = false;
+			// }
+			
+			return isValid;
          }
 	   </script>
 
 		<style>
 			.error-message {
-			color: #ff0000;
-			font-size: 0.9em;
-			margin-top: 5px;
-			display: block;
+				color: #ff0000;
+				font-size: 0.9em;
+				margin-top: 5px;
+				display: block;
 			}
 			.input-field {
-			margin-bottom: 15px;
+				margin-bottom: 15px;
+				position: relative;
+			}
+			.star{
+				color: red;
+				position: absolute;
+				top: -10;
+				right: 0
 			}
 		</style>
 

@@ -2,6 +2,7 @@
 <cfsilent>
 	<cfparam name="form.fname" default="">
 	<cfparam name="form.lname" default="">
+	<cfparam name="form.name" default="">
 	<cfparam name="form.email" default="">
 	<cfparam name="form.phone" default="">
 	<cfparam name="form.otherphone" default="">
@@ -124,6 +125,7 @@
 				<form method="post" action="#script_name#?xss=#xss#" name="errorFrm">
 				   <input type="Hidden" name="fname">
 				   <input type="Hidden" name="lname">
+				   <input type="Hidden" name="name">
 				   <input type="Hidden" name="email">
 				   <input type="Hidden" name="phone">
 				   <input type="Hidden" name="otherphone">
@@ -171,11 +173,23 @@
 												 	</div>
 													
 													<cfif FORM.submitted>
+
+														<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+
+														<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+															<cfhttpparam type="formField" name="secret" value="#apikey#">
+															<cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+															<cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+														</cfhttp>
+																
+														<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+
 													   <cfif phoneError>
 														  <cfoutput>
 															 <script language="JavaScript">
-																document.errorFrm.fname.value = '#form.fname#'
-																document.errorFrm.lname.value = '#form.lname#'
+																// document.errorFrm.fname.value = '#form.fname#'
+																// document.errorFrm.lname.value = '#form.lname#'
+																document.errorFrm.name.value = '#form.name#'
 																document.errorFrm.email.value = '#form.email#'
 																document.errorFrm.phone.value = '#form.phone#'
 																document.errorFrm.otherphone.value = '#form.otherphone#'
@@ -189,11 +203,12 @@
 																document.errorFrm.submit();
 															 </script>
 														  </cfoutput>
-														  <cfelseif blnIsBot>
+														  <cfelseif captchaResponse.success NEQ 'YES'>
 														  <cfoutput>
 															 <script language="JavaScript">
-																document.errorFrm.fname.value = '#form.fname#'
-																document.errorFrm.lname.value = '#form.lname#'
+																// document.errorFrm.fname.value = '#form.fname#'
+																// document.errorFrm.lname.value = '#form.lname#'
+																document.errorFrm.name.value = '#form.name#'
 																document.errorFrm.email.value = '#form.email#'
 																document.errorFrm.phone.value = '#form.phone#'
 																document.errorFrm.otherphone.value = '#form.otherphone#'
@@ -208,23 +223,43 @@
 															 </script>
 														  </cfoutput>
 														  <cfelse>
-														  <cfif form.fname neq '' and form.lname neq '' and form.email neq ''>
+															<!--- <cfdump var="#form#" abort="true"> --->
+														  <cfif form.name neq ''  and form.Offer neq '' and (form.email NEQ '' OR form.phone NEQ '')>
 														  <cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 															 SELECT * from customers where (email = '#trim(email)#')
 														  </cfquery>
-														  <cfif not find_cust.recordcount>
-															 <cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+
+														<cfif form.email eq ''>
+
+															<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 																INSERT into customers
 																(
-																FNAME,
-																LNAME,
+																NAME,
 																PHONE,
 																EMAIL
 																)
 																VALUES
 																(
-																'#form.FNAME#',
-																'#form.LNAME#',
+																'#form.NAME#',
+																'#form.PHONE#',
+																'#form.EMAIL#'
+																)
+																SELECT @@identity as uid 
+															</cfquery>
+															<cfset customerId=insert_cust.uid />
+
+														 <cfelse>
+														  <cfif not find_cust.recordcount>
+															 <cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																INSERT into customers
+																(
+																NAME,
+																PHONE,
+																EMAIL
+																)
+																VALUES
+																(
+																'#form.NAME#',
 																'#form.PHONE#',
 																'#form.EMAIL#'
 																)
@@ -245,6 +280,8 @@
 															 </cfquery>
 															 <cfset customerId=find_cust.id />
 														  </cfif>
+
+														</cfif>
 														  <cfquery datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 															 INSERT into makeoffer
 															 (
@@ -263,12 +300,13 @@
 															 '#form.best_time#'
 															)
 													   </cfquery>
-													   <cfmail server="#servername#" username="gallart@onlinegalleryart.com"
+													   <!--- <cfmail server="#servername#" username="gallart@onlinegalleryart.com"
 													   password="re3objeC!P" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.Email#" subject="GallArt.com <> We Buy & Sell Fine Art <> Make An Offer" type="HTML">
 													   <font style="font-size: 10pt; font-family: Arial;">
 													   The following user made an offer on the piece below:
 													   <br><br>
-													   Name: #form.FNAME# #form.LNAME#<br>
+													   <!--- Name: #form.FNAME# #form.LNAME#<br> --->
+													   Name: #form.NAME#<br>
 													   Email Address: #form.Email#<br>
 													   Phone: #form.phone#<br>
 													   Best time to call: #form.best_time#<br>
@@ -288,7 +326,7 @@
 													   </cfif>
 													   <br><br>
 													   </font>
-												   </cfmail>
+												   </cfmail> --->
 													<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">
 															THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY
 															<br><br>
@@ -377,6 +415,16 @@
 																				   #DollarFormat(productinfo.gallery_price)#  &nbsp;
 																				  <!--- <b> #DollarFormat(productinfo.gallery_price)# </b> --->
 																				</cfif>
+
+
+																				<cfset actualPrice = 0>
+																				<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and application.showSalePrice EQ 1>
+																					<cfset actualPrice = productinfo.special_price>
+																				<cfelseif productinfo.gallery_price gt 0>
+																					<cfset actualPrice = productinfo.gallery_price>
+																				</cfif>
+
+																				<input type="hidden" id="actualPrice" value="#actualPrice#">
 						  
 																			 
 																			 <!--- </cfif> --->
@@ -450,36 +498,56 @@
 																		</span> 
 																	</h2>
 																	<div class="row">
-																		<div class="col-md-12">
+																		<!--- <div class="col-md-12">
 																			<div class="input-field">
 																				<cfinput type="text" size=40 maxsize=50 placeholder="First Name" name="fname" id="fname" value="#form.fname#" >
+																				<span class="star">*</span>
 																					<span class="error-message" id="fnameError"></span>
 																			</div>
 																		</div>
 																		<div class="col-md-12">
 																			<div class="input-field">
 																				<cfinput type="text" size=40 maxsize=50 placeholder="Last Name" name="lname" id="lname" value="#form.lname#" >
+																				<span class="star">*</span>
 																					<span class="error-message" id="lnameError"></span>
 																			</div>
-																		</div>
+																		</div> --->
+
+																		<span style="color: ##ff0000;">* Required</span> <br><br>
+
 																		<div class="col-md-12">
 																			<div class="input-field">
-																				<cfinput type="text" size=40 maxsize=50 name="email" placeholder="Email Address" id="email" value="#form.email#"  >
+																				<cfinput type="text" size=40 maxsize=50 placeholder="Enter your Name*" name="name" id="name" value="#form.name#" >
+																				<!--- <span class="star">*</span> --->
+																					<span class="error-message" id="nameError"></span>
+																			</div>
+																		</div>
+
+																		<div class="col-md-12">
+																			<div class="input-field">
+																				<cfinput type="text" size=40 maxsize=50 name="email" placeholder="Enter your Email Address*" id="email" value="#form.email#"  >
+																				<!--- <span class="star">*</span> --->
 																					<span class="error-message" id="emailError"></span>
 																			</div>
 																		</div>
+																		<!--- <label><b>OR</b></label> --->
 																		<div class="col-md-12">
 																			<div class="input-field">
-																				<cfinput type="text" size=40 maxsize=50 name="phone" placeholder="Enter Your Phone Number" id="phone" value="#form.phone#" required="No">
-																						<span class="error-message" id="phoneError"></span>
+																				
+																				<cfinput type="text" size=40 maxsize=50 name="phone" placeholder="Enter your Phone Number" id="phone" value="#form.phone#" required="No">
+																				<!--- <span class="star">*</span> --->
+																					<span class="error-message" id="phoneError"></span>
 																			</div>
 																		</div>
-																		<div class="col-md-12">
+
+																		<!--- <div class="col-md-12">
 																			<div class="input-field">
 																				<cfinput type="text" size=40 maxsize=50 placeholder="Best Time To Call" name="best_time" id="best_time" value="#form.best_time#" required="No">
+																				<!--- <span class="star">*</span> --->
 																				<span class="error-message" id="best_timeError"></span>
 																			</div>
-																		</div>
+																		</div> --->
+
 																		<!--- <div class="col-md-12">
 																			<div class="input-field flex-form-group checkbox-form-group">
 																				<div class="checkbox">
@@ -498,11 +566,12 @@
 																		<div class="col-md-12">
 																			<div class="input-field">
 																				<!--- <TEXTAREA NAME="comments" placeholder="Comments" ROWS=10 COLS=35>#form.comments#</TEXTAREA> --->
-																				<cfinput type="text" name="Offer" size="10" id="Offer" message="Please make an offer - enter a dollar amount, no $ or decimal." placeholder="Please make an offer - enter a dollar amount, no $ or decimal." validate="integer" >
+																				<cfinput type="text" name="Offer" size="10" id="Offer" message="Enter a Dollar amount, no $ or decimal." placeholder="Enter a Dollar amount, no $ or decimal.*" validate="integer" >
+																				<!--- <span class="star">*</span> --->
 																				<span class="error-message" id="OfferError"></span>
 																			</div>
 																		</div>
-																		<div class="col-md-12">
+																		<!--- <div class="col-md-12">
 																			<div class="input-field">
 																				<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier,tahoma"
 																				   fontsize="28" />
@@ -510,10 +579,16 @@
 																		</div>
 																		<div class="col-md-12">
 																			<div class="input-field" style="margin-top: 10px;">
-																				<cfinput type="text" placeholder="Please enter the characters in the" name="captcha" id="captcha" >
+																				<cfinput type="text" placeholder="Please enter the characters in the image" name="captcha" id="captcha" >
 																				<span class="error-message" id="captchaError"></span>
 																			</div>
+																		</div> --->
+
+																		<div class="input-field pt-3">
+																			<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+																			<span class="error-message" id="m_recaptchaError"></span>
 																		</div>
+
 																		<div class="col-md-12 mt-3">
 																			<div class="input-button">
 																				<button type="submit" class="SeeMore">Submit</button>
@@ -575,6 +650,8 @@
 	   </tr>
 	   <cfinclude template="frmxss.cfm">
 
+	   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 	   <script>
 		function validateEpricingForm() {
          let isValid = true;
@@ -582,54 +659,79 @@
          // Clear previous error messages
          document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
          
-         // Get form field values
-         const fname = document.getElementById('fname').value.trim();
-         const lname = document.getElementById('lname').value.trim();
+    	//  Get form field values
+        //  const fname = document.getElementById('fname').value.trim();
+        //  const lname = document.getElementById('lname').value.trim();
+         const name = document.getElementById('name').value.trim();
          const email = document.getElementById('email').value.trim();
-         const captcha = document.getElementById('captcha').value.trim();
-         const phone = document.getElementById('phone').value.trim();
-         const best_time = document.getElementById('best_time').value.trim();
+        //  const captcha = document.getElementById('captcha').value.trim();
+        //  const phone = document.getElementById('phone').value.trim();
+        //  const best_time = document.getElementById('best_time').value.trim();
          const Offer = document.getElementById('Offer').value.trim();
+         const actualPrice = document.getElementById('actualPrice').value.trim();
+
+
+		 
 
 		 const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
 		 const integerRegex = /^[0-9]+$/; 
+		 const emailRegex = /\S+@\S+\.\S+/;
+
+		 var recaptcha = grecaptcha.getResponse();
+		 console.log(recaptcha.length);
+
+
+		 if (recaptcha.length == 0) {
+			document.getElementById("m_recaptchaError").innerText = "Please confirm you are not a robot.";
+			isValid = false;
+		}
 		 
          
          // Validate FIRST NAME
-         if (!fname) {
-            document.getElementById('fnameError').textContent = 'Please fill in your first name.';
-            isValid = false;
-         }
+        //  if (!fname) {
+        //     document.getElementById('fnameError').textContent = 'Please fill in your first name.';
+        //     isValid = false;
+        //  }
          
-         // Validate LAST NAME
-         if (!lname) {
-            document.getElementById('lnameError').textContent = 'Please fill in your last name.';
+        //  // Validate LAST NAME
+        //  if (!lname) {
+        //     document.getElementById('lnameError').textContent = 'Please fill in your last name.';
+        //     isValid = false;
+        //  }
+
+		
+
+		 if (!name) {
+            document.getElementById('nameError').textContent = 'Please enter your name.';
             isValid = false;
          }
          
          // Validate EMAIL
-		 if (!email) {
-			document.getElementById('emailError').textContent = 'Please fill in your email address.';
+		 if (!email ) {
+			document.getElementById('emailError').textContent = 'Please enter an email address.';
+			// document.getElementById('phoneError').textContent = 'Please enter a phone number or email address.';
 			isValid = false;
+		}
 
-       			 // Only show errors for phone and best_time if email is also empty
-				if (!phone) {
-					document.getElementById('phoneError').textContent = 'Please enter your phone number.';
-					isValid = false;
-				}else if (phone.length < 5) {
-					document.getElementById('phoneError').textContent = 'Please enter a complete phone number digits.';
-					isValid = false;
-				}
+		// If email is entered, validate format
+		if (email && !emailRegex.test(email)) {
+			document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+			isValid = false;
+		}
 
-				if (!best_time) {
-					document.getElementById('best_timeError').textContent = 'Best time to call is required.';
-					isValid = false;
-				}
-			} else if (!/\S+@\S+\.\S+/.test(email)) {
-				document.getElementById('emailError').textContent = 'Please enter a valid email address.';
-				isValid = false;
-			}
+		// If phone is entered, validate minimum length
+		// if (phone) {
+		// 	if (phone.length < 5) {
+		// 		document.getElementById('phoneError').textContent = 'Please enter a complete phone number.';
+		// 		isValid = false;
+		// 	}
 
+		// 	// If phone is entered, best_time is required
+		// 	if (!best_time) {
+		// 		document.getElementById('best_timeError').textContent = 'Please provide the best time to call.';
+		// 		isValid = false;
+		// 	}
+		// }
 		//  if(!phone){
 		// 	document.getElementById('phoneError').textContent = 'Please enter your phone number';
 		// 	isValid = false;
@@ -653,13 +755,16 @@
 		 }  else if (parseInt(Offer, 10) === 0) {
 			document.getElementById('OfferError').textContent = 'Please enter an offer price greater than 0.';
 			isValid = false;
-		 }
+		 } else if (parseInt(Offer, 10) >= actualPrice) {
+			document.getElementById('OfferError').textContent = 'Offer price must be less than the sale or gallery price.';
+			isValid = false;
+		}
          
          // Validate CAPTCHA
-         if (!captcha) {
-            document.getElementById('captchaError').textContent = 'Please enter the characters in the image.';
-            isValid = false;
-         }
+        //  if (!captcha) {
+        //     document.getElementById('captchaError').textContent = 'Please enter the characters in the image.';
+        //     isValid = false;
+        //  }
          
          return isValid;
          }
@@ -674,6 +779,13 @@
 			}
 			.input-field {
 				margin-bottom: 15px;
+				position: relative;
+			}
+			.star{
+				color: red;
+				position: absolute;
+				top: -10;
+				right: 0
 			}
 			input, select, textarea {
 				border: 1px solid #bbbbbb;

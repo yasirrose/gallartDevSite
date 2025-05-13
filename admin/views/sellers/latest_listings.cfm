@@ -195,22 +195,17 @@
 		</td>
 	</tr>
 </table>
-<script language="JavaScript">
-	for(i = 0; i < gridForm.searchActive.options.length; i++){
-		if(gridForm.searchActive.options[i].value == '<cfoutput>#form.searchActive#</cfoutput>'){
-			gridForm.searchActive.options[i].selected = true;
+<cfif structKeyExists(form, "searchActive") AND structKeyExists(form, "searchTimeframe")>
+	<script language="JavaScript">
+		var searchActiveVal = "<cfoutput>#JSStringFormat(form.searchActive)#</cfoutput>";
+		var searchTimeframeVal = "<cfoutput>#JSStringFormat(form.searchTimeframe)#</cfoutput>";
+	
+		for (var i = 0; i < gridForm.searchActive.options.length; i++) {
+			gridForm.searchActive.options[i].selected = (gridForm.searchActive.options[i].value === searchActiveVal);
 		}
-		else{
-			gridForm.searchActive.options[i].selected = false;
+	
+		for (var i = 0; i < gridForm.searchTimeframe.options.length; i++) {
+			gridForm.searchTimeframe.options[i].selected = (gridForm.searchTimeframe.options[i].value === searchTimeframeVal);
 		}
-	}
-	for(i = 0; i < gridForm.searchTimeframe.options.length; i++){
-		if(gridForm.searchTimeframe.options[i].value == '<cfoutput>#form.searchTimeframe#</cfoutput>'){
-			gridForm.searchTimeframe.options[i].selected = true;
-		}
-		else{
-			gridForm.searchTimeframe.options[i].selected = false;
-		}
-	}
-
-</script>
+	</script>
+</cfif>

@@ -24,7 +24,7 @@ function latestGridChange(thisId) {
 	strLatest = edit.getListingFromId(thisId);
 	email = strLatest['SELLER_EMAIL'];
 	frm.seller_email.value = email;
-	document.getElementById('emailLink').innerHTML = '<a href="mailto: '+email+'" style="color: #000000; text-decoration: none;">[SEND EMAIL]</a>';
+	document.getElementById('emailLink').innerHTML = '<a href="mailto: '+email+'" style="color: black; text-decoration: none;">[SEND EMAIL]</a>';
 	active	= strLatest['ACTIVE'];
 	for(i = 0; i < frm.active.length; i++){
 		if(frm.active[i].value == active){

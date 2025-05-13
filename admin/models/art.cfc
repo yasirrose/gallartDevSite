@@ -347,7 +347,7 @@
 						artSubject     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
 						artSize     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
 						promotion     = <cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">
-						<cfif form.deactivated EQ 1 AND form.active EQ 1>
+						<cfif isDefined('form.deactivated') and form.deactivated EQ 1 AND form.active EQ 1>
 							,ACTIVE_DATE = #now()#
 						</cfif>
 	                WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.uid#">
@@ -1207,6 +1207,7 @@
 				ORDER BY datestamp desc
 	      	</cfif>
 	   	</cfquery>
+		
 
    		<cfreturn queryconvertforgrid(qListings,page,pagesize)/>
 

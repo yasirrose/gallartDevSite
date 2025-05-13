@@ -23,7 +23,10 @@
 		<cfset var qMakeoffer='' />
 	
 	   	<cfquery name="qMakeoffer" datasource="#application.dsource#">
-	      	SELECT CONVERT(CHAR(9),mo.datestamp,6) as offerdate,u.lname as seller_lname,u.fname as seller_fname,u.email as seller_email,u.phone as seller_phone,c.lname as customer_lname,c.fname as customer_Fname,c.email as customer_email,*
+	      	SELECT CONVERT(CHAR(9),mo.datestamp,6) as offerdate,u.lname as seller_lname,u.fname as seller_fname,u.email as seller_email,u.phone as seller_phone,c.lname as customer_lname,c.fname as customer_Fname,c.email as customer_email,c.name as customer_name,
+			CASE WHEN c.name IS NULL OR LTRIM(RTRIM(c.name)) = '' 
+			THEN LTRIM(RTRIM(c.fname + ' ' + c.lname)) 
+			ELSE c.name END AS combine_customer_name, *
 	      	FROM makeoffer mo
 			INNER JOIN customers c on mo.fk_customers = c.id
 			INNER JOIN products p on mo.fk_products = p.uid

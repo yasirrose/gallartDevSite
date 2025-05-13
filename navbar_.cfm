@@ -72,7 +72,7 @@
 	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav me-auto ms-auto">
 			<li class="nav-item">
-				<a href="index.cfm?xss=#xss#" class="nav-link">Home</a>
+				<a href="/index.cfm?xss=#xss#" class="nav-link">Home</a>
 			</li>
 			<li class="nav-item">
 				<a href="new_listings.cfm?xss=#xss#" class="nav-link">Recent Acquisitions</a>

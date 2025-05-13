@@ -4,36 +4,59 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 <cfif IsDefined("form.email")>
-    <cfquery name="ValidUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-        SELECT * FROM users
-        WHERE email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar">
-        AND password = <cfqueryparam value="#form.password#" cfsqltype="cf_sql_varchar">
-    </cfquery>
 
-    <cfif ValidUser.recordcount>
+    <cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+    <cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+        <cfhttpparam type="formField" name="secret" value="#apikey#">
+        <cfhttpparam type="formField" name="response" value="#form['g-recaptcha-response']#">
+        <cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+    </cfhttp>
 
-		<cfset session.sellerinfo.pk_users = ValidUser.pk_users>
-        <cfset session.sellerinfo.fname = ValidUser.fname>
-        <cfset session.sellerinfo.lname = ValidUser.lname>
-        <cfset session.sellerinfo.email = ValidUser.email>
-        <cfset session.sellerinfo.login = 1>
+    <cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
 
-		<cfif isDefined('xss')>
-			<cfset url_string = "overView.cfm?xss="&xss />
-			<cfelse>
-			<cfset url_string = "overView.cfm" />
-		</cfif>
+    <!--- <cfdump var="#captchaResponse.success#" abort="true"> --->
 
-        <cfset result = {
-            "success": true,
-            "redirectURL": url_string
-        }>
+    <cfif captchaResponse.success  >
+        <cfquery name="ValidUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+            SELECT * FROM users
+            WHERE email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar">
+            AND password = <cfqueryparam value="#form.password#" cfsqltype="cf_sql_varchar">
+        </cfquery>
+    
+        <cfif ValidUser.recordcount>
+    
+            <cfset session.sellerinfo.pk_users = ValidUser.pk_users>
+            <cfset session.sellerinfo.fname = ValidUser.fname>
+            <cfset session.sellerinfo.lname = ValidUser.lname>
+            <cfset session.sellerinfo.email = ValidUser.email>
+            <cfset session.sellerinfo.login = 1>
+    
+            <cfif isDefined('xss')>
+                <cfset url_string = "overView.cfm?xss="&xss />
+                <cfelse>
+                <cfset url_string = "overView.cfm" />
+            </cfif>
+    
+            <cfset result = {
+                "success": true,
+                "redirectURL": url_string
+            }>
+        <cfelse>
+            <cfset result = {
+                "success": false,
+                "errorMessage": "Email or Password is Invalid. Please try again."
+            }>
+        </cfif>
+
     <cfelse>
         <cfset result = {
             "success": false,
-            "errorMessage": "Email or Password is Invalid. Please try again."
+            "errorMessage": "reCAPTCHA verification failed. Please try again."
         }>
+
     </cfif>
+
+   
 
     <cfcontent type="application/json" reset="yes">
     <cfoutput>#serializeJSON(result)#</cfoutput>
@@ -59,6 +82,12 @@
 						<input type="password" id="password" name="password">
 						<span class="error-message" id="passwordError"></span>
 					</div>
+
+                    <div class="input-field pt-3">
+                        <div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+                        <span class="error-message" id="recaptchaError"></span>
+                    </div>
+
 					<div class="input-button">
 						<button type="submit" style="margin: auto;" class="SeeMore">Sign In</button>
 					</div>
@@ -78,6 +107,8 @@
 
 
 <!--- </cfoutput> --->
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 <script>
 
@@ -101,60 +132,67 @@
 			});
 
         document.getElementById('loginForm').addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevent form from refreshing the page
+            e.preventDefault(); // Prevent form from refreshing the page
 
-        // Clear previous error messages
-        document.getElementById('email_loginError').textContent = '';
-        document.getElementById('passwordError').textContent = '';
-        document.getElementById('errorMessage').textContent = '';
+            // Clear previous error messages
+            document.getElementById('email_loginError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
+            document.getElementById('errorMessage').textContent = '';
 
-        let isValid = true;
-        const email_login = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
+            let isValid = true;
+            const email_login = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const recaptchaResponse = grecaptcha.getResponse();
 
-        if (!email_login) {
-            document.getElementById('email_loginError').textContent = 'Please enter your email address';
-            isValid = false;
-        }else if (!/\S+@\S+\.\S+/.test(email_login)) {
-            document.getElementById('email_loginError').textContent = 'Please enter a valid email address.';
-            isValid = false;
-         }
+            if (!recaptchaResponse) {
+                document.getElementById('recaptchaError').textContent = 'Please verify reCAPTCHA.';
+                isValid = false;
+            }
 
-        if (!password) {
-            document.getElementById('passwordError').textContent = 'Please enter your password';
-            isValid = false;
-        }
+            if (!email_login) {
+                document.getElementById('email_loginError').textContent = 'Please enter your email address';
+                isValid = false;
+            }else if (!/\S+@\S+\.\S+/.test(email_login)) {
+                document.getElementById('email_loginError').textContent = 'Please enter a valid email address.';
+                isValid = false;
+            }
 
-        if (!isValid) return;
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Please enter your password';
+                isValid = false;
+            }
 
-        // Create a FormData object for AJAX
-        const formData = new FormData();
-        formData.append('email', email_login);
-        formData.append('password', password);
+            if (!isValid) return;
 
-        // Send an AJAX request
-		fetch('user_login_page.cfm', {
-    method: 'POST',
-    body: formData,
-})
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json(); // Parse JSON only if response is valid
-    })
-    .then(data => {
-        if (data.success) {
-           
-            window.location.href = data.redirectURL; // Redirect on successful login
-        } else {
-            toastr.error(data.errorMessage ); // Display error message
-        }
-    })
-    .catch(error => {
-        document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
-        console.error('Error:', error);
-    });
+            // Create a FormData object for AJAX
+            const formData = new FormData();
+            formData.append('email', email_login);
+            formData.append('password', password);
+            formData.append('g-recaptcha-response', recaptchaResponse);
+
+            // Send an AJAX request
+            fetch('user_login_page.cfm', {
+                method: 'POST',
+                body: formData,
+            })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse JSON only if response is valid
+        })
+        .then(data => {
+            if (data.success) {
+            
+                window.location.href = data.redirectURL; // Redirect on successful login
+            } else {
+                toastr.error(data.errorMessage ); // Display error message
+            }
+        })
+        .catch(error => {
+            document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
+            console.error('Error:', error);
+        });
     });
 </script>
  <style>

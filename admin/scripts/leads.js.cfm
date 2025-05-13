@@ -52,12 +52,13 @@ getKeywords = function(){
 
    function doEdit(type) {
 
-	var fname = document.getElementById('fname').value.trim();
-	var lname = document.getElementById('lname').value.trim();
+	<!--- var fname = document.getElementById('fname').value.trim(); --->
+	<!--- var lname = document.getElementById('lname').value.trim(); --->
+	var name = document.getElementById('name').value.trim();
 	var email = document.getElementById('leadEmail').value.trim();
 	
 
-	  if (fname === '') {
+	  <!--- if (fname === '') {
 		  toastr.error('First Name is required.');
 		  document.getElementById('fname').focus();
 		  return false;
@@ -67,20 +68,26 @@ getKeywords = function(){
 		  toastr.error('Last Name is required.');
 		  document.getElementById('lname').focus();
 		  return false;
-	  }
+	  } --->
 
-	  if (email === '') {
-		  toastr.error('Email is required.');
-		  document.getElementById('leadEmail').focus();
-		  return false;
-	  } else {
-		  // Simple email format check using regex
-		  var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		  if (!emailPattern.test(email)) {
-			  toastr.error('Please enter a valid email address.');
-			  document.getElementById('seller_email').focus();
-			  return false;
-		  }
+		if (name === '') {
+			toastr.error('Name is required.');
+			document.getElementById('name').focus();
+			return false;
+		}
+
+		if (email === '') {
+			toastr.error('Email is required.');
+			document.getElementById('leadEmail').focus();
+			return false;
+		} else {
+			// Simple email format check using regex
+			var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailPattern.test(email)) {
+				toastr.error('Please enter a valid email address.');
+				document.getElementById('seller_email').focus();
+				return false;
+			}
 	  }
 
 	  
@@ -113,6 +120,7 @@ getKeywords = function(){
 	document.getElementById('fk_employees').value = '<cfoutput>#session.userinfo.pk_employees#</cfoutput>';
    	document.getElementById('fname').value = '';
    	document.getElementById('lname').value = '';
+   	document.getElementById('name').value = '';
    	document.getElementById('leadEmail').value = '';
 	document.getElementById('cellphone').value = '';
 	document.getElementById('phone').value = '';
@@ -153,6 +161,24 @@ getKeywords = function(){
 	empDisplay = strLead['EMPDISPLAY'];
 	origin = strLead['ORIGIN'];
 	maillist = strLead['MAILLIST'];
+
+
+	var fname = strLead.RESULTSET.DATA[0][4]; // FNAME
+	var lname = strLead.RESULTSET.DATA[0][5]; // LNAME
+	var name = strLead.RESULTSET.DATA[0][31]; // NAME
+
+	
+	<!--- console.log('test1: ' + fname); --->
+
+
+    // Set the name field based on logic
+    if (!name || name.trim() === "") {
+        frm.name.value = (fname ? fname : "") + " " + (lname ? lname : "");
+    } else {
+        frm.name.value = name;
+    }
+
+
 	for(i = 0; i < frm.origin.options.length; i++){
 		if(frm.origin.options[i].value == origin){
 			frm.origin.options[i].selected = true;

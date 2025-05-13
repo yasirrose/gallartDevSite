@@ -42,7 +42,7 @@
 						<strong>Title:</strong>
 					</td>
 					<td>
-						<cfinput name="searchTitle" size="30" />
+						<cfinput name="searchTitle" id="searchTitle" size="30" />
 					</td>
 
 				</tr>
@@ -284,7 +284,8 @@
 				<tr>
 					<td colspan="2" align="center">
 						<input type="Reset">
-						<cfinput type="button" name="searchBtn" id="searchBtn" value="Search" onclick="document.getElementById('showResults').value = 1; ColdFusion.Grid.refresh('data', false);" />
+						<!--- <cfinput type="button" name="searchBtn" id="searchBtn" value="Search" onclick="document.getElementById('showResults').value = 1; ColdFusion.Grid.refresh('data', false);" /> --->
+						<cfinput type="button" name="searchBtn" id="searchBtn" value="Search" onclick="encodeSearchTitle(); ColdFusion.Grid.refresh('data', false);" />
 						<input type="Submit" value="Ken's Spreadsheet View" />
 					</td>
 				</tr>
@@ -349,6 +350,14 @@
 
 
 <script>
+
+	function encodeSearchTitle() {
+    var searchTitleValue = document.getElementById('searchTitle').value;
+    document.getElementById('searchTitle').value = encodeURIComponent(searchTitleValue);
+    document.getElementById('showResults').value = 1;
+}
+
+
 	$(document).ready(function () {
 		$('.select2').select2({
 			matcher: function (params, data) {

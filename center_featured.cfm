@@ -35,7 +35,7 @@
 				</div>
 				<div class="featured-heading" itemscope itemtype="http://schema.org/ArtGallery">
 					<h5 itemprop="name">
-						<a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
+						<a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>" >
 							<cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
 							#artist_name#</a>
 					</h5>
@@ -47,6 +47,28 @@
 	</cfoutput>
 </div>
 </div>
+
+<!--- <script>
+	function changeurl(event, man, xss) {
+	  event.preventDefault(); // stop the normal link navigation
+  
+	  // Convert "Indiana, Robert" to "indiana-robert"
+	  const artistSlug = man.toLowerCase()
+		.replace(/\s*,\s*/g, '-') // replace commas with hyphens
+		.replace(/\s+/g, '-');    // replace spaces with hyphens
+  
+	  // Create the new URL
+	  const newURL = `${window.location.origin}/artists/${artistSlug}/`;
+	  console.log(newURL);
+	  
+	  // Redirect to the new URL
+	  window.location.replace(newURL);
+  
+	  
+	}
+  </script> --->
+
+
 <!--- <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
 		<td style="padding: 0 25px;" align="center">
