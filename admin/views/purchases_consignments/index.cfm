@@ -87,7 +87,8 @@ function validEntries(frm) {
 				<tr>
 					<td colspan="3">
 						<cfgrid format="html" name="data" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.purchases_consignments.getPurchasesConsignments({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchName},{searchEmail},{searchFromDate},{searchToDate})">
-						    <cfgridcolumn name="name" header="Name" width="80">
+						    <!--- <cfgridcolumn name="name" header="Name" width="80"> --->
+						    <cfgridcolumn name="user_name" header="Name" width="200">
 							<cfgridcolumn name="email" header="Email" width="175">
 							<cfgridcolumn name="datestamp" header="Date" width="150">
 						</cfgrid>
@@ -106,15 +107,31 @@ function validEntries(frm) {
 						<table border = "0" width = "100%" cellpadding = "1" cellspacing = "0">
 							<tr>
 								<td width="100" style="font-size: 10px;">
+									First Name:
+								</td>
+								<td>
+									<cfinput type="text" name="fname" id="fname"  bind="{data.fname}" size="25">
+								</td>
+							</tr>
+							<tr>
+								<td width="100" style="font-size: 10px;">
+									Last Name:
+								</td>
+								<td>
+									<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" size="25">
+								</td>
+							</tr>
+							<tr>
+								<td width="100" style="font-size: 10px;">
 									Name:
 								</td>
 								<td>
-									<cfinput type="text" name="name" id="name"  bind="{data.name}" size="25">
+									<cfinput type="text" name="name" id="name"  bind="{data.user_name}" size="25">
 								</td>
 							</tr>
 							<tr>
 								<td style="font-size: 10px;">
-									Phone
+									Phone:
 								</td>
 								<td>
 									<cfinput type="text" name="phone" id="phone"  bind="{data.phone}" size="25">
@@ -130,7 +147,7 @@ function validEntries(frm) {
 							</tr>
 							<tr>
 								<td style="font-size: 10px;">
-									Artist
+									Artist:
 								</td>
 								<td>
 									<cfinput type="text" name="artist" id="artist"  bind="{data.artist}" size="25">
@@ -138,7 +155,7 @@ function validEntries(frm) {
 							</tr>
 							<tr>
 								<td style="font-size: 10px;">
-									Title
+									Title:
 								</td>
 								<td>
 									<cfinput type="text" name="title" id="title"  bind="{data.title}" size="25">
@@ -146,20 +163,20 @@ function validEntries(frm) {
 							</tr>
 							<tr>
 								<td style="font-size: 10px;">
-									Medium
+									Medium:
 								</td>
 								<td>
 									<select name="medium" style="font-size: 8pt;">
 										<option value="">Please Select
 										<cfoutput query="getAllMedium">
-											<option value="#path#">#ucase(path)#
+											<option value="#path#">#path#
 										</cfoutput>
 									</select>
 								</td>
 							</tr>
 							<tr>
 								<td style="font-size: 10px;">
-									Size
+									Price:
 								</td>
 								<td>
 									<cfinput type="text" name="size" id="size"  bind="{data.size}" size="30">

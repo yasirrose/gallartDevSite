@@ -16,8 +16,9 @@
                                    
                                     <div>
                                         <div class="slide-content">
-                                           
-                                           <div class="img-sec">
+
+                                          <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                             <div class="img-sec">
                                               <!-- Dynamic image source -->
                                               <cfif fileexists("http://23.20.226.157/img/#listings.uid#.jpg")>
                                                 <img src="http://23.20.226.157/img/#uid#.jpg" alt="gallery-img">
@@ -26,12 +27,32 @@
                                               </cfif>
                                               
                                            </div>
+                                          </a>
+                                           
+                                           
                                            <div class="content-sec">
                                               <div class="top-content">
                                                  <!-- Dynamic product title -->
 
-                                                 <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
-                                                   <h3 class="title">#name#</h3>
+                                                 <cfset words = ListToArray(name, " ")>
+                                                      <cfset updatedName = "">
+
+                                                      <cfloop index="word" array="#words#">
+                                                         <cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+                                             
+                                                         <cfif cleanWord EQ "FS">
+                                                            <!--- Preserve "FS" in uppercase --->
+                                                            <cfset updatedName = updatedName & " " & UCase(word)>
+                                                         <cfelse>
+                                                            <!--- Keep the original case of other words --->
+                                                            <cfset updatedName = updatedName & " " & word>
+                                                         </cfif>
+                                                      </cfloop>
+
+                                                      <cfset updatedName = Trim(updatedName)>
+
+                                                 <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
+                                                   <h3 class="title-name">#updatedName#</h3>
                                                  </a>
 
                                                  
@@ -88,7 +109,7 @@
                                               </div>
                                               <!-- Dynamic meta information -->
 
-                                              <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
+                                              <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
 
                                                 <cfset nameParts = listToArray(listings.manufacturer, ",")>
                                                 <cfif  arrayLen(nameParts) EQ 2 >

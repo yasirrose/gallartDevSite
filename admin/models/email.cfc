@@ -191,6 +191,23 @@
 	 <cfreturn queryconvertforgrid(qEmail,page,pagesize)/>
   
  </cffunction>
+
+
+ <cffunction name="getNewsletter" access="remote" output="false">
+
+	<cfargument name="page" required="yes">
+   	<cfargument name="pageSize" required="yes">
+   	<cfargument name="gridsortcolumn" required="yes">
+   	<cfargument name="gridsortdirection" required="yes">
+
+	  
+	<cfquery name="qNewsletterEmail" datasource="#application.dsource#">
+		SELECT * FROM newsLetterUsers
+	</cfquery>
+	  
+	<cfreturn queryconvertforgrid(qNewsletterEmail,page,pagesize)/>
+  
+ </cffunction>
  
 <!--- <cffunction name="getEmployeeContacts" access="remote">
  		<cfargument name="count" required="no">
@@ -236,6 +253,81 @@
 	
 </cffunction>
 
+<cffunction name="getCombinedEmailData" access="remote" returntype="query" output="false">
+    <cfargument name="emailType" type="string" required="false" default="all">
+    <cfset var qCombined = queryNew("fname,lname,email,last_email_sent", "varchar,varchar,varchar,varchar")>
+
+    <cfif arguments.emailType EQ "all" OR arguments.emailType EQ "orders">
+        <!--- Employee Orders Data --->
+        <cfquery name="qEmployees" datasource="#application.dsource#">
+            SELECT lname, fname, email, employee_email
+            FROM orders O
+            INNER JOIN employees E ON O.fk_employees = E.pk_employees
+            WHERE E.pk_employees = #session.userinfo.pk_employees#
+            AND email IS NOT NULL
+            AND email <> ''
+            GROUP BY lname, fname, email, employee_email
+            ORDER BY email
+        </cfquery>
+
+        <!--- Add Employee Orders Rows --->
+        <cfloop query="qEmployees">
+            <cfset queryAddRow(qCombined)>
+            <cfset querySetCell(qCombined, "fname", fname)>
+            <cfset querySetCell(qCombined, "lname", lname)>
+            <cfset querySetCell(qCombined, "email", email)>
+            <cfset querySetCell(qCombined, "last_email_sent", employee_email)>
+        </cfloop>
+    </cfif>
+
+    <cfif arguments.emailType EQ "all" OR arguments.emailType EQ "newsletter">
+        <!--- Newsletter Users Data --->
+        <cfquery name="qNewsletters" datasource="#application.dsource#">
+            SELECT *
+            FROM newsLetterUsers where isdeleted is null order by id desc
+        </cfquery>
+
+        <!--- Add Newsletter Rows --->
+        <cfloop query="qNewsletters">
+            <cfset queryAddRow(qCombined)>
+            <cfset querySetCell(qCombined, "fname", "")>
+            <cfset querySetCell(qCombined, "lname", "")>
+            <cfset querySetCell(qCombined, "email", email)>
+            <cfset querySetCell(qCombined, "last_email_sent", dateFormat(created_at, "yyyy-mm-dd") & " (newsletter)")>
+        </cfloop>
+    </cfif>
+
+    <cfreturn qCombined>
+</cffunction>
+
+
+<cffunction name="exportNewsletterCSV" access="remote" returntype="void" output="true">
+    
+    
+    <cfquery name="qNewsletters" datasource="#application.dsource#">
+        SELECT email, created_at
+        FROM newsLetterUsers
+        WHERE isdeleted IS NULL
+        ORDER BY id DESC
+    </cfquery>
+
+    <!--- Output CSV headers --->
+
+	 <cfheader name="Content-Disposition" value='attachment; filename="newsletter_emails#DateFormat(createodbcdate(now()), "yyyymmdd")#.csv"'>
+        <cfcontent type="application/csv">
+        
+        "Email"
+        <cfoutput>
+        <cfloop query="qNewsletters">
+            "#qNewsletters.email#"
+        </cfloop>
+        </cfoutput>
+        </cfcontent>
+	
+</cffunction>
+
+
+
 <cffunction name="getEmployeeContactsLeads" access="remote">
 	<cfargument name="count" required="no">
 	<cfargument name="date_from" required="no">
@@ -279,6 +371,9 @@
 		ORDER by email
 	</cfquery>
 
+		<!--- <cfdump var="#qContacts.email#" > <br>
+		<cfdump var="#arguments.mailToMe#" > <br>
+		<cfdump var="#qTemplate.pk_employee_email#" abort="true"> --->
 		
 
 	<cfif arguments.mailToMe NEQ "emailToMe">

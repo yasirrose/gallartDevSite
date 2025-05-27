@@ -102,33 +102,33 @@
 
 	<!--
 
-	function isEmail(string) {
-	    if (string.search(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) != -1)
-	        return true;
-	    else
-	        return false;
-	}
-	validateFrm = function(){
-		var errorMsg = "";
-		if(document.quoteForm.fname.value == "") errorMsg += "Please enter your first name.\n";
-		if(document.quoteForm.lname.value == "") errorMsg += "Please enter your last name.\n";
-		if(isEmail(document.quoteForm.email.value) == false) errorMsg += "Please enter a proper email.\n";
-		if( document.quoteForm.phone.value == "" &&
-			document.quoteForm.cell.value == "" &&
-			document.quoteForm.otherphone.value == "") errorMsg += "Please enter a phone number.\n";
-		if(document.quoteForm.artist.value == "") errorMsg += "Please enter an artist name.\n";
-		if(document.quoteForm.title.value == "") errorMsg += "Please enter a title.\n";
-		if(document.quoteForm.pictureUpload.value == "") errorMsg += "You must upload a picture.\n";
-		if(document.quoteForm.captcha.value == "") errorMsg += "Please enter the characters in the image.\n";
+	// function isEmail(string) {
+	//     if (string.search(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) != -1)
+	//         return true;
+	//     else
+	//         return false;
+	// }
+	// validateFrm = function(){
+	// 	var errorMsg = "";
+	// 	if(document.quoteForm.fname.value == "") errorMsg += "Please enter your first name.\n";
+	// 	if(document.quoteForm.lname.value == "") errorMsg += "Please enter your last name.\n";
+	// 	if(isEmail(document.quoteForm.email.value) == false) errorMsg += "Please enter a proper email.\n";
+	// 	if( document.quoteForm.phone.value == "" &&
+	// 		document.quoteForm.cell.value == "" &&
+	// 		document.quoteForm.otherphone.value == "") errorMsg += "Please enter a phone number.\n";
+	// 	if(document.quoteForm.artist.value == "") errorMsg += "Please enter an artist name.\n";
+	// 	if(document.quoteForm.title.value == "") errorMsg += "Please enter a title.\n";
+	// 	if(document.quoteForm.pictureUpload.value == "") errorMsg += "You must upload a picture.\n";
+	// 	if(document.quoteForm.captcha.value == "") errorMsg += "Please enter the characters in the image.\n";
 		
-		if (errorMsg != "") {
-			alert(errorMsg);
-			return false;
-		} else {
-			document.quoteForm.submit();
-		}
+	// 	if (errorMsg != "") {
+	// 		alert(errorMsg);
+	// 		return false;
+	// 	} else {
+	// 		document.quoteForm.submit();
+	// 	}
 		
-	}
+	// }
 	// -->
 </script>
 <!--- thickbox --->
@@ -196,7 +196,18 @@
 													<h3>Free Quote Form</h3>
 												</div>
 
-												<cfif FORM.submitted>	
+												<cfif FORM.submitted>
+													
+													<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+
+													<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+														<cfhttpparam type="formField" name="secret" value="#apikey#">
+														<cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+														<cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+													</cfhttp>
+															
+													<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+													
 													<!--- Check for a bot. --->
 													<cfif phoneError>
 														<cfoutput>
@@ -223,7 +234,7 @@
 									
 															</script>
 															</cfoutput>
-													<cfelseif blnIsBot>
+													<cfelseif captchaResponse.success NEQ 'YES'>
 															<cfoutput>
 															<script language="JavaScript">
 																document.errorFrm.fname.value = '#form.fname#'
@@ -508,36 +519,49 @@
 													<div class="input-form">
 														<div class="input-field">
 															<label>First Name:</label>
-															<input type="Text" name="fname"  value="#form.fname#" size="40" />&nbsp;<span style="color:##ff0000;">* Required</span>
+															<input type="Text" name="fname" id="fname" value="#form.fname#" size="40" />
+															&nbsp;<span style="color:##ff0000;">* Required</span>
+															<span class="error-message" id="fnameError"></span>
 														</div>
 														<div class="input-field">
 															<label>Last Name:</label>
-															<input type="Text" name="lname"  value="#form.lname#" size="40" />&nbsp;<span style="color:##ff0000;">* Required</span>
+															<input type="Text" name="lname" id="lname" value="#form.lname#" size="40" />
+															&nbsp;<span style="color:##ff0000;">* Required</span>
+															<span class="error-message" id="lnameError"></span>
 														</div>
 														<div class="input-field">
 															<label>Email Address:</label>
-															<input type="Text" name="email"  value="#form.email#" size="40" />&nbsp;<span style="color:##ff0000;">* Required</span>
+															<input type="Text" name="email" id="email" value="#form.email#" size="40" />
+															&nbsp;<span style="color:##ff0000;">* Required</span>
+															<span class="error-message" id="emailError"></span>
 														</div>
+														<br>
 														<div class="input-field">
 															<span style="color:##ff0000; margin-bottom: 5px; display: block;">One phone number is required:</span>
 															<label>Phone Number:</label>
-															<cfinput type="Text" name="phone" value="#form.phone#" size="40" mask="(999) 999-9999" /> <span>(xxx) xxx-xxxx</span>
+															<cfinput type="Text" name="phone" id="phone" value="#form.phone#" size="40" mask="(999) 999-9999" /> <span>(xxx) xxx-xxxx</span>
+															<span class="error-message" id="phoneError"></span>
 														</div>
 														<div class="input-field">
 															<label>Cell Number:</label>
-															<cfinput type="Text" name="cell" value="#form.cell#" size="40" mask="(999) 999-9999" /> <span>(xxx) xxx-xxxx</span>
+															<cfinput type="Text" name="cell" id="cell" value="#form.cell#" size="40" mask="(999) 999-9999" /> <span>(xxx) xxx-xxxx</span>
+															<span class="error-message" id="cellError"></span>
 														</div>
 														<div class="input-field">
 															<label>Number Outside the US:</label>
-															<input type="Text" name="otherphone" value="#form.otherphone#" size="40" />
+															<input type="Text" name="otherphone" id="otherphone" value="#form.otherphone#" size="40" />
 														</div>
 														<div class="input-field">
 															<label>Artist:</label>
-															<input type="Text" name="artist" value="#form.artist#" size="40" />&nbsp;<span style="color:##ff0000;">* Required</span>
+															<input type="Text" name="artist" id="artist" value="#form.artist#" size="40" />
+															&nbsp;<span style="color:##ff0000;">* Required</span>
+															<span class="error-message" id="artistError"></span>
 														</div>
 														<div class="input-field">
 															<label>Title:</label>
-															<input type="Text" name="title" value="#form.title#" size="40" />&nbsp;<span style="color:##ff0000;">* Required</span>
+															<input type="Text" name="title" id="title" value="#form.title#" size="40" />
+															&nbsp;<span style="color:##ff0000;">* Required</span>
+															<span class="error-message" id="titleError"></span>
 														</div>
 														<div class="input-field">
 															<label>Medium:</label>
@@ -600,15 +624,25 @@
 														</div>
 														<div class="choose-field input-field">
 															<label>Upload Picture:</label>
-															<input type="File" name="pictureUpload" id="pictureUpload" />&nbsp;<span style="color:##ff0000;">* Required</span>
+															<input type="File" name="pictureUpload" id="pictureUpload" />
+															&nbsp;<span style="color:##ff0000;">* Required</span>
+															<span class="error-message" id="pictureUploadError"></span>
 														</div>
-														<div class="input-field">
+
+														<!--- <div class="input-field">
 															<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
 															<span id="captchaError" style="color: ##ff0000; font-weight: bold; display:none;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span>
 															<label><b>Please enter the characters in the image above:</b></label>
 															<span id="captchaCopy"></span><br>
 															<input type="text" name="captcha" id="captcha" />&nbsp;<span style="color:##ff0000;">* Required</span>
+														</div> --->
+
+														<div class="input-field pt-3">
+															<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+															<span class="error-message" id="recaptchaError"></span>
 														</div>
+
+
 														<div class="input-button">
 															<button type="submit" class="SeeMore" style="cursor: pointer;">Send</button>
 														</div>
@@ -652,3 +686,94 @@
 		</div>
 	</div>
 </div>
+
+   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+   <script>
+	function validateFrm() {
+
+		let isValid = true;
+		
+		document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+
+		const fname = document.getElementById('fname').value.trim();
+		const lname = document.getElementById('lname').value.trim();
+		const artist = document.getElementById('artist').value.trim();
+		const email = document.getElementById('email').value.trim();
+		const title = document.getElementById('title').value.trim();
+		const pictureUpload = document.getElementById('pictureUpload').value.trim();
+		const phone = document.getElementById('phone').value.trim();
+		const cell = document.getElementById('cell').value.trim();
+		const otherphone = document.getElementById('otherphone').value.trim();
+		// const captcha = document.getElementById('captcha').value.trim();
+
+		const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+		var recaptcha = grecaptcha.getResponse();
+		console.log(recaptcha.length);
+		
+
+		if (recaptcha.length == 0) {
+			document.getElementById("recaptchaError").innerText = "Please confirm you are not a robot.";
+			isValid = false;
+		}
+
+		if (!fname) {
+			document.getElementById('fnameError').textContent = 'Please enter your first name.';
+			isValid = false;
+		}
+
+		if (!lname) {
+			document.getElementById('lnameError').textContent = 'Please enter your last name.';
+			isValid = false;
+		}
+
+		if (!email) {
+			document.getElementById('emailError').textContent = 'Please enter your email.';
+			isValid = false;
+		} else if (!/\S+@\S+\.\S+/.test(email)) {
+			document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+			isValid = false;
+		}
+
+		if (!artist) {
+			document.getElementById('artistError').textContent = 'Please enter your artist name.';
+			isValid = false;
+		}
+
+		if (!title) {
+			document.getElementById('titleError').textContent = 'Please enter your title.';
+			isValid = false;
+		}
+
+		if (!phone && !cell && !otherphone) {
+			document.getElementById('phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+			isValid = false;
+		}else {
+			if (phone && !phoneRegex.test(phone)) {
+				document.getElementById('phoneError').textContent = 'Phone must be in the format (xxx) xxx-xxxx.';
+				isValid = false;
+			} else if (cell && !phoneRegex.test(cell)) {
+				document.getElementById('cellError').textContent = 'Cell must be in the format (xxx) xxx-xxxx.';
+				isValid = false;
+			} 
+		}
+
+		if (!pictureUpload) {
+			document.getElementById('pictureUploadError').textContent = 'You must upload a picture';
+			isValid = false;
+		}
+
+		return isValid;
+	}
+   </script>
+
+   <style>
+	.error-message {
+		color: #ff0000;
+		font-size: 0.9em;
+		margin-top: -2px;
+		display: block;
+	}
+   </style>

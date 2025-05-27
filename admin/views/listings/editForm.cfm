@@ -84,29 +84,29 @@ function validEntries(frm) {
 	}
 	console.log(frm.uid.value)
 	if(frm.name.value == ''){
-	alert('You must select a Name.');
-	frm.name.focus();
-	return false;
+		alert('You must select a Name.');
+		frm.name.focus();
+		return false;
 	}
 	if(frm.manufacturer.value == ''){
-	alert('You must select an Artist.');
-	frm.manufacturer.focus();
-	return false;
+		alert('You must select an Artist.');
+		frm.manufacturer.focus();
+		return false;
 	}
 	if(frm.path.value == ''){
-	alert('You must select a Medium.');
-	frm.path.focus();
-	return false;
+		alert('You must select a Medium.');
+		frm.path.focus();
+		return false;
 	}
 	if(frm.quantity.value == ''){
-	alert('You must select a Quantity.');
-	frm.quantity.focus();
-	return false;
+		alert('You must select a Quantity.');
+		frm.quantity.focus();
+		return false;
 	}
 	if(!isValidSize(frm.size.value)){
-	alert('You must enter a valid SIZE: only numbers and the letter x');
-	frm.size.focus();
-	return false;
+		alert('You must enter a valid SIZE: only numbers and the letter x');
+		frm.size.focus();
+		return false;
 	}
 	return true;
 
@@ -270,7 +270,7 @@ function popupWin(url) {
 						Art Subject:
 					</td>
 					<td>
-						<select name="artSubjectt" class="chosen-select artSubjectvalue" data-placeholder="Choose art Subject" multiple onchange="artSubjectvalue()">
+						<select name="artSubjectt" id="artSubjectt" class="chosen-select artSubjectvalue" data-placeholder="Choose art Subject" multiple onchange="artSubjectvalue()">
 							<option value="">Search by Subject</option>
 							<cfoutput query="qGetSubject">
 								<option value="#filterName#">#filterName#</option>

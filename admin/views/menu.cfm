@@ -99,6 +99,7 @@
 								<li><a href="index.cfm?event=email.selectTemplate">Email Blasts</a></li>
 								<li><a href="index.cfm?event=email.clickReport">Click Report</a></li>
 								<li><a href="index.cfm?event=email.popEmail">Pop Email</a></li>
+								<li><a href="index.cfm?event=email.newslettersUsers">Newsletters Email</a></li>
 							</ul>
 
 						</li>

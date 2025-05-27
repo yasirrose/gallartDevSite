@@ -666,9 +666,10 @@ a.SeeMore:hover {
 							<h2>Stay in touch</h2>
 							<p>Be the first to know about Gallery Art's upcoming events, recent acquisitions and sales.</p>
 							<div class="email-form">
-								<form id="signupForm" method="POST">
+								<form id="signupForm" method="POST"  onsubmit="return validateNewsletterForm()">
 									<div class="form-floating">
-										<input type="email" name="email" required class="form-control" id="email" placeholder="email">
+										<input type="email" name="email"  class="form-control" id="email" placeholder="email">
+										<span class="error-message" id="emailError"></span>
 										<label for="floatingInput">Email</label>
 									  </div>
 									<div class="privacy-content">
@@ -691,18 +692,44 @@ a.SeeMore:hover {
 		</div>
 	</cfif>
 	
+	<script>
+		function validateNewsletterForm() {
+			let isValid = true;
+		
+			// Clear previous error messages
+			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+
+			const email = document.getElementById('email').value.trim();
+
+			if (!email) {
+				document.getElementById('emailError').textContent = 'Please enter your email address.';
+				isValid = false;
+			} else if (!/\S+@\S+\.\S+/.test(email)) {
+				document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+				isValid = false;
+			}
+
+			return isValid;
+			
+		}
+	</script>
 
 
 	<cfif isDefined('form.email') and form.email neq ''>
 		<cfset email = trim(FORM.email)>
 		<cfset ipAddress = cgi.remote_addr>
 		<cfset createdAt = now()>
-		
-		<cfquery name="qGetNewsLetterUser" datasource="#application.dsource#">
-			Select * FROM newsLetterUsers where email = '#form.email#'
+
+		<cfquery name="qGetNewsLetterUserLogs" datasource="#application.dsource#">
+			Select * FROM newsLetterUsers where CAST([created_at] AS DATE) = #createdAt# and ipAddress = '#ipAddress#' and isdeleted is null
 		</cfquery>
+
+		<cfif qGetNewsLetterUserLogs.recordCount LT 2>
+			<cfquery name="qGetNewsLetterUser" datasource="#application.dsource#">
+				Select * FROM newsLetterUsers where email = '#form.email#'
+			</cfquery>
 		
-		<cfif qGetNewsLetterUser.recordCount EQ 0 >
+			<cfif qGetNewsLetterUser.recordCount EQ 0 >
 				<cfquery name="addNewsLetterUsers" datasource="#application.dsource#">
 					INSERT INTO newsLetterUsers (
 							email, 
@@ -722,15 +749,25 @@ a.SeeMore:hover {
 							window.location.href = 'index.cfm?xss=<cfoutput>#xss#</cfoutput>';
 						</script>
 					</cfoutput>
-			<cfelse>
-				<cfset session.email = email>
-				<cfoutput>
-					<script>
-						alert('You are already subscribed.');
-						window.location.href = 'index.cfm?xss=<cfoutput>#xss#</cfoutput>';
-					</script>
-				</cfoutput>
+				<cfelse>
+					<cfset session.email = email>
+					<cfoutput>
+						<script>
+							alert('You are already subscribed.');
+							window.location.href = 'index.cfm?xss=<cfoutput>#xss#</cfoutput>';
+						</script>
+					</cfoutput>
+			</cfif>
+		 <cfelse>
+			<cfoutput>
+				<script>
+					alert('You cannnot add record more than 2 times');
+					// window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
+				</script>
+			</cfoutput>
 		</cfif>
+		
+		
 		
 	
 		<!--- <cfelse>
@@ -748,24 +785,31 @@ a.SeeMore:hover {
 
 <style>
 	#myBtn {
-  display: none;
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  z-index: 100;
-  width: 50px; /* Small square size */
-  height: 50px;
-  background-color: white;
-  color: black;
-  border: none;
-  border-radius: 10px; /* Rounded corners for style */
-  cursor: pointer;
-  font-size: 28px; /* Icon size */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-}
+		display: none;
+		position: fixed;
+		bottom: 30px;
+		right: 30px;
+		z-index: 100;
+		width: 50px; /* Small square size */
+		height: 50px;
+		background-color: white;
+		color: black;
+		border: none;
+		border-radius: 10px; /* Rounded corners for style */
+		cursor: pointer;
+		font-size: 28px; /* Icon size */
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border: 1px solid black;
+	}
+
+	.error-message {
+		color: #ff0000;
+		font-size: 0.9em;
+		margin-top: 5px;
+		display: block;
+	}
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">

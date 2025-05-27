@@ -174,6 +174,10 @@
 													
 													<cfif FORM.submitted>
 
+														<!--- <cfdump var="#application.mailserver#"><br>
+														<cfdump var="#application.mailserver_un#"><br>
+														<cfdump var="#application.mailserver_pw#" abort="true"> --->
+
 														<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
 
 														<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
@@ -300,8 +304,17 @@
 															 '#form.best_time#'
 															)
 													   </cfquery>
-													   <!--- <cfmail server="#servername#" username="gallart@onlinegalleryart.com"
-													   password="re3objeC!P" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.Email#" subject="GallArt.com <> We Buy & Sell Fine Art <> Make An Offer" type="HTML">
+
+															<cftry>
+
+																<cfmail 
+													   server="#application.mailserver#" 
+													   username="#application.mailserver_un#"
+													   password="#application.mailserver_pw#" 
+													   to="tldz.dev12@gmail.com"   
+													   from="sales@gallart.com" 
+													   subject="GallArt.com <> We Buy & Sell Fine Art <> Make An Offer" 
+													   port="587" type="HTML">
 													   <font style="font-size: 10pt; font-family: Arial;">
 													   The following user made an offer on the piece below:
 													   <br><br>
@@ -326,7 +339,16 @@
 													   </cfif>
 													   <br><br>
 													   </font>
-												   </cfmail> --->
+												   </cfmail>
+
+																<cfcatch>
+																	<cfdump var="#cfcatch#" abort="true">
+																</cfcatch>
+															</cftry>
+
+													   
+
+
 													<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">
 															THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY
 															<br><br>

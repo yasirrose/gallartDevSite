@@ -208,6 +208,16 @@
 
 	</cfcase>
 
+	<cfcase value="newslettersUsers">
+
+		<cfinclude template="../views/layout.top.cfm" />
+
+		<cfinclude template="#ViewPath#/newsletters_email.cfm">
+
+		<cfinclude template="../views/layout.bottom.cfm" />
+
+	</cfcase>
+
 	<cfcase value="emailContactsFrame">
 
 		<cfinclude template="../views/layout.top.cfm" />

@@ -22,7 +22,8 @@
 		<cfset var qPurchasesConsignments='' />
 
 	   	<cfquery name="qPurchasesConsignments" datasource="#application.dsource#">
-	      	SELECT email as customer_email,*
+	      	SELECT email as customer_email, CASE WHEN name IS NULL OR name = '' THEN fname + ' ' + lname 
+			ELSE name END AS user_name, *
 	      	FROM purchases_consignments
 			WHERE 0=0 and isdeleted is null
 			<cfif arguments.name neq ''>
@@ -70,6 +71,8 @@
 	<cffunction name="editPurchasesConsignmentsFromForm" access="remote" output="false" returntype="boolean">
 	    <cfargument name="pk_purchases_consignments" type="string" default="">
 	    <cfargument name="NAME" type="string" default="">
+	    <cfargument name="FNAME" type="string" default="">
+	    <cfargument name="LNAME" type="string" default="">
 		<cfargument name="PHONE" type="string" default="">
 		<cfargument name="CUSTOMER_EMAIL" type="string" default="">
 		<cfargument name="ARTIST" type="string" default="">
@@ -122,6 +125,8 @@
 				<cfquery name="editPurchasesConsignments" datasource="#application.dsource#"> 
 	                UPDATE purchases_consignments SET 
 		                NAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
+		                FNAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FNAME#">,
+		                LNAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LNAME#">,
 						PHONE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PHONE#">,
 						EMAIL = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CUSTOMER_EMAIL#">,
 						<!---<cfif len(arguments.THISIMAGE)>

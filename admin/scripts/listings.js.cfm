@@ -477,6 +477,40 @@ function showNew () {
 	frm.manufacturer.value 	= '';
 	frm.path.value			= '';
 	frm.artType.value			= '';
+	<!--- document.getElementById('artistview').value = ''; --->
+
+	frm.artistview.options[0].selected 		= true;
+	frm.catstringview.options[0].selected 	= true;
+
+	for (var k = 0; k < frm.artTypes.options.length; k++) {
+		frm.artTypes.options[k].selected = false;
+	}
+	if (frm.artTypes.classList.contains('chosen-select')) {
+		frm.artTypes.dispatchEvent(new Event('chosen:updated', { bubbles: true }));
+	}
+
+	for (var k = 0; k < frm.artTypees.options.length; k++) {
+		frm.artTypees.options[k].selected = false;
+	}
+	if (frm.artTypees.classList.contains('chosen-select')) {
+		frm.artTypees.dispatchEvent(new Event('chosen:updated', { bubbles: true }));
+	}
+
+	for (var k = 0; k < frm.artSizee.options.length; k++) {
+		frm.artSizee.options[k].selected = false;
+	}
+	if (frm.artSizee.classList.contains('chosen-select')) {
+		frm.artSizee.dispatchEvent(new Event('chosen:updated', { bubbles: true }));
+	}
+
+
+	for (var k = 0; k < frm.artSubjectt.options.length; k++) {
+		frm.artSubjectt.options[k].selected = false;
+	}
+	if (frm.artSubjectt.classList.contains('chosen-select')) {
+		frm.artSubjectt.dispatchEvent(new Event('chosen:updated', { bubbles: true }));
+	}
+	
 
 	<!--- frm.artistview.options[0].selected 		= true;
 	frm.artTypes.options[0].selected 		= true;

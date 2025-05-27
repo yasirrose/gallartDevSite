@@ -81,8 +81,9 @@
 								<div class="address">
 									<p class="mb-3">Subscribe to receive our newsletter and notifications about new arrivals.</p>
 									<div class="footer__newsletter">
-										<form method="POST" >
-											<input type="email" id="footerEmail" name="footerEmail" required placeholder="Enter Your Email">
+										<form method="POST" onsubmit="return validateForm()">
+											<input type="email" id="footerEmail" size="15" maxsize="15" name="footerEmail"  placeholder="Enter Your Email">
+											<span class="error-message" id="footerEmailError"></span>
 											<button type="submit" class="footer__newsletter-btn" name="commit" aria-label="Subscribe">
 												<i class="fa fa-envelope"></i>
 												<span class="footer__newsletter-btn-label">
@@ -173,6 +174,27 @@
 			<cfset cookiesAccepted = "not_set">
 		</cfif>
 
+		<script>
+			function validateForm() {
+				let isValid = true;
+			
+				// Clear previous error messages
+				document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+
+				const email = document.getElementById('footerEmail').value.trim();
+
+				if (!email) {
+					document.getElementById('footerEmailError').textContent = 'Please enter your email address.';
+					isValid = false;
+				} else if (!/\S+@\S+\.\S+/.test(email)) {
+					document.getElementById('footerEmailError').textContent = 'Please enter a valid email address.';
+					isValid = false;
+				}
+
+				return isValid;
+				
+			}
+		</script>
 		
 		
 		<cfif NOT StructKeyExists(cookie, "userConsent")>
@@ -193,12 +215,22 @@
 		<cfset email = trim(FORM.footerEmail)>
 		<cfset ipAddress = cgi.remote_addr>
 		<cfset createdAt = now()>
+
 		
-		<cfquery name="qGetNewsLetterUser" datasource="#application.dsource#">
-			Select * FROM newsLetterUsers where email = '#form.footerEmail#'
+		<cfquery name="qGetNewsLetterUserLogs" datasource="#application.dsource#">
+			Select * FROM newsLetterUsers where CAST([created_at] AS DATE) = #createdAt# and ipAddress = '#ipAddress#' and isdeleted is null
 		</cfquery>
 		
-		<cfif qGetNewsLetterUser.recordCount EQ 0 >
+		<!--- <cfdump var="#form#" abort="true"> --->
+		<!--- <cfdump var="#qGetNewsLetterUserLogs.recordCount#" abort="true"> --->
+
+		<cfif qGetNewsLetterUserLogs.recordCount LT 2>
+
+			<cfquery name="qGetNewsLetterUser" datasource="#application.dsource#">
+				Select * FROM newsLetterUsers where email = '#form.footerEmail#' and isdeleted is null
+			</cfquery>
+
+			<cfif qGetNewsLetterUser.recordCount EQ 0 >
 				<cfquery name="addNewsLetterUsers" datasource="#application.dsource#">
 					INSERT INTO newsLetterUsers (
 							email, 
@@ -214,18 +246,29 @@
 			 	<cfset session.email = email>
 					<cfoutput>
 						<script>
+							alert('Your Email is Submitted');
 							window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
 						</script>
 					</cfoutput>
-			<cfelse>
-				<cfset session.email = email>
-				<cfoutput>
-					<script>
-						alert('You are already subscribed.');
-						window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
-					</script>
-				</cfoutput>
+				<cfelse>
+					<cfset session.email = email>
+					<cfoutput>
+						<script>
+							alert('You are already subscribed.');
+							window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
+						</script>
+					</cfoutput>
+			</cfif>
+		 <cfelse>
+			<cfoutput>
+				<script>
+					alert('You cannnot add record more than 2 times');
+					// window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
+				</script>
+			</cfoutput>
 		</cfif>
+
+		
 		
 	
 		<!--- <cfelse>
@@ -260,6 +303,15 @@
             });
         });
     </script>
+
+	<style>
+		.error-message {
+			color: #ff0000;
+			font-size: 0.9em;
+			margin-top: 5px;
+			display: block;
+		}
+	</style>
 	
 	<!--- <cfif structKeyExists(url, "action") AND url.action EQ "setCookie">
 		<!-- Set the cookie values based on the URL parameters -->

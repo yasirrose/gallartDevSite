@@ -52,7 +52,7 @@
 
 	   	<cfquery name="qListings" datasource="#application.dsource#">
 	      	SELECT CONVERT(CHAR(9),datestamp,6) as listingDate,CONVERT(CHAR(9),lastedit,6) as lasteditDate,'<a href="http://gallart.com/img/'+CAST(uid AS varchar(50))+'.jpg" target="_blank"><img src="http://gallart.com/img/thumbnails/'+CAST(uid AS varchar(50))+'.jpg" border="0" height="50" />' as 'Thumbnail',
-			UPPER(U.lname)+', '+UPPER(U.fname) as full_seller_name, 
+			UPPER(U.lname)+', '+UPPER(U.fname) as full_seller_name, p.promotion,  
 			CASE WHEN active = '0' THEN 'Inactive' ELSE 'Active' END AS Status,*
 	      	FROM products P
 			LEFT OUTER JOIN users U on P.fk_users = U.pk_users
@@ -64,10 +64,13 @@
 	      		AND name like '#arguments.name#%'
 	      	</cfif>
 			<cfif isDefined('arguments.manufacturer') AND arguments.manufacturer neq ''>
-	      		AND manufacturer like '#arguments.manufacturer#%'
+				<cfset decodedmanufacturer = URLDecode(arguments.manufacturer)>
+	      		-- AND manufacturer like '#arguments.manufacturer#%'
+	      		AND manufacturer like '#decodedmanufacturer#%'
 	      	</cfif>
 			<cfif isDefined('arguments.path') AND arguments.path neq ''>
-	      		AND path = '#arguments.path#'
+	      		<cfset decodedPath = URLDecode(arguments.path)>
+	      		AND path = '#decodedPath#'
 	      	</cfif>
 			<cfif isDefined('arguments.year') AND arguments.year neq ''>
 	      		AND year = '#arguments.year#'
@@ -1323,11 +1326,6 @@
 
 		<cfset var qListings='' />
 
-        <!--- <cfif arguments.searchArtist NEQ '' >
-            <cfdump var="#arguments.searchArtist#" abort="true">
-        </cfif> --->
-        
-
 		<cfif isDefined('arguments.fromPrice') AND arguments.fromPrice neq ''>
 			<cfset arguments.fromPrice 	= rereplace(arguments.fromPrice, "[^0-9|.]", "", "all")>
 		</cfif>
@@ -1530,6 +1528,7 @@
 		<cfargument name="artSize" required="no" type="string" default="">
 		<cfargument name="artSubject" required="no" type="string" default="">
 		
+		
 
 		<cfset var returnStruct = structNew() />
 		<cfset var qListings='' />
@@ -1542,9 +1541,11 @@
 			<cfset arguments.toPrice 	= rereplace(arguments.toPrice, "[^0-9|.]", "", "all")>
 		</cfif>
 
-        <cfif isDefined('arguments.groups') AND arguments.groups GT 0>
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 
-			<cfsavecontent variable="sql_where">
+        <cfif isDefined('arguments.groups') AND arguments.groups GT 0>
+			
+			<!--- <cfsavecontent variable="sql_where">
 				<cfoutput>
 					active = 1
 	                AND fk_users is null
@@ -1568,113 +1569,149 @@
 				<cfprocparam type="In" dbvarname="@SqlOrderBy" value="manufacturer" cfsqltype="CF_SQL_VARCHAR">
 				<cfprocresult name="qListings" resultset="1">
 				<cfprocresult name="totalrecords" resultset="2">
-			</cfstoredproc>
+			</cfstoredproc> --->
 
-        <cfelse>
 
-	   	<cfquery name="qListings" datasource="#application.dsource#">
-	      	SELECT UPPER(U.lname)+', '+UPPER(U.fname) as full_seller_name,*
-	      	FROM products P
-			LEFT OUTER JOIN users U on P.fk_users = U.pk_users
-			WHERE 0=0
-			<cfif isDefined('arguments.modelno') AND arguments.modelno neq ''>
-	      		AND modelno like '#arguments.modelno#%'
-	      	</cfif>
-			<cfif isDefined('arguments.name') AND arguments.name neq ''>
-	      		AND name like '#arguments.name#%'
-	      	</cfif>
-			<cfif isDefined('arguments.manufacturer') AND arguments.manufacturer neq ''>
-	      		AND manufacturer like '#arguments.manufacturer#%'
-	      	</cfif>
-			<cfif isDefined('arguments.path') AND arguments.path neq ''>
-	      		AND path = '#arguments.path#'
-	      	</cfif>
-			<cfif isDefined('arguments.year') AND arguments.year neq ''>
-	      		AND year = '#arguments.year#'
-	      	</cfif>
-			<cfif isDefined('arguments.height') and len(trim(arguments.height))>
-				AND (patindex('%x%',size) > 1 AND substring(size,1,patindex('%x%',size)-1) like '#arguments.height#')
-			</cfif>
-			<cfif isDefined('arguments.width') and len(trim(arguments.width))>
-				AND (patindex('%x%',size) > 1 AND replace(substring(size,patindex('%x%',size)+1,10),' ','') like '#arguments.width#%')
-			</cfif>
-			<cfif isDefined('arguments.caption') AND arguments.caption neq ''>
-	      		AND caption like '%#arguments.caption#%'
-	      	</cfif>
-			<cfif isDefined('arguments.fromPrice') AND arguments.fromPrice neq ''>
-				AND gallery_price >= #arguments.fromPrice#
-			</cfif>
-			<cfif isDefined('arguments.toPrice') AND arguments.toPrice neq ''>
-				AND gallery_price <= #arguments.toPrice#
-			</cfif>
-			<cfif isDefined('arguments.fromDate') AND arguments.fromDate neq ''>
-				AND datestamp >= '#dateFormat(arguments.fromDate)#'
-			</cfif>
-			<cfif isDefined('arguments.toDate') AND arguments.toDate neq ''>
-				AND datestamp <= '#dateFormat(arguments.toDate)#'
-			</cfif>
-			<cfif isDefined('arguments.fromLastedit') AND arguments.fromLastedit neq ''>
-				AND lastedit >= '#dateFormat(arguments.fromLastedit)#'
-			</cfif>
-			<cfif isDefined('arguments.toLastedit') AND arguments.toLastedit neq ''>
-				AND lastedit <= '#dateFormat(arguments.toLastedit)#'
-			</cfif>
-			<cfif isDefined('arguments.sellerId') and len(trim(arguments.sellerId))>
-				<cfif arguments.sellerId eq 0>
-				 	AND fk_users is not null
-				<cfelseif arguments.sellerId gt 0>
-					AND fk_users = #arguments.sellerId#
+			<cfquery name="qListings" datasource="#application.dsource#">
+				SELECT *
+				FROM products
+				WHERE active = 1
+					AND fk_users IS NULL
+					<cfif isDefined('arguments.alphaChar') AND arguments.alphaChar neq ''>
+						AND manufacturer LIKE <cfqueryparam value="#arguments.alphaChar#%" cfsqltype="cf_sql_varchar">
+					</cfif>
+					<cfif isDefined('arguments.fromPrice') AND arguments.fromPrice neq ''>
+						AND gallery_price >= <cfqueryparam value="#arguments.fromPrice#" cfsqltype="cf_sql_numeric">
+					</cfif>
+					<cfif isDefined('arguments.toPrice') AND arguments.toPrice neq ''>
+						AND gallery_price <= <cfqueryparam value="#arguments.toPrice#" cfsqltype="cf_sql_numeric">
+					</cfif>
+				ORDER BY manufacturer
+				OFFSET <cfoutput>#(arguments.page - 1) * arguments.groups#</cfoutput> ROWS
+				FETCH NEXT <cfoutput>#arguments.groups#</cfoutput> ROWS ONLY
+			</cfquery>
+
+			<cfquery name="totalrecords" datasource="#application.dsource#">
+				SELECT COUNT(*) as countall
+				FROM products
+				WHERE active = 1
+					AND fk_users IS NULL
+					<cfif isDefined('arguments.alphaChar') AND arguments.alphaChar neq ''>
+						AND manufacturer LIKE <cfqueryparam value="#arguments.alphaChar#%" cfsqltype="cf_sql_varchar">
+					</cfif>
+			</cfquery>
+
+			<cfset totalrecords  = totalrecords.countall>
+
+			
+
+         <cfelse>
+
+			<cfquery name="qListings" datasource="#application.dsource#">
+				SELECT UPPER(U.lname)+', '+UPPER(U.fname) as full_seller_name,*
+				FROM products P
+				LEFT OUTER JOIN users U on P.fk_users = U.pk_users
+				WHERE 0=0
+				<cfif isDefined('arguments.modelno') AND arguments.modelno neq ''>
+					AND modelno like '#arguments.modelno#%'
 				</cfif>
-			</cfif>
-			<cfif isDefined('arguments.onSale') AND arguments.onSale EQ 1>
-				AND closeout = 1
-			</cfif>
-			<cfif isDefined('arguments.trump') AND arguments.trump EQ 2>
-				AND location = 2
-			</cfif>
-			<cfif isDefined('arguments.auction') AND arguments.auction EQ 1>
-				AND auction = 1
-			</cfif>
-			<cfif isDefined('arguments.slideshow') AND arguments.slideshow EQ 1>
-				AND slideshow = 1
-			</cfif>
-			<cfif isDefined('arguments.frontShow') AND arguments.frontShow EQ 1>
-				AND frontshow = 1
-			</cfif>
-			<cfif isDefined('arguments.bottomHome') AND arguments.bottomHome EQ 1>
-				AND family > 0
-			</cfif>
-			<cfif isDefined('arguments.active')>
-				<cfif arguments.active EQ 1>
-					AND P.active = 1
-				<cfelseif arguments.active EQ 0>
-					AND P.active = 0
+				<cfif isDefined('arguments.name') AND arguments.name neq ''>
+					AND name like '#arguments.name#%'
 				</cfif>
-			</cfif>
-			<cfif isDefined('arguments.gallery_only') AND arguments.gallery_only EQ 1>
-				AND fk_users is null
-			</cfif>
-            <cfif isDefined('arguments.alphaChar') AND arguments.alphaChar neq ''>
-				AND manufacturer like '#arguments.alphaChar#%'
-			</cfif>
-            <cfif isDefined('arguments.artType') AND arguments.artType neq ''>
-				AND artType like '#arguments.artType#%'
-			</cfif>
-            <cfif isDefined('arguments.artTypee') AND arguments.artTypee neq ''>
-				AND artTypee like '#arguments.artTypee#%'
-			</cfif>
-            <cfif isDefined('arguments.artSize') AND arguments.artSize neq ''>
-				AND artSize like '#arguments.artSize#%'
-			</cfif>
-            <cfif isDefined('arguments.artSubject') AND arguments.artSubject neq ''>
-				AND artSubject like '#arguments.artSubject#%'
-			</cfif>
-            <cfif isDefined('arguments.alphaChar') AND arguments.alphaChar neq ''>
-            	ORDER BY manufacturer
-			<cfelse>
-            	ORDER BY name
-			</cfif>
-	   	</cfquery>
+				<cfif isDefined('arguments.manufacturer') AND arguments.manufacturer neq ''>
+					AND manufacturer like '#arguments.manufacturer#%'
+				</cfif>
+				<cfif isDefined('arguments.path') AND arguments.path neq ''>
+					AND path = '#arguments.path#'
+				</cfif>
+				<cfif isDefined('arguments.year') AND arguments.year neq ''>
+					AND year = '#arguments.year#'
+				</cfif>
+				<cfif isDefined('arguments.height') and len(trim(arguments.height))>
+					AND (patindex('%x%',size) > 1 AND substring(size,1,patindex('%x%',size)-1) like '#arguments.height#')
+				</cfif>
+				<cfif isDefined('arguments.width') and len(trim(arguments.width))>
+					AND (patindex('%x%',size) > 1 AND replace(substring(size,patindex('%x%',size)+1,10),' ','') like '#arguments.width#%')
+				</cfif>
+				<cfif isDefined('arguments.caption') AND arguments.caption neq ''>
+					AND caption like '%#arguments.caption#%'
+				</cfif>
+				<cfif isDefined('arguments.fromPrice') AND arguments.fromPrice neq ''>
+					AND gallery_price >= #arguments.fromPrice#
+				</cfif>
+				<cfif isDefined('arguments.toPrice') AND arguments.toPrice neq ''>
+					AND gallery_price <= #arguments.toPrice#
+				</cfif>
+				<cfif isDefined('arguments.fromDate') AND arguments.fromDate neq ''>
+					AND datestamp >= '#dateFormat(arguments.fromDate)#'
+				</cfif>
+				<cfif isDefined('arguments.toDate') AND arguments.toDate neq ''>
+					AND datestamp <= '#dateFormat(arguments.toDate)#'
+				</cfif>
+				<cfif isDefined('arguments.fromLastedit') AND arguments.fromLastedit neq ''>
+					AND lastedit >= '#dateFormat(arguments.fromLastedit)#'
+				</cfif>
+				<cfif isDefined('arguments.toLastedit') AND arguments.toLastedit neq ''>
+					AND lastedit <= '#dateFormat(arguments.toLastedit)#'
+				</cfif>
+				<cfif isDefined('arguments.sellerId') and len(trim(arguments.sellerId))>
+					<cfif arguments.sellerId eq 0>
+						AND fk_users is not null
+					<cfelseif arguments.sellerId gt 0>
+						AND fk_users = #arguments.sellerId#
+					</cfif>
+				</cfif>
+				<cfif isDefined('arguments.onSale') AND arguments.onSale EQ 1>
+					AND closeout = 1
+				</cfif>
+				<cfif isDefined('arguments.trump') AND arguments.trump EQ 2>
+					AND location = 2
+				</cfif>
+				<cfif isDefined('arguments.auction') AND arguments.auction EQ 1>
+					AND auction = 1
+				</cfif>
+				<cfif isDefined('arguments.slideshow') AND arguments.slideshow EQ 1>
+					AND slideshow = 1
+				</cfif>
+				<cfif isDefined('arguments.frontShow') AND arguments.frontShow EQ 1>
+					AND frontshow = 1
+				</cfif>
+				<cfif isDefined('arguments.bottomHome') AND arguments.bottomHome EQ 1>
+					AND family > 0
+				</cfif>
+				<cfif isDefined('arguments.active')>
+					<cfif arguments.active EQ 1>
+						AND P.active = 1
+					<cfelseif arguments.active EQ 0>
+						AND P.active = 0
+					</cfif>
+				</cfif>
+				<cfif isDefined('arguments.gallery_only') AND arguments.gallery_only EQ 1>
+					AND fk_users is null
+				</cfif>
+				<cfif isDefined('arguments.alphaChar') AND arguments.alphaChar neq ''>
+					AND manufacturer like '#arguments.alphaChar#%'
+				</cfif>
+				<cfif isDefined('arguments.artType') AND arguments.artType neq ''>
+					AND artType like '#arguments.artType#%'
+				</cfif>
+				<cfif isDefined('arguments.artTypee') AND arguments.artTypee neq ''>
+					AND artTypee like '#arguments.artTypee#%'
+				</cfif>
+				<cfif isDefined('arguments.artSize') AND arguments.artSize neq ''>
+					AND artSize like '#arguments.artSize#%'
+				</cfif>
+				<cfif isDefined('arguments.artSubject') AND arguments.artSubject neq ''>
+					AND artSubject like '#arguments.artSubject#%'
+				</cfif>
+				<cfif isDefined('arguments.alphaChar') AND arguments.alphaChar neq ''>
+					ORDER BY manufacturer
+				<cfelse>
+					ORDER BY name
+				</cfif>
+			</cfquery>
+
+			<cfset totalrecords  = qListings.recordcount>
 
 		</cfif>
 
@@ -1801,9 +1838,7 @@
                         WHERE uid = #this_deleteval#
                        </cfquery>
                 <cfelseif left(idx,8) eq 'MODELNO_'>
-                    <cfset this_keyval = right(idx,len(idx)-8)>
-                    
-    
+                    <cfset this_keyval = right(idx,len(idx)-8)>                       
                     <cfquery name="update" datasource="#application.dsource#">
                         UPDATE products
                         SET

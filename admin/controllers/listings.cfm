@@ -43,7 +43,7 @@
 	</cfcase>
 	
 	<cfcase value="procListing">
-    	<cfset fileSizeLimit = 1000000 />
+    	<cfset fileSizeLimit = 2000000 />
 	
 		<cfif structKeyExists(form,'Edit')>
 		

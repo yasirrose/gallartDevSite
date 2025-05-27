@@ -186,12 +186,12 @@ function artSizevalue(uid) {
 				<tr>
 					<td colspan="15">
 						<cfoutput>
-						<cfif  structKeyExists(form,'groups')>#getListingsMassUpdate.totalrecords.countall#<cfelse>#getListingsMassUpdate.qListings.recordcount#</cfif> listings found
+						<cfif  structKeyExists(form,'groups')>#getListingsMassUpdate.totalrecords#<cfelse>#getListingsMassUpdate.qListings.recordcount#</cfif> listings found
 						<cfif structKeyExists(form,'alphaCharNum')> where artist's name starts with the letter <cfoutput>#chr(form.alphaCharNum)#</cfoutput></cfif>
 						<cfif  structKeyExists(form,'groups')>
 							(from #(page-1)*groups+1# to
-						<cfif (getListingsMassUpdate.totalrecords.countall-(page*groups)-page) GT 0> 
-#page*groups#<cfelse>#getListingsMassUpdate.totalrecords.countall#</cfif>)
+						<cfif (getListingsMassUpdate.totalrecords-(page*groups)-page) GT 0> 
+#page*groups#<cfelse>#getListingsMassUpdate.totalrecords#</cfif>)
 						</cfif>.
 						</cfoutput>
 					</td>

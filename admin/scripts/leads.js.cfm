@@ -118,8 +118,8 @@ getKeywords = function(){
    function showNew () {
    	document.getElementById('pk_leads').value = '';
 	document.getElementById('fk_employees').value = '<cfoutput>#session.userinfo.pk_employees#</cfoutput>';
-   	document.getElementById('fname').value = '';
-   	document.getElementById('lname').value = '';
+   	<!--- document.getElementById('fname').value = ''; --->
+   	<!--- document.getElementById('lname').value = ''; --->
    	document.getElementById('name').value = '';
    	document.getElementById('leadEmail').value = '';
 	document.getElementById('cellphone').value = '';
