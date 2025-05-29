@@ -6,6 +6,7 @@
 	WHERE 0=0 <cfif isDefined('url.bioid') > and pk_bios = #url.bioId# </cfif>
 </cfquery>
 
+<!--- <cfdump var="#getBio#" abort="true"> --->
 
 <html>
 <head>
@@ -65,6 +66,42 @@
 														<!-- Output the content from the database -->
 														#getBio.bio#
 													</div>
+												<!--- <cfset bioImage = reReplace(getBio.bio, ".*?(<img[^>]+>).*", "\1", "ALL")>
+												<cfset bioText = reReplaceNoCase(getBio.bio, "<img[^>]+>", "", "ALL")>
+
+												<!-- Display image at the top -->
+													<!--- <div>
+														#bioImage#
+													</div> --->
+
+												<!-- Always show full content but initially hide anything after 500 characters -->
+													<div id="bio-content" class="bio-container">
+														<cfif not refind('<img[^>]+>', bioImage)>
+															<cfset bioImage = ''>
+														</cfif>
+														#bioImage#
+														<!-- The content will be truncated using CSS, but the full HTML is present -->
+														<div id="bio-preview" class="bio-preview">
+															<cfset bioText = reReplaceNoCase(bioText, 'text-align:\s?center;', '', 'ALL')>
+															#bioText#
+														</div>
+														
+														<!--- Step 1: Strip HTML tags --->
+														<cfset strippedBioText = REReplaceNoCase(bioText, "<[^>]*>", "", "ALL")>
+
+														<!--- Step 2: Replace non-breaking spaces (&nbsp;) and trim the result --->
+														<cfset strippedBioText = Trim(REReplaceNoCase(strippedBioText, "&nbsp;", "", "ALL"))>
+
+
+														<!--- <cfif strippedBioText NEQ "" >
+															<!-- Button to toggle between full and truncated content -->
+														<p style="font-weight: bold; cursor: pointer;" id="toggle-btn" onclick="toggleBio()">Show More</p>
+														</cfif> --->
+
+														
+													</div> --->
+											</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -82,6 +119,23 @@
 </tr>
 </cfoutput>
 <cfinclude template="frmxss.cfm">
+
+<!--- <style>
+    /* Initially, only show the first 500 characters, hide the rest */
+    .bio-preview {
+        display: -webkit-box;
+        -webkit-line-clamp: 5; /* Limiting the number of lines (adjust as needed) */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* When expanded, show full content */
+    .bio-preview.expanded {
+        -webkit-line-clamp: unset;
+        display: inline;
+    }
+	
+</style> --->
 
 <style>
     .bio-content img {

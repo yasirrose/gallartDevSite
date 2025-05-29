@@ -106,7 +106,7 @@
 												</div>
 												<div class="searchalpha-listing">
 													<cfquery name="data" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-														SELECT distinct manufacturer,artist 
+														SELECT distinct manufacturer,artist, LOWER(P.manufacturer) AS lower_manufacturer  
 														FROM products P
 														LEFT OUTER JOIN highlighted_artists HL on P.manufacturer = HL.artist
 														WHERE manufacturer like '#man#%' 
@@ -114,7 +114,7 @@
 														AND (path <> '') 
 														AND (path IS NOT NULL)
 														<!--- AND fk_users is null --->
-														ORDER BY manufacturer 
+														ORDER BY lower_manufacturer 
 													</cfquery>
 													<!--- <cfif man EQ "M">
 														<cfset temp = QueryAddRow(data)>
@@ -123,22 +123,28 @@
 													<cfquery dbtype="query" name="alpha_info">
 														select *
 														from data
-														ORDER BY manufacturer
+														ORDER BY lower_manufacturer
 													</cfquery>
+
+													<!--- <cfdump var="#alpha_info#" > --->
+
 													<cfif alpha_info.recordcount>
 														<!--- <h4><strong>Artists whose name begins with <cfoutput>#man#</cfoutput></strong>&nbsp;(Click artist's name to view art):</h4> --->
 														<div class="aloha-list">
 															<ul>
 																<cfoutput query="alpha_info">
 																	<li>
-																		<a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
+																		<a href="products.cfm?man=#URLEncodedFormat(manufacturer)#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
+
+																			<!--- <cfset capitalize_artistName = REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+
 																			<cfif len(artist) OR manufacturer EQ 'MAX, PETER'>
 																				<span style="color: ##ff0000; font-size: 14px;">
-																					#ucase(manufacturer)#
-																					<cfif manufacturer EQ 'MAX, PETER'> (ALL)</cfif>
+																					#manufacturer#
+																					<!--- <cfif manufacturer EQ 'MAX, PETER'> (ALL)</cfif> --->
 																				</span>
 																			<cfelse>
-																				#ucase(manufacturer)#
+																				#manufacturer#
 																			</cfif>
 																		</a>
 																	</li>

@@ -1,9 +1,11 @@
 <cfquery name="qGetBanners" datasource="#application.dsource#">
-    SELECT bannerImage
+    SELECT *
     FROM banners
     WHERE bannerImage IS NOT NULL
+    AND active = 'Yes'
 </cfquery>
 
+<!--- <cfdump var="#qGetBanners#"> --->
 
 <style>
     .slider {
@@ -25,7 +27,8 @@
     }
 
     .slide img {
-        width: 1145;
+        /* width: 1145; */
+        width: 100%;
         height: auto; /* Maintain aspect ratio */
         max-height: 400px; /* Set max height */
         object-fit: cover; /* Ensure images cover the entire slide area */
@@ -57,6 +60,13 @@
         background-color: rgba(0, 0, 0, 0.8); /* Change background on hover */
             color: white; /* Change arrow color to white on hover */
     }
+    @media (max-width: 650px) {
+        .slide img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+        }
+    }
 </style>
 
 
@@ -64,7 +74,9 @@
     <div class="slides">
         <cfoutput query="qGetBanners">
             <div class="slide">
-                <img src="/images/banners/#bannerImage#" alt="Banner Image">
+                <a href="javascript:goxss('#BANNERIMAGESURL#')">
+                    <img src="/images/banners/#bannerImage#" alt="Banner Image">
+                </a>
             </div>
         </cfoutput>
     </div>
@@ -86,7 +98,7 @@
         slideIndex++;
         if (slideIndex > slides.length) { slideIndex = 1 }
         slides[slideIndex - 1].style.display = 'block';
-        setTimeout(showSlides, 3000); // Change image every 3 seconds
+        setTimeout(showSlides, 10000); // Change image every 3 seconds
     }
 
     function moveSlide(n) {
