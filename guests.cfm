@@ -306,18 +306,19 @@
 															</cfif>
 															<p>Please sign our Guest Book for upcoming shows and information, and to be placed on our Mailing List.</p>
 														</div>
+														<span style="color: ##ff0000;">* Required</span><br><br>
 														<div class="input-form">
 															<div class="input-field">
 																<label><b>FIRST NAME:</b></label>
-																<cfinput type="text" size=40 maxsize=50 name="fname" value="#form.fname#" required="Yes" MESSAGE="Please fill in your first name.">
+																<cfinput type="text" size=40 maxsize=50 name="fname" value="#form.fname#" required="Yes" MESSAGE="Please fill in your first name."> &nbsp;<span style="color:##ff0000;">*</span>
 															</div>
 															<div class="input-field">
 																<label><b>LAST NAME:</b></label>
-																<cfinput type="text" size=40 maxsize=50 name="lname" value="#form.lname#" required="Yes" MESSAGE="Please fill in your last name.">
+																<cfinput type="text" size=40 maxsize=50 name="lname" value="#form.lname#" required="Yes" MESSAGE="Please fill in your last name."> &nbsp;<span style="color:##ff0000;">*</span>
 															</div>
 															<div class="input-field">
 																<label><b>E-MAIL ADDRESS:</b></label>
-																<cfinput type="text" size=40 maxsize=50 name="email" value="#form.email#" required="Yes" MESSAGE="Please fill in a proper email address." validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
+																<cfinput type="text" size=40 maxsize=50 name="email" value="#form.email#" required="Yes" MESSAGE="Please fill in a proper email address." validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$"> &nbsp;<span style="color:##ff0000;">*</span>
 															</div>
 															<div class="input-field">
 																<label><b>CELL PHONE (xxx) xxx-xxxx:</b></label>
@@ -351,7 +352,7 @@
 															</div>
 															<div class="input-button">
 																<button type="submit" class="SeeMore">Send</button>
-																<button type="button" class="SeeMore">Reset</button>
+																<button type="reset" class="SeeMore">Reset</button>
 															</div>
 														</div>
 														</cfform>

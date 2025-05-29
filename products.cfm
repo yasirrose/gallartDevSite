@@ -81,6 +81,50 @@
     </cfquery>
 </cfif>
 
+
+<cfquery name="getArtists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+    SELECT DISTINCT manufacturer from products
+    WHERE active = 1
+    AND fk_users is not null
+    ORDER by manufacturer 
+</cfquery>
+
+<cfquery name="getMedium" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+    Select path from products
+    WHERE fk_users is not null
+    group by path
+    order by path
+</cfquery>
+
+<cfquery name="qEmployees" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+    SELECT * 
+    FROM filterOption
+    WHERE filterType = 'Subject'
+    ORDER BY filterName ASC
+</cfquery>
+
+<cfquery name="qGetStyle" datasource="#application.dsource#">
+    SELECT * 
+    FROM filterOption
+    WHERE filterType = 'Style'
+    ORDER BY filterName ASC
+</cfquery>
+
+<cfquery name="qGetSize" datasource="#application.dsource#">
+    SELECT * 
+    FROM filterOption
+    WHERE filterType = 'Size'
+    ORDER BY id ASC
+</cfquery>
+
+<cfquery name="qGetType" datasource="#application.dsource#">
+    SELECT * 
+    FROM filterOption
+    WHERE filterType = 'Type'
+    ORDER BY filterName ASC
+</cfquery>
+
+
     <div class="main-container">
         <div id="Table_01">
             <div class="header-section">
@@ -113,7 +157,7 @@
                                     </div>
 
 									<div class="bottom-content">
-
+                                        
                                         <cfif isDefined('url.keywords') >
                                             <h3> Results for <cfoutput>"#url.keywords#"</cfoutput> </h3>
                                         </cfif>
@@ -137,12 +181,29 @@
                                         
 
                                         <cfif isDefined('url.man')>
+                                            <!--- <cfquery name="getArtistName"  datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                                                SELECT manufacturer from products where manufacturer LIKE  '%#url.man#'
+                                            </cfquery>
+
+                                                <cfdump var="#getArtistName.manufacturer#">
+                                                <cfdump var="#getBio.artist#"> --->
+
                                             <cfif getBio.recordCount NEQ 0 >
+
+                                                
                                                 <div class="top-heading m-0">
                                                     <h3>
                                                         <cfparam name="artistName" default="#getBio.artist#">
-                                                        <cfif find(',',getBio.artist)><cfset artistName = "#listlast(getBio.artist,',')# #listfirst(getBio.artist,',')#" /></cfif>
-                                                        <cfoutput>#artistName#</cfoutput>
+                                                        <cfif find(',',getBio.artist)>
+                                                            <cfset artistName = "#listlast(getBio.artist,',')# #listfirst(getBio.artist,',')#" />
+                                                        </cfif>
+
+                                                        <cfset capitalize_artistName = REReplace(artistName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                                                        
+                                                        <cfoutput>#capitalize_artistName#</cfoutput>
+
+                                                        
+
                                                     </h3>
                                                     <cfset bioImage = reReplace(getBio.bio, ".*?(<img[^>]+>).*", "\1", "ALL")>
                                                     <cfset bioText = reReplaceNoCase(getBio.bio, "<img[^>]+>", "", "ALL")>
@@ -179,7 +240,12 @@
                                                         </div>
                                                 </div>
                                             <cfelse>
-                                                <h3 class="h3"> <cfoutput>#fullName#</cfoutput></h3>
+                                                <h3 class="h3"> 
+                                                    <cfoutput>
+                                                        <cfset capitalize_artistNameeee = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                                                        #capitalize_artistNameeee#
+                                                    </cfoutput>
+                                                </h3>
                                             </cfif>
                                         </cfif>
                                         <cfoutput>
@@ -205,281 +271,327 @@
                             
                         </div>
                     </div>
-                    </div>
-                    </div>
-                    </div>
+                </div>
+            </div>
+       </div>
 
 
-                    <tr>
-                            <td colspan="2" valign="baseline">
-                                <cfinclude template="footer_.cfm">
-                            </td>
-                        </tr>
+        <tr>
+            <td colspan="2" valign="baseline">
+                <cfinclude template="footer_.cfm">
+            </td>
+        </tr>
 
-                        <cfinclude template="frmxss.cfm">
+        <cfinclude template="frmxss.cfm">
 
-                        <style>
-                            /* Initially, only show the first 500 characters, hide the rest */
-                            .bio-preview {
-                                display: -webkit-box;
-                                -webkit-line-clamp: 5; /* Limiting the number of lines (adjust as needed) */
-                                -webkit-box-orient: vertical;
-                                overflow: hidden;
-                            }
+        <style>
+            /* Initially, only show the first 500 characters, hide the rest */
+            .bio-preview {
+                display: -webkit-box;
+                -webkit-line-clamp: 5; /* Limiting the number of lines (adjust as needed) */
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
 
-                            /* .bio-preview p{
-                                text-align: left !important;
-                                display:bloc;
-                            } */
+            /* .bio-preview p{
+                text-align: left !important;
+                display:bloc;
+            } */
+        
+            /* When expanded, show full content */
+            .bio-preview.expanded {
+                -webkit-line-clamp: unset;
+                display: inline;
+            }
+            /* .bio-preview.expanded p{
+                text-align: left !important;
+                display: inline;
+            } */
+            .h3 {
+                font-size: 25px;
+                line-height: 30px;
+                font-weight: 700;
+                color: #000;
+                text-align: center;
+            }
+
+            #myBtn {
+                display: none;
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                z-index: 100;
+                width: 50px; /* Small square size */
+                height: 50px;
+                background-color: white;
+                color: black;
+                border: none;
+                border-radius: 10px; /* Rounded corners for style */
+                cursor: pointer;
+                font-size: 28px; /* Icon size */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid black;
+            }
+
+        </style>
+
+
+
+        <script>
+            function toggleBio() {
+                // Get the elements for the preview and the button
+                var preview = document.getElementById('bio-preview');
+                var button = document.getElementById('toggle-btn');
+            
+                // Toggle between showing truncated and full content
+                if (preview.classList.contains('expanded')) {
+                    // If currently showing full content, collapse it
+                    preview.classList.remove('expanded');
+                    button.innerText = 'Show More'; // Change the button text
+                } else {
+                    // If currently showing truncated content, expand it
+                    preview.classList.add('expanded');
+                    button.innerText = 'Show Less';  // Change the button text
+                }
+            }
+
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                    document.getElementById("myBtn").style.display = "block";
+                } else {
+                    document.getElementById("myBtn").style.display = "none";
+                }
+            }
+
+             // the below code is use for clear the search values from advanced search form
+
+            const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
+            function clearSearch() {
+                const form = document.getElementById('dropdownSearchforProducts');
+                if (form) {
+                        form.reset();
+                        // window.location.href = `sales.cfm?xss=${xssValue}`;
+                        page = 1;
+                        noMoreProducts = false;
+
+                        $('#product-container').empty();
+                        $('#loading').hide();
+                        loadProducts();
+                }
+            }
+
+            $(document).ready(function() {
+                toastr.options = {
+                    'closeButton': true,
+                    'debug': false,
+                    'newestOnTop': false,
+                    'progressBar': true,
+                    'positionClass': 'toast-top-right',
+                    'preventDuplicates': false,
+                    'showDuration': '1000',
+                    'hideDuration': '1000',
+                    'timeOut': '5000',
+                    'extendedTimeOut': '1000',
+                    'showEasing': 'swing',
+                    'hideEasing': 'linear',
+                    'showMethod': 'fadeIn',
+                    'hideMethod': 'fadeOut',
+                }
+            });
+
+            var page = 1; // Start at page 1
+            var loading = false; // Flag to prevent multiple requests
+            var noMoreProducts = false; // Flag to check if there are no more products
+            var previousData = ''; // Variable to store previously fetched data
+            let lastkeywords = '';
+            let lastPriceOrder = '';
+            let lastartSubject = '';
+            let lastartType = '';
+            let lastartSize = '';
+            let lastartStyle = '';
+
+            function gotoTopFunction() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+                e.preventDefault();
+            }
+
+            function loadProducts() {
+                if (loading || noMoreProducts) return;
+                loading = true;
+                $('#loading').show();
+
+                let currentUrl = window.location.href;
+                console.log(currentUrl);
+
+                let url = new URL(window.location.href);
+                let params = new URLSearchParams(url.search);
+
+                let Manufacturer = params.get('man'); // Retrieve 'man' value
+                if (Manufacturer) {
+                    Manufacturer = decodeURIComponent(Manufacturer);
+                }
+                
+                // let Manufacturer = params.get('man');
+                let Size = params.get('Size');
+                let Subject = params.get('Subject');
+                let Type = params.get('Type');
+                let Style = params.get('Style');
+                // let Artist = params.get('artist');
+                let Artist = params.get('adv_artist');
+                let title = params.get('adv_title');
+                let year = params.get('adv_year');
+                let path = params.get('adv_medium');
+                let desc_keyword = params.get('adv_desc_keyword');
+                let keywords = params.get('keywords'); 
+
+                let artSubject = document.getElementById('artSubject').value;
+                let artType = document.getElementById('artType').value;
+                let artSize = document.getElementById('artSize').value;
+                let artStyle = document.getElementById('artStyle').value;
+                
+                let priceRange = params.get('adv_price_range');
+
+                console.log('Manufacturer:', Manufacturer);
+                console.log('keyword:', keywords);
+
+                if(priceRange){
+                    if(priceRange == 1){
+                        var a = '0';
+                        var b = '1000';
+                    }
+                    else if(priceRange == 2){
+                        var a = '1000';
+                        var b = '5000';
+                    }
+                    else if(priceRange == 3){
+                        var a = '5000';
+                        var b = '10000';
+                    }
+                    else if(priceRange == 4){
+                        var a = '10000';
+                        var b = '100000';
+                    }
+                }
+
+                // let keywords = document.getElementById('keywords').value;
+                let priceOrder = document.getElementById('priceOrder').value;
+
+                // if (artType) {
+                //     params.delete('Type'); // Remove the previous Size value from the URL
+                // }
+
+                let ajaxSize = artSize ? artSize : Size;
+                let ajaxSubject = artSubject ? artSubject : Subject;
+                let ajaxStyle = artStyle ? artStyle : Style;
+                let ajaxType = artType ? artType : Type;
+
+                if ( keywords || priceOrder ||  ajaxSubject || ajaxType|| ajaxSize|| ajaxStyle) {
+                    if (  priceOrder !==lastPriceOrder || keywords!==lastkeywords || ajaxSubject!=lastartSubject || ajaxType !=  lastartType || ajaxSize != lastartSize || ajaxStyle != lastartStyle) {
                         
-                            /* When expanded, show full content */
-                            .bio-preview.expanded {
-                                -webkit-line-clamp: unset;
-                                display: inline;
-                            }
-                            /* .bio-preview.expanded p{
-                                text-align: left !important;
-                                display: inline;
-                            } */
-                            .h3 {
-                                font-size: 25px;
-                                line-height: 30px;
-                                font-weight: 700;
-                                color: #000;
-                                text-align: center;
-                            }
-                            
-                            #myBtn {
-                            display: none;
-                            position: fixed;
-                            bottom: 30px;
-                            right: 30px;
-                            z-index: 100;
-                            width: 50px; /* Small square size */
-                            height: 50px;
-                            background-color: white;
-                            color: black;
-                            border: none;
-                            border-radius: 10px; /* Rounded corners for style */
-                            cursor: pointer;
-                            font-size: 28px; /* Icon size */
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            border: 1px solid black;
-                            }
-                            
-                        </style>
-
-
+                        page = 1; 
                         
-                        <script>
-                            function toggleBio() {
-                                // Get the elements for the preview and the button
-                                var preview = document.getElementById('bio-preview');
-                                var button = document.getElementById('toggle-btn');
-                            
-                                // Toggle between showing truncated and full content
-                                if (preview.classList.contains('expanded')) {
-                                    // If currently showing full content, collapse it
-                                    preview.classList.remove('expanded');
-                                    button.innerText = 'Show More'; // Change the button text
-                                } else {
-                                    // If currently showing truncated content, expand it
-                                    preview.classList.add('expanded');
-                                    button.innerText = 'Show Less';  // Change the button text
-                                }
+                        $('#product-container').empty(); // Clear the product container for new results
+                        noMoreProducts = false; // Reset the no more products flag
+                        // lastArtist = Artist; // Update lastArtist to the new artist value
+                    //   lastpath = path; // Update lastArtist to the new artist value
+                        lastPriceOrder = priceOrder;
+                        lastkeywords = keywords;
+                        lastartSubject = ajaxSubject;
+                        lastartType = ajaxType;
+                        lastartSize = ajaxSize;
+                        lastartStyle = ajaxStyle;
+                    }
+                }
+
+                console.log('Manufacturer:', Manufacturer);
+
+                $.ajax({
+                    url: 'fetch_products.cfm',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        man: Manufacturer,
+                        Size: ajaxSize,
+                        Title: title,
+                        Artist: Artist,
+                        priceOrder: priceOrder,
+                        Subject: ajaxSubject,
+                        Type: ajaxType,
+                        Style: ajaxStyle,
+                        keywords: keywords,
+                        year: year,
+                        path: path,
+                        desc_keyword: desc_keyword,
+                        a: a,
+                        b: b
+                    },
+                    success: function(data) {
+                        if (data.trim() === '') {
+                            noMoreProducts = true;
+                            $('#loading').html('No more products').show();
+                            // toastr.warning('No more products');
+                            // $('#loading').hide();
+
+                        } else if (data === previousData && page !== 1) {
+                            // Prevent loading duplicate data on scroll (ignore check for page 1)
+                            noMoreProducts = true;
+                            $('#loading').html('No more products').show();
+
+                        // toastr.warning('No more products');
+                        // $('#loading').hide();
+
+                        } else {
+                            if (page === 1) {
+                                $('#product-container').empty(); // On first page, replace content
                             }
+                            $('#product-container').append(data); // Append new data
+                            previousData = data;
+                            page++; // Increment the page number for the next request
+                            $('#loading').hide();
+                        }
+                        loading = false; // Reset the loading flag
+                            },
+                        error: function() {
+                    $('#loading').html('Error loading products').show();
+                    loading = false; // Reset the loading flag on error
+                    }
+                });
+            }
 
-                            window.onscroll = function() {scrollFunction()};
+                     // Load more products when user scrolls near the bottom
+            $(window).scroll(function () {
+                if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
+                    if (!noMoreProducts && !loading) {
+                        loadProducts(); // Load products only if not loading and no more products
+                    }
+                }
+            });
 
-                            function scrollFunction() {
-                            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                                document.getElementById("myBtn").style.display = "block";
-                            } else {
-                                document.getElementById("myBtn").style.display = "none";
-                            }
-                            }
+                        // Search button click event
+            $('#searchButton').on('click', function () {
+                page = 1; // Reset page to 1 when search button is clicked
+                noMoreProducts = false;
+                loadProducts(); // Trigger product loading based on search
 
-                        </script>
+            });
+
+            function artistClick() {
+                page = 1; // Reset page to 1 when search button is clicked
+                noMoreProducts = false;
+                loadProducts();
+            }
+            
+            // Initial load
+            loadProducts();
 
 
-                        <script>
+        </script>
 
-                                $(document).ready(function() {
-                                    toastr.options = {
-                                        'closeButton': true,
-                                        'debug': false,
-                                        'newestOnTop': false,
-                                        'progressBar': true,
-                                        'positionClass': 'toast-top-right',
-                                        'preventDuplicates': false,
-                                        'showDuration': '1000',
-                                        'hideDuration': '1000',
-                                        'timeOut': '5000',
-                                        'extendedTimeOut': '1000',
-                                        'showEasing': 'swing',
-                                        'hideEasing': 'linear',
-                                        'showMethod': 'fadeIn',
-                                        'hideMethod': 'fadeOut',
-                                    }
-                                });
-
-                            var page = 1; // Start at page 1
-                            var loading = false; // Flag to prevent multiple requests
-                            var noMoreProducts = false; // Flag to check if there are no more products
-                            var previousData = ''; // Variable to store previously fetched data
-                            let lastkeywords = '';
-                            let lastPriceOrder = '';
-
-                            function gotoTopFunction() {
-                                document.body.scrollTop = 0;
-                                document.documentElement.scrollTop = 0;
-                                e.preventDefault();
-                            }
-                                            
-                            function loadProducts() {
-                                if (loading || noMoreProducts) return;
-                                loading = true;
-                                $('#loading').show();
-                        
-                                let currentUrl = window.location.href;
-                                console.log(currentUrl);
-                        
-                                let url = new URL(window.location.href);
-                                let params = new URLSearchParams(url.search);
-                                
-                                let Manufacturer = params.get('man');
-                                let Size = params.get('Size');
-                                let Subject = params.get('Subject');
-                                let Type = params.get('Type');
-                                let Style = params.get('Style');
-                                // let Artist = params.get('artist');
-                                let Artist = params.get('adv_artist');
-                                let title = params.get('adv_title');
-                                let year = params.get('adv_year');
-                                let path = params.get('adv_medium');
-                                let desc_keyword = params.get('adv_desc_keyword');
-                                let keywords = params.get('keywords'); 
-                                
-                                let priceRange = params.get('adv_price_range');
-
-                                if(priceRange){
-                                    if(priceRange == 1){
-                                        var a = '0';
-                                        var b = '1000';
-                                    }
-                                    else if(priceRange == 2){
-                                        var a = '1000';
-                                        var b = '5000';
-                                    }
-                                    else if(priceRange == 3){
-                                        var a = '5000';
-                                        var b = '10000';
-                                    }
-                                   else if(priceRange == 4){
-                                        var a = '10000';
-                                        var b = '100000';
-                                    }
-                                }
-
-                                // let keywords = document.getElementById('keywords').value;
-                                let priceOrder = document.getElementById('priceOrder').value;
-
-                                if ( keywords || priceOrder) {
-                                    if (keywords!==lastkeywords ||  priceOrder !==lastPriceOrder) {
-                                            page = 1; 
-                                            $('#product-container').empty(); // Clear the product container for new results
-                                            noMoreProducts = false; // Reset the no more products flag
-                                            // lastArtist = Artist; // Update lastArtist to the new artist value
-                                        //   lastpath = path; // Update lastArtist to the new artist value
-                                            lastPriceOrder = priceOrder;
-                                            lastkeywords = keywords;
-                                    }
-                                }
-                        
-                                console.log('Manufacturer:', Manufacturer);
-                        
-                                $.ajax({
-                                    url: 'fetch_products.cfm',
-                                    type: 'GET',
-                                    data: {
-                                        page: page,
-                                        man: Manufacturer,
-                                        Size: Size,
-                                        Title: title,
-                                        Artist: Artist,
-                                        priceOrder: priceOrder,
-                                        Subject: Subject,
-                                        Type: Type,
-                                        Style: Style,
-                                        keywords: keywords,
-                                        year: year,
-                                        path: path,
-                                        desc_keyword: desc_keyword,
-                                        a: a,
-                                        b: b
-                                    },
-                                    success: function(data) {
-                                        if (data.trim() === '') {
-                                    noMoreProducts = true;
-                                    $('#loading').html('No more products').show();
-
-                                        // toastr.warning('No more products');
-                                        // $('#loading').hide();
-
-                                        } else if (data === previousData && page !== 1) {
-                                            // Prevent loading duplicate data on scroll (ignore check for page 1)
-                                            noMoreProducts = true;
-                                            $('#loading').html('No more products').show();
-
-                                        // toastr.warning('No more products');
-                                        // $('#loading').hide();
-
-                                        } else {
-                                            if (page === 1) {
-                                                $('#product-container').empty(); // On first page, replace content
-                                            }
-                                            $('#product-container').append(data); // Append new data
-                                            previousData = data;
-                                            page++; // Increment the page number for the next request
-                                            $('#loading').hide();
-                                        }
-                                        loading = false; // Reset the loading flag
-                                                 },
-                                             error: function() {
-                                            $('#loading').html('Error loading products').show();
-                                            loading = false; // Reset the loading flag on error
-                                            }
-                                        });
-                                    }
-                        
-                            // Load more products when user scrolls near the bottom
-                            $(window).scroll(function () {
-                            if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
-                                if (!noMoreProducts && !loading) {
-                                    loadProducts(); // Load products only if not loading and no more products
-                                }
-                            }
-                            });
-
-                            // Search button click event
-                            $('#searchButton').on('click', function () {
-                                page = 1; // Reset page to 1 when search button is clicked
-                                noMoreProducts = false;
-                                loadProducts(); // Trigger product loading based on search
-
-                            });
-
-							function artistClick() {
-                                page = 1; // Reset page to 1 when search button is clicked
-                                noMoreProducts = false;
-                                loadProducts();
-                            }    
-							                    
-                            // Initial load
-                            loadProducts();
-                        </script>
 
                       
                         

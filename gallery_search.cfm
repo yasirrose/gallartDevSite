@@ -20,27 +20,6 @@
 		}
 	</style>
 	<title>Search</title>
-	<!--- <script>
-		document.addEventListener("DOMContentLoaded", function() {
-			function drop(gothere) {
-				var form = document.forms['dropdown'];
-				if (form) {
-					// var select = form.elements['manufact'];
-					var select = form.elements['artSubject'];
-					if (select) {
-						parent.location = gothere + select.options[select.selectedIndex].value;
-					} else {
-						console.error("Select element 'manufact' not found.");
-					}
-				} else {
-					console.error("Form 'dropdown' not found.");
-				}
-				return true;
-			}
-				// Make the function globally available
-			window.drop = drop;
-		});
-	</script> --->
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {
 			function drop(gothere, selectName) {
@@ -68,21 +47,11 @@
 			<div class="top-content">
 				<!--- <label>Picture Gallery</label> --->
 				<label></label>
-				<a href="#TB_inline?height=200&width=300&inlineId=picturegallery_help&modal=true" class="thickbox">
+				<!--- <a href="#TB_inline?height=200&width=300&inlineId=picturegallery_help&modal=true" class="thickbox">
 					<span>What's this <span class="question-span">?</span></span>
-				</a>
+				</a> --->
 			</div>
 			
-				<!--- <select name="manufact" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&artist=')" style="font-family: arial; font-size: 7pt;">
-					<option value="" selected>PLEASE SELECT ARTIST</option>
-					<cfoutput query="artistinfo">
-						<cfif manufacturer EQ 'MAX, PETER'>
-							<option value="#manufacturer#">MAX, PETER (ALL)</option>
-						<cfelseif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-							<option value="#manufacturer#" <cfif parameterexists(manufact) and manufact eq '#manufacturer#'>Selected</cfif>>#ucase(manufacturer)#</option>
-						</cfif>
-					</cfoutput>
-				</select> --->
 				<cfquery name="qEmployees" datasource="#application.dsource#">
 					SELECT * 
 					FROM filterOption
@@ -90,40 +59,16 @@
 					ORDER BY filterName ASC
 				</cfquery>
 				
-				<div class="row">
-						<div class="col-md-6 mb-3">
-							<div class="select-option">
-								<select name="artSubject" class="chosen-select" data-placeholder="Search by Subject" style="font-family: arial; font-size: 7pt;" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Subject=', 'artSubject')">
+				<div class="row input-form">
+						<div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+							<div class="select-option input-field">
+								<select name="artSubject" class="chosen-select m-0" data-placeholder="Search by Subject" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Subject=', 'artSubject')">
 									<option value="">Search by Subject</option>
 									<!--- Loop through the query results to create option tags --->
 									<cfoutput query="qEmployees">
 										<option value="#filterName#">#filterName#</option>
 									</cfoutput>
 								</select>
-								<!--- <select name="artSubject" class="chosen-select" data-placeholder="Search by Subject" style="font-family: arial; font-size: 7pt;" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Subject=', 'artSubject')">
-									<option value="">Search by Subject</option>
-									<option value="Abstract">Abstract</option>
-									<option value="Animals">Animals</option>
-									<option value="Animation">Animation</option>
-									<option value="Cityscapes">Cityscapes</option>
-									<option value="Ethnic">Ethnic</option>
-									<option value="Famous People">Famous People</option>
-									<option value="Fantasy">Fantasy</option>
-									<option value="Figures">Figures</option>
-									<option value="Floral">Floral</option>
-									<option value="Food/Wine">Food/Wine</option>
-									<option value="Inspirational">Inspirational</option>
-									<option value="Landscapes">Landscapes</option>
-									<option value="Military">Military</option>
-									<option value="Music">Music</option>
-									<option value="Nudes">Nudes</option>
-									<option value="Religious">Religious</option>
-									<option value="Seascapes">Seascapes</option>
-									<option value="Sports">Sports</option>
-									<option value="Still Life">Still Life</option>
-									<option value="Text">Text</option>
-									<option value="Transportation">Transportation</option>
-								</select> --->
 							</div>
 						</div>
 						<cfquery name="qGetStyle" datasource="#application.dsource#">
@@ -132,15 +77,15 @@
 							WHERE filterType = 'Style'
 							ORDER BY filterName ASC
 						</cfquery>
-						<div class="col-md-6 mb-3">
-							<div class="select-option">
-								<select name="artStyle" class="chosen-select" data-placeholder="Search by Style" style="font-family: arial; font-size: 7pt;" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
+						<div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+							<div class="select-option input-field">
+								<select name="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
 									<option value="">Search by Style</option>
 									<cfoutput query="qGetStyle">
 										<option value="#filterName#">#filterName#</option>
 									</cfoutput>
 								</select>
-								<!--- <select name="artStyle" class="chosen-select" data-placeholder="Search by Style" style="font-family: arial; font-size: 7pt;" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
+								<!--- <select name="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
 									<option value="">Search by Style</option>
 									<option value="Abstract">Abstract</option>
 									<option value="Art Deco">Art Deco</option>
@@ -162,9 +107,9 @@
 							WHERE filterType = 'Size'
 							ORDER BY id ASC
 						</cfquery>
-					<div class="col-md-6">
-						<div class="select-option">
-							<select name="artSize" class="chosen-select" data-placeholder="Search by Size" style="font-family: arial; font-size: 7pt;" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Size=', 'artSize')">
+					<div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+						<div class="select-option input-field">
+							<select name="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Size=', 'artSize')">
 								<option value="">Search by Size</option>
 								<cfoutput query="qGetSize">
 									<option value="#filterName#">#filterName#</option>
@@ -182,9 +127,9 @@
 						WHERE filterType = 'Type'
 						ORDER BY filterName ASC
 					</cfquery>
-					<div class="col-md-6">
-						<div class="select-option">
-							<select name="artType" class="chosen-select" data-placeholder="Search by Type" style="font-family: arial; font-size: 7pt;" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Type=', 'artType')">
+					<div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-2 mb-2">
+						<div class="select-option input-field">
+							<select name="artType" class="chosen-select m-0" data-placeholder="Search by Type" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Type=', 'artType')">
 								<option value="">Search by Type</option>
 								<cfoutput query="qGetType">
 									<option value="#filterName#">#filterName#</option>

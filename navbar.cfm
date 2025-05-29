@@ -14,7 +14,7 @@
 		float: left;
 	}
 	.navElement {
-		background: url('images/nav_bkg.png') repeat-x;
+		background: url('/images/nav_bkg.png') repeat-x;
 		padding: 13px 20px 10px;
 		color: #FFF!important;
 		text-decoration: none;

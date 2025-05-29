@@ -43,7 +43,7 @@
 </head>
 <body>
 	<div class="search-form-group gallary-product">
-		<form name="dropdownSearchforProducts">
+		<form name="dropdownSearchforProducts" id="dropdownSearchforProducts">
 			<div class="top-content">
 				<!--- <label>Picture Gallery</label> --->
 				<!--- <label></label>
@@ -62,7 +62,7 @@
 				<div class="row input-form">
 						<div class="product-form-columns">
 							<div class="select-option input-field">
-								<select name="artSubject" class="chosen-select m-0" data-placeholder="Search by Subject" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Subject=', 'artSubject')">
+								<select name="artSubject" id="artSubject" class="chosen-select m-0" data-placeholder="Search by Subject" onChange="artistClick()">
 									<option value="">Search by Subject</option>
 									<!--- Loop through the query results to create option tags --->
 									<cfoutput query="qEmployees">
@@ -79,10 +79,10 @@
 						</cfquery>
 						<div class="product-form-columns">
 							<div class="select-option input-field">
-								<select name="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
+								<select name="artStyle" id="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="artistClick()">
 									<option value="">Search by Style</option>
 									<cfoutput query="qGetStyle">
-										<option value="#filterName#" <cfif isDefined('url.Style') and url.Style EQ filterName >selected</cfif> >#filterName#</option>
+										<option value="#filterName#" <cfif isDefined('url.Style') and url.Style EQ filterName >selected</cfif>>#filterName#</option>
 									</cfoutput>
 								</select>
 								<!--- <select name="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
@@ -109,10 +109,10 @@
 						</cfquery>
 					<div class="product-form-columns">
 						<div class="select-option input-field">
-							<select name="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Size=', 'artSize')">
+							<select name="artSize" id="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="artistClick()">
 								<option value="">Search by Size</option>
 								<cfoutput query="qGetSize">
-									<option value="#filterName#" <cfif isDefined('url.Size') and url.Size EQ filterName >selected</cfif> >#filterName#</option>
+									<option value="#filterName#" <cfif isDefined('url.Size') and url.Size EQ filterName >selected</cfif>>#filterName#</option>
 								</cfoutput>
 								<!--- <option value="small">Small (up to 12 inches)</option>
 								<option value="medium">Medium (13 to 36 inches)</option>
@@ -129,7 +129,7 @@
 					</cfquery>
 					<div class="product-form-columns">
 						<div class="select-option input-field">
-							<select name="artType" class="chosen-select m-0" data-placeholder="Search by Type" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Type=', 'artType')">
+							<select name="artType" id="artType" class="chosen-select m-0" data-placeholder="Search by Type" onChange="artistClick()">
 								<option value="">Search by Type</option>
 								<cfoutput query="qGetType">
 									<option value="#filterName#" <cfif isDefined('url.Type') and url.Type EQ filterName >selected</cfif> >#filterName#</option>
@@ -151,15 +151,20 @@
 							   <select name="priceOrder" id="priceOrder" onChange="artistClick();">
 									 <option value="">Sort</option>
 									 
-									 <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>>Date Listed: Old to New</option>
+									 <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>>Date Added: New to Old</option>
 
 									<option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Price: Low to High</option>
 									
-									<option value="desc" <cfif isDefined('form.priceOrder') and priceOrder eq 'desc'>selected</cfif>>Price: High to Low</option>
+									<option value="desc" selected>Price: High to Low</option>
 							   </select>
 							</div>
 						</div>
 					</div>
+
+					<div class="col-12 mt-2 mb-2 text-center">
+						<button type="button" class="btn btn-secondary" onclick="clearSearch()">Clear Search</button>
+					</div>
+
 				</div>
 		</form>
 	</div>

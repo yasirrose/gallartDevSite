@@ -39,7 +39,7 @@
 	<div class="main-container registration-page">
 		<div id="Table_01">
 			<div class="header-section text-center py-4 px-4">
-				<img src="../images/top_01.jpg" style="width: 100%; max-width: 634px; height: auto;" alt="image">
+				<img src="/images/top_01.jpg" style="width: 100%; max-width: 634px; height: auto;" alt="image">
 			</div>
 			<div class="inner-section">
 				<div class="container">

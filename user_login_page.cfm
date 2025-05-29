@@ -1,3 +1,7 @@
+<cfif NOT structKeyExists(session, 'sellerinfo') >
+
+
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
 
@@ -48,6 +52,8 @@
 </script>
 <!-- END ROBLY WIDGET CODE -->
 
+<!--- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --->
+
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <div class="main-container registration-page">
@@ -68,18 +74,20 @@
 							<i class="fas fa-bars"></i>
 						</div>
 					</div>
-					<div class="sidebar web-sidebar-modal">	
+					<!--- <div class="sidebar web-sidebar-modal">	
 						<cfinclude template="left_.cfm">
-					</div>
+					</div> --->
 					<div class="content-section">
 						<div class="bottom-content-sec">
 							<div class="banner-section">
 								<div class="art-work-content">
 									<div class="bottom-content">
 										<div class="top-heading">
-											<h3>SELLER LOGIN</h3>
+											<h3> Login </h3>
 										</div>
-										<div><cfinclude template="userlogin_form.cfm"></div>
+										<div class="user-registrations">
+											<cfinclude template="userlogin_form.cfm">
+										</div>
 									</div>
 								</div>
 							</div>
@@ -88,15 +96,16 @@
 				</div>
 			</div>
 		</div>
+		<div class="footer-section">
+			<cfinclude template="footer_user.cfm">
+		</div>
 	</div>
 </div>
-<tr>
-	<td colspan="2" valign="baseline">
-		<cfinclude template="footer_user.cfm">
-	</td>
-</tr>
 
 <cfinclude template="frmxss.cfm">
 
 </body>
 </html>
+<cfelse>
+	<cflocation addtoken="No" url="overView.cfm?xss=#xss#">
+</cfif>

@@ -85,6 +85,9 @@
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
             <!--- Toastr CDN  --->
 
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
@@ -97,14 +100,29 @@
         <!-- Products will be loaded here -->
         </div>
         <div id="loading" style="display: none;">Loading...</div> --->
-       
 
+
+        <cfquery name="allNewListings" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+            SELECT top 200 <!--- substring(path, 1, PATINDEX('%:%', path)-1) as ccat,  --->*
+            FROM products 
+            WHERE active = 1
+            AND fk_users is null
+            ORDER BY lastedit desc
+        </cfquery>
+        
+        <cfquery name="getArtists" dbtype="query">
+            SELECT DISTINCT manufacturer from allNewListings
+            ORDER BY manufacturer
+        </cfquery>
+       
+       <!--- <cfdump var="#getArtistssss#" abort="true"> --->
+<!--- 
         <cfquery name="getArtists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-            SELECT DISTINCT manufacturer from products
+            SELECT DISTINCT TOP manufacturer from products
             WHERE active = 1
             AND fk_users is not null
             ORDER by manufacturer
-        </cfquery>
+        </cfquery> --->
 
         <!--- <cfquery name="getArtists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
         SELECT DISTINCT manufacturer from allNewListings
@@ -208,17 +226,17 @@
                                                         <!--- <cfinclude template="gallery_search_listings.cfm"> --->
                                                         <div class="row input-form">
 
-                                                            <form name="dropdownSearchForlistings">
+                                                            <form name="dropdownSearchForlistings" id="dropdownSearchForlistings" >
                                                                 <div class="row">
 
                                                                     <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                                         <div class="select-option">
                                                                             <cfoutput>
                                                                                 <!--- <form name="dropdownSearchForlistings"> --->
-                                                                                    <select name="artist" id="artist" onChange="artistClick()">
+                                                                                    <select name="artist" id="artist" class="select2" onChange="artistClick()">
                                                                                         <option value="">Search By Artist</option>
                                                                                             <cfloop query="getArtists">
-                                                                                                <option value="#manufacturer#">#manufacturer#</option>
+                                                                                                <option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#</option>
                                                                                             </cfloop>
                                                                                     </select>
                                                                                 <!--- </form> --->
@@ -229,11 +247,11 @@
                                                                     <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                                         <div class="select-option input-field">
                                                                             <!--- <form name="dropdownSearchForlistings" > --->
-                                                                                <select name="artSubject" class="chosen-select m-0" data-placeholder="Search by Subject" onChange="drop('new_listings.cfm?xss=<cfoutput>#xss#</cfoutput>&Subject=', 'artSubject')">
+                                                                                <select name="artSubject" id="artSubject" class="chosen-select m-0" data-placeholder="Search by Subject" onChange="artistClick()">
                                                                                     <option value="">Search by Subject</option>
                                                                                     <!--- Loop through the query results to create option tags --->
                                                                                     <cfloop query="qEmployees">
-                                                                                        <option value="#filterName#" <cfif isDefined('url.Subject') and url.Subject EQ filterName >selected</cfif> >#filterName#</option>
+                                                                                        <option value="#filterName#" >#filterName#</option>
                                                                                     </cfloop>
                                                                                 </select>
                                                                             <!--- </form> --->
@@ -244,10 +262,10 @@
                                                                     <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                                         <div class="select-option input-field">
                                                                             <!--- <form name="dropdownSearchForlistings"> --->
-                                                                                <select name="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="drop('new_listings.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
+                                                                                <select name="artStyle" id="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="artistClick()">
                                                                                     <option value="">Search by Style</option>
                                                                                     <cfloop query="qGetStyle">
-                                                                                        <option value="#filterName#" <cfif isDefined('url.Style') and url.Style EQ filterName >selected</cfif> >#filterName#</option>
+                                                                                        <option value="#filterName#">#filterName#</option>
                                                                                     </cfloop>
                                                                                 </select>
                                                                             <!--- </form> --->
@@ -257,7 +275,7 @@
                                                                     <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                                         <div class="select-option input-field">
                                                                             <!--- <form name="dropdownSearchForlistings" > --->
-                                                                                <select name="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="drop('new_listings.cfm?xss=<cfoutput>#xss#</cfoutput>&Size=', 'artSize')">
+                                                                                <select name="artSize" id="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="artistClick()">
                                                                                     <option value="">Search by Size</option>
                                                                                     <cfloop query="qGetSize">
                                                                                         <option value="#filterName#" <cfif isDefined('url.Size') and url.Size EQ filterName >selected</cfif> >#filterName#</option>
@@ -271,7 +289,7 @@
                                                                     <div class="col-lg-2 col-md-4 col-sm-6 col-12 mt-2 mb-2">
                                                                         <div class="select-option input-field">
                                                                             <!--- <form name="dropdownSearchForlistings" > --->
-                                                                                <select name="artType" class="chosen-select m-0" data-placeholder="Search by Type" onChange="drop('new_listings.cfm?xss=<cfoutput>#xss#</cfoutput>&Type=', 'artType')">
+                                                                                <select name="artType" id="artType" class="chosen-select m-0" data-placeholder="Search by Type" onChange="artistClick()">
                                                                                     <option value="">Search by Type</option>
                                                                                     <cfloop query="qGetType">
                                                                                         <option value="#filterName#" <cfif isDefined('url.Type') and url.Type EQ filterName >selected</cfif> >#filterName#</option>
@@ -288,7 +306,7 @@
                                                                                     <select name="priceOrder" id="priceOrder" onChange="artistClick()">
                                                                                         <option value="">Sort</option>
 
-                                                                                        <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>>Date Listed: Old to New</option>
+                                                                                        <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>>Date Added: New to Old</option>
 
                                                                                         <option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Price: Low to High</option>
                                                                                         
@@ -297,6 +315,10 @@
                                                                                 <!--- </form> --->
                                                                             </cfoutput>
                                                                         </div>
+                                                                    </div>
+
+                                                                    <div class="col-12 mt-2 mb-2 text-center">
+                                                                        <button type="button" class="btn btn-secondary" onclick="clearSearch()">Clear Search</button>
                                                                     </div>
 
                                                                 </div>
@@ -339,197 +361,334 @@
         <cfinclude template="frmxss.cfm">
 
         <style>
-            #myBtn {
-          display: none;
-          position: fixed;
-          bottom: 30px;
-          right: 30px;
-          z-index: 100;
-          width: 50px; /* Small square size */
-          height: 50px;
-          background-color: white;
-          color: black;
-          border: none;
-          border-radius: 10px; /* Rounded corners for style */
-          cursor: pointer;
-          font-size: 28px; /* Icon size */
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border: 1px solid black;
-      }
+                    #myBtn {
+                display: none;
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                z-index: 100;
+                width: 50px; /* Small square size */
+                height: 50px;
+                background-color: white;
+                color: black;
+                border: none;
+                border-radius: 10px; /* Rounded corners for style */
+                cursor: pointer;
+                font-size: 28px; /* Icon size */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid black;
+            }
+
+            body {
+                    overflow-x: hidden;
+                }
+
+            .select2-container--default .select2-selection--single {
+                background-color: #fff;
+                border: 1px solid #C5C5C5;
+                border-radius: 10px;
+                height: 45px;
+                color: #5E5E5E;
+                font-size: 14px;
+                line-height: 20px;
+                font-weight: 800;
+                width: 100%;
+                padding: 10px 25px 10px 10px;
+                appearance: none;
+            }
+
+            .select2-container .select2-selection--single .select2-selection__rendered {
+                display: inline !important;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 23px;
+                color: #5E5E5E;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                /* height: 36px;
+                top: 1px;
+                right: 10px;
+                width: 20px; */
+                display: none;
+            }
+
+            /* Ensure full width */
+            .select2-container {
+                width: 100% !important;
+            }
+
+
+            .select2-container--default .select2-search--dropdown .select2-search__field {
+                border: 1px solid #aaa;
+                height: 30px;
+                font-size: 14px;
+            }
+
+
        </style>
 
 
-            <script>
+       <script>
 
-            window.onscroll = function() {scrollFunction()};
+        $(document).ready(function () {
+            $('.select2').select2({
+                matcher: function (params, data) {
+                    if ($.trim(params.term) === '') {
+                        return data;
+                    }
 
-            function scrollFunction() {
+                    // Prevent matching placeholder during search
+                    if (data.id === '') {
+                        return null;
+                    }
+
+                    var term = params.term.toLowerCase();
+                    var text = data.text.toLowerCase();
+
+                    // Starts with match
+                    if (text.startsWith(term)) {
+                        return data;
+                    }
+
+                    // Contains match (less priority)
+                    if (text.indexOf(term) > -1) {
+                        var modifiedData = $.extend({}, data, true);
+                        modifiedData.text = data.text + ' ';
+                        return modifiedData;
+                    }
+
+                    return null;
+                },
+
+                sorter: function (data) {
+                    var term = $('.select2-search__field').val().toLowerCase();
+                    return data.sort(function (a, b) {
+                        var aStarts = a.text.toLowerCase().startsWith(term);
+                        var bStarts = b.text.toLowerCase().startsWith(term);
+
+                        if (aStarts && !bStarts) return -1;
+                        if (!aStarts && bStarts) return 1;
+                        return 0;
+                    });
+                }
+            });
+        });
+
+
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
             if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
                 document.getElementById("myBtn").style.display = "block";
             } else {
                 document.getElementById("myBtn").style.display = "none";
             }
+        }
+
+        // the below code is use for clear the search values from advanced search form
+
+        const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
+        function clearSearch() {
+            const form = document.getElementById('dropdownSearchForlistings');
+            if (form) {
+                    form.reset();
+                    // window.location.href = `sales.cfm?xss=${xssValue}`;
+
+                    // Reset select2 manually
+                $('#artist').val(null).trigger('change'); // Clear the Select2 dropdown
+
+                $('#artType').val(null).trigger('change'); 
+                $('#artSize').val(null).trigger('change'); 
+                $('#artStyle').val(null).trigger('change'); 
+                $('#artSubject').val(null).trigger('change');
+
+                    page = 1;
+                    noMoreProducts = false;
+
+                    $('#product-container').empty();
+                    $('#loading').hide();
+                    loadProducts();
+            }
+        }
+
+
+        $(document).ready(function() {
+            toastr.options = {
+                'closeButton': true,
+                'debug': false,
+                'newestOnTop': false,
+                'progressBar': true,
+                'positionClass': 'toast-top-right',
+                'preventDuplicates': false,
+                'showDuration': '1000',
+                'hideDuration': '1000',
+                'timeOut': '5000',
+                'extendedTimeOut': '1000',
+                'showEasing': 'swing',
+                'hideEasing': 'linear',
+                'showMethod': 'fadeIn',
+                'hideMethod': 'fadeOut',
+            }
+        });
+
+
+        var page = 1; // Start at page 1
+        var loading = false; // Flag to prevent multiple requests
+        var noMoreProducts = false; // Flag to check if there are no more products
+        var previousData = ''; // Variable to store previously fetched data
+        var lastArtist = ''; // Variable to store the last selected artist
+        // var lastpath = ''; // Variable to store the last selected artist
+        var lastPriceOrder = '';
+        // let lastkeywords = '';
+        let lastartSubject = '';
+        let lastartType = '';
+        let lastartSize = '';
+        let lastartStyle = '';
+
+        function gotoTopFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            e.preventDefault();
+        }
+
+        function submitForm() {
+            loadProducts(); // Call your JS function
+            document.getElementById('srchForm').submit(); // Submit the form
+        }
+
+        function loadProducts() {
+            if (loading || noMoreProducts) return; // Prevent multiple AJAX calls if already loading or no more products
+            loading = true;
+            $('#loading').show();
+
+            let currentUrl = window.location.href;
+            let url = new URL(currentUrl);
+            let params = new URLSearchParams(url.search);
+
+            let Manufacturer = params.get('man');
+            let Size = params.get('Size');
+            let Subject = params.get('Subject');
+            let Type = params.get('Type');
+            let Style = params.get('Style');
+            let urlArtist = params.get('artist');
+
+            var Artist = document.getElementById('artist').value;
+            // var path = document.getElementById('path').value;
+            var priceOrder = document.getElementById('priceOrder').value;
+            var keywords = document.getElementById('keywords').value;
+
+            let artSubject = document.getElementById('artSubject').value;
+            let artType = document.getElementById('artType').value;
+            let artSize = document.getElementById('artSize').value;
+            let artStyle = document.getElementById('artStyle').value;
+
+            // Check if artist or path has changed, reset page and load new data
+            if (Artist || priceOrder || keywords) {
+                if (Artist !== lastArtist ||  priceOrder !==lastPriceOrder || keywords!==lastkeywords || artSubject!=lastartSubject || artType !=  lastartType || artSize != lastartSize || artStyle != lastartStyle) {
+                    page = 1;
+                    $('#product-container').empty(); // Clear the product container for new results
+                    noMoreProducts = false; // Reset the no more products flag
+                    lastArtist = Artist; // Update lastArtist to the new artist value
+                    // lastpath = path; // Update lastArtist to the new artist value
+                    lastPriceOrder = priceOrder;
+                    lastkeywords = keywords;
+                    lastartSubject = artSubject;
+                    lastartType = artType;
+                    lastartSize = artSize;
+                    lastartStyle = artStyle;
+                }
+            } else if (urlArtist && !Artist) {
+                // If artist is obtained through URL params, set Artist to urlArtist
+                Artist = urlArtist;
             }
 
-            $(document).ready(function() {
-                toastr.options = {
-                    'closeButton': true,
-                    'debug': false,
-                    'newestOnTop': false,
-                    'progressBar': true,
-                    'positionClass': 'toast-top-right',
-                    'preventDuplicates': false,
-                    'showDuration': '1000',
-                    'hideDuration': '1000',
-                    'timeOut': '5000',
-                    'extendedTimeOut': '1000',
-                    'showEasing': 'swing',
-                    'hideEasing': 'linear',
-                    'showMethod': 'fadeIn',
-                    'hideMethod': 'fadeOut',
+            console.log('Manufacturer:', Manufacturer);
+            console.log('Artist:', Artist);
+
+            $.ajax({
+                url: 'getRecentAcquisitions.cfm',
+                type: 'GET',
+                data: {
+                    page: page,
+                    man: Manufacturer,
+                    Size: artSize,
+                    artist: Artist,
+                    
+                    priceOrder: priceOrder,
+                    Subject: artSubject,
+                    Type: artType,
+                    Style: artStyle,
+                    keywords: keywords
+                    
+                },
+                success: function (data) {
+                    if (data.trim() === '') {
+                        noMoreProducts = true;
+                        $('#loading').html('No more products').show();
+
+                        // toastr.warning('No more products');
+                        // $('#loading').hide();
+
+                    } else if (data === previousData && page !== 1) {
+                        // Prevent loading duplicate data on scroll (ignore check for page 1)
+                        noMoreProducts = true;
+                        $('#loading').html('No more products').show();
+
+                        // toastr.warning('No more products');
+                        // $('#loading').hide();
+
+                    } else {
+                        if (page === 1) {
+                            $('#product-container').empty(); // On first page, replace content
+                        }
+                        $('#product-container').append(data); // Append new data
+                        previousData = data;
+                        page++; // Increment the page number for the next request
+                        $('#loading').hide();
+                    }
+                    loading = false; // Reset the loading flag
+                },
+                error: function () {
+                    $('#loading').html('Error loading products').show();
+                    loading = false; // Reset the loading flag on error
                 }
             });
+        }
 
-                var page = 1; // Start at page 1
-                var loading = false; // Flag to prevent multiple requests
-                var noMoreProducts = false; // Flag to check if there are no more products
-                var previousData = ''; // Variable to store previously fetched data
-                var lastArtist = ''; // Variable to store the last selected artist
-                // var lastpath = ''; // Variable to store the last selected artist
-                // var lastPriceOrder = '';
-                // let lastkeywords = '';
-
-                function gotoTopFunction() {
-                    document.body.scrollTop = 0;
-                    document.documentElement.scrollTop = 0;
-                    e.preventDefault();
+          // Scroll event handler to load more products when near the bottom
+        $(window).scroll(function () {
+            if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
+                if (!noMoreProducts && !loading) {
+                    loadProducts(); // Load products only if not loading and no more products
                 }
-
-                function submitForm() {
-                    loadProducts(); // Call your JS function
-                    document.getElementById('srchForm').submit(); // Submit the form
-                }
-
-                function loadProducts() {
-                    if (loading || noMoreProducts) return; // Prevent multiple AJAX calls if already loading or no more products
-                    loading = true;
-                    $('#loading').show();
-
-                    let currentUrl = window.location.href;
-                    let url = new URL(currentUrl);
-                    let params = new URLSearchParams(url.search);
-
-                    let Manufacturer = params.get('man');
-                    let Size = params.get('Size');
-                    let Subject = params.get('Subject');
-                    let Type = params.get('Type');
-                    let Style = params.get('Style');
-                    let urlArtist = params.get('artist');
-
-                    var Artist = document.getElementById('artist').value;
-                    // var path = document.getElementById('path').value;
-                    var priceOrder = document.getElementById('priceOrder').value;
-                    var keywords = document.getElementById('keywords').value;
-
-                    // Check if artist or path has changed, reset page and load new data
-                    // if (Artist || priceOrder || keywords) {
-                    //     if (Artist !== lastArtist  || priceOrder !==lastPriceOrder || keywords!==lastkeywords ) {
-                    //         page = 1;
-                    //         $('#product-container').empty(); // Clear the product container for new results
-                    //         noMoreProducts = false; // Reset the no more products flag
-                    //         lastArtist = Artist; // Update lastArtist to the new artist value
-                    //         // lastpath = path; // Update lastArtist to the new artist value
-                    //         lastPriceOrder = priceOrder;
-                    //         lastkeywords = keywords;
-                    //     }
-                    // } else if (urlArtist && !Artist) {
-                    //     // If artist is obtained through URL params, set Artist to urlArtist
-                    //     Artist = urlArtist;
-                    // }
-
-                    console.log('Manufacturer:', Manufacturer);
-                    console.log('Artist:', Artist);
-
-                    $.ajax({
-                        url: 'getRecentAcquisitions.cfm',
-                        type: 'GET',
-                        data: {
-                            page: page,
-                            man: Manufacturer,
-                            Size: Size,
-                            artist: Artist,
-                            
-                            priceOrder: priceOrder,
-                            Subject: Subject,
-                            Type: Type,
-                            Style: Style,
-                            keywords: keywords
-                            
-                        },
-                        success: function (data) {
-                            if (data.trim() === '') {
-                                noMoreProducts = true;
-                                $('#loading').html('No more products').show();
-
-                                // toastr.warning('No more products');
-                                // $('#loading').hide();
-
-                            } else if (data === previousData && page !== 1) {
-                                // Prevent loading duplicate data on scroll (ignore check for page 1)
-                                noMoreProducts = true;
-                                $('#loading').html('No more products').show();
-
-                                // toastr.warning('No more products');
-                                // $('#loading').hide();
-
-                            } else {
-                                if (page === 1) {
-                                    $('#product-container').empty(); // On first page, replace content
-                                }
-                                $('#product-container').append(data); // Append new data
-                                previousData = data;
-                                page++; // Increment the page number for the next request
-                                $('#loading').hide();
-                            }
-                            loading = false; // Reset the loading flag
-                        },
-                        error: function () {
-                            $('#loading').html('Error loading products').show();
-                            loading = false; // Reset the loading flag on error
-                        }
-                    });
-                }
-
-                // Scroll event handler to load more products when near the bottom
-                $(window).scroll(function () {
-                    if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
-                        if (!noMoreProducts && !loading) {
-                            loadProducts(); // Load products only if not loading and no more products
-                        }
-                    }
-                });
-
-                // Search button click event
-                $('#searchButton').on('click', function () {
-                    page = 1; // Reset page to 1 when search button is clicked
-                    noMoreProducts = false;
-                    loadProducts(); // Trigger product loading based on search
-
-                });
-
-                function artistClick() {
-                    page = 1; // Reset page to 1 when search button is clicked
-                    noMoreProducts = false;
-                    loadProducts();
-                }
-
-                // Initial load
-                loadProducts();
+            }
+        });
 
 
-            </script>
+        // Search button click event
+        $('#searchButton').on('click', function () {
+            page = 1; // Reset page to 1 when search button is clicked
+            noMoreProducts = false;
+            loadProducts(); // Trigger product loading based on search
+
+        });
+
+        function artistClick() {
+            page = 1; // Reset page to 1 when search button is clicked
+            noMoreProducts = false;
+            loadProducts();
+        }
+
+        // Initial load
+        loadProducts();
+
+
+       </script>
+
     </body>
 
     </html>

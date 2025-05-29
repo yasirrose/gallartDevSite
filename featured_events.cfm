@@ -77,12 +77,12 @@
 								<div class="banner-section">
 									<div class="art-work-content">
 
-										<!--- <div aria-label="breadcrumb">
+										<div aria-label="breadcrumb" style="margin-top:60px;" >
 											<ol class="breadcrumb">
 											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
 											  <li class="breadcrumb-item active" aria-current="page">Events</li>
 											</ol>
-										</div> --->
+										</div>
 
 										<div class="bottom-content">
 											<div class="featuredevents-page">

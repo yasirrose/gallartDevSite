@@ -72,7 +72,7 @@
 	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav me-auto ms-auto">
 			<li class="nav-item">
-				<a href="index.cfm?xss=#xss#" class="nav-link">Home</a>
+				<a href="/index.cfm?xss=#xss#" class="nav-link">Home</a>
 			</li>
 			<li class="nav-item">
 				<a href="new_listings.cfm?xss=#xss#" class="nav-link">Recent Acquisitions</a>
@@ -87,7 +87,7 @@
 				<a href="featured_events.cfm?xss=#xss#" class="nav-link">Events</a>
 			</li>
 			<li class="nav-item">
-				<a href="user_registration.cfm?xss=#xss#" class="nav-link">Sell Your Art</a>
+				<a href="new_user_registration.cfm?xss=#xss#" class="nav-link" onclick="clearActiveTab()">Sell Your Art</a>
 			</li>
 			<li class="nav-item">
 				<a href="about.cfm?xss=#xss#" class="nav-link">About</a>
@@ -98,9 +98,9 @@
 			<!--- <li class="nav-item">
 				<a href="alerts.cfm?xss=#xss#" class="nav-link">Alerts</a>
 			</li> --->
-			<li class="nav-item">
+			<!--- <li class="nav-item">
 				<a href="guests.cfm?xss=#xss#" class="nav-link">Guest Book</a>
-			</li>
+			</li> --->
 			<!--- <li class="nav-item">
 				<a href="http://blog.gallart.com/" class="nav-link">Blog</a>
 			</li> --->
@@ -180,4 +180,12 @@ ul.sub-menu {
 } */
 
 </style>
+
+<script>
+    function clearActiveTab() {
+        // Clear the 'activeTab' key from localStorage
+		console.log('test');
+        localStorage.removeItem('activeTab');
+    }
+</script>
 

@@ -14,6 +14,7 @@
     <cfoutput>
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+        <!--- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"> --->
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
         <script language="JavaScript" src="./js/utils.js"></script>
@@ -45,6 +46,9 @@
     </script>
     <!-- END ROBLY WIDGET CODE -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
@@ -70,6 +74,10 @@
 					<div class="sidebar web-sidebar-modal">	
 						<cfinclude template="left_.cfm">
 					</div>
+
+                    <!--- <button id="showAlert">Show Alert</button> --->
+                    <!--- <button id="success" >Success</button> --->
+
 					<div class="content-section product-page">
 						<div class="bottom-content-sec">
 							<div class="banner-section">
@@ -97,70 +105,117 @@
                             </td>
                         </tr>
 
+                        <cfinclude template="frmxss.cfm">
 
-    <script>
-        var page = 1; // Start at page 1
-        var loading = false; // Flag to prevent multiple requests
-        var noMoreProducts = false; // Flag to check if there are no more products
+                        <script>
+                        
+                        $(document).ready(function() {
+			toastr.options = {
+				'closeButton': true,
+				'debug': false,
+				'newestOnTop': false,
+				'progressBar': true,
+				'positionClass': 'toast-top-right',
+				'preventDuplicates': false,
+				'showDuration': '1000',
+				'hideDuration': '1000',
+				'timeOut': '5000',
+				'extendedTimeOut': '1000',
+				'showEasing': 'swing',
+				'hideEasing': 'linear',
+				'showMethod': 'fadeIn',
+				'hideMethod': 'fadeOut',
+			}
+		});
 
-        function loadProducts() {
-            if (loading || noMoreProducts) return;
-            loading = true;
-            $('#loading').show();
+        // $('#success').click(function(event) {
+		// 	toastr.success('You clicked Success toast');
+		// });
 
+                            var page = 1; // Start at page 1
+                            var loading = false; // Flag to prevent multiple requests
+                            var noMoreProducts = false; // Flag to check if there are no more products
+                            var previousData = ''; // Variable to store previously fetched data
+                        
+                            function loadProducts() {
+                                if (loading || noMoreProducts) return;
+                                loading = true;
+                                $('#loading').show();
+                        
+                                let currentUrl = window.location.href;
+                                console.log(currentUrl);
+                        
+                                let url = new URL(window.location.href);
+                                let params = new URLSearchParams(url.search);
+                                
+                                let Manufacturer = params.get('man');
+                                let Size = params.get('Size');
+                                let Subject = params.get('Subject');
+                                let Type = params.get('Type');
+                                let Style = params.get('Style');
+                                let Artist = params.get('artist');
+                        
+                                console.log('Manufacturer:', Manufacturer);
+                        
+                                $.ajax({
+                                    url: 'fetch_products.cfm',
+                                    type: 'GET',
+                                    data: {
+                                        page: page,
+                                        man: Manufacturer,
+                                        Size: Size,
+                                        url: currentUrl,
+                                        artist: Artist
+                                    },
+                                    success: function(data) {
+                                        if (data.trim() === '') {
+                                            // No data means all records have been loaded
+                                            noMoreProducts = true;
+                                            // $('#loading').html('No more products').show();
+                                            toastr.warning('No more products');
+                                            $('#loading').hide();
+                                           
+                                        } else if (data === previousData) {
+                                            // Data is the same as the last request, consider it as no more products
+                                            noMoreProducts = true;
+                                            // $('#loading').html('No more products').show();
+                                            toastr.warning('No more products', 'Alert!');
+                                            $('#loading').hide();
+                                           
+                                        } else {
+                                            // Data is new, append it to the container
+                                            $('#product-container').append(data);
+                                            previousData = data; // Store the new data for comparison
+                                            page++;
+                                            $('#loading').hide();
+                                        }
+                                        loading = false;
+                                    },
+                                    error: function() {
+                                        $('#loading').html('Error loading products').show();
+                                        loading = false;
+                                    }
+                                });
+                            }
+                        
+                            // Load more products when user scrolls near the bottom
+                            $(window).scroll(function() {
+                                if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+                                    loadProducts();
+                                }
+                            });
+                        
+                            // Initial load
+                            loadProducts();
+                        </script>
 
-            let currentUrl = window.location.href;
-            console.log(currentUrl);
-
-            let url = new URL(window.location.href);
-            let params = new URLSearchParams(url.search);
-            
-            let Manufacturer = params.get('man');
-            let Size = params.get('Size');
-            let Subject = params.get('Subject');
-            let Type = params.get('Type');
-            let Style = params.get('Style');
-
-            console.log('Manufacturer:', Manufacturer);
-
-            $.ajax({
-                url: 'fetch_products.cfm',
-                type: 'GET',
-                data: {
-                    page: page,
-                    man: Manufacturer,
-                    Size: Size,
-                    url: currentUrl
-                },
-                success: function(data) {
-                    if (data.trim() === '') {
-                        // No data means all records have been loaded
-                        noMoreProducts = true;
-                        $('#loading').html('No more products').show();
-                    } else {
-                        $('#product-container').append(data);
-                        page++;
-                        $('#loading').hide();
-                    }
-                    loading = false;
-                },
-                error: function() {
-                    $('#loading').html('Error loading products').show();
-                    loading = false;
-                }
-            });
-        }
-
-        // Load more products when user scrolls near the bottom
-        $(window).scroll(function() {
-            if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-                loadProducts();
-            }
-        });
-
-        // Initial load
-        loadProducts();
-    </script>
+<style>
+    .custom-swal {
+        height: 150px; /* Set your desired height */
+        width: 150px; /* Set your desired width */
+    }
+</style>
+                        
 </body>
 </html>
 

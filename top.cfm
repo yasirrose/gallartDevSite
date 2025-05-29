@@ -1,4 +1,4 @@
-<link href="stylesheet_print.css?x=<cfoutput>#RandRange(0,1000)#</cfoutput>" rel="stylesheet" type="text/css" media="print" />
+<link href="/stylesheet_print.css?x=<cfoutput>#RandRange(0,1000)#</cfoutput>" rel="stylesheet" type="text/css" media="print" />
 <script language="JavaScript">
 function helpWin(url) {
 	w = 350;  // width
@@ -13,10 +13,10 @@ function helpWin(url) {
 }
 </script>
 <div id="top">
-	<div class="title"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>"><img src="images/top_01.jpg" width="634" height="123" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
+	<div class="title"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>"><img src="/images/top_01.jpg" width="634" height="123" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
     <div class="mailto">
-    	<img src="images/top_02.jpg" width="166" height="53" alt="">
-    	<a href="mailto:sales@gallart.com"><img src="images/top_03.jpg" width="166" height="70" alt="20633 Biscayne Blvd, Aventura, FL 33180, 305.932.6166" border="0"></a>
+    	<img src="/images/top_02.jpg" width="166" height="53" alt="">
+    	<a href="mailto:sales@gallart.com"><img src="/images/top_03.jpg" width="166" height="70" alt="20633 Biscayne Blvd, Aventura, FL 33180, 305.932.6166" border="0"></a>
     </div>
     <div class="top_icons" style="float:left; width: 210px;">
 		<a href="https://www.facebook.com/pages/GallArt/119056118127427?ref=hl" target="_blank">
