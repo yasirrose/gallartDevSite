@@ -19,6 +19,8 @@ $(function() {
 	<tr>
 		<td>
 			<input type="Button" onclick="location.href='index.cfm?event=reports.orderReportSearch'" value="Back To Search"><br><br>
+			
+			<!--- <cfdump var="#getOrderReport.recordCount#" abort="true"> --->
 
 <cfoutput>
 <span style="font-size: 12px; font-weight: bold;">
@@ -71,6 +73,9 @@ Date Range:
 					<cfset sum_gallery = 0 />
 					<cfset sum_retail = 0 />
 					<cfset sum_balancedue = 0 />
+
+					
+
 					<cfoutput>
 						<cfset sum_total = sum_total + total />
 						<cfset sum_amountsale = sum_amountsale + amountsale />
@@ -78,7 +83,9 @@ Date Range:
 						<cfset sum_retail = sum_retail + total_retail />
 						<cfset sum_balancedue = sum_balancedue + balancedue />
 					</cfoutput>
+					<!--- <cfdump var="#getOrderReport.recordCount#" abort="true"> --->
 					<cfset commission = ((sum_total - commission_minus) * commission_percent)/100 />
+					<!--- <cfset commission = ((sum_total - val(commission_minus)) * val(commission_percent)) / 100 /> --->
 					<tr>
 						<td>#emp_lname#, #emp_fname#</td>
 						<td class="dollarAlign">#dollarFormat(sum_total)#</td>

@@ -301,7 +301,7 @@
 </cffunction>
 
 
-<cffunction name="exportNewsletterCSV" access="remote" returntype="void" output="true">
+<!--- <cffunction name="exportNewsletterCSV" access="remote" returntype="void" output="true">
     
     
     <cfquery name="qNewsletters" datasource="#application.dsource#">
@@ -324,7 +324,29 @@
         </cfoutput>
         </cfcontent>
 	
+</cffunction> --->
+
+<cffunction name="exportNewsletterCSV" access="remote" returntype="void" output="false">
+    <cfquery name="qNewsletters" datasource="#application.dsource#">
+        SELECT email, created_at
+        FROM newsLetterUsers
+        WHERE isdeleted IS NULL
+        ORDER BY id DESC
+    </cfquery>
+
+  	<cfset csvContent = "Email#chr(13)##chr(10)#">
+
+    <!--- Append each email, one per line --->
+    <cfloop query="qNewsletters">
+        <cfset csvContent &= trim(email) & chr(13) & chr(10)>
+    </cfloop>
+
+    <!--- Set headers for CSV download --->
+    <cfheader name="Content-Disposition" value="attachment; filename=newsletter_emails_#DateFormat(now(), 'yyyymmdd')#.csv">
+    <cfcontent type="text/csv; charset=utf-8" variable="#ToBinary(ToBase64(csvContent))#">
 </cffunction>
+
+
 
 
 
