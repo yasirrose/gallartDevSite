@@ -1,5 +1,5 @@
 <!--- <cfoutput>
-  <script language="JavaScript" src="./js/utils.js"></script>
+  <script language="JavaScript" src="/js/utils.js"></script>
 	<div id="left">
 		<div class="productSearch">
 			<form action="products.cfm?xss=#xss#" method="post">

@@ -118,7 +118,7 @@
 			<!--- <cfdump var="#artist_name_url#"> --->
 
             <div class="list-item">
-                <a href="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
+                <a href="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
                     <cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")>
                         <img src="http://23.20.226.157/img/#uid#.jpg" alt="#name#" title="#name#" border="0" align="center">
                     <cfelse>
@@ -250,7 +250,7 @@
                         <!--- <span style="font-weight: 600;">Art ID:</span> #modelno# --->
 
 						<span>
-							<a href="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
+							<a href="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
 								Art ID: #modelno#
 							</a>
 						</span>
@@ -261,7 +261,7 @@
 				<!--- <a>MORE INFO</a> --->
 
 				<!--- <span class="pinkText">
-					<b><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="dbl_arrows">MORE INFO</a></b>
+					<b><A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="dbl_arrows">MORE INFO</a></b>
 				</span> --->
 
 				<cfif len(fk_users)>

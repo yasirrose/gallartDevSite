@@ -1,4 +1,4 @@
-<link href="stylesheet_print.css?x=<cfoutput>#RandRange(0,1000)#</cfoutput>" rel="stylesheet" type="text/css" media="print" />
+<link href="/stylesheet_print.css?x=<cfoutput>#RandRange(0,1000)#</cfoutput>" rel="stylesheet" type="text/css" media="print" />
 <!--- <cfoutput>
 
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -21,7 +21,7 @@ function helpWin(url) {
 </script>
 <div id="top">
 	<div class="top-conteiner">
-		<div class="site-logo"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>"><img src="images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
+		<div class="site-logo"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>"><img src="/images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
 		<!--- <div class="mailto">
 			<div class="mailto-text">
 				<p>20633 Biscayne Blvd Aventura, FL 33180</p>
@@ -42,7 +42,7 @@ function helpWin(url) {
 					<div class="resigter">
 						<ul>
 							<li><a href="/user_login_page.cfm?xss=<cfoutput>#xss#</cfoutput>"><i class="far fa-user"></i></a></li>
-							<li><a href="/view.cfm?xss=<cfoutput>#xss#</cfoutput>"><i class="fas fa-shopping-cart"></i></a></li>
+							<li><a href="/view/?xss=<cfoutput>#xss#</cfoutput>"><i class="fas fa-shopping-cart"></i></a></li>
 						</ul>
 					</div>
 					<!---<p>20633 Biscayne Blvd Aventura, FL 33180</p> --->

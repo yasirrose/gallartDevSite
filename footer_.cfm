@@ -9,7 +9,7 @@
 								<h3>Main Menu</h3>
 								<!--- <cfdump var="#cookiesAccepted#"> --->
 								<ul>
-									<li> <a href="index.cfm?xss=#xss#">Home</a> </li>
+									<li> <a href="/index.cfm?xss=#xss#">Home</a> </li>
 									<!--- <li> <a href="user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
 									<li> <a href="requests.cfm?xss=#xss#">Requests</a> </li>
 									<li> <a href="quotes.cfm?xss=#xss#">Quotes</a> </li>
@@ -20,13 +20,13 @@
 									<li> <a href="alerts.cfm?xss=#xss#">Alert</a> </li>
 									<li> <a href="http://blog.gallart.com/">Blog</a> </li> --->
 									<!-- <li> <a href="contact.cfm?xss=#xss#">Contact Us</a> </li> -->
-									<li> <a href="searchpage.cfm?xss=#xss#">Search</a> </li>
-									<li> <a href="new_listings.cfm?xss=#xss#">Recent Acquisitions</a> </li>
-									<li> <a href="sales.cfm?xss=#xss#">Sales</a> </li>
-									<li> <a href="classifieds.cfm?xss=#xss#">Classifieds</a> </li>
-									<li> <a href="featured_events.cfm?xss=#xss#">Events</a> </li>
-									<li> <a href="new_user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
-									<li> <a href="promotion.cfm?xss=#xss#">Promotion</a> </li>
+									<li> <a href="/searchpage.cfm?xss=#xss#">Search</a> </li>
+									<li> <a href="/new_listings.cfm?xss=#xss#">Recent Acquisitions</a> </li>
+									<li> <a href="/sales.cfm?xss=#xss#">Sales</a> </li>
+									<li> <a href="/classifieds.cfm?xss=#xss#">Classifieds</a> </li>
+									<li> <a href="/featured_events.cfm?xss=#xss#">Events</a> </li>
+									<li> <a href="/new_user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
+									<li> <a href="/promotion.cfm?xss=#xss#">Promotion</a> </li>
 
 									
 								</ul>
@@ -37,10 +37,10 @@
 								<h3>Customer Service</h3>
 								<ul>
 									<li> <a href="">Account</a> </li>
-									<li> <a href="view.cfm?xss=#xss#">View Cart</a> </li>
-									<li> <a href="shippingpolicy.cfm?xss=#xss#">Shipping Policy</a> </li>
-									<li> <a href="pns.cfm?xss=#xss#">Privacy</a> </li>
-									<li> <a href="termsUse.cfm?xss=#xss#">Terms of Use</a> </li>
+									<li> <a href="/view/?xss=#xss#">View Cart</a> </li>
+									<li> <a href="/shippingpolicy.cfm?xss=#xss#">Shipping Policy</a> </li>
+									<li> <a href="/pns.cfm?xss=#xss#">Privacy</a> </li>
+									<li> <a href="/termsUse.cfm?xss=#xss#">Terms of Use</a> </li>
 								</ul>
 							</div>
 						</div>
@@ -70,7 +70,7 @@
 							<div class="footer-menu">								
 								<div class="map-image">
 									<a href="https://maps.app.goo.gl/MZniVSbiddj1X1vWA" target="_blank">
-										<img src="images/Gallery-Art-Map-V2.jpg" alt="image">
+										<img src="/images/Gallery-Art-Map-V2.jpg" alt="image">
 									</a>
 								</div>
 							</div>

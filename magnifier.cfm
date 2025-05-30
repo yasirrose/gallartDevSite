@@ -79,7 +79,7 @@ p {
 </script>
 <!---
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 <script language="JavaScript" src="http://#server_name#/js/jquery-1.2.6.min.js"></script>
 <script language="JavaScript" src="http://#server_name#/js/magnifier.js"></script>
 <script language="JavaScript" src="http://#server_name#/js/slimbox2.js"></script>

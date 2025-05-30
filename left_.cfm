@@ -36,7 +36,7 @@
 </script>
 
 <cfoutput>
-	<!--- <script language="JavaScript" src="./js/utils.js"></script> --->
+	<!--- <script language="JavaScript" src="/js/utils.js"></script> --->
 	<div id="left">
 		<div class="productSearch-filed web-search">
 			<form action="products.cfm?xss=#xss#" method="post">

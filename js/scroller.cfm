@@ -6,7 +6,7 @@ function banner(name, width, link){
 	this.link = link
    }
 <cfoutput query="data">
-pic[#evaluate(currentrow-1)#] = new banner('#imageurl#',102,'item.cfm?pid=#uid#&xss=#xss#')
+pic[#evaluate(currentrow-1)#] = new banner('#imageurl#',102,'/item.cfm?pid=#uid#&xss=#xss#')
 </cfoutput>
 
 var speed = 50

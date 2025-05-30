@@ -9,7 +9,7 @@
 <cfinclude template="meta.cfm">
 <link rel="shortcut icon" href="favicon.ico" >
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet.css" rel="stylesheet" type="text/css">
 <link type="text/css" href="/css/jquery/ui.all.css" rel="stylesheet" />
 <script src="/js/jquery-1.3.2.js" type="text/javascript"></script>
 <script type="text/javascript" src="/js/jquery.ui.core.js"></script>

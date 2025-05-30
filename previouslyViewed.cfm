@@ -86,7 +86,7 @@
                                <cfoutput query="productData" >
                                   <div>
                                      <div class="slide-content">
-                                        <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                        <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
                                           <div class="img-sec">
                                            <!-- Dynamic image source -->
                                            <cfif fileexists("http://23.20.226.157/img/#productData.uid#.jpg")>
@@ -102,7 +102,7 @@
                                            <div class="top-content">
                                               <!-- Dynamic product title -->
 
-                                              <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
+                                              <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
                                                 <h3 class="title">#name#</h3>
                                               </a>
                                               
@@ -154,7 +154,7 @@
                                            </div>
                                            <!-- Dynamic meta information -->
 
-                                           <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
+                                           <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
 
                                              <cfset nameParts = listToArray(productData.manufacturer, ",")>
                                              <cfif  arrayLen(nameParts) EQ 2 >

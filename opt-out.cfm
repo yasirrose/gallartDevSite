@@ -22,7 +22,7 @@
 <head>
 	<title><cfoutput>#companyname# - #titletext#</cfoutput></title>
 <cfinclude template="meta.cfm">
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet.css" rel="stylesheet" type="text/css">
 
 </head>
 

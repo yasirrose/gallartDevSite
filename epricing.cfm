@@ -64,7 +64,7 @@
 	   </cfoutput>
 	   <cfinclude template="meta.cfm">
 	   <cfoutput>
-		  <script language="JavaScript" src="./js/utils.js"></script>
+		  <script language="JavaScript" src="/js/utils.js"></script>
 		  <script language="JavaScript" src="http://#server_name#/js/jquery-1.2.6.min.js"></script>
 		  <script language="JavaScript" src="http://#server_name#/js/slimbox2.js"></script>
 		  <link href="http://#server_name#/css/slimbox2.css" rel="stylesheet" type="text/css">
@@ -83,7 +83,7 @@
 		  }
 		  
 	   </SCRIPT>
-	   <link href="stylesheet_.css" rel="stylesheet" type="text/css">
+	   <link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 	   <script type="text/javascript">
 		  var _gaq = _gaq || [];
 		  _gaq.push(['_setAccount', 'UA-34565365-1']);

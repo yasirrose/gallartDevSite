@@ -9,7 +9,7 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 <script language="JavaScript" src="http://#server_name#/js/jquery-1.2.6.min.js"></script>
 <script language="JavaScript" src="http://#server_name#/js/slimbox2.js"></script>
 <link href="http://#server_name#/css/slimbox2.css" rel="stylesheet" type="text/css">
@@ -30,7 +30,7 @@ function popUpWin(urlPage){
 	
 </SCRIPT>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -268,7 +268,7 @@ function popUpWin(urlPage){
 																<cfset artist_name = manufacturer />
 																<cfset artist_name_url = manufacturer />
 															</cfif>
-															<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+															<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
 															<cfif fileExists(thisFile)>
 															<img src="http://#server_name#/img/thumbnails/#similar.uid#.jpg" alt="#ucase(similar.manufacturer)# - #similar.name#" border="1">
 															<cfelse>

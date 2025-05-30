@@ -95,7 +95,7 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 <script type="text/javascript" src="http://#server_name#/js/jquery-1.2.6.min.js" ></script>
 <script type="text/javascript" src="http://#server_name#/js/thickbox-compressed.js" ></script>
 <link rel="stylesheet" type="text/css" href="http://#server_name#/css/thickbox.css">
@@ -114,7 +114,7 @@
 	}
 </script>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
