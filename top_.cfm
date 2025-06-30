@@ -1,4 +1,4 @@
-<link href="/stylesheet_print.css?x=<cfoutput>#RandRange(0,1000)#</cfoutput>" rel="stylesheet" type="text/css" media="print" />
+<link href="stylesheet_print.css?x=<cfoutput>#RandRange(0,1000)#</cfoutput>" rel="stylesheet" type="text/css" media="print" />
 <!--- <cfoutput>
 
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -21,7 +21,7 @@ function helpWin(url) {
 </script>
 <div id="top">
 	<div class="top-conteiner">
-		<div class="site-logo"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>"><img src="/images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
+		<div class="site-logo"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>"><img src="images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
 		<!--- <div class="mailto">
 			<div class="mailto-text">
 				<p>20633 Biscayne Blvd Aventura, FL 33180</p>
@@ -41,15 +41,23 @@ function helpWin(url) {
 				<div class="mailto-text">
 					<div class="resigter">
 						<ul>
-							<li><a href="/user_login_page.cfm?xss=<cfoutput>#xss#</cfoutput>"><i class="far fa-user"></i></a></li>
-							<li><a href="/view/?xss=<cfoutput>#xss#</cfoutput>"><i class="fas fa-shopping-cart"></i></a></li>
+							<li>
+								<a href="/user_login_page.cfm?xss=<cfoutput>#xss#</cfoutput>">
+									<i class="far fa-user"></i>
+								</a>
+							</li>
+							<li>
+								<a href="/view.cfm?xss=<cfoutput>#xss#</cfoutput>">
+									<i class="fas fa-shopping-cart"></i>
+								</a>
+							</li>
 						</ul>
 					</div>
 					<!---<p>20633 Biscayne Blvd Aventura, FL 33180</p> --->
 					<p><strong>305.932.6166</strong></p>
 				</div>
 				<!--- <a class="btn" href="mailto:sales@gallart.com">Email Us! CLICK!</a> --->
-			</div>
+			</div>	
 			<!--- <div class="productSearch-filed web-search">
 				<form action="products.cfm?xss=<cfoutput>#xss#</cfoutput>" method="get">
 				<input type="text" name="keywords" id="keywords" placeholder="Product Search">                  
@@ -58,7 +66,7 @@ function helpWin(url) {
 			</div> --->
 
 			<!---<div style="display:flex;">
-				<a href="https://www.facebook.com/pages/GallArt/119056118127427?ref=hl" target="_blank"><img src="https://gallart.com/images/social_icons/facebook-sm.png" border="0" alt="facebook" /></a>
+					<a href="https://www.facebook.com/pages/GallArt/119056118127427?ref=hl" target="_blank"><img src="https://gallart.com/images/social_icons/facebook-sm.png" border="0" alt="facebook" /></a>
 			<a href="https://instagram.com/gallartcom/" target="_blank"><img src="https://gallart.com/images/social_icons/instagram-sm.png" border="0" alt="instagram" /></a>
 			<a href="https://twitter.com/GallArtcom" target="_blank"><img src="https://gallart.com/images/social_icons/twitter-sm.png" border="0" alt="twitter" /></a>
 			<!--- <a href="https://www.tumblr.com/blog/gallartcom" target="_blank"><img src="https://gallart.com/images/social_icons/tumblr-sm.png" border="0" alt="tumblr" /></a> --->
@@ -74,8 +82,8 @@ function helpWin(url) {
 				<!--- https://www.youtube.com/channel/yourchannelid --->
 			</a>
 			</div> --->
-
 			
+
 			
 		</div>
 	</div>

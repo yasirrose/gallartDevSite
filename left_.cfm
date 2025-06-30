@@ -36,12 +36,12 @@
 </script>
 
 <cfoutput>
-	<!--- <script language="JavaScript" src="/js/utils.js"></script> --->
+	<!--- <script language="JavaScript" src="./js/utils.js"></script> --->
 	<div id="left">
 		<div class="productSearch-filed web-search">
 			<form action="products.cfm?xss=#xss#" method="post">
 			<input type="text" name="keywords" placeholder="Product Search">                  
-			<button type="button" class="search-btn"><i class="fas fa-search"></i></button>
+			<button type="button" class="search-btn find" onclick="document.forms[0].submit()"><i class="fas fa-search find"></i></button>
 			</form>
 		</div>
 		<div class="advance-search">

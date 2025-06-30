@@ -7,7 +7,7 @@
 						<td width="2%">&nbsp;</td>
 						<cfloop from="65" to="90" index="idx">
 							<td width="3.8%">
-							<a href="/alpha_list/#chr(idx)#/" class="alpha">#chr(idx)#</a>
+							<a href="alpha_list.cfm?man=#chr(idx)#" class="alpha">#chr(idx)#</a>
 							</td>
 						</cfloop>
 					</tr>
@@ -29,7 +29,7 @@
 		<tr>
 			<td style="color: ##FF3399;">Artists whose name begins with #man#:<br>
 				<cfloop query="alpha_info">
-					<a href="/artists/#manufacturer#/">#ucase(manufacturer)#</a><br>
+					<a href="products.cfm?man=#manufacturer#">#ucase(manufacturer)#</a><br>
 				</cfloop>
 				(Click artist's name to view art)
 			</td>

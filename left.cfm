@@ -1,5 +1,5 @@
-<!--- <cfoutput>
-  <script language="JavaScript" src="/js/utils.js"></script>
+<cfoutput>
+	<script language="JavaScript" src="./js/utils.js"></script>
 	<div id="left">
 		<div class="productSearch">
 			<form action="products.cfm?xss=#xss#" method="post">
@@ -40,15 +40,15 @@
 			<cfinclude template="featured.cfm">
 		</div>
 	</div>
-</cfoutput> --->
+</cfoutput>
 
 
-<cfoutput>
+<!---<cfoutput>
 <table border="0" cellpadding="0" cellspacing="0" height="100%">
 	<tr>
 		<td valign="top" style="padding-top: 20px;">
-			<table border="0" cellspacing="0" cellpadding="0" background="/images/product_search.jpg" style="background-repeat: no-repeat; background-position: top;" width="173" height="121">
-				<form action="/artists/?xss=#xss#" method="post">
+			<table border="0" cellspacing="0" cellpadding="0" background="images/product_search.jpg" style="background-repeat: no-repeat; background-position: top;" width="173" height="121">
+				<form action="products.cfm?xss=#xss#" method="post">
 				<tr>
 					<td style="padding-left: 20px; padding-top: 65px;">
 						<input type="text" name="keywords" style="font-size: 8pt; width: 132px;">
@@ -56,7 +56,7 @@
 				</tr>
 				<tr>
 					<td style="padding-left: 92px; padding-bottom: 7px;">
-						<input type="image" src="/images/find_but.jpg" alt="Search by Keyword or Artist" style="border: 1px solid ##ffffff;">
+						<input type="image" src="images/find_but.jpg" alt="Search by Keyword or Artist" style="border: 1px solid ##ffffff;">
 					</td>
 				</tr>
 				</form>
@@ -164,7 +164,7 @@
 	</tr>
 	<tr height="100%">
 		<td height="100%" valign="top">
-			<table border="0" cellspacing="0" cellpadding="0" background="/images/featured.jpg" style="background-repeat: no-repeat; background-position: top;" width="173" height="100%">
+			<table border="0" cellspacing="0" cellpadding="0" background="images/featured.jpg" style="background-repeat: no-repeat; background-position: top;" width="173" height="100%">
 				<tr>
 					<td valign="top">
 						<cfinclude template="featured.cfm">
@@ -175,3 +175,4 @@
 	</tr>
 </table>
 </cfoutput>
+--->

@@ -15,13 +15,13 @@
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 	</cfif>
-	<link href="/css/photogallery.css" rel="stylesheet" type="text/css">
-	<script language="JavaScript" src="/js/utils.js"></script>
-	<script type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
-	<script type="text/javascript" src="/js/jquery.bgpos.js"></script>
-	<script type="text/javascript" src="/js/jquery.cross-slide.js"></script>
-    <script language="JavaScript" src="/js/slimbox2.js"></script>
-	<link href="/css/slimbox2.css" rel="stylesheet" type="text/css">
+	<link href="./css/photogallery.css" rel="stylesheet" type="text/css">
+	<script language="JavaScript" src="./js/utils.js"></script>
+	<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
+	<script type="text/javascript" src="./js/jquery.bgpos.js"></script>
+	<script type="text/javascript" src="./js/jquery.cross-slide.js"></script>
+    <script language="JavaScript" src="./js/slimbox2.js"></script>
+	<link href="./css/slimbox2.css" rel="stylesheet" type="text/css">
 </cfoutput>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <cfquery name="qSlideshow" datasource="#application.dsource#">
@@ -62,7 +62,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0;
+	margin: 0;
     color: #000 !important;
     font-size: 14px;
     /* border: 2px solid #ec008c; */
@@ -76,7 +76,7 @@
 	justify-content: center;
 	text-transform: uppercase;
 	gap: 8px;
-	
+
 }
 a.SeeMore:hover {
     background: transparent;
@@ -101,7 +101,7 @@ a.SeeMore:hover {
 </script>
 
 
-<link href="/stylesheet_.css?x=<cfoutput>#RandRange(0,100)#</cfoutput>" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css?x=<cfoutput>#RandRange(0,100)#</cfoutput>" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -130,7 +130,7 @@ a.SeeMore:hover {
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	<div class="main-container">
-		
+
 		<div id="Table_01">
 			<div class="header-section">
 				<div class="top-header">
@@ -147,21 +147,21 @@ a.SeeMore:hover {
 							<div class="sidebar-Icon">
 								<i class="fas fa-bars"></i>
 							</div>
-						</div>
+						</div>						
 						<div class="content-section">
 							<div class="banner-section">
 								<div class="banner-content">
-									<div class="content-sec">
+									<div class="content-sec">										
 										<cfinclude template="search.cfm">
 										<div class="like-content mobile-like-content ">
 											<iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FGallArt%2F119056118127427&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:400px; height:35px;" allowTransparency="true"></iframe>
 										</div>
-									</div>
+									</div>								
 <!--- 									<div style="padding: 20px 0 0 0;"> 
 										<div id="slideshow"></div>
 										</div> --->
 								</div>
-								
+
 								<div class="bottom-content-sec">
 									<!-- <div class="like-content desktop-like-content ">
 										<iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FGallArt%2F119056118127427&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:400px; height:35px;" allowTransparency="true"></iframe>
@@ -211,8 +211,8 @@ a.SeeMore:hover {
 											<cfdump var="#initialQuery#">
 										</cfif> --->
 										<div class="Recent Aquestoins" style="background-color:#F2F2F2; border-radius:10px;">
-										<div class="top-heading home-page-heading">
-											<h3>RECENT ACQUISITIONS</h3>
+											<div class="top-heading home-page-heading">
+												<h3>RECENT ACQUISITIONS</h3>										
 										</div>
 										<div class="bottom-content">
 											<div class="gallery-lists">
@@ -230,30 +230,30 @@ a.SeeMore:hover {
 													
 												<!--- <Cfset pc = pc + 1> --->
 												<Td valign="top" align="Center">
-												<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+												<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
 													<!--- <cfset uidd = '20338'> --->
 												<!--- <IMG SRC="http://23.20.226.157/img/#uidd#.jpg?x=randrange(1,99)"  width="100" BORDER="0" ALT="#trim(modelno)#" align="Center"> 
 												
 												 SRC="./img/thumbnails/#uid#.jpg?x=randrange(1,99)"
 												--->
-												<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg") >
-													<IMG SRC="/img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
+												<cfif fileexists("https://#server_name#/img/thumbnails/#uid#.jpg") >
+													<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
 												<cfelse>
-													<img src="https://as2.ftcdn.net/v2/jpg/07/95/29/45/1000_F_795294547_gaBzWLhkAYBSz1ZUIZssHhvzGzstNmHK.jpg">
-												</cfif>
+													<img src="https://#server_name#/img/thumbnails/noImage.jfif.jpeg">
+												</cfif>												
 												</A>
 												<Br>
-												<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+												<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
 
 													<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
-
+														
 														<cfset words = ListToArray(name, " ")>
 														<cfset updatedName = "">
 
 														<cfloop index="word" array="#words#">
 															<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
-
+															
 															<cfif cleanWord EQ "FS">
 																<!--- Preserve "FS" in uppercase --->
 																<cfset updatedName = updatedName & " " & UCase(word)>
@@ -266,65 +266,71 @@ a.SeeMore:hover {
 														<!--- Trim to remove leading space --->
 														<cfset updatedName = Trim(updatedName)>
 
-														
+
 
 													<b>#updatedName#</b>
 
-												
+													
 												</a>
 												<br>
 												<span class="bytext">
 													<!--- <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
 														By: #artist_name#<Br>
 												</span>
-
+													
 												<!--- By: #ucase(artist_name)#<Br> </span> --->
 												<!--- <font color="660066" >
-													<cfif retail_price gt 0 and retail_price gt gallery_price>
-														Retail Price: #dollarformat(retail_price)#
-													</cfif>
-												</font>
-												<Br>
+												<cfif retail_price gt 0 and retail_price gt gallery_price>
+												Retail Price: #dollarformat(retail_price)#
+												</cfif>
+											</font>
+											<Br>
 												<span class="pinkText">
-													<cfif gallery_price eq 0>
-														<b>Price On Request</b>
-													<cfelse>
-														Gallery Price: <b>#dollarformat(gallery_price)#</b>
-													</cfif>
+												<cfif gallery_price eq 0>
+												<b>Price On Request</b>
+												<cfelse>
+												Gallery Price: <b>#dollarformat(gallery_price)#</b>
+												</cfif>
 												</span>
 												<br>
 												Art ID:&nbsp;#modelno#<br><br>
-												<cfif len(fk_users)>
-													<span style="font-size: 12px; font-weight: bold; color: ##ff0000;">
-														PRIVATE LISTING
-													</span>
-													<br><br>
-												</cfif> --->
+											<cfif len(fk_users)>
+												<span style="font-size: 12px; font-weight: bold; color: ##ff0000;">
+													PRIVATE LISTING
+												</span>
+												<br><br>
+											</cfif> --->
 
-												<div>
-													<cfif retail_price gt 0 and retail_price gt gallery_price>
-
-														<cfif gallery_price gt 0 and  gallery_price gt special_price>
-								
-															<cfif closeout eq 1 and special_price gt 0 >
-																<del>#DollarFormat(gallery_price)#</del>
-																&nbsp; 
-																 <b>
-																	<span style="color: ##ff0000;">
-																		#DollarFormat(special_price)# 
-																	</span>
-																</b>
-															 <cfelse>
-																<del>#DollarFormat(retail_price)#</del>
-																&nbsp; 
-																
-																<b> #DollarFormat(gallery_price)# </b>
-															</cfif>
-	
+											<div>
+												<cfif retail_price gt 0 and retail_price gt gallery_price>
+										
+													<cfif gallery_price gt 0 and  gallery_price gt special_price>
+										
+														<cfif closeout eq 1 and special_price gt 0 >
+															<del>#DollarFormat(gallery_price)#</del>
+															&nbsp; 
+															 <b>
+																<span style="color: ##ff0000;">
+																	#DollarFormat(special_price)# 
+																</span>
+															</b>
 														 <cfelse>
-															<!--- <span style="color: red;">
-																	Price On Request
-															</span> --->
+															<del>#DollarFormat(retail_price)#</del>
+															&nbsp; 
+															
+															<b> #DollarFormat(gallery_price)# </b>
+														</cfif>
+										
+													 <cfelse>
+														<!--- <span style="color: red;">
+																Price On Request
+														</span> --->
+
+														<cfif gallery_price neq 0 and gallery_price LT special_price>
+															<del>#DollarFormat(retail_price)# </del>
+															&nbsp; 
+															<b> #DollarFormat(gallery_price)# </b>
+														 <cfelse>
 															<cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
 																<del>#DollarFormat(retail_price)# </del>
 																&nbsp; 
@@ -337,36 +343,39 @@ a.SeeMore:hover {
 																	<cfelse>
 																		<b> #DollarFormat(retail_price)# </b>
 															</cfif>
-								
 														</cfif>
-													 <cfelse>
+
 														
-														<cfif gallery_price EQ 0 OR gallery_price EQ ''>
-															
-															<span style="color: red;">
-																Price On Request
-															</span>
+										
+													</cfif>
+												 <cfelse>
+													
+													<cfif gallery_price EQ 0 OR gallery_price EQ ''>
+														
+														<span style="color: red;">
+															Price On Request
+														</span>
+													 <cfelse>
+														<cfif retail_price neq 0 and retail_price GT gallery_price >		
+															<b>#DollarFormat(retail_price)#</b>
 														 <cfelse>
-															<cfif retail_price neq 0 and gallery_price GT retail_price>
-																<b>#DollarFormat(retail_price)#</b>
-															 <cfelse>
-																<cfif closeout eq 1 and special_price gt 0 and special_price LT gallery_price>
-																	<del>#DollarFormat(gallery_price)# </del>
-																	&nbsp; 
-																		<b>
-																			<span style="color: ##ff0000;">
-																			#DollarFormat(special_price)# 
-																			</span>
-																		</b>
-												
-																		<cfelse>
-																			<b>#DollarFormat(gallery_price)#</b>
-																</cfif>
+															<cfif closeout eq 1 and special_price gt 0 and special_price LT gallery_price>
+																<del>#DollarFormat(gallery_price)# </del>
+																&nbsp; 
+																	<b>
+																		<span style="color: ##ff0000;">
+																		#DollarFormat(special_price)# 
+																		</span>
+																	</b>
+											
+																	<cfelse>
+																		<b>#DollarFormat(gallery_price)#</b>
 															</cfif>
 														</cfif>
-								
 													</cfif>
-												</div>
+										
+												</cfif>
+											</div>
 
 												Art ID:&nbsp;#modelno#<br><br>
 											
@@ -389,11 +398,11 @@ a.SeeMore:hover {
 									</div>
 		
 										
-									</div>
+									</div>							
 									<div class="art-work-content" style="background-color:#F2F2F2; border-radius:10px;">
 
 
-
+										
 										<!--- <cfquery name="initialQuery" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 											SELECT top 8 *
 											FROM products 
@@ -432,7 +441,7 @@ a.SeeMore:hover {
 											<cfif isDefined('priceOrder') and len(priceOrder)>
 												ORDER by special_price #priceOrder#
 											<cfelse>
-												ORDER by active_date desc
+												ORDER by uid desc
 											</cfif>
 											
 										</cfquery>
@@ -459,24 +468,21 @@ a.SeeMore:hover {
 													</cfif>
 													<!--- <Cfset pc = pc + 1> --->
 													<Td valign="top" align="Center">
-													<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(name))#')">
+													<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(name))#')">
 														<!--- http://#server_name#/img/thumbnails/#uid#.jpg --->
-														<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg") >
-															<IMG SRC="/img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
-														<cfelse>
-															<img src="https://as2.ftcdn.net/v2/jpg/07/95/29/45/1000_F_795294547_gaBzWLhkAYBSz1ZUIZssHhvzGzstNmHK.jpg">
-														</cfif>
+													<IMG SRC="http://#server_name#/img/#uid#.jpg"  width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
 													</A>
 													<Br>
-													<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(name))#')">
+													<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(name))#')">
 
 														<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
-
+														<!--- Split the name into words --->
 														<cfset words = ListToArray(name, " ")>
 														<cfset updatedName = "">
 
 														<cfloop index="word" array="#words#">
+															<!--- Check if the word (before any punctuation) is a Roman numeral --->
 															<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
 
 															<cfif cleanWord EQ "FS">
@@ -499,8 +505,7 @@ a.SeeMore:hover {
 														<!--- <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
 														By: #artist_name#<Br>
 													</div>
-													<!--- By: #artist_name#<Br> --->
-
+													<!--- By: #ucase(manufacturer)#<Br> --->
 													<!--- <font color="660066" >
 													<cfif len(retail_price)>
 													Retail Price: #dollarformat(retail_price)#
@@ -522,9 +527,9 @@ a.SeeMore:hover {
 
 													<div>
 														<cfif retail_price gt 0 and retail_price gt gallery_price>
-
+												
 															<cfif gallery_price gt 0 and  gallery_price gt special_price>
-									
+												
 																<cfif closeout eq 1 and special_price gt 0 >
 																	<del>#DollarFormat(gallery_price)#</del>
 																	&nbsp; 
@@ -539,24 +544,30 @@ a.SeeMore:hover {
 																	
 																	<b> #DollarFormat(gallery_price)# </b>
 																</cfif>
-		
+												
 															 <cfelse>
 																<!--- <span style="color: red;">
 																		Price On Request
 																</span> --->
-																<cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+																<cfif gallery_price neq 0 and gallery_price LT special_price>
 																	<del>#DollarFormat(retail_price)# </del>
 																	&nbsp; 
-																		<b>
-																			<span style="color: ##ff0000;">
-																			#DollarFormat(special_price)# 
-																			</span>
-																		</b>
-												
-																		<cfelse>
-																			<b> #DollarFormat(retail_price)# </b>
+																	<b> #DollarFormat(gallery_price)# </b>
+																 <cfelse>
+																	<cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+																		<del>#DollarFormat(retail_price)# </del>
+																		&nbsp; 
+																			<b>
+																				<span style="color: ##ff0000;">
+																				#DollarFormat(special_price)# 
+																				</span>
+																			</b>
+													
+																			<cfelse>
+																				<b> #DollarFormat(retail_price)# </b>
+																	</cfif>
 																</cfif>
-									
+												
 															</cfif>
 														 <cfelse>
 															
@@ -583,10 +594,10 @@ a.SeeMore:hover {
 																	</cfif>
 																</cfif>
 															</cfif>
-									
+												
 														</cfif>
 													</div>
-
+													
 													
 												Art ID:&nbsp;#modelno#<br><br>
 												<cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br>
@@ -614,7 +625,7 @@ a.SeeMore:hover {
 		
 										
 									</div>
-								
+
 									<!--- <div class="featured-work-content featured-artwork-content ">
 										<div class="top-heading home-page-heading">
 											<h3>Featured Artworks</h3>
@@ -625,10 +636,10 @@ a.SeeMore:hover {
 											</div>
 										</div>
 									</div> --->
-									
+
 							</div>
 						</div>
-						
+
 					</div>
 				</divcl>
 			</div>
@@ -661,7 +672,7 @@ a.SeeMore:hover {
 					<div class="modal-body pt-0">
 						<div class="inner-content">
 							<div class="top-image">
-								<img src="/images/G-Logowhite.png" alt="logo" />
+								<img src="images/G-Logowhite.png" alt="logo" />
 							</div>
 							<h2>Stay in touch</h2>
 							<p>Be the first to know about Gallery Art's upcoming events, recent acquisitions and sales.</p>
@@ -719,14 +730,14 @@ a.SeeMore:hover {
 		<cfset email = trim(FORM.email)>
 		<cfset ipAddress = cgi.remote_addr>
 		<cfset createdAt = now()>
-
+		
 		<cfquery name="qGetNewsLetterUserLogs" datasource="#application.dsource#">
 			Select * FROM newsLetterUsers where CAST([created_at] AS DATE) = #createdAt# and ipAddress = '#ipAddress#' and isdeleted is null
 		</cfquery>
 
 		<cfif qGetNewsLetterUserLogs.recordCount LT 2>
 			<cfquery name="qGetNewsLetterUser" datasource="#application.dsource#">
-				Select * FROM newsLetterUsers where email = '#form.email#'
+				Select * FROM newsLetterUsers where email = '#form.email#'  and isdeleted is null
 			</cfquery>
 		
 			<cfif qGetNewsLetterUser.recordCount EQ 0 >
@@ -742,21 +753,21 @@ a.SeeMore:hover {
 							<cfqueryparam value="#ipAddress#" cfsqltype="cf_sql_varchar">
 							)
 				</cfquery>
-			 	<cfset session.email = email>
+				<cfset session.email = email>
 					<cfoutput>
 						<script>
-							
+							alert('Your Email is Submitted');
 							window.location.href = 'index.cfm?xss=<cfoutput>#xss#</cfoutput>';
 						</script>
 					</cfoutput>
-				<cfelse>
-					<cfset session.email = email>
-					<cfoutput>
-						<script>
-							alert('You are already subscribed.');
-							window.location.href = 'index.cfm?xss=<cfoutput>#xss#</cfoutput>';
-						</script>
-					</cfoutput>
+			<cfelse>
+				<cfset session.email = email>
+				<cfoutput>
+					<script>
+						alert('You are already subscribed.');
+						window.location.href = 'index.cfm?xss=<cfoutput>#xss#</cfoutput>';
+					</script>
+				</cfoutput>
 			</cfif>
 		 <cfelse>
 			<cfoutput>
@@ -767,7 +778,7 @@ a.SeeMore:hover {
 			</cfoutput>
 		</cfif>
 		
-		
+
 		
 	
 		<!--- <cfelse>
@@ -830,45 +841,22 @@ a.SeeMore:hover {
         });
     }
 </script>
-<!--- <script>
-	document.getElementById('signupBtn').addEventListener('click', function (event) {
-	  // Prevent the default anchor navigation
-	  event.preventDefault();
-  
-	  // Get the email input field
-	  const emailInput = document.getElementById('floatingInput');
-	  const emailValue = emailInput.value.trim();
-  
-	  // Email validation regex
-	  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
-	  // Validate the email
-	  if (emailValue === '') {
-		alert('Please fill in your email address.');
-	  } else if (!emailRegex.test(emailValue)) {
-		alert('Please enter a valid email address.');
-	  } else {
-		// Navigate to the URL if the email is valid
-		window.location.href = 'mailing_list.cfm?xss=<cfoutput>#xss#</cfoutput>';
-	  }
-	});
-  </script> --->
 <script>
-	 window.onscroll = function() {scrollFunction()};
+	window.onscroll = function() {scrollFunction()};
 
-function scrollFunction() {
-   if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-	  document.getElementById("myBtn").style.display = "block";
-   } else {
-	  document.getElementById("myBtn").style.display = "none";
-   }
-}
+	function scrollFunction() {
+		if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+			document.getElementById("myBtn").style.display = "block";
+		} else {
+			document.getElementById("myBtn").style.display = "none";
+		}
+	}
 
-function gotoTopFunction() {
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
-            e.preventDefault();
-        }
+	function gotoTopFunction() {
+		document.body.scrollTop = 0;
+		document.documentElement.scrollTop = 0;
+		e.preventDefault();
+	}
 
 </script>
 

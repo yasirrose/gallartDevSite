@@ -1,55 +1,5 @@
 <cfoutput>
-	<div class="company-box">
-		<div class="row content-row">
-			<div class="col-md-12">
-				<p><strong>WE BUY FINE ART!</strong></p>
-			</div>
-			<div class="col-md-4">
-				<div class="content">
-					<a href="framing_details.cfm?xss=#xss#">
-						<img src="images/framingclick.jpg" alt="Framing" border="0">
-					</a>
-					<ul class="ul-check">
-						<li>
-							<i class="fas fa-check"></i><a href="http://gallart.com/products.cfm?man=CELEBRITY">Click Here To See Celebrity&nbsp;Link</a>
-						</li>
-						<li>
-							<i class="fas fa-check"></i><a href="http://gallart.com/quotes.cfm">Click Here For A Free Quote</a>
-						</li>
-						<li>
-							<i class="fas fa-check"></i><a href="javascript: void(0)" onclick="showVideo()">Click Here To View Video</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="content">
-					<p>Looking for something special?</p>
-					<p>Please contact us:</p>
-					<ul>
-						<li>
-							<strong>Tel: </strong>&nbsp;<span>305.932.6166</span>
-						</li>
-						<li>
-							<strong>Fax: </strong>&nbsp;<span>305.937.2125</span>
-						</li>
-						<li>
-							<strong>Email: </strong>&nbsp;<a href="mailto:sales@GallArt.com" target="_blank" class="company">sales@GallArt.com</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="content">
-					<a href="http://maps.google.com/maps?f=q&hl=en&q=20633+Biscayne+Blvd,+Miami,+FL&ie=UTF8&om=1" target="_blank"><img src="images/directions.jpg?x=<cfoutput>#RandRange(0,100)#</cfoutput>" alt="" border="0"></a>
-					<img src="http://www.blogtalkradio.com/img/blogtalkradiologo.gif" />
-					<p>Listen to interview with Ken Hendel:</p>
-				</div>
-			</div>
-		</div>
-	</div>
-</cfoutput>
-<!--- <table border="0" cellpadding="0" cellspacing="0" width="885" class="company" style="padding-left: 100px;">
+<table border="0" cellpadding="0" cellspacing="0" width="885" class="company" style="padding-left: 100px;">
 	<tr>
 		<!--- left side --->
 		<td width="60%">
@@ -141,5 +91,5 @@
     </div>
 		</td>
 	</tr>
-</table> --->
+</table>
 

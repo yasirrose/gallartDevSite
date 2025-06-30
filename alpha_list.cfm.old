@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<cfoutput>
+<title>#companyname# - Welcome to #sitename# - Peter Max, Andy Warhol, Keith Haring, Roy Lichtenstein, Louis Icart, Erte</title>
+</cfoutput>
+
+<cfinclude template="meta.cfm">
+
+<cfoutput>
+<script language="JavaScript" src="http://#server_name#/js/utils.js"></script>
+</cfoutput>
+
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
+
+</head>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<table id="Table_01" width="800" height="100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td colspan="2" width="800" height="125" valign="top">
+			<cfinclude template="top.cfm">
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" width="800" valign="top" height="37">
+			<cfinclude template="navbar.cfm">
+		</td>
+	</tr>
+	<tr height="100%">
+		<td valign="top" width="173" height="100%">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+				<tr height="100%">
+					<td valign="top" height="100%">	
+						<cfinclude template="left.cfm">
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td valign="top" width="627" height="100%">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td valign="top">	
+						<cfinclude template="search.cfm">
+					</td>
+				</tr>
+				<tr height="100%">
+					<td height="100%" valign="top" style="padding-left: 20px;">	
+						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+								<cfquery name="alpha_info" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+									SELECT distinct manufacturer 
+									FROM products 
+									WHERE manufacturer like '#man#%' 
+									AND active = 1 
+									AND (path <> '') 
+									AND (path IS NOT NULL)
+									ORDER BY manufacturer 
+								</cfquery>
+							<tr>
+								<td style="color: #db3a7d;">
+								<cfif alpha_info.recordcount>
+									<strong>Artists whose name begins with <cfoutput>#man#</cfoutput></strong>&nbsp;(Click artist's name to view art):<br>
+									<cfset columns =2>
+									<table border=0 cellpadding=3 cellspacing=3 width="100%">
+									<tr>
+									<cfset i = 0>
+									<cfoutput query="alpha_info">
+										<td valign="top">
+											<table border=0 cellpadding=0 cellspacing=0>
+											<tr>
+												<td>
+												<a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">#ucase(manufacturer)#</a>
+												</td>
+											</tr>
+											</table>
+										</td>
+										<cfset i = i + 1>
+										<cfif i mod columns is 0></tr><tr></cfif>
+									</cfoutput>
+									</tr>
+									</table>
+								<cfelse>
+									<strong>There are no artists in our database whose name begins with <cfoutput>#man#</cfoutput>.  <br>Please try another search.</strong>
+								</cfif>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" valign="baseline">
+			<cfinclude template="footer.cfm">
+		</td>
+	</tr>
+</table>
+
+<cfinclude template="frmxss.cfm">
+
+</body>
+</html>

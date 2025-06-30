@@ -5,7 +5,6 @@
    <cfquery name="deleteWishlistItem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
        DELETE FROM Wishlist
        WHERE pk_id = <cfqueryparam value="#form.wishlist_pk_id#" cfsqltype="cf_sql_integer">
-       and user_id = #userID#
    </cfquery>
 
    <!--- Return JSON response and stop further execution --->

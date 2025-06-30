@@ -1,16 +1,5 @@
-<cftry>
-	<cfmail server="#servername#" from="steve@rekal.net" to="tldz.dev12@gmail.com"  type="html" subject="New Test Placed">
-		<br><br>
-		<img src="http://www.onlinegalleryart.com/WOLFRYDEXHIBITON.jpg">
-		An order was placed on #DateFormat(createodbcdate(now()),"mmm dd, yyyy")#.
-		
-		</cfmail>
-	<cfdump var="test123" abort="true">
-	<cfcatch>
-		<cfdump var="#cfcatch#" abort="true">
 
-</cfcatch>
-</cftry>
+<cfdump var="test" abort="true">
 <!--- <CFQUERY NAME="test" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 insert into users
 (fname,lname,email,password)
@@ -611,7 +600,7 @@ ALTER TABLE purchases_consignments ADD
 count tinyint,
 datestamp DATETIME NOT NULL DEFAULT (GETDATE())
 </CFQUERY>  --->
-<cfdump var="test" abort="true">
+
 <CFSET this_id = 65 />
 
 <CFQUERY NAME="import_name" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">

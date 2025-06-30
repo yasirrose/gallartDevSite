@@ -14,10 +14,10 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
-<script language="JavaScript" src="/js/utils.js"></script>
+<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
@@ -59,11 +59,11 @@
 												<div class="top-heading text-left">
 													<cfoutput>
 														<p>
-															Welcome to <b><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>">Gallery Art</a></b>. Our services and products are provided subject to the following terms and conditions. By using the website, you agree to be bound by these terms and conditions. Please read them carefully, as they contain important provisions relating to your use of the site.
+															Welcome to Gallery Art. Our services and products are provided subject to the following terms and conditions. By using the website, you agree to be bound by these terms and conditions. Please read them carefully, as they contain important provisions relating to your use of the site.
 														</p>
 
 														<h3>I. Privacy</h3>
-														<p>Please review our <b><a href="pns.cfm?xss=<cfoutput>#xss#</cfoutput>" >Privacy Policy</a></b> to understand our privacy practices.</p>
+														<p>Please review our <a href="pns.cfm?xss=<cfoutput>#xss#</cfoutput>" >Privacy Policy</a> to understand our privacy practices.</p>
 
 														<h3>II. Terms of Use</h3>
 														<p>
@@ -102,7 +102,7 @@
 														<p>
 															You consent to receive communications from us by e-mail. You agree that all agreements, notices, disclosures and other communications that we provide to you by e-mail satisfy any legal requirement that such communications be in writing.
 															<br><br>
-															If you opt in to receive SMS (text messages) from <b><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>">Gallery Art</a></b> (as/when available), or use a mobile application, the following additional terms and conditions ("Mobile Terms") also apply to you. Your access to the Sites via your mobile device or use of a mobile application confirms your agreement to these Mobile Terms, as well as the rest of the Terms and Conditions.
+															If you opt in to receive SMS (text messages) from Gallery Art (as/when available), or use a mobile application, the following additional terms and conditions ("Mobile Terms") also apply to you. Your access to the Sites via your mobile device or use of a mobile application confirms your agreement to these Mobile Terms, as well as the rest of the Terms and Conditions.
 															<br><br>
 															By opting in, you agree to receive promotional SMS text messages on your mobile device. Your consent is not required as a condition of purchasing any goods or services from RoGallery. By agreeing to receive SMS messages from RoGallery, you certify that you are over 18 years of age and (a) you are the mobile account holder or (b) you have the account holder’s permission to enroll the designated mobile phone number and can incur any mobile message or data charges. You agree that you are solely responsible for all message and data charges that apply to use of your mobile device to access the Sites or use of a mobile application. All such charges are billed by and payable to your mobile service provider. Please contact your participating mobile service provider for pricing plans, participation status and details. You understand that wireless through Wi-Fi or a participating mobile service provider may not be available in all areas at all times and may be affected by product, software, coverage or other service changes made by your mobile service provider or otherwise. Additional terms and conditions may apply to your use of a mobile application, based on the type of mobile device on which you install and use the mobile application. You can opt out of receiving SMS messages at any time.
 
@@ -123,7 +123,7 @@
 														<h4>Trademarks</h4>
 
 														<p>
-															Certain graphics, logos, page headers, button icons, scripts, and service names are trademarks, service marks, or trade dress of our company or our affiliated companies. Our trademarks and trade dress may not be used for any commercial or other purposes without our prior written consent. All other trademarks and service marks not owned by <b><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>">Gallery Art</a></b> or our affiliated companies that appear on the website are the property of their respective owners and may or may not be used without their prior written consent.
+															Certain graphics, logos, page headers, button icons, scripts, and service names are trademarks, service marks, or trade dress of our company or our affiliated companies. Our trademarks and trade dress may not be used for any commercial or other purposes without our prior written consent. All other trademarks and service marks not owned by Gallery Art or our affiliated companies that appear on the website are the property of their respective owners and may or may not be used without their prior written consent.
 														</p>
 
 														<h4>Copyright & Trademark Compliance; Complaints</h4>
@@ -142,7 +142,7 @@
 
 														<p>
 															
-															The website may contain links to or services offered by third parties that are not under the control of <b><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>">Gallery Art</a></b> (“Third Party Services”). Any such Third Party Services are provided for your convenience only and you access them at your own risk. Any concerns regarding such Third Party Service should be directed to the particular outside service.
+															The website may contain links to or services offered by third parties that are not under the control of Gallery Art (“Third Party Services”). Any such Third Party Services are provided for your convenience only and you access them at your own risk. Any concerns regarding such Third Party Service should be directed to the particular outside service.
 
 														</p>
 
@@ -158,7 +158,7 @@
 
 														<p>
 															
-															These Terms of Sale apply to all offers made by <b><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>">Gallery Art</a></b>, all purchases and orders placed by you and all agreements concluded between us in relation to the products and services offered on this website.
+															These Terms of Sale apply to all offers made by Gallery Art, all purchases and orders placed by you and all agreements concluded between us in relation to the products and services offered on this website.
 
 														</p>
 
@@ -170,7 +170,7 @@
 															<br><br>
 															If for any reason you are not completely satisfied with your purchase, you may return it within 14 days of receipt. For a complete refund, notify us of the return, send tracking information and please ship back to us in all original packing materials. Shipping charges will not be refunded.
 															<br><br>
-															If your order should arrive in less than satisfactory condition, we will need to file a claim with the shipping company. Simply take a digital photo of the item and one of the shipping container it arrived in, attach them to an email and send to <b><a href="contact.cfm?xss=#xss#"> info@gallart.com</a></b>  . Please include in the body of the email: your order number, the artist and title, a brief description of the reason for the return, and let us know whether you are seeking a replacement or a refund. Your request will be processed within 48 hours and you will receive an email letting you know your replacement is under production or your refund is being processed.
+															If your order should arrive in less than satisfactory condition, we will need to file a claim with the shipping company. Simply take a digital photo of the item and one of the shipping container it arrived in, attach them to an email and send to  info@gallart.com  . Please include in the body of the email: your order number, the artist and title, a brief description of the reason for the return, and let us know whether you are seeking a replacement or a refund. Your request will be processed within 48 hours and you will receive an email letting you know your replacement is under production or your refund is being processed.
 															<br><br>
 															To return your item(s) please pack them in the original tube or box and include the completed Be sure to specify the reason for the return and what action you would like us to take: replacement or refund. We strongly encourage you to return your item via a trackable method.
 
@@ -241,15 +241,6 @@
 		</td>
 	</tr>
 <cfinclude template="frmxss.cfm">
-
-<style>
-	ul{
-		line-height: 20px;
-	}
-	h4{
-		color: #EC008C;
-	}
-</style>
 
 </body>
 </html>

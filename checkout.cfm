@@ -9,7 +9,7 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="/js/utils.js"></script>
+<script language="JavaScript" src="http://#server_name#/js/utils.js"></script>
 </cfoutput>
 
 <SCRIPT LANGUAGE="JavaScript">
@@ -33,7 +33,7 @@ function validEntries(frm){
 	
 </SCRIPT>
 
-<link href="/stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

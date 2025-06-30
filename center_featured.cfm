@@ -1,10 +1,11 @@
 <cfquery name="artistgroup"  datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#" maxrows="1000">
-	SELECT TOP 15 * 
+	SELECT TOP 15 *
 	FROM products
 	WHERE  Active = 1 and family = '1'
 	order by newid() 
 </cfquery>
 
+<!--- <cfdump var="#artistgroup.recordCount#"> --->
 
 <cfset columns =3>
 
@@ -24,19 +25,22 @@
 		
 			<div class="featured-item">
 				<div class="featured-img">
-					<span itemprop="url"><a href="/artists/#manufacturer#/<cfif parameterexists(xss)>?xss=#xss#</cfif>">
-						<cfset imgFile =  'http://#server_name#/img/thumbnails/' & uid &'.jpg' />
-						<cfif fileExists(imgFile)>
-							<span itemprop="image"><img src="http://#server_name#/img/#uid#.jpg" alt="#artist_name_alt# - #name#" title="#artist_name_alt# - #name#" border="0" align="center"></span>
-							<!--- <img src="http://#server_name#/img/thumbnails/#uid#.jpg" alt="#artist_name_alt# - #name#" title="#artist_name_alt# - #name#" border="0" align="center"> --->
-						<cfelse>
-							#artist_name#
-						</cfif>
+					<span itemprop="url">
+						<a href="products.cfm?man=#HTMLEditFormat(manufacturer)#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
+							<cfset imgFile =  'http://#server_name#/img/thumbnails/' & uid &'.jpg' />
+							<cfif fileExists(imgFile)>
+								<span itemprop="image"><img src="http://#server_name#/img/#uid#.jpg" alt="#artist_name_alt# - #name#" title="#artist_name_alt# - #name#" border="0" align="center"></span>
+								<!--- <img src="http://#server_name#/img/thumbnails/#uid#.jpg" alt="#artist_name_alt# - #name#" title="#artist_name_alt# - #name#" border="0" align="center"> --->
+							<cfelse>
+								#artist_name#
+							</cfif>
+						</a>
+					</span>
 				</div>
 				<div class="featured-heading" itemscope itemtype="http://schema.org/ArtGallery">
 					<h5 itemprop="name">
-						<a href="/artists/#manufacturer#/<cfif parameterexists(xss)>?xss=#xss#</cfif>" >
-							<cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+						<a href="products.cfm?man=#HTMLEditFormat(manufacturer)#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
+							<!--- <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
 							#artist_name#</a>
 					</h5>
 				</div>
@@ -47,28 +51,6 @@
 	</cfoutput>
 </div>
 </div>
-
-<!--- <script>
-	function changeurl(event, man, xss) {
-	  event.preventDefault(); // stop the normal link navigation
-  
-	  // Convert "Indiana, Robert" to "indiana-robert"
-	  const artistSlug = man.toLowerCase()
-		.replace(/\s*,\s*/g, '-') // replace commas with hyphens
-		.replace(/\s+/g, '-');    // replace spaces with hyphens
-  
-	  // Create the new URL
-	  const newURL = `${window.location.origin}/artists/${artistSlug}/`;
-	  console.log(newURL);
-	  
-	  // Redirect to the new URL
-	  window.location.replace(newURL);
-  
-	  
-	}
-  </script> --->
-
-
 <!--- <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
 		<td style="padding: 0 25px;" align="center">
@@ -121,4 +103,4 @@
 		</td>	
 	</tr>
 </table>
---->
+ --->

@@ -5,10 +5,10 @@
 
     <!-- Calculate the starting row -->
     <cfset startrow = ((page - 1) * ipp) + 1>
-
+	<!--- <cfdump var="#man#" abort="true"> --->
     <!-- Initialize base SQL query -->
 	<cfquery name="productinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		SELECT  *
+		SELECT gallery_price as pvalue, *
 		FROM (
 			SELECT *, ROW_NUMBER() OVER (
 				<cfif isDefined('priceOrder') and len(priceOrder)>
@@ -61,8 +61,8 @@
 					AND (
 						name LIKE '%#keywords#%' 
 						OR caption LIKE '%#keywords#%' 
-						OR modelno LIKE '#keywords#%' 
-						OR manufacturer LIKE '%#keywords#%'
+						OR modelno LIKE '#keywords#%'
+						OR manufacturer LIKE '%#keywords#%' 
 						OR manufacturer LIKE '%#reversedKeyword#%'
 						OR manufacturer LIKE '%#reversedKeyworddd#%'
 						)
@@ -78,14 +78,14 @@
             	</cfif>
 				<cfif isDefined('title') and len(trim(title))>
                 AND name LIKE '%#title#%'
-            	</cfif>
-				<cfif isDefined('desc_keyword') and len(trim(desc_keyword))>
+			</cfif>
+			<cfif isDefined('desc_keyword') and len(trim(desc_keyword))>
                 AND location_notes LIKE '%#desc_keyword#%'
             	</cfif>
 				<cfif isDefined('a') and len(trim(a)) and isDefined('b') and len(trim(b)) >
                 AND gallery_price between #a# and #b#
             	</cfif>
-
+				
 			  
 		) AS Subquery
 		WHERE RowNum BETWEEN #startrow# AND (#startrow# + #ipp# - 1)
@@ -96,7 +96,7 @@
 	WHERE pk_makeoffer_buttons = 1
 </cfquery>
 	
-	
+		
 	<!--- <cfdump var="#productinfo#" abort="true"> --->
     <!-- Output the products as HTML -->
 	<cfif productinfo.recordcount gt 0>
@@ -115,52 +115,52 @@
 				<cfset artist_name_alt = manufacturer /> --->
 			</cfif>
 
-			<!--- <cfdump var="#artist_name_url#"> --->
 
             <div class="list-item">
-                <a href="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
-                    <cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")>
-                        <img src="http://23.20.226.157/img/#uid#.jpg" alt="#name#" title="#name#" border="0" align="center">
+                <a href="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
+                    <cfif fileexists("http://#server_name#/img/thumbnails/#uid#.jpg")>
+                        <img src="http://#server_name#/img/#uid#.jpg" alt="#name#" title="#name#" border="0" align="center">
                     <cfelse>
                         <!--- <div align="center" style="padding: 20px;">NO IMAGE AVAILABLE</div> --->
 						<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
 						<!--- <img src="https://as2.ftcdn.net/v2/jpg/07/95/29/45/1000_F_795294547_gaBzWLhkAYBSz1ZUIZssHhvzGzstNmHK.jpg"> --->
-						<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+						<img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
                     </cfif>  
                 </a>
                 <div class="product-name" style="font-weight: 600;">
 					<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
+					<!--- Split the name into words --->
+					<cfset words = ListToArray(name, " ")>
+					<cfset updatedName = "">
 
-						<cfset words = ListToArray(name, " ")>
-						<cfset updatedName = "">
-
-						<cfloop index="word" array="#words#">
-							<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
-
-							<cfif cleanWord EQ "FS">
-								<!--- Preserve "FS" in uppercase --->
-								<cfset updatedName = updatedName & " " & UCase(word)>
-							<cfelse>
-								<!--- Keep the original case of other words --->
-								<cfset updatedName = updatedName & " " & word>
-							</cfif>
-						</cfloop>
+					<cfloop index="word" array="#words#">
+						<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+						
+						<cfif cleanWord EQ "FS">
+							<!--- Preserve "FS" in uppercase --->
+							<cfset updatedName = updatedName & " " & UCase(word)>
+						<cfelse>
+							<!--- Keep the original case of other words --->
+							<cfset updatedName = updatedName & " " & word>
+						</cfif>
+					</cfloop>
 
 					<cfset updatedName = Trim(updatedName)>
 
-					#updatedName#
+				#updatedName#
 				</div>
-				<!--- <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
-
-				By: #artist_name#<Br>
-				
+				<div>
+					<!--- <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+					
+					By: #artist_name#<Br>
+				</div>				
                 <!--- <div class="product-price">
                     <cfif retail_price neq ''>
                         <span style="font-weight: 600;">BY:</span> #ucase(artist_name)#
                     </cfif>
                 </div> --->
-                <div class="product-price">
+				<div class="product-price">
 					<cfif retail_price gt 0 and retail_price gt gallery_price>
 		
 						<cfif gallery_price gt 0 and  gallery_price gt special_price>
@@ -184,18 +184,27 @@
 							<!--- <span style="color: red;">
 									Price On Request
 							</span> --->
-							<cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+
+							<cfif gallery_price neq 0 and gallery_price LT special_price>
 								<del>#DollarFormat(retail_price)# </del>
 								&nbsp; 
-									<b>
-										<span style="color: ##ff0000;">
-										#DollarFormat(special_price)# 
-										</span>
-									</b>
-			
-									<cfelse>
-										<b> #DollarFormat(retail_price)# </b>
+								<b> #DollarFormat(gallery_price)# </b>
+							 <cfelse>
+								<cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+									<del>#DollarFormat(retail_price)# </del>
+									&nbsp; 
+										<b>
+											<span style="color: ##ff0000;">
+											#DollarFormat(special_price)# 
+											</span>
+										</b>
+				
+										<cfelse>
+											<b> #DollarFormat(retail_price)# </b>
+								</cfif>
 							</cfif>
+
+							
 		
 						</cfif>
 					 <cfelse>
@@ -228,12 +237,14 @@
 				</div>
                 <!--- <div class="product-price">
                     <cfif gallery_price neq ''>
-                        <span>Gallery Price:</span> #dollarformat(gallery_price)#
+                        <span>
+							Gallery Price:
+						</span> #dollarformat(gallery_price)#
                     <cfelse>
                         Price On Request
                     </cfif>
 				</div> --->
-				
+
 
 				<!--- <cfif len(special_price) and application.showSalePrice EQ 1 and special_price NEQ '0.00' and closeout EQ 1>
 					<div class="product-price">
@@ -244,13 +255,13 @@
 						
 					</div>
 				</cfif> --->
-
+				
 				<div class="product-price">
                     <cfif modelno neq ''>
                         <!--- <span style="font-weight: 600;">Art ID:</span> #modelno# --->
 
 						<span>
-							<a href="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
+							<a href="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="add-hover">
 								Art ID: #modelno#
 							</a>
 						</span>
@@ -259,9 +270,9 @@
 				</div>
 				
 				<!--- <a>MORE INFO</a> --->
-
+				
 				<!--- <span class="pinkText">
-					<b><A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="dbl_arrows">MORE INFO</a></b>
+					<b><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(manufacturer,"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#jsStringFormat(trim(replace(name,"'",'')))#')" class="dbl_arrows">MORE INFO</a></b>
 				</span> --->
 
 				<cfif len(fk_users)>
@@ -299,27 +310,6 @@
     <cfdump var="#cfcatch#" abort="true">
 </cfcatch>
 </cftry>
-
-
-<!--- <script>
-	 let url = new URL(window.location.href);
-	let params = new URLSearchParams(url.search);
-
-	let Manufacturer = params.get('man'); // Retrieve 'man' value
-	if (Manufacturer) {
-		Manufacturer = decodeURIComponent(Manufacturer);
-	}
-
-
-	const artistSlug = Manufacturer.toLowerCase()
-		.replace(/\s*,\s*/g, '-') // replace commas with hyphens
-		.replace(/\s+/g, '-');    // replace spaces with hyphens
-
-	// Create the new URL
-	const newURL = `${window.location.origin}/artists/${artistSlug}/`;
-	console.log(newURL);
-	window.history.pushState({}, '', newURL)
-</script> --->
 
 <style>
 	.add-hover:hover{

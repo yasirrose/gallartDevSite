@@ -1,4 +1,3 @@
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -9,15 +8,16 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
+<!--- <script language="JavaScript" src="http://#server_name#/js/utils.js"></script> --->
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
-<script language="JavaScript" src="/js/utils.js"></script>
+<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
+<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -93,7 +93,7 @@
 																	<cfloop from="65" to="90" index="idx">
 																		<cfset currentLetter = chr(idx)>
 																		<div>
-																			<a href="/alpha_list/#currentLetter#/?xss=#xss#"
+																			<a href="alpha_list.cfm?man=#currentLetter#&xss=#xss#"
 																				class="alpha <cfif currentLetter EQ url.man>active</cfif>">
 																				#currentLetter#
 																			</a>
@@ -106,60 +106,54 @@
 													</div>
 												</div>
 												<div class="searchalpha-listing">
-													<cfquery name="data" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-														SELECT distinct manufacturer,artist, LOWER(P.manufacturer) AS lower_manufacturer  
-														FROM products P
-														LEFT OUTER JOIN highlighted_artists HL on P.manufacturer = HL.artist
-														WHERE manufacturer like '#man#%' 
-														AND active = 1 
-														AND (path <> '') 
-														AND (path IS NOT NULL)
-														<!--- AND fk_users is null --->
-														ORDER BY lower_manufacturer 
-													</cfquery>
-													<!--- <cfif man EQ "M">
-														<cfset temp = QueryAddRow(data)>
-														<cfset temp = QuerySetCell(data, "manufacturer", "MAX, PETER")> 
-													</cfif> --->
-													<cfquery dbtype="query" name="alpha_info">
-														select *
-														from data
-														ORDER BY lower_manufacturer
-													</cfquery>
+								<cfquery name="data" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+									SELECT distinct manufacturer,artist, LOWER(P.manufacturer) AS lower_manufacturer 
+									FROM products P
+									LEFT OUTER JOIN highlighted_artists HL on P.manufacturer = HL.artist
+									WHERE manufacturer like '#man#%' 
+									AND active = 1 
+									AND (path <> '') 
+									AND (path IS NOT NULL)
+									<!--- AND fk_users is null --->
+									ORDER BY lower_manufacturer 
+								</cfquery>
+								<!--- <cfif man EQ "M">
+									<cfset temp = QueryAddRow(data)>
+									<cfset temp = QuerySetCell(data, "manufacturer", "MAX, PETER")> 
+								</cfif> --->
+								<cfquery dbtype="query" name="alpha_info">
+									select *
+									from data
+									ORDER BY lower_manufacturer
+								</cfquery>
 
-													<!--- <cfdump var="#alpha_info#" > --->
 
-													<cfif alpha_info.recordcount>
-														<!--- <h4><strong>Artists whose name begins with <cfoutput>#man#</cfoutput></strong>&nbsp;(Click artist's name to view art):</h4> --->
-														<div class="aloha-list">
-															<ul>
-																<cfoutput query="alpha_info">
-																	<li>
-																		<a href="/artists/#URLEncodedFormat(manufacturer)#/<cfif parameterexists(xss)>?xss=#xss#</cfif>">
+								<cfif alpha_info.recordcount>
+									<!--- <strong>Artists whose name begins with <cfoutput>#man#</cfoutput></strong>&nbsp;(Click artist's name to view art):<br> --->									
+									<div class="aloha-list">
+										<ul>
+											<cfoutput query="alpha_info">
+												<li>
+													<a href="products.cfm?man=#URLEncodedFormat(manufacturer)#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
 
-																			<!--- <cfset capitalize_artistName = REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+														<!--- <cfset capitalize_artistName = REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
 
-																			<cfif len(artist) OR manufacturer EQ 'MAX, PETER'>
-																				<span style="color: ##ff0000; font-size: 14px;">
-																					#manufacturer#
-																					<!--- <cfif manufacturer EQ 'MAX, PETER'> (ALL)</cfif> --->
-																				</span>
-																			<cfelse>
-																				#manufacturer#
-																			</cfif>
-																		</a>
-																	</li>
-																</cfoutput>
-															</ul>
-														</div>
-													<cfelse>
-														<strong>There are no artists in our database whose name begins with <cfoutput>#man#</cfoutput>.  <br>Please try another search.</strong>
-													</cfif>
-												</div>
-											</div>
-										</div>
+														<cfif len(artist) OR manufacturer EQ 'MAX, PETER'>
+															<span style="color: ##ff0000; font-size: 14px;">
+																#manufacturer#
+																<!--- <cfif manufacturer EQ 'MAX, PETER'> (ALL)</cfif> --->
+															</span>
+														<cfelse>
+															#manufacturer#
+														</cfif>
+													</a>
+												</li>
+											</cfoutput>
+										</ul>
 									</div>
-								</div>
+								<cfelse>
+									<strong>There are no artists in our database whose name begins with <cfoutput>#man#</cfoutput>.  <br>Please try another search.</strong>
+								</cfif>
 							</div>
 						</div>
 					</div>
@@ -167,11 +161,16 @@
 			</div>
 		</div>
 	</div>
-<tr>
-	<td colspan="2" valign="baseline">
-		<cfinclude template="footer_.cfm">
-	</td>
-</tr>
+</div>
+</div>
+</div>
+</div>
+</div>
+	<tr>
+		<td colspan="2" valign="baseline">
+			<cfinclude template="footer_.cfm">
+		</td>
+	</tr>
 <cfinclude template="frmxss.cfm">
 
 <style>

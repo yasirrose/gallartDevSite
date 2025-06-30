@@ -95,7 +95,8 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="/js/utils.js"></script>
+<!--- <script language="JavaScript" src="http://#server_name#/js/utils.js"></script> --->
+<script language="JavaScript" src="./js/utils.js"></script>
 <script type="text/javascript" src="http://#server_name#/js/jquery-1.2.6.min.js" ></script>
 <script type="text/javascript" src="http://#server_name#/js/thickbox-compressed.js" ></script>
 <link rel="stylesheet" type="text/css" href="http://#server_name#/css/thickbox.css">
@@ -114,7 +115,7 @@
 	}
 </script>
 
-<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -145,111 +146,109 @@
 
 
 <cfoutput>
-<div class="main-container registration-page">
-	<div id="Table_01">
-		<div class="header-section">
-			<div class="top-header">
-				<cfinclude template="top_.cfm">
-			</div>
-			<div class="navbar-section">
-				<cfinclude template="navbar_.cfm">
-			</div>
-		</div>
-		<div class="inner-section">
-			<div class="container-fluid">
-				<div class="main-content">
-					<div class="mobile-sidebar-logo">
-						<div class="sidebar-Icon">
-							<i class="fas fa-bars"></i>
-						</div>
-					</div>
-					<!--- <div class="sidebar web-sidebar-modal">	
-						<cfinclude template="left_.cfm">
-					</div> --->
-					<div class="content-section">
-						<div class="bottom-content-sec">
-							<div class="banner-section">
-								<div class="art-work-content">
-
-									<div aria-label="breadcrumb">
-										<ol class="breadcrumb">
-										  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-										  <li class="breadcrumb-item active" aria-current="page">Requests</li>
-										</ol>
-									</div>
-
-									<div class="bottom-content">
-										<div class="top-heading text-left">
-											<h3>REQUESTS</h3>
-											<cfif structKeyExists(form,'requestFormNotes')>
-												<p>Thank you for submitting a response to one of our REQUEST listings. <br>You can respond to as many as you'd like, simply by clicking the Contact Gallery Art button.</p>
-											</cfif>
-											<p>#getPages.page_content#</p>
-										</div>
-										<div class="table-responsive">
-											<table cellspacing="0" cellpadding="0" border="0" width="100%" style="padding-right: 10px;">
-												<tr>
-													<td align="center" style="padding-top: 10px;">
-														<table cellspacing="0" cellpadding="3" border="0" width="100%">
-															<tr>
-																<td colspan="3" align="center" style="padding-bottom: 10px;">
-																	<table cellspacing="0" cellpadding="0" border="0" width="100%">
-																		<tr>
-																			<td>
-																				Click <a href="requests_submit.cfm?xss=#xss#">HERE</a> to submit a request for a piece of art that you want listed on our REQUEST page.
-																			</td>
-																		</tr>
-																	</table>
-																</td>
-															</tr>
-															<cfif getRequests.recordcount>
-																<tr class="row0">
-																	<td width="65%" height="20" style="color: ##ffffff;padding:5px;"><b>Title</b></td>
-																	<td width="25%" style="color: ##ffffff;"><b>Artist</b></td>
-																	<td>&nbsp;</td>
-																</tr>
-																<cfloop query="getRequests">
-																	<tr class="#this_row()#">
-																		<td height="20" style="padding:5px;">
-																			#title#
-																		</td>
-																			<td>
-																			#artist#
-																		</td>
-																		<td>
-																			<input type="Button" value="Contact Gallery Art" onMouseOver="fillResponseForm('#pk_requests#','#title#','#artist#')" alt="##TB_inline?height=540&width=450&inlineId=responseForm&modal=true"  style="font-size: 7pt;" class="thickbox">
-																		</td>
-																	</tr>
-																</cfloop>
-															<cfelse>
-																<tr>
-																	<td>
-																		<div align="center" style="color: ##db3a7d;">Sorry, there are no requests in the system at this time.</div>
-																	</td>
-																</tr>
-															</cfif>
-														</table>
-													</td>
-												
-												</tr>
-										</table>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+	<div class="main-container registration-page">
+		<div id="Table_01">
+			<div class="header-section">
+				<div class="top-header">
+					<cfinclude template="top_.cfm">
+				</div>
+				<div class="navbar-section">
+					<cfinclude template="navbar_.cfm">
 				</div>
 			</div>
+			<div class="inner-section">
+				<div class="container-fluid">
+					<div class="main-content">
+						<div class="mobile-sidebar-logo">
+							<div class="sidebar-Icon">
+								<i class="fas fa-bars"></i>
+							</div>
+						</div>
+						<!--- <div class="sidebar web-sidebar-modal">	
+							<cfinclude template="left_.cfm">
+						</div> --->
+						<div class="content-section">
+							<div class="bottom-content-sec">
+								<div class="banner-section">
+									<div class="art-work-content">
+										<div aria-label="breadcrumb">
+											<ol class="breadcrumb">
+											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item active" aria-current="page">Requests</li>
+											</ol>
+										</div>
+										<div class="bottom-content">
+											<div class="top-heading text-left">
+												<h3>REQUESTS</h3>			
+				<cfif structKeyExists(form,'requestFormNotes')>
+					<p>Thank you for submitting a response to one of our REQUEST listings. <br>You can respond to as many as you'd like, simply by clicking the Contact Gallery Art button.</p>
+				</cfif>
+				<p>#getPages.page_content#</p>
+			</div>
+			<div class="table-responsive">
+				<table cellspacing="0" cellpadding="0" border="0" width="100%" style="padding-right: 10px;">
+				<tr>
+					<td align="center" style="padding-top: 10px;">
+						<table cellspacing="0" cellpadding="3" border="0" width="100%">
+							<tr>
+								<td colspan="3" align="center" style="padding-bottom: 10px;">
+									<table cellspacing="0" cellpadding="0" border="0" width="100%">
+										<tr>
+											<td>
+												Click <a href="requests_submit.cfm?xss=#xss#"><strong>HERE</strong></a> to submit a request for a piece of art that you want listed on our REQUEST page.
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<cfif getRequests.recordcount>
+								<tr class="row0">
+									<td width="65%" height="20" style="color: ##ffffff;padding:5px;"><b>Title</b></td>
+									<td width="25%" style="color: ##ffffff;"><b>Artist</b></td>
+									<td>&nbsp;</td>
+								</tr>
+								<cfloop query="getRequests">
+									<tr class="#this_row()#">
+										<td height="20" style="padding:5px;">
+											#title#
+										</td>
+											<td>
+											#artist#
+										</td>
+										<td>
+											<input type="Button" value="Contact Gallery Art" onMouseOver="fillResponseForm('#pk_requests#','#title#','#artist#')" alt="##TB_inline?height=540&width=450&inlineId=responseForm&modal=true"  style="font-size: 7pt;" class="thickbox">
+										</td>
+									</tr>
+								</cfloop>
+							<cfelse>
+								<tr>
+									<td>
+										<div align="center" style="color: ##db3a7d;">Sorry, there are no requests in the system at this time.</div>
+									</td>
+								</tr>
+							</cfif>
+						</table>
+					</td>
+				
+				</tr>
+			</table>
 		</div>
+										
 	</div>
 </div>
-<tr>
-	<td colspan="2" valign="baseline">
-		<cfinclude template="footer_.cfm">
-	</td>
-</tr>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+	<tr>
+		<td colspan="2" valign="baseline">
+			<cfinclude template="footer_.cfm">
+		</td>
+	</tr>
 </cfoutput>
 <cfinclude template="frmxss.cfm">
 

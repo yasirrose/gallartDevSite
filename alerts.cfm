@@ -59,16 +59,17 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<!--- <script language="JavaScript" src="http://#server_name#/js/utils.js"></script> --->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
-	<script language="JavaScript" src="/js/utils.js"></script>
+	<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
+	<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -129,7 +130,7 @@
 											  <li class="breadcrumb-item active" aria-current="page">Email Alerts</li>
 											</ol>
 										</div>
-										
+
 										<div class="bottom-content">
 											<div class="user-registrations alert-page">
 												<div class="user-content">
@@ -137,69 +138,69 @@
 														<h3><strong>EMAIL ALERTS</strong></h3>
 														<p>Click <a href="alerts_info.cfm?xss=#xss#">HERE</a> for more information.</p>
 													</div>
-													<cfif not isDefined('session.sellerinfo.fname')>
-														<p>You must be a registered member in order to submit email alerts.  Please login below or click <a href="alerts_registration.cfm?xss=#xss#">HERE </a> to register.</p>
-														<p><cfif structKeyExists(session,'sellerinfo') AND session.sellerinfo.login EQ 0>
-																<span style="color: red;">Sorry, we couldn't find that username/password combination in our system.  Please try again.</span>
-															</cfif>
-															<cfinclude template="alerts_login.cfm">
-														</p>
-													<cfelse>
-													<cfif isDefined('url.alertthanks')>
-														<p>Thank you for entering your alerts into our system. <br>When art is added by these artists, you will be notified by email:</p>
-														<cfif len(session.alertlst)>
-															<cfloop list="#session.alertlst#" index="idx" delimiters="|">
-																#idx#<br>							
-															</cfloop>
-														<cfelse>
-															<p>No artists were selected.</p>
-														</cfif>
-													<cfelse>
-													
-													<cfquery name="getAlerts" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-														SELECT * FROM alerts
-														WHERE FK_USERS = #session.sellerinfo.pk_users#
-													</cfquery>
-													<form method="POST" action="#script_name#?#query_string#">
-														<input type="Hidden" name="alerts_proc">
-														<p>Please select the artists for which you would like to receive alerts.<br><br>Artists that you have previously selected are already checked.</p>
-														<div>
-															<input type="submit" value="Submit" style="color: ##d9387c; font-size: 11pt; font-weight: bold; background-color: transparent; border: 1px solid ##eeeeee; cursor: pointer;">
-															<input type="image" src="images/arrow.jpg" alt="Submit" align="top" style="border: 1px solid ##eeeeee;">
-														</div>
-														<cfset thisQuery = artist_info />
-															<cfset columnNum = 4 />
-															<cfset column = round(thisQuery.recordcount/columnNum)>
-															<cfset rem = thisQuery.recordcount MOD columnNum>
-															<cfset x = 1 />
-															<cfif rem EQ 1>
-																<cfset val = evaluate(-1) />
-															<cfelse>
-																<cfset val = 0 />
-															</cfif>
-															<cfloop query="thisQuery">
-																<div style="font-size: 9px;"><input type="Checkbox" name="artist_#manufacturer#" value="#manufacturer#" <cfif listfindnocase(valuelist(getAlerts.artist,'|'),manufacturer,'|')>checked</cfif>>#manufacturer#</div>
-																<cfif x IS column>
-																</table></td><td valign="top"><table>
-																<cfset x = val>
-																</cfif>
-															<cfset x = x + 1>    
-														</cfloop>
-														</form>
-														</cfif>
-													</cfif>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
+				<cfif not isDefined('session.sellerinfo.fname')>
+					<p>You must be a registered member in order to submit email alerts.  Please login below or click <a href="alerts_registration.cfm?xss=#xss#">HERE </a> to register.</p>
+					<p><cfif structKeyExists(session,'sellerinfo') AND session.sellerinfo.login EQ 0>
+							<span style="color: red;">Sorry, we couldn't find that username/password combination in our system.  Please try again.</span>
+						</cfif>
+						<cfinclude template="alerts_login.cfm">
+					</p>
+				<cfelse>			
+						<cfif isDefined('url.alertthanks')>
+							<p>Thank you for entering your alerts into our system. <br>When art is added by these artists, you will be notified by email:</p>
+							<cfif len(session.alertlst)>							
+								<cfloop list="#session.alertlst#" index="idx" delimiters="|">
+									#idx#<br>							
+								</cfloop>				
+							<cfelse>
+								<p>No artists were selected.</p>					
+							</cfif>
+						<cfelse>
+						
+						<cfquery name="getAlerts" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+						    SELECT * FROM alerts
+							WHERE FK_USERS = #session.sellerinfo.pk_users#
+						</cfquery>				
+						<form method="POST" action="#script_name#?#query_string#">
+						<input type="Hidden" name="alerts_proc">
+						<p>Please select the artists for which you would like to receive alerts.<br><br>Artists that you have previously selected are already checked.</p>
+						<div>
+							<input type="submit" value="Submit" style="color: ##d9387c; font-size: 11pt; font-weight: bold; background-color: transparent; border: 1px solid ##eeeeee; cursor: pointer;">
+							<input type="image" src="images/arrow.jpg" alt="Submit" align="top" style="border: 1px solid ##eeeeee;">
 						</div>
-					</div>
-				</div>
+									<cfset thisQuery = artist_info />
+									<cfset columnNum = 4 />
+									<cfset column = round(thisQuery.recordcount/columnNum)>
+									<cfset rem = thisQuery.recordcount MOD columnNum>
+									<cfset x = 1 />
+									<cfif rem EQ 1>
+										<cfset val = evaluate(-1) />
+									<cfelse>
+										<cfset val = 0 />
+									</cfif>									
+											 	<cfloop query="thisQuery">
+											    	<div style="font-size: 9px;"><input type="Checkbox" name="artist_#manufacturer#" value="#manufacturer#" <cfif listfindnocase(valuelist(getAlerts.artist,'|'),manufacturer,'|')>checked</cfif>>#manufacturer#</div>
+											      	<cfif x IS column>
+											    		</table></td><td valign="top"><table>
+											    		<cfset x = val>
+											      	</cfif>
+											   	<cfset x = x + 1>    
+											 	</cfloop>										  	
+						</form>
+						</cfif>					
+				</cfif>
 			</div>
 		</div>
 	</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 	<tr>
 		<td colspan="2" valign="baseline">
 			<cfinclude template="footer_.cfm">

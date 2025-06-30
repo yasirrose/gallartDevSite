@@ -5,7 +5,6 @@
     AND active = 'Yes'
 </cfquery>
 
-<!--- <cfdump var="#qGetBanners#"> --->
 
 <style>
     .slider {
@@ -60,6 +59,7 @@
         background-color: rgba(0, 0, 0, 0.8); /* Change background on hover */
             color: white; /* Change arrow color to white on hover */
     }
+
     @media (max-width: 650px) {
         .slide img {
             width: 100%;
@@ -74,7 +74,7 @@
     <div class="slides">
         <cfoutput query="qGetBanners">
             <div class="slide">
-                <a href="javascript:goxss('#BANNERIMAGESURL#')">
+                <a href="javascript:goxss('#HTMLEditFormat(BANNERIMAGESURL)#')">
                     <img src="/images/banners/#bannerImage#" alt="Banner Image">
                 </a>
             </div>

@@ -17,14 +17,15 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
+<!--- <script language="JavaScript" src="http://#server_name#/js/utils.js"></script> --->
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-<script language="JavaScript" src="/js/utils.js"></script>
+<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -49,8 +50,6 @@
   })(window, document, 'Robly');
 </script>
 <!-- END ROBLY WIDGET CODE -->
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
@@ -92,51 +91,46 @@
 												<div class="top-heading">
 													<h3>SEARCH GALLERY ART</h3>
 												</div>
-												<div class="row">
-													<div class="col-md-6 simple-search">
 												<h4>Simple Search</h4>
 												<p>Enter a keyword into the box below, and the system will find art that has that keyword in the title, description, or Artists' name.</p>
-												<form action="products.cfm?xss=<cfoutput>#xss#</cfoutput>" method="get" id="simpleSearchForm">
-													<div class="input-form">
-														<div class="input-field">
-															<input type="text" name="keywords">
-														</div>
-														<div class="input-button">
-															<input type="hidden" name="xss" value="<cfoutput>#xss#</cfoutput>">
-															<button type="submit" class="SeeMore">Search</button>
-														</div>
-													</div>
-												</form>
-											</div>
-											<div class="col-md-6 simple-search">
-												<h4>Search our Database</h4>
-													<p>Use the dropdown below to search by Artist.  When you select an Artist, you will be taken to a listing page of all of the art in our inventory by that Artist.  Click on any text to view details.</p>
-													<cfinclude template="database_search.cfm">
-												</div>
-										</div>
-												<hr style="border-bottom: 1px dotted #000000;">
-												<h4>Advanced Search</h4>
-												<p>Use the fields below for a more precise search:</p>
-												<cfinclude template="advanced_search.cfm">
-												<hr style="border-bottom: 1px dotted #000000;">
-												<h4>Search our Gallery</h4>
-												<p>Use the dropdown below to search for art by Artist.  Simply select an Artist, and the system will take you to a page showing thumbnails of the pieces in our inventory by that Artist.</p>
-												<cfinclude template="gallery_search.cfm">
-												<hr style="border-bottom: 1px dotted #000000;">
-												<h4>Alphabetical Search</h4>
-												<p>Click on a letter of the alphabet below to view art by Artists whose last name begins with that letter.  Then, click on the Artist's name to view art by that Artist.</p>
-												<cfinclude template="alpha_search.cfm">
-											</div>
-										</div>
+							<form action="products.cfm?xss=<cfoutput>#xss#</cfoutput>" method="get" id="simpleSearchForm">
+								<div class="input-form">
+									<div class="input-field">
+										<input type="text" name="keywords">
+									</div>
+									<div class="input-button">
+										<input type="hidden" name="xss" value="<cfoutput>#xss#</cfoutput>">
+										<button type="submit" class="SeeMore">Search</button>
 									</div>
 								</div>
-							</div>
-						</div>
+							</form>
+							<hr style="border-bottom: 1px dotted #000000;">
+						<h4>Advanced Search</h4>
+						<p>Use the fields below for a more precise search:</p>
+						<cfinclude template="advanced_search.cfm">
+						<hr style="border-bottom: 1px dotted #000000;">					
+						<h4>Search our Gallery</h4>
+						<p>Use the dropdown below to search for art by Artist.  Simply select an Artist, and the system will take you to a page showing thumbnails of the pieces in our inventory by that Artist.</p>
+						<cfinclude template="gallery_search.cfm">
+						<hr style="border-bottom: 1px dotted #000000;">
+						<h4>Search our Database</h4>
+						<p>Use the dropdown below to search by Artist.  When you select an Artist, you will be taken to a listing page of all of the art in our inventory by that Artist.  Click on any text to view details.</p>
+						<cfinclude template="database_search.cfm">
+						<hr style="border-bottom: 1px dotted #000000;">
+						<h4>Alphabetical Search</h4>
+						<p>Click on a letter of the alphabet below to view art by Artists whose last name begins with that letter.  Then, click on the Artist's name to view art by that Artist.</p>
+						<cfinclude template="alpha_search.cfm">
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 	<tr>
 		<td colspan="2" valign="baseline">
 			<cfinclude template="footer_.cfm">
@@ -145,18 +139,18 @@
 
 <cfinclude template="frmxss.cfm">
 
-	<script>
-		document.getElementById("simpleSearchForm").addEventListener("submit", function(event) {
-            // Loop through each form element and remove empty ones
-            const formElements = event.target.elements;
-            for (let i = formElements.length - 1; i >= 0; i--) {
-                const element = formElements[i];
-                if (element.type !== "submit" && element.type !== "reset" && element.name !== "xss" && element.value === "") {
-                    element.parentNode.removeChild(element); // Remove empty fields except xss
-                }
-            }
-        });
-	</script>
+<script>
+	document.getElementById("simpleSearchForm").addEventListener("submit", function(event) {
+		// Loop through each form element and remove empty ones
+		const formElements = event.target.elements;
+		for (let i = formElements.length - 1; i >= 0; i--) {
+			const element = formElements[i];
+			if (element.type !== "submit" && element.type !== "reset" && element.name !== "xss" && element.value === "") {
+				element.parentNode.removeChild(element); // Remove empty fields except xss
+			}
+		}
+	});
+</script>
 
 </body>
 </html>

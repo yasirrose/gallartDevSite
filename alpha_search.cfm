@@ -7,7 +7,7 @@
 			<div class="alpha-row">
 				<cfloop from="65" to="90" index="idx">
 					<div>
-						<a href="/alpha_list/#chr(idx)#/?xss=#xss#" class="alpha">#chr(idx)#</a>
+						<a href="alpha_list.cfm?man=#chr(idx)#&xss=#xss#" class="alpha">#chr(idx)#</a>
 					</div>
 				</cfloop>
 			</div>
@@ -16,7 +16,7 @@
 	
 </div>
 
-<!--- <table cellpadding="0" cellspacing="0" border="0" width="95%" align="center" style="padding-right: 10px;"> 
+<!--- <table cellpadding="0" cellspacing="0" border="0" width="95%" align="center" style="padding-right: 10px;">
 	<tr>
 		<td align="Center">
 			<cfoutput>

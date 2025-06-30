@@ -149,13 +149,13 @@
 							<!--- <label>Order By Sale Price:</label> --->
 							<div class="select-option">
 							   <select name="priceOrder" id="priceOrder" onChange="artistClick();">
-									 <option value="">Sort</option>
+									 <!--- <option value="">Sort</option> --->
 									 
-									 <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>>Date Added: New to Old</option>
+									 <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>>Newest</option>
 
-									<option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Price: Low to High</option>
+									<option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Price: Low - High</option>
 									
-									<option value="desc" selected>Price: High to Low</option>
+									<option value="desc" selected>Price: High - Low</option>
 							   </select>
 							</div>
 						</div>
@@ -164,7 +164,7 @@
 					<div class="col-12 mt-2 mb-2 text-center">
 						<button type="button" class="btn btn-secondary" onclick="clearSearch()">Clear Search</button>
 					</div>
-
+					
 				</div>
 		</form>
 	</div>

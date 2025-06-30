@@ -74,6 +74,10 @@
                 </cfif>
              </cfoutput>
 
+             <!--- <cfdump var="#cgi.remote_addr#"> --->
+
+           
+
             <!--- <cfif productData.recordCount GT 0 >
                 <cfoutput query="productData" > --->
                    <div class="container user-registrations item-page new-item-page">
@@ -81,110 +85,130 @@
 
                         <cfif productData.recordCount GT 0 >
                            <h2 class="title">PREVIOUSLY VIEWED</h2>
-                         <div class="multi-slick-carousel">
-                          
-                               <cfoutput query="productData" >
-                                  <div>
-                                     <div class="slide-content">
-                                        <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
-                                          <div class="img-sec">
-                                           <!-- Dynamic image source -->
-                                           <cfif fileexists("http://23.20.226.157/img/#productData.uid#.jpg")>
-                                             <img src="http://23.20.226.157/img/#uid#.jpg" alt="gallery-img">
-                                           <cfelse>
-                                             <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
-                                           </cfif>
-                                          
-                                          </div>
-                                        </a>
-                                        
-                                        <div class="content-sec">
-                                           <div class="top-content">
-                                              <!-- Dynamic product title -->
+                           <div class="multi-slick-carousel">
+                                 
+                                    <cfoutput query="productData" >
+                                       
+                                       <div>
+                                          <div class="slide-content">
+                                             <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                <div class="img-sec">
+                                                <!-- Dynamic image source -->
+                                                <cfif fileexists("http://#server_name#/img/#listings.uid#.jpg")>
+                                                   <img src="http://#server_name#/img/#uid#.jpg" alt="gallery-img">
+                                                   <cfelse>
+                                                      <img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
+                                                </cfif>
+                                                
+                                             </div>
+                                             </a>
+                                             
+                                             <div class="content-sec">
+                                                <div class="top-content">
+                                                   <!-- Dynamic product title -->
 
-                                              <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
-                                                <h3 class="title">#name#</h3>
-                                              </a>
-                                              
+                                                   <!--- <cfdump var="#productData.name#"> --->
 
-                                              <cfif structKeyExists(session, 'sellerinfo')>
+                                                   <cfset words = ListToArray(name, " ")>
+                                                      <cfset updatedName = "">
 
-                                                <cfquery name="getwishList" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                                                   SELECT * FROM Wishlist 
-                                                   WHERE product_id = <cfqueryparam value="#uid#" cfsqltype="cf_sql_integer">
-                                                   AND user_id = <cfqueryparam value="#session.sellerinfo.pk_users#" cfsqltype="cf_sql_integer">
-                                                </cfquery>
+                                                      <cfloop index="word" array="#words#">
+                                                         <cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+                                             
+                                                         <cfif cleanWord EQ "FS">
+                                                            <!--- Preserve "FS" in uppercase --->
+                                                            <cfset updatedName = updatedName & " " & UCase(word)>
+                                                         <cfelse>
+                                                            <!--- Keep the original case of other words --->
+                                                            <cfset updatedName = updatedName & " " & word>
+                                                         </cfif>
+                                                      </cfloop>
 
-                                                      <cfform action="" method="POST">
-                                                         <cfoutput>
-                                                            <input type="hidden" id="pre_productID_#productData.uid#" name="ProductID" value="#productData.uid#">
-                                                            <input type="hidden" id="pre_userID" name="UserID" value="#session.sellerinfo.pk_users#">
-                                                            <input type="hidden" id="addData" name="addData" value="AddWishlist">
-                                                      </cfoutput>
-                                                      
-                                                      <!--- <button type="button" class="heart-btn" id="addWishButton" onclick="pre_addWishListdata('#productData.uid#')">
-                                                         <i class="fa fa-heart" id="pre_heartIcon_#productData.uid#" <cfif getwishList.recordCount GT 0>style="color:red !important;"</cfif> ></i>
-                                                      </button> --->
+                                                      <cfset updatedName = Trim(updatedName)>
 
-                                                      <cfif getwishList.recordCount GT 0 >
+                                                   <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
+                                                      <h3 class="title-name">#updatedName#</h3>
+                                                   </a>
+
+
+                                                   <cfif structKeyExists(session, 'sellerinfo')>
+
+                                                      <cfquery name="getwishList" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                                                         SELECT * FROM Wishlist 
+                                                         WHERE product_id = <cfqueryparam value="#uid#" cfsqltype="cf_sql_integer">
+                                                         AND user_id = <cfqueryparam value="#session.sellerinfo.pk_users#" cfsqltype="cf_sql_integer">
+                                                      </cfquery>
+      
+                                                            <cfform action="" method="POST">
+                                                               <cfoutput>
+                                                                  <input type="hidden" id="pre_productID_#productData.uid#" name="ProductID" value="#productData.uid#">
+                                                                  <input type="hidden" id="pre_userID" name="UserID" value="#session.sellerinfo.pk_users#">
+                                                                  <input type="hidden" id="addData" name="addData" value="AddWishlist">
+                                                            </cfoutput>
                                                             
-                                                         <input type="hidden" id="wishlist_pk_id_#getwishList.pk_id#" name="wishlist_pk_id" value="#getwishList.pk_id#">
-                                                         <button type="button" class="heart-btn" id="pre_addWishButton" onclick="pre_deleteWishListdata('#getwishList.pk_id#')">
-                                                            <i class="fa fa-heart" id="pre_heartIcon_#getwishList.pk_id#" style="color:red !important;" ></i>
-                                                         </button>
+                                                            <!--- <button type="button" class="heart-btn" id="addWishButton" onclick="pre_addWishListdata('#productData.uid#')">
+                                                               <i class="fa fa-heart" id="pre_heartIcon_#productData.uid#" <cfif getwishList.recordCount GT 0>style="color:red !important;"</cfif> ></i>
+                                                               </button> --->
+
+                                                               <cfif getwishList.recordCount GT 0 >
+                                                            
+                                                                  <input type="hidden" id="wishlist_pk_id_#getwishList.pk_id#" name="wishlist_pk_id" value="#getwishList.pk_id#">
+                                                                  <button type="button" class="heart-btn" id="pre_addWishButton" onclick="pre_deleteWishListdata('#getwishList.pk_id#')">
+                                                                     <i class="fa fa-heart" id="pre_heartIcon_#getwishList.pk_id#" style="color:red !important;" ></i>
+                                                                  </button>
+                                                               <cfelse>
+                                                                  <button type="button" class="heart-btn" id="pre_addWishButtonnn_#productData.uid#" onclick="pre_addWishListdata('#productData.uid#')">
+                                                                     <i class="fa fa-heart" id="pre_heartIcon_#productData.uid#"  ></i>
+                                                                  </button>
+                                                               </cfif>
+
+                                                            </cfform>
+      
+                                                            
                                                       <cfelse>
-                                                         <button type="button" class="heart-btn" id="pre_addWishButtonnn_#productData.uid#" onclick="pre_addWishListdata('#productData.uid#')">
-                                                            <i class="fa fa-heart" id="pre_heartIcon_#productData.uid#"  ></i>
+                                                         <button type="button" class="heart-btn" id="pre_addWishButtonNotLoggedIn" onclick="pre_loginFirst('#productData.uid#')">
+                                                            <i class="fa fa-heart"></i>
                                                          </button>
                                                       </cfif>
 
-                                                      </cfform>
 
-                                                      
-                                                <cfelse>
-                                                   <button type="button" class="heart-btn" id="pre_addWishButtonNotLoggedIn" onclick="pre_loginFirst('#productData.uid#')">
-                                                      <i class="fa fa-heart"></i>
-                                                   </button>
-                                                </cfif>
+                                                   <!--- <button type="button" class="heart-btn">
+                                                   <i class="fa fa-heart"></i>
+                                                   </button> --->
+                                                </div>
+                                                <!-- Dynamic meta information -->
 
+                                                <a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
 
-                                              <!--- <button type="button" class="heart-btn">
-                                              <i class="fa fa-heart"></i> 
-                                              </button> --->
-                                           </div>
-                                           <!-- Dynamic meta information -->
+                                                   <cfset nameParts = listToArray(productData.manufacturer, ",")>
+                                                   <cfif  arrayLen(nameParts) EQ 2 >
+                                                      <cfset firstName = trim(nameParts[2])>
+                                                      <cfset lastName = trim(nameParts[1])>
+                                                      <cfset fullName = firstName & " " & lastName>
 
-                                           <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
+                                                   <cfelse>
+                                                      <cfset fullName = trim(productData.manufacturer)>
 
-                                             <cfset nameParts = listToArray(productData.manufacturer, ",")>
-                                             <cfif  arrayLen(nameParts) EQ 2 >
-                                                <cfset firstName = trim(nameParts[2])>
-                                                <cfset lastName = trim(nameParts[1])>
-                                                <cfset fullName = firstName & " " & lastName>
-
-                                             <cfelse>
-                                                <cfset fullName = trim(productData.manufacturer)>
-
-                                             </cfif>
-                                             <cfset ArtistName = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-                                             <p class="meta">#ArtistName#</p>
-                                           </a>
-                                           <!-- Dynamic price -->
-                                           <!--- <span class="price">$#numberformat(price, "999.99")#</span> --->
-                                        </div>
-                                        
-                                     </div>
-                                  </div>
-                               <!--- </cfloop> --->
-                              </cfoutput>
-                          
-                         </div>
+                                                   </cfif>
+                                                   <!--- <cfset ArtistName = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+                                                   <p class="meta">#fullName#</p>
+                                                </a>
+                                                <!-- Dynamic price -->
+                                                <!--- <span class="price">$#numberformat(price, "999.99")#</span> --->
+                                             </div>
+                                            
+                                          </div>
+                                       </div>
+                                    <!--- </cfloop> --->
+                                    </cfoutput>
+                                 
+                           </div>
                         </cfif>
 
-                         
+
                       </div>
                    </div>
-                     
+                   
             
 
           </cfif>
@@ -195,7 +219,7 @@
 
     </div>
  </div>
-
+ 
 
  <script>
    // document.addEventListener("DOMContentLoaded", function() {
@@ -209,7 +233,7 @@
    function pre_loginFirst(id) {
       alert("Please first login to add items to your wishlist.");
    }
-
+   
 </script>
 
 <script>
@@ -253,7 +277,7 @@
 
    }
 
-         function updatePreviousList(id) {
+   function updatePreviousList(id) {
             $.ajax({
                url: "inquiry.cfm",
                type: "POST",
@@ -319,6 +343,19 @@
            });
 
         }
-
+        
 
 </script>
+
+
+<style>
+   .bottom-row .multi-slick-carousel .slick-slide .slide-content .content-sec .top-content h3.title-name {
+      font-size: 16px;
+      line-height: normal;
+      font-weight: 400;
+      color: #000;
+      margin-bottom: 0px;
+      /* text-transform: uppercase; */
+      padding-right: 32px;
+   }
+</style>

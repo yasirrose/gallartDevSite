@@ -8,10 +8,10 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="/js/utils.js"></script>
+<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="/stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -44,11 +44,11 @@
 	<cfcase value="popart"> 
 		<cfset art_Type= 'Pop Art'>
 	</cfcase> 
-	<cfcase value="ArtDeco"> 
-		<cfset art_Type= 'Art Deco'>
+	<cfcase value="traditional"> 
+		<cfset art_Type= 'Traditional'>
 	</cfcase> 
-	<cfcase value="Cubism"> 
-		<cfset art_Type= 'Cubism'>
+	<cfcase value="modernmasters"> 
+		<cfset art_Type= 'Modern Masters'>
 	</cfcase> 
 	<cfcase value="urbanart"> 
 		<cfset art_Type= 'Urban Art'>
@@ -56,17 +56,8 @@
 	<cfcase value="abstract"> 
 		<cfset art_Type= 'Abstract'>
 	</cfcase> 
-	<cfcase value="Contemporary"> 
-		<cfset art_Type= 'Contemporary Art'>
-	</cfcase> 
-	<cfcase value="Realism"> 
-		<cfset art_Type= 'Realism'>
-	</cfcase> 
-	<cfcase value="Surrealism"> 
-		<cfset art_Type= 'Surrealism'>
-	</cfcase> 
-	<cfcase value="Figurative"> 
-		<cfset art_Type= 'Figurative'>
+	<cfcase value="latinamerican"> 
+		<cfset art_Type= 'Latin American'>
 	</cfcase> 
 </cfswitch>
 <!--- getting artist list  --->
@@ -105,15 +96,15 @@
 						<table id="Table_01" width="1000" height="205" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td>
-									<a href="./banner_listings.cfm?listing=popart<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/pop_art.jpg" width="152" height="205" alt="" border="0"></a></td>
+									<a href="./banner_listings.cfm?listing=popart<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/pop_art.jpg" width="142" height="205" alt="" border="0"></a></td>
 								<td>
 									<img src="/images/banner_listings/banner_listings_02.jpg" width="22" height="205" alt=""></td>
 								<td>
-									<a href="./banner_listings.cfm?listing=ArtDeco<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/traditional.jpg" width="150" height="205" alt=""></a></td>
+									<a href="./banner_listings.cfm?listing=traditional<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/traditional.jpg" width="150" height="205" alt=""></a></td>
 								<td>
 									<img src="/images/banner_listings/banner_listings_04.jpg" width="22" height="205" alt=""></td>
 								<td>
-									<a href="./banner_listings.cfm?listing=Contemporary<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/modern_masters.jpg" width="151" height="205" alt=""></a></td>
+									<a href="./banner_listings.cfm?listing=modernmasters<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/modern_masters.jpg" width="151" height="205" alt=""></a></td>
 								<td>
 									<img src="/images/banner_listings/banner_listings_06.jpg" width="21" height="205" alt=""></td>
 								<td>
@@ -123,20 +114,9 @@
 								<td>
 									<a href="./banner_listings.cfm?listing=abstract<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/abstract.jpg" width="151" height="205" alt=""></a></td>
 								<td>
-									<img src="/images/banner_listings/banner_listings_08.jpg" width="22" height="205" alt=""></td>
+									<img src="/images/banner_listings/banner_listings_10.jpg" width="22" height="205" alt=""></td>
 								<td>
-									<a href="./banner_listings.cfm?listing=Cubism<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/urban_art.jpg" width="144" height="205" alt=""></a></td>
-								<td>
-									<img src="/images/banner_listings/banner_listings_08.jpg" width="22" height="205" alt=""></td>
-								<td>
-									<a href="./banner_listings.cfm?listing=Surrealism<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/latin_american.jpg" width="154" height="205" alt=""></a></td>
-							</tr>
-							<tr>
-								<td>
-									<a href="./banner_listings.cfm?listing=Realism<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/urban_art.jpg" width="144" height="205" alt=""></a></td>
-								<td>
-									<a href="./banner_listings.cfm?listing=Figurative<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/urban_art.jpg" width="144" height="205" alt=""></a></td>
-								
+									<a href="./banner_listings.cfm?listing=latinamerican<cfif parameterexists(xss)>&xss=#xss#</cfif>"><img src="/images/banner_listings/latin_american.jpg" width="154" height="205" alt=""></a></td>
 							</tr>
 						</table>
 					</cfoutput>
@@ -161,7 +141,7 @@
 													<tr>
 														<td valign="top">
 															<cfif manufacturer EQ "RAE" OR manufacturer EQ "SEEN">
-																<a style="font-size: 14px;" href="/artists/#manufacturer#/<cfif parameterexists(xss)>?xss=#xss#</cfif>">#ucase(manufacturer)#</a>
+																<a style="font-size: 14px;" href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">#ucase(manufacturer)#</a>
 															<cfelse>
 																<a style="font-size: 14px;" href="products.cfm?keywords=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">#ucase(manufacturer)#</a>
 															</cfif>

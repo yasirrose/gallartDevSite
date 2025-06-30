@@ -9,10 +9,10 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="/js/utils.js"></script>
+<script language="JavaScript" src="http://#server_name#/js/utils.js"></script>
 </cfoutput>
 
-<link href="/stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -279,10 +279,10 @@
 					<Cfset pc = pc + 1>
 								<Td valign="top" align="Center">
 								
-								<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+								<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
 
 <img src="http://#server_name#/img/thumbnails/#uid#.jpg" alt="#ucase(manufacturer)# - #name#" border="0" align="center"></A><br>
-								<font face="verdana,arial, helvetica" size="1" color="black"><A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#')"><font face="verdana,arial, helvetica" size="1" color="black">#name#</a><h1>BY: #ucase(artist_name)#</h1><font color="660066" size="1">
+								<font face="verdana,arial, helvetica" size="1" color="black"><A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#')"><font face="verdana,arial, helvetica" size="1" color="black">#name#</a><h1>BY: #ucase(artist_name)#</h1><font color="660066" size="1">
 					<cfif retail_price gt 0 and retail_price gt gallery_price>
 					Retail Price: #dollarformat(retail_price)#</cfif></font><Br>
 					<font face="verdana,arial, helvetica" size="1" color="ff6600">

@@ -1,86 +1,86 @@
 
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
-<html lang="en">
+<html lang="en">	
 <head>
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <cfoutput>
-        <title>#companyname# - #titletext#</title>
-    </cfoutput>
+<cfoutput>
+<title>#companyname# - #titletext#</title>
+</cfoutput>
 
-    <cfinclude template="meta.cfm">
+<cfinclude template="meta.cfm">
 
-    <cfoutput>
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-        <script language="JavaScript" src="/js/utils.js"></script>
-    </cfoutput>
+<cfoutput>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+<script language="JavaScript" src="./js/utils.js"></script>
+</cfoutput>
 
-    <link href="/stylesheet_.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript">
-    
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-34565365-1']);
-      _gaq.push(['_trackPageview']);
-    
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    
-    </script>
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">
 
-    <!-- BEGIN ROBLY WIDGET CODE -->
-    <script type='text/javascript'>
-        var _d_site = _d_site || 'ebb8c5f7da7077e127988b3276107648';
-        (function(w, d, p, s, s2) {
-        w[p] = w[p] || function() { (w[p].q = w[p].q || []).push(arguments) };
-        s = d.createElement('script'); s.async = 1; s.src = '//s3.amazonaws.com/roblyimages/accounts/20559/forms/29541/signup_popup.js';
-        s2 = d.getElementsByTagName('script')[0]; s2.parentNode.insertBefore(s, s2);
-        })(window, document, 'Robly');
-    </script>
-    <!-- END ROBLY WIDGET CODE -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34565365-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<!-- BEGIN ROBLY WIDGET CODE -->
+<script type='text/javascript'>
+  var _d_site = _d_site || 'ebb8c5f7da7077e127988b3276107648';
+  (function(w, d, p, s, s2) {
+    w[p] = w[p] || function() { (w[p].q = w[p].q || []).push(arguments) };
+    s = d.createElement('script'); s.async = 1; s.src = '//s3.amazonaws.com/roblyimages/accounts/20559/forms/29541/signup_popup.js';
+    s2 = d.getElementsByTagName('script')[0]; s2.parentNode.insertBefore(s, s2);
+  })(window, document, 'Robly');
+</script>
+<!-- END ROBLY WIDGET CODE -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 </head>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 
     <!--- <cfif isDefined('url.man') >
         <cfquery name="getBio" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
             SELECT * from bios
             WHERE artist = '#url.man#' 
-        </cfquery>   
+        </cfquery>
     </cfif> --->
 
-  <cfif isDefined('url.man')>
-    <!--- Split the name by comma and trim any extra whitespace --->
-    <cfset nameParts = listToArray(url.man, ",")>
-    
-    <!--- Check if we have both first and last name parts --->
-    <cfif arrayLen(nameParts) EQ 2>
-        <!--- Assign first and last name correctly --->
-        <cfset firstName = trim(nameParts[2])>
-        <cfset lastName = trim(nameParts[1])>
-        <cfset fullName = firstName & " " & lastName>
-    <cfelse>
-        <!--- If the format is unexpected, just display it as is --->
-        <cfset fullName = trim(url.man)>
+    <cfif isDefined('url.man')>
+        <!--- Split the name by comma and trim any extra whitespace --->
+        <cfset nameParts = listToArray(url.man, ",")>
+        
+        <!--- Check if we have both first and last name parts --->
+        <cfif arrayLen(nameParts) EQ 2>
+            <!--- Assign first and last name correctly --->
+            <cfset firstName = trim(nameParts[2])>
+            <cfset lastName = trim(nameParts[1])>
+            <cfset fullName = firstName & " " & lastName>
+        <cfelse>
+            <!--- If the format is unexpected, just display it as is --->
+            <cfset fullName = trim(url.man)>
+        </cfif>
+        
+        <!--- Query to fetch the bio --->
+        <cfquery name="getBio" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+            SELECT * FROM bios
+            WHERE artist = '#url.man#'
+        </cfquery>
     </cfif>
     
-    <!--- Query to fetch the bio --->
-    <cfquery name="getBio" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-        SELECT * FROM bios
-        WHERE artist = '#url.man#'
-    </cfquery>
-</cfif>
-
 
 <cfquery name="getArtists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
     SELECT DISTINCT manufacturer from products
@@ -157,8 +157,8 @@
                                     </div>
 
 									<div class="bottom-content">
-                                        
-                                        <cfif isDefined('url.keywords') >
+
+                                        <!--- <cfif isDefined('url.keywords') >
                                             <h3> Results for <cfoutput>"#url.keywords#"</cfoutput> </h3>
                                         </cfif>
 
@@ -176,21 +176,12 @@
 
                                         <cfif isDefined('url.Type') >
                                             <h3> Type: <cfoutput>"#url.Type#"</cfoutput> </h3>
-                                        </cfif>
+                                        </cfif> --->
 
-                                        
+                                        <!--- <cfdump var="#CGI.REMOTE_ADDR#"> --->
 
                                         <cfif isDefined('url.man')>
-                                            <!--- <cfquery name="getArtistName"  datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                                                SELECT manufacturer from products where manufacturer LIKE  '%#url.man#'
-                                            </cfquery>
-
-                                                <cfdump var="#getArtistName.manufacturer#">
-                                                <cfdump var="#getBio.artist#"> --->
-
                                             <cfif getBio.recordCount NEQ 0 >
-
-                                                
                                                 <div class="top-heading m-0">
                                                     <h3>
                                                         <cfparam name="artistName" default="#getBio.artist#">
@@ -198,12 +189,10 @@
                                                             <cfset artistName = "#listlast(getBio.artist,',')# #listfirst(getBio.artist,',')#" />
                                                         </cfif>
 
-                                                        <cfset capitalize_artistName = REReplace(artistName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                                                        <!--- <cfset capitalize_artistName = REReplace(artistName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
                                                         
-                                                        <cfoutput>#capitalize_artistName#</cfoutput>
-
+                                                        <cfoutput>#artistName#</cfoutput>
                                                         
-
                                                     </h3>
                                                     <cfset bioImage = reReplace(getBio.bio, ".*?(<img[^>]+>).*", "\1", "ALL")>
                                                     <cfset bioText = reReplaceNoCase(getBio.bio, "<img[^>]+>", "", "ALL")>
@@ -220,7 +209,6 @@
 
                                                             <!-- The content will be truncated using CSS, but the full HTML is present -->
                                                             <div id="bio-preview" class="bio-preview"  >
-                                                                
                                                                 <p>
                                                                     <cfoutput>
                                                                     
@@ -230,9 +218,11 @@
                                                             </div>
                                                             
                                                             <cfset strippedBioText = REReplaceNoCase(bioText, "<[^>]*>", "", "ALL")>
-                                                            <cfset strippedBioText = Trim(REReplaceNoCase(strippedBioText, "&nbsp;", "", "ALL"))>
+                                                            <cfset strippedBioTextt = Trim(REReplaceNoCase(strippedBioText, "&nbsp;", "", "ALL"))>
 
-                                                            <cfif strippedBioText NEQ "" >
+                                                            <!--- <cfdump var="#ListLen(strippedBioTextt, " ")#"> --->
+
+                                                            <cfif strippedBioTextt NEQ ""  AND ListLen(strippedBioTextt, " ") GT 120 >
 
                                                             <p style="font-weight: bold; cursor: pointer;" id="toggle-btn" onclick="toggleBio()">Show More</p>
 
@@ -240,10 +230,10 @@
                                                         </div>
                                                 </div>
                                             <cfelse>
-                                                <h3 class="h3"> 
-                                                    <cfoutput>
-                                                        <cfset capitalize_artistNameeee = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-                                                        #capitalize_artistNameeee#
+                                                <h3 class="h3">
+                                                     <cfoutput>
+                                                        <!--- <cfset capitalize_artistNameeee = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+                                                        #fullName#
                                                     </cfoutput>
                                                 </h3>
                                             </cfif>
@@ -271,290 +261,348 @@
                             
                         </div>
                     </div>
-                </div>
-            </div>
-       </div>
+                    </div>
+                    </div>
+                    </div>
 
 
-        <tr>
-            <td colspan="2" valign="baseline">
-                <cfinclude template="footer_.cfm">
-            </td>
-        </tr>
+	<tr>
+		<td colspan="2" valign="baseline">
+			<cfinclude template="footer_.cfm">
+		</td>
+	</tr>
 
-        <cfinclude template="frmxss.cfm">
+<cfinclude template="frmxss.cfm">
 
-        <style>
-            /* Initially, only show the first 500 characters, hide the rest */
-            .bio-preview {
-                display: -webkit-box;
-                -webkit-line-clamp: 5; /* Limiting the number of lines (adjust as needed) */
-                -webkit-box-orient: vertical;
-                overflow: hidden;
+<style>
+	/* Initially, only show the first 500 characters, hide the rest */
+	.bio-preview {
+		display: -webkit-box;
+		-webkit-line-clamp: 5; /* Limiting the number of lines (adjust as needed) */
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	/* .bio-preview p{
+		text-align: left !important;
+		display:bloc;
+	} */
+
+	/* When expanded, show full content */
+	.bio-preview.expanded {
+		-webkit-line-clamp: unset;
+		display: inline;
+	}
+	/* .bio-preview.expanded p{
+		text-align: left !important;
+		display: inline;
+	} */
+	.h3 {
+		font-size: 25px;
+		line-height: 30px;
+		font-weight: 700;
+		color: #000;
+		text-align: center;
+	}
+	
+	#myBtn {
+        display: none;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 100;
+        width: 50px; /* Small square size */
+        height: 50px;
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 10px; /* Rounded corners for style */
+        cursor: pointer;
+        font-size: 28px; /* Icon size */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+	}
+	
+</style>
+
+
+
+<script>
+	function gonextProduct(url) {
+		var paginationForm = document.forms.pagination_form;
+		if (paginationForm && paginationForm.pagego) {
+			var next = paginationForm.pagego.options[paginationForm.pagego.selectedIndex].value;
+			var urlParams = new URLSearchParams(window.location.search);
+			var styleParam = urlParams.get('Style');
+			var subjectParam = urlParams.get('Subject');
+			var typeParam = urlParams.get('Type');
+			var sizeParam = urlParams.get('Size');
+	
+			var finalURL = url + next;
+	
+			if (styleParam) {
+				finalURL += "&Style=" + styleParam;
+			}
+			if (subjectParam) {
+				finalURL += "&Subject=" + subjectParam;
+			}
+			if (typeParam) {
+				finalURL += "&Type=" + typeParam;
+			}
+			if (sizeParam) {
+				finalURL += "&Size=" + sizeParam;
+			}
+	
+			console.log("Current URL:", window.location.href);
+			console.log("Final URL:", finalURL);
+	
+			document.frm.action = finalURL;
+			document.frm.submit();
+		} else {
+			console.error('Form or select element not found.');
+		}
+	}
+	
+	function gonext22(url){
+	
+		var urlParams = new URLSearchParams(window.location.search);
+	
+		var styleParam = urlParams.get('Style');
+		var subjectParam = urlParams.get('Subject');
+		var typeParam = urlParams.get('Type');
+		var sizeParam = urlParams.get('Size');
+		var finalURL = url;
+		if (styleParam) {
+				finalURL += "&Style=" + styleParam;
+			}
+		if (subjectParam) {
+			finalURL += "&Subject=" + subjectParam;
+		}
+		if (typeParam) {
+			finalURL += "&Type=" + typeParam;
+		}
+		if (sizeParam) {
+			finalURL += "&Size=" + sizeParam;
+		}
+	
+		url = url + '&Style=Urban%20Art';
+		document.frm.action = finalURL;
+		document.frm.submit();
+	}
+
+	function toggleBio() {
+        // Get the elements for the preview and the button
+        var preview = document.getElementById('bio-preview');
+        var button = document.getElementById('toggle-btn');
+    
+        // Toggle between showing truncated and full content
+        if (preview.classList.contains('expanded')) {
+            // If currently showing full content, collapse it
+            preview.classList.remove('expanded');
+            button.innerText = 'Show More'; // Change the button text
+        } else {
+            // If currently showing truncated content, expand it
+            preview.classList.add('expanded');
+            button.innerText = 'Show Less';  // Change the button text
+        }
+    }
+
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                document.getElementById("myBtn").style.display = "block";
+            } else {
+                document.getElementById("myBtn").style.display = "none";
             }
+    }
 
-            /* .bio-preview p{
-                text-align: left !important;
-                display:bloc;
-            } */
+</script>
+
+
+<script>
+
+ // the below code is use for clear the search values from advanced search form
+
+    const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
+    function clearSearch() {
+        const form = document.getElementById('dropdownSearchforProducts');
+            if (form) {
+                    form.reset();
+                    // window.location.href = `sales.cfm?xss=${xssValue}`;
+                    page = 1;
+                    noMoreProducts = false;
+
+                    $('#product-container').empty();
+                    $('#loading').hide();
+                    loadProducts();
+            }
+    }
+
+    $(document).ready(function() {
+        toastr.options = {
+            'closeButton': true,
+            'debug': false,
+            'newestOnTop': false,
+            'progressBar': true,
+            'positionClass': 'toast-top-right',
+            'preventDuplicates': false,
+            'showDuration': '1000',
+            'hideDuration': '1000',
+            'timeOut': '5000',
+            'extendedTimeOut': '1000',
+            'showEasing': 'swing',
+            'hideEasing': 'linear',
+            'showMethod': 'fadeIn',
+            'hideMethod': 'fadeOut',
+        }
+    });
+
+    var page = 1; // Start at page 1
+    var loading = false; // Flag to prevent multiple requests
+    var noMoreProducts = false; // Flag to check if there are no more products
+    var previousData = ''; // Variable to store previously fetched data
+    let lastkeywords = '';
+    let lastPriceOrder = '';
+    let lastartSubject = '';
+    let lastartType = '';
+    let lastartSize = '';
+    let lastartStyle = '';
+
+    function gotoTopFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+        e.preventDefault();
+    }
+                                            
+    function loadProducts() {
+        if (loading || noMoreProducts) return;
+        loading = true;
+        $('#loading').show();
+
+        let currentUrl = window.location.href;
+        console.log(currentUrl);
+
+        let url = new URL(window.location.href);
+        let params = new URLSearchParams(url.search);
         
-            /* When expanded, show full content */
-            .bio-preview.expanded {
-                -webkit-line-clamp: unset;
-                display: inline;
+        let Manufacturer = params.get('man');
+        let Size = params.get('Size');
+        let Subject = params.get('Subject');
+        let Type = params.get('Type');
+        let Style = params.get('Style');
+        // let Artist = params.get('artist');
+        let Artist = params.get('adv_artist');
+        let title = params.get('adv_title');
+        let year = params.get('adv_year');
+        let path = params.get('adv_medium');
+        let desc_keyword = params.get('adv_desc_keyword');
+        let keywords = params.get('keywords');
+
+        let artSubject = document.getElementById('artSubject').value;
+        let artType = document.getElementById('artType').value;
+        let artSize = document.getElementById('artSize').value;
+        let artStyle = document.getElementById('artStyle').value;
+
+        let priceRange = params.get('adv_price_range');
+
+        if(priceRange){
+            if(priceRange == 1){
+                var a = '0';
+                var b = '1000';
             }
-            /* .bio-preview.expanded p{
-                text-align: left !important;
-                display: inline;
-            } */
-            .h3 {
-                font-size: 25px;
-                line-height: 30px;
-                font-weight: 700;
-                color: #000;
-                text-align: center;
+            else if(priceRange == 2){
+                var a = '1000';
+                var b = '5000';
             }
-
-            #myBtn {
-                display: none;
-                position: fixed;
-                bottom: 30px;
-                right: 30px;
-                z-index: 100;
-                width: 50px; /* Small square size */
-                height: 50px;
-                background-color: white;
-                color: black;
-                border: none;
-                border-radius: 10px; /* Rounded corners for style */
-                cursor: pointer;
-                font-size: 28px; /* Icon size */
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: 1px solid black;
+            else if(priceRange == 3){
+                var a = '5000';
+                var b = '10000';
             }
+            else if(priceRange == 4){
+                var a = '10000';
+                var b = '100000';
+            }
+        }  
 
-        </style>
+        // let keywords = document.getElementById('keywords').value;
+        let priceOrder = document.getElementById('priceOrder').value;
+
+            // if (artType) {
+        //     params.delete('Type'); // Remove the previous Size value from the URL
+        // }
+
+        let ajaxSize = artSize ? artSize : Size;
+        let ajaxSubject = artSubject ? artSubject : Subject;
+        let ajaxStyle = artStyle ? artStyle : Style;
+        let ajaxType = artType ? artType : Type;
+
+        if ( keywords || priceOrder ||  ajaxSubject || ajaxType|| ajaxSize|| ajaxStyle) {
+            if (  priceOrder !==lastPriceOrder || keywords!==lastkeywords || ajaxSubject!=lastartSubject || ajaxType !=  lastartType || ajaxSize != lastartSize || ajaxStyle != lastartStyle) {
+
+                    page = 1; 
+
+                    $('#product-container').empty(); // Clear the product container for new results
+                    noMoreProducts = false; // Reset the no more products flag
+                    // lastArtist = Artist; // Update lastArtist to the new artist value
+                //   lastpath = path; // Update lastArtist to the new artist value
+                    lastPriceOrder = priceOrder;
+                    lastkeywords = keywords;
+                    lastartSubject = ajaxSubject;
+                    lastartType = ajaxType;
+                    lastartSize = ajaxSize;
+                    lastartStyle = ajaxStyle;
+            }
+        }
+
+        console.log('Manufacturer:', Manufacturer);
+
+        $.ajax({
+            url: 'fetch_products.cfm',
+            type: 'GET',
+            data: {
+                page: page,
+                man: Manufacturer,
+                Size: ajaxSize,
+                Title: title,
+                Artist: Artist,                                    
+                priceOrder: priceOrder,
+                Subject: ajaxSubject,
+                Type: ajaxType,
+                Style: ajaxStyle,
+                keywords: keywords,
+                year: year,
+                path: path,
+                desc_keyword: desc_keyword,
+                a: a,
+                b: b
+            },
+            success: function(data) {
+                if (data.trim() === '') {
+            noMoreProducts = true;
+            $('#loading').html('No more products').show();
 
 
+                } else if (data === previousData && page !== 1) {
+                    // Prevent loading duplicate data on scroll (ignore check for page 1)
+                    noMoreProducts = true;
+                    $('#loading').html('No more products').show();
 
-        <script>
-            function toggleBio() {
-                // Get the elements for the preview and the button
-                var preview = document.getElementById('bio-preview');
-                var button = document.getElementById('toggle-btn');
-            
-                // Toggle between showing truncated and full content
-                if (preview.classList.contains('expanded')) {
-                    // If currently showing full content, collapse it
-                    preview.classList.remove('expanded');
-                    button.innerText = 'Show More'; // Change the button text
+                // toastr.warning('No more products');
+                // $('#loading').hide();
+
                 } else {
-                    // If currently showing truncated content, expand it
-                    preview.classList.add('expanded');
-                    button.innerText = 'Show Less';  // Change the button text
-                }
-            }
-
-            window.onscroll = function() {scrollFunction()};
-
-            function scrollFunction() {
-                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                    document.getElementById("myBtn").style.display = "block";
-                } else {
-                    document.getElementById("myBtn").style.display = "none";
-                }
-            }
-
-             // the below code is use for clear the search values from advanced search form
-
-            const xssValue = '<cfoutput>#encodeForJavaScript(xss)#</cfoutput>';
-            function clearSearch() {
-                const form = document.getElementById('dropdownSearchforProducts');
-                if (form) {
-                        form.reset();
-                        // window.location.href = `sales.cfm?xss=${xssValue}`;
-                        page = 1;
-                        noMoreProducts = false;
-
-                        $('#product-container').empty();
-                        $('#loading').hide();
-                        loadProducts();
-                }
-            }
-
-            $(document).ready(function() {
-                toastr.options = {
-                    'closeButton': true,
-                    'debug': false,
-                    'newestOnTop': false,
-                    'progressBar': true,
-                    'positionClass': 'toast-top-right',
-                    'preventDuplicates': false,
-                    'showDuration': '1000',
-                    'hideDuration': '1000',
-                    'timeOut': '5000',
-                    'extendedTimeOut': '1000',
-                    'showEasing': 'swing',
-                    'hideEasing': 'linear',
-                    'showMethod': 'fadeIn',
-                    'hideMethod': 'fadeOut',
-                }
-            });
-
-            var page = 1; // Start at page 1
-            var loading = false; // Flag to prevent multiple requests
-            var noMoreProducts = false; // Flag to check if there are no more products
-            var previousData = ''; // Variable to store previously fetched data
-            let lastkeywords = '';
-            let lastPriceOrder = '';
-            let lastartSubject = '';
-            let lastartType = '';
-            let lastartSize = '';
-            let lastartStyle = '';
-
-            function gotoTopFunction() {
-                document.body.scrollTop = 0;
-                document.documentElement.scrollTop = 0;
-                e.preventDefault();
-            }
-
-            function loadProducts() {
-                if (loading || noMoreProducts) return;
-                loading = true;
-                $('#loading').show();
-
-                let currentUrl = window.location.href;
-                console.log(currentUrl);
-
-                let url = new URL(window.location.href);
-                let params = new URLSearchParams(url.search);
-
-                let Manufacturer = params.get('man'); // Retrieve 'man' value
-                if (Manufacturer) {
-                    Manufacturer = decodeURIComponent(Manufacturer);
-                }
-                
-                // let Manufacturer = params.get('man');
-                let Size = params.get('Size');
-                let Subject = params.get('Subject');
-                let Type = params.get('Type');
-                let Style = params.get('Style');
-                // let Artist = params.get('artist');
-                let Artist = params.get('adv_artist');
-                let title = params.get('adv_title');
-                let year = params.get('adv_year');
-                let path = params.get('adv_medium');
-                let desc_keyword = params.get('adv_desc_keyword');
-                let keywords = params.get('keywords'); 
-
-                let artSubject = document.getElementById('artSubject').value;
-                let artType = document.getElementById('artType').value;
-                let artSize = document.getElementById('artSize').value;
-                let artStyle = document.getElementById('artStyle').value;
-                
-                let priceRange = params.get('adv_price_range');
-
-                console.log('Manufacturer:', Manufacturer);
-                console.log('keyword:', keywords);
-
-                if(priceRange){
-                    if(priceRange == 1){
-                        var a = '0';
-                        var b = '1000';
+                    if (page === 1) {
+                        $('#product-container').empty(); // On first page, replace content
                     }
-                    else if(priceRange == 2){
-                        var a = '1000';
-                        var b = '5000';
-                    }
-                    else if(priceRange == 3){
-                        var a = '5000';
-                        var b = '10000';
-                    }
-                    else if(priceRange == 4){
-                        var a = '10000';
-                        var b = '100000';
-                    }
+                    $('#product-container').append(data); // Append new data
+                    previousData = data;
+                    page++; // Increment the page number for the next request
+                    $('#loading').hide();
                 }
-
-                // let keywords = document.getElementById('keywords').value;
-                let priceOrder = document.getElementById('priceOrder').value;
-
-                // if (artType) {
-                //     params.delete('Type'); // Remove the previous Size value from the URL
-                // }
-
-                let ajaxSize = artSize ? artSize : Size;
-                let ajaxSubject = artSubject ? artSubject : Subject;
-                let ajaxStyle = artStyle ? artStyle : Style;
-                let ajaxType = artType ? artType : Type;
-
-                if ( keywords || priceOrder ||  ajaxSubject || ajaxType|| ajaxSize|| ajaxStyle) {
-                    if (  priceOrder !==lastPriceOrder || keywords!==lastkeywords || ajaxSubject!=lastartSubject || ajaxType !=  lastartType || ajaxSize != lastartSize || ajaxStyle != lastartStyle) {
-                        
-                        page = 1; 
-                        
-                        $('#product-container').empty(); // Clear the product container for new results
-                        noMoreProducts = false; // Reset the no more products flag
-                        // lastArtist = Artist; // Update lastArtist to the new artist value
-                    //   lastpath = path; // Update lastArtist to the new artist value
-                        lastPriceOrder = priceOrder;
-                        lastkeywords = keywords;
-                        lastartSubject = ajaxSubject;
-                        lastartType = ajaxType;
-                        lastartSize = ajaxSize;
-                        lastartStyle = ajaxStyle;
-                    }
-                }
-
-                console.log('Manufacturer:', Manufacturer);
-
-                $.ajax({
-                    url: '/fetch_products.cfm',
-                    type: 'GET',
-                    data: {
-                        page: page,
-                        man: Manufacturer,
-                        Size: ajaxSize,
-                        Title: title,
-                        Artist: Artist,
-                        priceOrder: priceOrder,
-                        Subject: ajaxSubject,
-                        Type: ajaxType,
-                        Style: ajaxStyle,
-                        keywords: keywords,
-                        year: year,
-                        path: path,
-                        desc_keyword: desc_keyword,
-                        a: a,
-                        b: b
-                    },
-                    success: function(data) {
-                        if (data.trim() === '') {
-                            noMoreProducts = true;
-                            $('#loading').html('No more products').show();
-                            // toastr.warning('No more products');
-                            // $('#loading').hide();
-
-                        } else if (data === previousData && page !== 1) {
-                            // Prevent loading duplicate data on scroll (ignore check for page 1)
-                            noMoreProducts = true;
-                            $('#loading').html('No more products').show();
-
-                        // toastr.warning('No more products');
-                        // $('#loading').hide();
-
-                        } else {
-                            if (page === 1) {
-                                $('#product-container').empty(); // On first page, replace content
-                            }
-                            $('#product-container').append(data); // Append new data
-                            previousData = data;
-                            page++; // Increment the page number for the next request
-                            $('#loading').hide();
-                        }
-                        loading = false; // Reset the loading flag
+                loading = false; // Reset the loading flag
                             },
                         error: function() {
                     $('#loading').html('Error loading products').show();
@@ -563,38 +611,35 @@
                 });
             }
 
-                     // Load more products when user scrolls near the bottom
-            $(window).scroll(function () {
-                if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
-                    if (!noMoreProducts && !loading) {
-                        loadProducts(); // Load products only if not loading and no more products
-                    }
-                }
-            });
-
-                        // Search button click event
-            $('#searchButton').on('click', function () {
-                page = 1; // Reset page to 1 when search button is clicked
-                noMoreProducts = false;
-                loadProducts(); // Trigger product loading based on search
-
-            });
-
-            function artistClick() {
-                page = 1; // Reset page to 1 when search button is clicked
-                noMoreProducts = false;
-                loadProducts();
+    // Load more products when user scrolls near the bottom
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+            if (!noMoreProducts && !loading) {
+                loadProducts(); // Load products only if not loading and no more products
             }
-            
-            // Initial load
-            loadProducts();
+        }
+    });
 
+                            // Search button click event
+    $('#searchButton').on('click', function () {
+        page = 1; // Reset page to 1 when search button is clicked
+        noMoreProducts = false;
+        loadProducts(); // Trigger product loading based on search
 
-        </script>
+    });
 
-
-                      
+    function artistClick() {
+        page = 1; // Reset page to 1 when search button is clicked
+        noMoreProducts = false;
+        loadProducts();
+    }
                         
+    // Initial load
+    loadProducts();
+	</script>
+
+
+
 </body>
 </html>
 

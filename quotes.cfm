@@ -15,7 +15,7 @@
 
 <cfinclude template="meta.cfm">
 
-<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -77,7 +77,7 @@
 												</ol>
 											</div>
 
-												<div class="bottom-content">
+											<div class="bottom-content">
 													<div class="user-registrations quotes-page">
 														<cfinclude template="/quotes/index.cfm" />
 													</div>
@@ -91,11 +91,11 @@
 			</div>
 		</div>
 	</div>
-<tr>
-	<td colspan="2" valign="baseline">
-		<cfinclude template="footer_.cfm">
-	</td>
-</tr>
+	<tr>
+		<td colspan="2" valign="baseline">
+			<cfinclude template="footer_.cfm">
+		</td>
+	</tr>
 </cfoutput>
 <cfinclude template="frmxss.cfm">
 

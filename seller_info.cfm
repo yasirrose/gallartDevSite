@@ -21,14 +21,15 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="/js/utils.js"></script>
+<!--- <script language="JavaScript" src="http://#server_name#/js/utils.js"></script> --->
+<script language="JavaScript" src="./js/utils.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 </cfoutput>
 
-<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -80,21 +81,21 @@
 						<div class="content-section">
 							<div class="bottom-content-sec">
 								<div class="banner-section">
-									<div class="art-work-content">
-
+									<div class="art-work-content"> 
+										
 										<div aria-label="breadcrumb">
-											<ol class="breadcrumb">
-											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-											  <li class="breadcrumb-item active" aria-current="page">Seller Info</li>
-											</ol>
-										</div>
+                                        <ol class="breadcrumb">
+                                          <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+                                          <li class="breadcrumb-item active" aria-current="page">Seller Info</li>
+                                        </ol>
+                                    </div>
 
 										<div class="bottom-content">
 											<div class="content-section">
 												<h2><strong>SELLER INFORMATION</strong></h2>
 												<cfoutput>
 													#getPages.page_content#
-												</cfoutput>
+												</cfoutput>			
 											</div>
 										</div>
 									</div>
@@ -106,11 +107,11 @@
 			</div>
 		</div>
 	</div>
-<tr>
-	<td colspan="2" valign="baseline">
-		<cfinclude template="footer_.cfm">
-	</td>
-</tr>
+	<tr>
+		<td colspan="2" valign="baseline">
+			<cfinclude template="footer_.cfm">
+		</td>
+	</tr>
 <cfinclude template="frmxss.cfm">
 
 </body>

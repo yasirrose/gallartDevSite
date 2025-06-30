@@ -1,10 +1,10 @@
 <script type="text/javascript" src="../js/thickbox-compressed.js"></script>
 <link rel="stylesheet" href="../css/thickbox.css" type="text/css" media="screen" />
- <style>
+<style>
 	#TB_ajaxContent.TB_modal {
 	height: 600px !important;
 }
-</style> 
+</style>
 <cfoutput>
 	<div class="search-box">
 		<div class="row">
@@ -39,7 +39,7 @@
 		
 		</div>
 	</div>
-<!-- <table border="0" cellspacing="0" cellpadding="0" background="images/search3.jpg" style="background-repeat: no-repeat; background-position: top;" width="627" height="157">
+<!--- <table border="0" cellspacing="0" cellpadding="0" background="images/search3.jpg" style="background-repeat: no-repeat; background-position: top;" width="627" height="157">
 	<tr>
 		<td style="padding-left: 150px; padding-top: 35px;">
 			<cfinclude template="gallery_search.cfm">
@@ -55,7 +55,7 @@
 			<cfinclude template="alpha_search.cfm">
 		</td>
 	</tr>
-</table> -->
+</table> --->
 </cfoutput>
 <div id="picturegallery_help" style="display: none;">
 	<div style="float: right;"><a href="#" onclick="tb_remove();" style="color: #dd3a7d; font-weight: bold; font-size: 13px; text-decoration: none;">CLOSE</a><br><br></div>

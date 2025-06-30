@@ -40,21 +40,21 @@
 </cfif>
 
 <cfoutput>
-	<cfform action="#script_name#?#query_string#" method="post">
-			<div class="input-form">
-				<div class="input-field">
-					<label><strong>Username:</strong></label>
-					<cfinput type="text" required="Yes" message="Please enter your email address" name="req_username">
-				</div>
-				<div class="input-field">
-					<label><strong>Password:</strong></label>
-					<cfinput type="password" required="Yes" message="Please enter your password" name="password">
-				</div>
-				<div class="input-button">
-					<input type="Submit" value="Submit"  name="Sign In" class="SeeMore">
-				</div>
-				<p class="text-center"><a href="forgot_password.cfm?xss=#xss#">Forget your password?</a></p>
+			<cfform action="#script_name#?#query_string#" method="post">
+				<div class="input-form">
+					<div class="input-field">
+						<label><strong>Username:</strong></label>
+						<cfinput type="text" required="Yes" message="Please enter your email address" name="req_username">
+					</div>
+			<div class="input-field">
+				<label><strong>Password:</strong></label>
+				<cfinput type="password" required="Yes" message="Please enter your password" name="password">
 			</div>
-		</cfform>
+			<div class="input-button">
+				<input type="Submit" value="Submit"  name="Sign In" class="SeeMore">
+			</div>
+			<p class="text-center"><a href="forgot_password.cfm?xss=#xss#">Forget your password?</a></p>
+		</div>
+			</cfform>
 		
 </cfoutput>

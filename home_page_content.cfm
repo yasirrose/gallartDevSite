@@ -21,15 +21,7 @@
         WHERE pk_pages = 1
     </cfquery>
     <cfoutput>
-        <div>
-            <div class="top-heading">
-                <p>Please sign our <a href="guests.cfm?xss=#xss#" class="company">Guest Book</a> for upcoming shows and information.</p>
-            </div>
-            <div class="bottom-heading">
-                <p>#getPages.page_content#</p>
-            </div>
-        </div>
-    <!---     <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td style="padding-top: 20px; padding-left: 15px; padding-bottom: 20px;" class="homepage" align="center">
                 <table border="0" cellpadding="0" cellspacing="0" width="700">
@@ -46,7 +38,7 @@
                 </table>
             </td>
         </tr>
-    </table>--->
+    </table>
     </cfoutput>
     
     <div  style="position:absolute; top:0px; left:0px; width:640px; height:380px; background-color:#FFF; padding:10px; border:2px solid #000; display:none;" id="gallartVideo">

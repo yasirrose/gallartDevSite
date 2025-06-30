@@ -47,6 +47,7 @@
 					AND artTypee LIKE '%#Type#%'
 			</cfif>
             <cfif isDefined('Style') AND len(Style)>
+					-- AND artType LIKE '%#Style#%'
                 AND (
                 artType LIKE <cfqueryparam value="%#Style#%" cfsqltype="cf_sql_varchar">
                 OR artType LIKE <cfqueryparam value="#Style#,%" cfsqltype="cf_sql_varchar">
@@ -83,28 +84,28 @@
             
         <!--- <Cfset pc = pc + 1> --->
         <Td valign="top" align="Center">
-        <A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+        <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
             <!--- <cfset uidd = '20338'> --->
         <!--- <IMG SRC="http://23.20.226.157/img/#uidd#.jpg?x=randrange(1,99)"  width="100" BORDER="0" ALT="#trim(modelno)#" align="Center"> 
         
          SRC="./img/thumbnails/#uid#.jpg?x=randrange(1,99)"
         --->
-        <cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")> 
+        <cfif fileexists("https://#server_name#/img/thumbnails/#uid#.jpg")> 
             <IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
             <cfelse>
                 <!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
-                <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+                <img src="https://#server_name#/img/thumbnails/noImage.jfif.jpeg">
         </cfif>   
         </A>
         <Br>
-        <A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" class="name-hover" >
+        <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" class="name-hover" >
             <cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
-
+            <!--- Split the name into words --->
             <cfset words = ListToArray(name, " ")>
             <cfset updatedName = "">
 
-            <cfloop index="word" array="#words#">
+            <cfloop index="word" array="#words#">               
                 <cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
 
                 <cfif cleanWord EQ "FS">
@@ -118,14 +119,19 @@
 
             <cfset updatedName = Trim(updatedName)>
 
-            
-            <b>#updatedName#</b>
+        
+               <b>#updatedName#</b>
         </a>
-       
+
         <br>
         <!--- <cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
-           
-				By: #artist_name#<Br>
+
+        By: #artist_name#<Br>
+
+        <!--- <cfif cgi.REMOTE_ADDR eq '110.39.156.90'>
+            <br>
+            #uid#
+        </cfif> --->
 
 
             <!--- <font color="660066" >
@@ -145,9 +151,9 @@
                 <!--- remove for make offer 4/30/15 --->
             <!--- <cfif application.showSalePrice EQ 1>Sale Price: <b>#dollarformat(special_price)#</b></cfif> --->
             </cfif>
-        </span> --->
+            </span> --->
 
-
+            
             <div>
                 <cfif retail_price gt 0 and retail_price gt gallery_price>
 
@@ -157,46 +163,57 @@
                             <del>#DollarFormat(gallery_price)#</del>
                             &nbsp; 
                             <b>
+                                
                                 <span style="color: ##ff0000;">
                                     #DollarFormat(special_price)# 
                                 </span>
                             </b>
-                        <cfelse>
+                         <cfelse>
                             <del>#DollarFormat(retail_price)#</del>
                             &nbsp; 
                             
                             <b> #DollarFormat(gallery_price)# </b>
                         </cfif>
 
-                    <cfelse>
+                     <cfelse>
                         <!--- <span style="color: red;">
                                 Price On Request
                         </span> --->
-                        <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+
+
+                        <cfif gallery_price neq 0 and gallery_price LT special_price>
+                            
                             <del>#DollarFormat(retail_price)# </del>
                             &nbsp; 
-                                <b>
-                                    <span style="color: ##ff0000;">
-                                    #DollarFormat(special_price)# 
-                                    </span>
-                                </b>
+                                <b> #DollarFormat(gallery_price)# </b>
+
+                         <cfelse>
+                            <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+                                <del>#DollarFormat(retail_price)# </del>
+                                &nbsp; 
+                                    <b>
+                                        <span style="color: ##ff0000;">
+                                        #DollarFormat(special_price)# 
+                                        </span>
+                                    </b>
         
-                                <cfelse>
+                                 <cfelse>
                                     <b> #DollarFormat(retail_price)# </b>
+                            </cfif>
                         </cfif>
 
                     </cfif>
-                <cfelse>
+                 <cfelse>
                     
                     <cfif gallery_price EQ 0 OR gallery_price EQ ''>
                         
                         <span style="color: red;">
                             Price On Request
                         </span>
-                    <cfelse>
+                     <cfelse>
                         <cfif retail_price neq 0 and retail_price GT gallery_price >
                             <b>#DollarFormat(retail_price)#</b>
-                        <cfelse>
+                         <cfelse>
                             <cfif closeout eq 1 and special_price gt 0 and special_price LT gallery_price>
                                 <del>#DollarFormat(gallery_price)# </del>
                                 &nbsp; 
@@ -216,9 +233,9 @@
             </div>
 
 
-            
+           
             <br>
-             Art ID:&nbsp;#modelno#<br><br>
+        Art ID:&nbsp;#modelno#<br><br>
         <cfif len(fk_users)><span style="font-size: 12px; font-weight: bold; color: ##ff0000;">PRIVATE LISTING</span><br><br>
         </cfif>
         <!--- <cfif makeoffer_buttons.show EQ 1>

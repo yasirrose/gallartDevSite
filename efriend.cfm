@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<link href="/stylesheet.css" rel="stylesheet" type="text/css">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
 <cfif parameterexists(form.from)>
 <cfif form.to gt "">
 <cfmail server="onlinegalleryart.com" to="#form.to#" from="#form.from#" Subject="This is something that I thought you'd like to see">

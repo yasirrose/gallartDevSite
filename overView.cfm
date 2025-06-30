@@ -13,10 +13,10 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-<script language="JavaScript" src="/js/utils.js"></script>
+<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -181,21 +181,21 @@ table tr td img{
 			SELECT * FROM products where fk_users = #userID#
 	</cfquery>
 
-	<cfquery name="get_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		  SELECT 
-        items.product_code AS pid, 
-        items.quantity AS qty, 
-        orders.email AS email, 
-		orders.total as total_price,
-        * 
-		FROM items
-		LEFT JOIN products ON products.code = items.product_code
-		LEFT JOIN orders ON orders.orderUID = items.orderUID
-		WHERE  orders.email = '#session.sellerinfo.email#'
-				order by ID DESC
-	</cfquery>
+<cfquery name="get_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+	SELECT 
+  items.product_code AS pid, 
+  items.quantity AS qty, 
+  orders.email AS email, 
+  orders.total as total_price,
+  * 
+  FROM items
+  LEFT JOIN products ON products.code = items.product_code
+  LEFT JOIN orders ON orders.orderUID = items.orderUID
+  WHERE  orders.email = '#session.sellerinfo.email#'
+		  order by ID DESC
+</cfquery>
     
-	<!--- <cfdump var="#get_items#" abort="true"> --->
+	<!--- <cfdump var="#wishlistData#" abort="true"> --->
    
 
     <div class="main-container registration-page">
@@ -247,20 +247,22 @@ table tr td img{
 
 															<tr>
 																<td valign="center">
-																	<a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
-																		#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																	<a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+																		<!--- #REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")# --->
+																		#name#
 																	</a>
-																	
+
 																</td>
 																<td align="center" valign="middle">
-																	# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																	<!--- # REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")# --->
+																	#artist_name#
 																</td>
 																<td align="center" valign="middle">
-																	<cfif fileexists("http://23.20.226.157/img/thumbnails/#wishlistData.uid#.jpg")> 
-																		<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#wishlistData.uid#" align="Center" style="max-height: 100px;">
+																	<cfif fileexists("http://#server_name#/img/thumbnails/#wishlistData.uid#.jpg")> 
+																		<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#wishlistData.uid#" align="Center">
 																		<cfelse>
 																			<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
-																			<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+																			<img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
 																	</cfif>
 																</td>
 																<td align="center" valign="middle">
@@ -268,17 +270,17 @@ table tr td img{
 																		<span style="color: ##ff0000;">
 																			#DollarFormat(special_price)# Sale
 																		 </span>
-																		<cfelseif gallery_price GT 0>
+																	  <cfelseif gallery_price GT 0>
 																			#dollarformat(gallery_price)#
-																	<cfelse>
-																		<span>
-																			<b style="color:red;">Price On request</b>
-																		</span>
+																		<cfelse>
+																			<span>
+																				<b style="color:red;">Price On request</b>
+																			</span>
+	
+																		</cfif>
 
-																	</cfif>
-																	
-																	
-																</td>
+
+																	</td>
 																<td align="center" valign="middle">
 																	<form action="overView.cfm?xss=#xss#" method="post">
 																		<input type="hidden" name="wishlist_pk_id" id="wishlist_pk_id" value="#wishlistData.PK_ID#">
@@ -329,17 +331,19 @@ table tr td img{
 
 															<tr>
 																<td valign="center">
-																	#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																	<!--- #REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")# --->
+																	#name#
 																</td>
 																<td align="center" valign="middle">
-																	# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																	<!--- # REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")# --->
+																	#artist_name#
 																</td>
 																<td align="center" valign="middle">
-																	<cfif fileexists("http://23.20.226.157/img/thumbnails/#getSellerRecord.uid#.jpg")> 
+																	<cfif fileexists("http://#server_name#/img/thumbnails/#getSellerRecord.uid#.jpg")> 
 																		<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#getSellerRecord.uid#" align="Center">
 																		<cfelse>
 																			<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
-																			<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+																			<img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
 																	</cfif>
 																</td>
 																<td align="center" valign="middle">#dollarformat(gallery_price)#</td>
@@ -397,7 +401,8 @@ table tr td img{
 																<td align="center" valign="middle">#get_items.modelno#</td>
 																<td align="center" valign="middle">#get_items.ID#</td>
 																<td  >
-																	# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")# 
+																	<!--- # REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#  --->
+																	#artist_name#
 																</td>
 																<td align="center" valign="middle">#dollarformat(get_items.total_price)#</td>
 																<td align="center" valign="middle">#get_items.email#</td>
@@ -419,7 +424,7 @@ table tr td img{
 											</div>
 
 											
-											
+
 										</div>
 									</div>
 								</div>
@@ -471,7 +476,7 @@ table tr td img{
 			}
 		}
 	</script>
-
+	
 <cfinclude template="frmxss.cfm">
 
 </body>

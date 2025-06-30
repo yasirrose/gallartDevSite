@@ -80,7 +80,7 @@
           <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
        </cfoutput>
        <cfinclude template="meta.cfm">
-       <link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+       <link href="stylesheet_.css" rel="stylesheet" type="text/css">
        <script type="text/javascript">
           var _gaq = _gaq || [];
           _gaq.push(['_setAccount', 'UA-34565365-1']);
@@ -158,6 +158,17 @@
                                      <div class="user-registrations quotes-page contact-page" style="max-width: 100%;">
                                         <!--- Check for a bot. --->
                                         <cfif FORM.submitted>
+
+                                          <cfset apikey="6LeZlyQrAAAAAJ9L0UQHORAJ_MColopktn5m7KGp">
+
+                                          <cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+                                             <cfhttpparam type="formField" name="secret" value="#apikey#">
+                                             <cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+                                             <cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+                                          </cfhttp>
+                                                
+                                          <cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+
                                            <!--- <cfdump var="#form#" abort="true"> --->
                                            <cfif phoneError>
                                               <cfoutput>
@@ -176,7 +187,7 @@
                                                     document.errorFrm.submit();
                                                  </script>
                                               </cfoutput>
-                                              <cfelseif blnIsBot>
+                                              <cfelseif captchaResponse.success NEQ 'YES'>
                                               <cfoutput>
                                                  <!--- <cfdump var="testing 2" abort="true"> --->
                                                  <script language="JavaScript">
@@ -249,11 +260,13 @@
                                               </cflock>
                                               <cfmail 
                                                     server="#servername#" 
-                                                    username="onli16@onlinegalleryart.com"
-                                                    password="re3objec" 
+                                                    username="Sales@GallArt.com"
+                                                    password="ylzwtvepstcsammm" 
                                                     to="#emailsupport#" 
                                                     cc="#emailsupportcc#" 
-                                                    from="#form.email#" 
+                                                    from="#form.email#"
+                                                    port="587"
+                                                    usetls="yes" 
                                                     subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller" 
                                                     type="HTML"
                                                     >
@@ -265,10 +278,12 @@
                                               </cfmail>
                                               <cfmail 
                                                     server="#servername#" 
-                                                    username="onli16@onlinegalleryart.com"
-                                                    password="re3objec" 
+                                                    username="Sales@GallArt.com"
+                                                    password="ylzwtvepstcsammm" 
                                                     to="#form.email#" 
-                                                    from="onli16@onlinegalleryart.com" 
+                                                    from="Sales@GallArt.com"
+                                                    port="587"
+													             usetls="yes" 
                                                     subject="Gallery Art - Welcome New Member" 
                                                     type="HTML"
                                                     >
@@ -314,7 +329,7 @@
                                         <cfoutput>
                                            <div class="user-content form-sectiom">
                                               <h3>Create an Account</h3>
-                                              <h4> Already have an account? <a href="user_login_page.cfm?xss=#xss#"> <b>Login In </b></a> </h4>
+                                              <h4> Already have an account? <a href="user_login_page.cfm?xss=#xss#" style="color: ##EC008C"> Log in </a> </h4>
                                               <br><br>
                                               <cfif FORM.captchaError>
                                                  <span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span><br><br>
@@ -354,7 +369,7 @@
                                                           </div>
                                                           <div class="col-md-6">
                                                              <div class="input-field">
-                                                                <label><b>Cell Phone:<span style="color: ##ff0000;">*</span></b></label>
+                                                                <label><b>Cell Phone:</b></label>
                                                                 <cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#"   size="30">
                                                                 <span class="error-message" id="S_cellphoneError"></span>
                                                              </div>
@@ -374,13 +389,20 @@
                                                              </div>
                                                           </div>
                                                        </div>
-                                                       <div class="input-field">
+
+                                                       <!--- <div class="input-field">
                                                           <cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
                                                           <br><br>
                                                           <FONT face="verdana,arial,helvetica" color="000000"><b>Please enter the characters in the image above:</b></FONT><br><br>
                                                           <cfinput type="text" name="captcha" id="S_captcha">
                                                           <span class="error-message" id="S_captchaError"></span>
-                                                       </div>
+                                                       </div> --->
+
+                                                       <div class="input-field pt-3">
+                                                         <div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LeZlyQrAAAAAIeJXW8lCPBOCfgLcPgPxounXa9i"></div>
+                                                         <span class="error-message" id="recaptchaError"></span>
+                                                      </div>
+
                                                        <div class="input-button mt-3 register-btn">
                                                           <input type="Hidden" name="proc_reg">
                                                           <cfif NOT structKeyExists(session, 'sellerinfo') >
@@ -419,6 +441,8 @@
           </td>
        </tr>
        <cfinclude template="frmxss.cfm">
+
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
        <script>
           function validateSellerForm(){
           // alert('test');
@@ -432,28 +456,36 @@
           const S_phone = document.getElementById('S_cellphone').value.trim();
           const S_password = document.getElementById('S_password').value.trim();
           const S_password2 = document.getElementById('S_password2').value.trim();
-          const S_captcha = document.getElementById('S_captcha').value.trim();
+         //  const S_captcha = document.getElementById('S_captcha').value.trim();
           
           const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+          var recaptcha = grecaptcha.getResponse();
+			 console.log(recaptcha.length);
           
+         if (recaptcha.length == 0) {
+               document.getElementById("recaptchaError").innerText = "Please confirm you are not a robot.";
+               isValid = false;
+         }
+
           if (!S_fname) {
-          document.getElementById('S_fnameError').textContent = 'Please fill in your first name.';
-          isValid = false;
+            document.getElementById('S_fnameError').textContent = 'Please fill in your first name.';
+            isValid = false;
           }
           
           // Validate LAST NAME
           if (!S_lname) {
-          document.getElementById('S_lnameError').textContent = 'Please fill in your last name.';
-          isValid = false;
+            document.getElementById('S_lnameError').textContent = 'Please fill in your last name.';
+            isValid = false;
           }
           
           // Validate EMAIL
           if (!S_email) {
-          document.getElementById('S_EmailError').textContent = 'Please fill in your email address.';
-          isValid = false;
+            document.getElementById('S_EmailError').textContent = 'Please fill in your email address.';
+            isValid = false;
           } else if (!/\S+@\S+\.\S+/.test(S_email)) {
-          document.getElementById('S_EmailError').textContent = 'Please enter a valid email address.';
-          isValid = false;
+            document.getElementById('S_EmailError').textContent = 'Please enter a valid email address.';
+            isValid = false;
           }
           
           
@@ -472,25 +504,25 @@
           // }
           
           if (!S_password) {
-          document.getElementById('S_passwordError').textContent = 'Please enter your password.';
-          isValid = false;
+            document.getElementById('S_passwordError').textContent = 'Please enter your password.';
+            isValid = false;
           }
           
           if (!S_password2) {
-          document.getElementById('S_password2Error').textContent = 'Please re-enter your password.';
-          isValid = false;
+            document.getElementById('S_password2Error').textContent = 'Please re-enter your password.';
+            isValid = false;
           }
           
           if (S_password && S_password2 && S_password !== S_password2) {
-          document.getElementById('S_password2Error').textContent = 'Passwords do not match.';
-          isValid = false;
+            document.getElementById('S_password2Error').textContent = 'Passwords do not match.';
+            isValid = false;
           }
           
           // Validate CAPTCHA
-          if (!S_captcha) {
-          document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
-          isValid = false;
-          }
+         //  if (!S_captcha) {
+         //    document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
+         //    isValid = false;
+         //  }
           
           if (isValid) {
           // Submit the form

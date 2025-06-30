@@ -1,56 +1,3 @@
-<!--- <cfsilent>
-	<cfparam name="FORM.captcha_check"	type="string" default="" />
-	<cfparam name="form.captchaError" default="0">
-
-	   <cftry>
-		<cfparam
-		   name="FORM.submitted"	type="numeric"	default="0"	/>
- 
-		<cfcatch>
-		   <cfset FORM.submitted = 0 />
-		</cfcatch>
-	 </cftry>
-
-	 <cfif isDefined('form.submit') >
-		<cftry>
-
-		
-			<!--- Decrypt the check value. --->
-			<cfset strCaptcha = Decrypt( FORM.captcha_check, "gallart-is-the-best", "CFMX_COMPAT", "HEX"	) />
-	
-			<cfif (strCaptcha EQ FORM.captcha)>
-	
-			   <cfset blnIsBot = false />
-	
-			</cfif>
-	
-			<cfcatch>
-	
-			   <cfset blnIsBot = true />
-	
-			</cfcatch>
-		 </cftry>
-	 </cfif>
-
-	
-
-	 <cfset arrValidChars = ListToArray(
-	"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z," &
-	"2,3,4,5,6,7,8,9"
-	) />
-
-	<!--- Now, shuffle the array. --->
-	<cfset CreateObject( "java", "java.util.Collections"	).Shuffle(	arrValidChars )	/>
-
-	<cfset strCaptcha = (
-	arrValidChars[ 1 ] &
-	arrValidChars[ 2 ] 
-	) />
-
-	<cfset FORM.captcha_check = Encrypt( strCaptcha,"gallart-is-the-best", "CFMX_COMPAT", "HEX" ) />
-
-</cfsilent> --->
-
 <cfif NOT structKeyExists(session, 'sellerinfo') >
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -66,53 +13,34 @@
 <cfparam name="msg" default="">
 
 <cfif isDefined("proc_pw")>
-
-	<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
-    <cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
-        <cfhttpparam type="formField" name="secret" value="#apikey#">
-        <cfhttpparam type="formField" name="response" value="#form['g-recaptcha-response']#">
-        <cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
-    </cfhttp>
-
-    <cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
-
-	<cfif captchaResponse.success >
-		<cfquery name="findUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-			SELECT * FROM users WHERE email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar" maxlength="255">
-		</cfquery>
+	<cfquery name="findUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+		SELECT * FROM users WHERE email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar" maxlength="255">
+	</cfquery>
 	
-		<cfif findUser.recordcount>
-			<cfmail server="#servername#" username="onli16@onlinegalleryart.com"
-				password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com"
-				subject="Gallery Art Password Retrieval" type="HTML">
-				<font style="font-size: 10pt; font-family: Arial;">
-				Your Gallery Art Password is:
-				<br><br>
-				#findUser.password#
-				<br><br>
-				Please keep it in a safe place.
-				<br><br>
-				Thank you from Gallery Art.
-				</font>
-			</cfmail>
-	
-			<cfoutput>
-				<strong style="color:green;">Your password has been emailed to you.</strong>
-			</cfoutput>
-		<cfelse>
-			<cfoutput>
-				<strong style="color:red;">That email address is not in our system. Please try again.</strong>
-			</cfoutput>
-		</cfif>
+	<cfif findUser.recordcount>
+		<cfmail server="#servername#" username="onli16@onlinegalleryart.com"
+			password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com" 
+			subject="Gallery Art Password Retrieval" type="HTML">
+			<font style="font-size: 10pt; font-family: Arial;">
+			Your Gallery Art Password is:
+			<br><br>
+			#findUser.password#
+			<br><br>
+			Please keep it in a safe place.
+			<br><br>
+			Thank you from Gallery Art.
+			</font>
+		</cfmail>	
+
+		<cfoutput>
+            <strong style="color:green;">Your password has been emailed to you.</strong>
+        </cfoutput>		
 	<cfelse>
 		<cfoutput>
-			<strong style="color:red;">reCAPTCHA verification failed. Please try again.</strong>
-		</cfoutput>
-
+            <strong style="color:red;">That email address is not in our system. Please try again.</strong>
+        </cfoutput>
 	</cfif>
-
-   
-    <cfabort>
+	<cfabort>
 </cfif>
 
 
@@ -129,11 +57,11 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
-	<script language="JavaScript" src="/js/utils.js"></script>
+	<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
+	<script language="JavaScript" src="./js/utils.js"></script>
 </cfoutput>
 
-<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -159,7 +87,7 @@
 </script>
 <!-- END ROBLY WIDGET CODE -->
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 	   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
@@ -200,39 +128,18 @@
 												<!--- <cfoutput> --->
 													<!--- <cfif success eq "false">
 
-														
+
 													
 														<cfif len(msg)><strong>#msg#</strong></cfif> --->
-
-														<!--- <cfif FORM.captchaError>
-															<p style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</p>
-														 </cfif> --->
-
-
 														<div id="responseMessage"></div>
 														<form id="forgetForm" onsubmit="return false;">
-															<!--- <input	type="hidden" name="captcha_check"	
-															value="<cfoutput>#FORM.captcha_check#</cfoutput>" /> --->
 															<div class="user-content text-center">
 																<p>Enter your email address below, and we will email your password to you:</p>
 																<div class="input-form">
 																	<div class="input-field">
-																		<input type="text" name="email" id="email" size="40"><span class="star"> * </span>
+																		<input type="text" name="email" id="email" size="40"><span style="color: #ff0000;"> * </span>
 																		<span class="error-message" id="email_loginError"></span>
 																	</div>
-
-																	<!--- <div class="input-field">
-																		<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier" fontsize="28"/>
-																		<label><FONT color="000000"><b>Please enter the characters in the image above: <span style="color:##ff0000;">*</span></b></FONT></label>
-																		<input type="text" name="captcha" >
-																		<span class="error-message" id="captchaError"></span>
-																	 </div> --->
-
-																	 <div class="input-field pt-3">
-																		<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
-																		<span class="error-message" id="recaptchaError"></span>
-																	</div>
-																	
 																	<div class="input-button">
 																		<button type="button" onclick="submitForgetForm()" class="SeeMore">Send My Password</button>
 																	</div>
@@ -264,41 +171,32 @@
 </tr>
 <cfinclude template="frmxss.cfm">
 
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
 <script>
 
-	$(document).ready(function() {
-		toastr.options = {
-			'closeButton': true,
-			'debug': false,
-			'newestOnTop': false,
-			'progressBar': true,
-			'positionClass': 'toast-top-right',
-			'preventDuplicates': false,
-			'showDuration': '1000',
-			'hideDuration': '1000',
-			'timeOut': '5000',
-			'extendedTimeOut': '1000',
-			'showEasing': 'swing',
-			'hideEasing': 'linear',
-			'showMethod': 'fadeIn',
-			'hideMethod': 'fadeOut',
-		}
-	});
+			$(document).ready(function() {
+				toastr.options = {
+					'closeButton': true,
+					'debug': false,
+					'newestOnTop': false,
+					'progressBar': true,
+					'positionClass': 'toast-top-right',
+					'preventDuplicates': false,
+					'showDuration': '1000',
+					'hideDuration': '1000',
+					'timeOut': '5000',
+					'extendedTimeOut': '1000',
+					'showEasing': 'swing',
+					'hideEasing': 'linear',
+					'showMethod': 'fadeIn',
+					'hideMethod': 'fadeOut',
+				}
+			});
 
-    function validateForgetForm() {
-        let isValid = true;
+	function validateForgetForm() {
+		let isValid = true;
         const email = document.getElementById('email').value.trim();
         const errorElement = document.getElementById('email_loginError');
         errorElement.textContent = ''; // Clear previous errors
-
-		const recaptchaResponse = grecaptcha.getResponse();
-
-		if (!recaptchaResponse) {
-			document.getElementById('recaptchaError').textContent = 'Please verify reCAPTCHA.';
-			isValid = false;
-		}
 
         if (!email) {
             errorElement.textContent = 'Please enter your email address';
@@ -309,63 +207,51 @@
         }
 
         return isValid;
-    }
+	}
 
-    function submitForgetForm() {
-        if (!validateForgetForm()) {
-            return; // Stop submission if validation fails
-        }
-	
-			
+function submitForgetForm() {
+	if (!validateForgetForm()) {
+		return; // Stop submission if validation fails
+	}
 
-			
-        const formData = new FormData();
-		formData.append('g-recaptcha-response', recaptchaResponse);
-        formData.append('email', document.getElementById('email').value);
-        formData.append('proc_pw', true); // Pass this to detect the form submission on the backend
+		
 
-        fetch('forgot_password.cfm', {
-            method: 'POST',
-            body: formData,
-        })
-            .then((response) => response.text())
-            .then((data) => {
-				if (data.toLowerCase().includes('success')) {
-                toastr.success('Your password has been emailed to you.');
-            } else {
-                toastr.error('That email address is not in our system. Please try again.');
-            }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                document.getElementById('responseMessage').innerHTML = `<strong style="color:red;">An error occurred. Please try again later.</strong>`;
-            });
-    }
-</script>
+		
+	const formData = new FormData();
+	formData.append('email', document.getElementById('email').value);
+	formData.append('proc_pw', true); // Pass this to detect the form submission on the backend
+
+	fetch('forgot_password.cfm', {
+		method: 'POST',
+		body: formData,
+	})
+		.then((response) => response.text())
+		.then((data) => {
+			if (data.toLowerCase().includes('success')) {
+			toastr.success('Your password has been emailed to you.');
+		} else {
+			toastr.error('That email address is not in our system. Please try again.');
+		}
+		})
+		.catch((error) => {
+			console.error('Error:', error);
+			document.getElementById('responseMessage').innerHTML = `<strong style="color:red;">An error occurred. Please try again later.</strong>`;
+		});
+	}
+ </script>
  <style>
 	.error-message {
-		color: #ff0000;
-		font-size: 0.9em;
-		/* margin-top: 5px; */
-		text-align: left;
-		margin-left: 10px;
-		display: block;
-	}
-	.input-field {
-		margin-bottom: 15px;
-		position: relative;
-	}
-	.star{
-		color: red;
-		position: absolute;
-		top: -10;
-		right: 10
+	color: #ff0000;
+	font-size: 0.9em;
+	/* margin-top: 5px; */
+	text-align: left;
+    margin-left: 10px;
+	display: block;
 	}
  </style>
 
 </body>
 </html>
-
 <cfelse>
 	<cflocation addtoken="No" url="user_listing_detail.cfm?xss=#xss#">
 </cfif>

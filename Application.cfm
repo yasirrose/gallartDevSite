@@ -1,16 +1,13 @@
-<cfapplication 
-    name="galleryart"
-    clientmanagement="Yes"
-    sessionmanagement="Yes"
-    sessiontimeout="#CreateTimeSpan(0,6,0,0)#"
-    applicationtimeout="#CreateTimeSpan(1,0,0,0)#">
-
-<cfset enableRobustException="true">
-<cfset application.dsource="gallarttest">
+<cfapplication name="galleryart"
+               clientmanagement="Yes"
+               sessionmanagement="Yes"
+               sessiontimeout="#CreateTimeSpan(0,6,0,0)#"
+               applicationtimeout="#CreateTimeSpan(1,0,0,0)#">
+<cfset application.dsource="gallartLive">
 <cfset server_name="gallart.com">
 
 <cfset COMPANYNAME="gallart">
-<cfset dsource="gallarttest">
+<cfset dsource="gallartLive">
 <cfset uname="admin">
 <cfset pword="GAllart2022!!"> 
 <cfset rootpath = "">
@@ -117,10 +114,13 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
 
 <!--- <cfparam name="flashow" default="siteflash"> --->
 <!--- for mails sent from main site (contact forms, etc) --->
-<cfset servername = "mail2.onlinegalleryart.com" />
+
+<!--- Change the SMTP Server 21 may 2025 --->
+<!--- <cfset servername = "mail2.onlinegalleryart.com" /> --->
+<cfset servername = "smtp.gmail.com" />
 
 <!--- email blast server --->
-<cfset application.email_server = "mail2.gallart_.com" />
+<cfset application.email_server = "mail2.gallart.com" />
 <cfset application.email_username = "info@onlinegalleryart.us" />
 <cfset application.email_password = "22kenhen" />
 <cfset application.email_from = "info@onlinegalleryart.us" />
@@ -165,12 +165,12 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
 <!--- SET THESE VARIABLES FOR LEAD SYSTEM - CONFIGBEAN --->
 
 <cfscript>
-	application.dsource='gallarttest';
+	application.dsource='gallartLive';
 	application.dbuname='admin';
 	application.dbpword='GAllart2022!!';
 	application.rootpath='';
 	application.vmap='';
-	application.mailserver='mail2.onlinegalleryart_.com';
+	application.mailserver='mail2.onlinegalleryart.com';
 </cfscript>
 
 <!--- mailserver for web --->
@@ -178,19 +178,16 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
 <!--- re3objec --->
 
 
-<cfscript>
-	application.mailserver='mail2.onlinegalleryart_.com';
+<!--- <cfscript>
+	application.mailserver='mail2.onlinegalleryart.com';
 	application.mailserver_un='gallart@onlinegalleryart.com';
 	application.mailserver_pw='re3objeC!P';
+</cfscript> --->
+
+<cfscript>
+	application.mailserver='smtp.sendgrid.net';
+	application.mailserver_un='apikey';
+	application.mailserver_pw='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';
 </cfscript>
 
 
-<cffunction name="onError" access="public" returntype="void">
-    <cfargument name="Exception" type="any" required="true">
-    <cfargument name="EventName" type="string" required="true">
-  
-    <!--- Display the error information --->
-    <cfdump var="#Arguments.EventName#" label="Error Information">
-    <cfdump var="#Arguments.Exception#" label="Error Information">
-    <cfabort>
-  </cffunction>

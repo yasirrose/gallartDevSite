@@ -7,9 +7,8 @@
 						<div class="col-md-2 col-sm-6 col-12 mb-3 footer-items">
 							<div class="footer-menu">
 								<h3>Main Menu</h3>
-								<!--- <cfdump var="#cookiesAccepted#"> --->
 								<ul>
-									<li> <a href="/index.cfm?xss=#xss#">Home</a> </li>
+									<li> <a href="index.cfm?xss=#xss#">Home</a> </li>
 									<!--- <li> <a href="user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
 									<li> <a href="requests.cfm?xss=#xss#">Requests</a> </li>
 									<li> <a href="quotes.cfm?xss=#xss#">Quotes</a> </li>
@@ -20,15 +19,15 @@
 									<li> <a href="alerts.cfm?xss=#xss#">Alert</a> </li>
 									<li> <a href="http://blog.gallart.com/">Blog</a> </li> --->
 									<!-- <li> <a href="contact.cfm?xss=#xss#">Contact Us</a> </li> -->
-									<li> <a href="/searchpage.cfm?xss=#xss#">Search</a> </li>
-									<li> <a href="/new_listings.cfm?xss=#xss#">Recent Acquisitions</a> </li>
-									<li> <a href="/sales.cfm?xss=#xss#">Sales</a> </li>
-									<li> <a href="/classifieds.cfm?xss=#xss#">Classifieds</a> </li>
-									<li> <a href="/featured_events.cfm?xss=#xss#">Events</a> </li>
-									<li> <a href="/new_user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
-									<li> <a href="/promotion.cfm?xss=#xss#">Promotion</a> </li>
-
+									<li> <a href="searchpage.cfm?xss=#xss#">Search</a> </li>
+									<li> <a href="new_listings.cfm?xss=#xss#">Recent Acquisitions</a> </li>
+									<li> <a href="sales.cfm?xss=#xss#">Sales</a> </li>
+									<li> <a href="classifieds.cfm?xss=#xss#">Classifieds</a> </li>
+									<li> <a href="featured_events.cfm?xss=#xss#">Events</a> </li>
+									<li> <a href="new_user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
+									<li> <a href="promotion.cfm?xss=#xss#">Promotion</a> </li>
 									
+
 								</ul>
 							</div>
 						</div>
@@ -36,11 +35,11 @@
 							<div class="footer-menu">
 								<h3>Customer Service</h3>
 								<ul>
-									<li> <a href="">Account</a> </li>
-									<li> <a href="/view/?xss=#xss#">View Cart</a> </li>
-									<li> <a href="/shippingpolicy.cfm?xss=#xss#">Shipping Policy</a> </li>
-									<li> <a href="/pns.cfm?xss=#xss#">Privacy</a> </li>
-									<li> <a href="/termsUse.cfm?xss=#xss#">Terms of Use</a> </li>
+									<li> <a href="user_login_page.cfm?xss=#xss#">Account</a> </li>
+									<li> <a href="view.cfm?xss=#xss#">View Cart</a> </li>
+									<li> <a href="shippingpolicy.cfm?xss=#xss#">Shipping Policy</a> </li>
+									<li> <a href="pns.cfm?xss=#xss#">Privacy</a> </li>
+									<li> <a href="termsUse.cfm?xss=#xss#">Terms of Use</a> </li>
 								</ul>
 							</div>
 						</div>
@@ -57,22 +56,22 @@
 									<p>Gallery Art <br>20633 Biscayne Blvd Suite C2<br> Aventura, FL 33180 </p>
 									<ul>
 										<li><a href="tel:305.932.6166">305.932.6166</a></li>
-										<li><a href="305.439.7422">305.439.7422 (Text) </a></li>
+										<li><a href="##">305.439.7422 (Text) </a></li>
 										<li><a href="contact.cfm?xss=#xss#">info@gallart.com</a></li>
 									</ul>
 
-									
+
 
 								</div>
 							</div>
 						</div>
 						<div class="col-md-3 col-sm-6 col-12 mb-3 footer-items">
-							<div class="footer-menu">								
-								<div class="map-image">
-									<a href="https://maps.app.goo.gl/MZniVSbiddj1X1vWA" target="_blank">
-										<img src="/images/Gallery-Art-Map-V2.jpg" alt="image">
-									</a>
-								</div>
+							<div class="footer-menu">
+									<div class="map-image">
+										<a href="https://maps.app.goo.gl/MZniVSbiddj1X1vWA" target="_blank">
+											<img src="images/Gallery-Art-Map-V2.jpg" alt="image">
+										</a>
+									</div>								
 							</div>
 						</div>
 						<div class="col-md-3 col-sm-6 col-12 mb-3 footer-items">
@@ -93,9 +92,9 @@
 										</form>
 									</div>
 								</div>
-							</div>			
+							</div>
 							<div class="footer-menu">
-								
+
 								<h3>Stay Connected</h3>
 								<div class="social-media">
 									<ul>
@@ -157,7 +156,7 @@
 											</a>
 										</li>		
 									</ul>
-								</div>
+								</div>	
 							</div>
 						</div>
 					</div>
@@ -168,11 +167,11 @@
 			</div>
 		</div>
 
-		<cfif structKeyExists(cookie, "cookiesAccepted")>
+		<!--- <cfif structKeyExists(cookie, "cookiesAccepted")>
 			<cfset cookiesAccepted = cookie.cookiesAccepted>
 		<cfelse>
 			<cfset cookiesAccepted = "not_set">
-		</cfif>
+		</cfif> --->
 
 		<script>
 			function validateForm() {
@@ -197,7 +196,7 @@
 		</script>
 		
 		
-		<cfif NOT StructKeyExists(cookie, "userConsent")>
+		<!--- <cfif NOT StructKeyExists(cookie, "userConsent")>
 			<div id="cookies-banner" style="display:block;">
 				<div class="cookie-banner-left">
 					<p>This website uses cookies to ensure you get the best experience on our website.</p>
@@ -207,20 +206,20 @@
 					<button class="button button--primary button--auto-width button--center" id="accept-btn">Accept</button>
 				</div>
 			</div>
-		</cfif>
-		
-	</footer>
+		</cfif> --->
 
+	</footer>
+	
 	<cfif isDefined('form.footerEmail') and form.footerEmail neq ''>
 		<cfset email = trim(FORM.footerEmail)>
 		<cfset ipAddress = cgi.remote_addr>
 		<cfset createdAt = now()>
-
 		
+
 		<cfquery name="qGetNewsLetterUserLogs" datasource="#application.dsource#">
 			Select * FROM newsLetterUsers where CAST([created_at] AS DATE) = #createdAt# and ipAddress = '#ipAddress#' and isdeleted is null
 		</cfquery>
-		
+
 		<!--- <cfdump var="#form#" abort="true"> --->
 		<!--- <cfdump var="#qGetNewsLetterUserLogs.recordCount#" abort="true"> --->
 
@@ -229,27 +228,27 @@
 			<cfquery name="qGetNewsLetterUser" datasource="#application.dsource#">
 				Select * FROM newsLetterUsers where email = '#form.footerEmail#' and isdeleted is null
 			</cfquery>
-
+			
 			<cfif qGetNewsLetterUser.recordCount EQ 0 >
-				<cfquery name="addNewsLetterUsers" datasource="#application.dsource#">
-					INSERT INTO newsLetterUsers (
-							email, 
-							created_at, 
-							ipAddress
-							)
-					VALUES (
-							<cfqueryparam value="#email#" cfsqltype="cf_sql_varchar">, 
-							<cfqueryparam value="#createdAt#" cfsqltype="cf_sql_timestamp">, 
-							<cfqueryparam value="#ipAddress#" cfsqltype="cf_sql_varchar">
-							)
-				</cfquery>
-			 	<cfset session.email = email>
-					<cfoutput>
-						<script>
-							alert('Your Email is Submitted');
-							window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
-						</script>
-					</cfoutput>
+					<cfquery name="addNewsLetterUsers" datasource="#application.dsource#">
+						INSERT INTO newsLetterUsers (
+								email, 
+								created_at, 
+								ipAddress
+								)
+						VALUES (
+								<cfqueryparam value="#email#" cfsqltype="cf_sql_varchar">, 
+								<cfqueryparam value="#createdAt#" cfsqltype="cf_sql_timestamp">, 
+								<cfqueryparam value="#ipAddress#" cfsqltype="cf_sql_varchar">
+								)
+					</cfquery>
+					<cfset session.email = email>
+						<cfoutput>
+							<script>
+								alert('Your Email is Submitted');
+								window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
+							</script>
+						</cfoutput>
 				<cfelse>
 					<cfset session.email = email>
 					<cfoutput>
@@ -281,8 +280,8 @@
 	
 	</cfoutput>
 	
-	
 
+<!--- 
 	<script>
         document.addEventListener("DOMContentLoaded", function () {
             // Check if the cookie consent banner should be displayed
@@ -302,7 +301,7 @@
                 document.getElementById("cookies-banner").style.display = "none";
             });
         });
-    </script>
+    </script> --->
 
 	<style>
 		.error-message {
@@ -312,11 +311,3 @@
 			display: block;
 		}
 	</style>
-	
-	<!--- <cfif structKeyExists(url, "action") AND url.action EQ "setCookie">
-		<!-- Set the cookie values based on the URL parameters -->
-		<cfset cookie.cookiesAccepted = url.value>
-		<cfset cookie.cookiesAccepted.expires = createDateTime(year(now()) + 1, month(now()), day(now()), hour(now()), minute(now()), second(now()))>
-		<cfset cookie.cookiesAccepted.path = "/">
-	</cfif> --->
-	

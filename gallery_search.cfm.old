@@ -1,0 +1,23 @@
+<cfquery name="artistinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+SELECT distinct manufacturer from products
+order by manufacturer
+</cfquery>
+
+<cfoutput>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<form action="products.cfm<cfif parameterexists(xss)>?xss=#xss#</cfif>" name="galleryfrm">
+	<tr>
+		<td>
+			<select name="manufact" style="font-family: verdana; font-size: 7pt;" onchange="galleryfrm.submit();">
+				<option value="" selected>PLEASE SELECT
+					<cfloop query="artistinfo">
+						<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+							<option value="#manufacturer#" <cfif parameterexists(manufact) and manufact eq '#manufacturer#'>Selected</cfif>>#ucase(manufacturer)#
+						</cfif>
+					</cfloop>
+			</select>
+		</td>
+	</tr>
+</form>
+</table>
+</cfoutput>
