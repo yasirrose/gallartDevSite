@@ -1518,6 +1518,7 @@
 		<cfargument name="slideshow" required="no" type="string" default="">
 		<cfargument name="frontShow" required="no" type="string" default="">
 		<cfargument name="bottomHome" required="no" type="string" default="">
+		<cfargument name="promotion" required="no" type="string" default="">
 		<cfargument name="active" required="no" type="string" default="">
 		<cfargument name="gallery_only" required="no" type="string" default="">
         <cfargument name="alphaChar" required="no" type="string" default="">
@@ -1679,6 +1680,9 @@
 				<cfif isDefined('arguments.bottomHome') AND arguments.bottomHome EQ 1>
 					AND family > 0
 				</cfif>
+				<cfif isDefined('arguments.promotion') AND arguments.promotion EQ 1>
+					AND promotion = 1
+				</cfif>
 				<cfif isDefined('arguments.active')>
 					<cfif arguments.active EQ 1>
 						AND P.active = 1
@@ -1824,6 +1828,11 @@
                 <cfelse>
                     ,family = 0
                 </cfif>
+				<cfif isDefined('form.Promotion_'&this_keyval)>
+                    ,promotion = <cfqueryparam cfsqltype="CF_SQL_TINYINT" value="1">
+                <cfelse>
+                    ,promotion = 0
+                </cfif>
                 WHERE uid = #this_keyval#
             </cfquery>
 
@@ -1929,6 +1938,11 @@
                         <cfelse>
                             ,family = 0
                         </cfif>
+						<cfif isDefined('form.Promotion_'&this_keyval)>
+							,promotion = <cfqueryparam cfsqltype="CF_SQL_TINYINT" value="1">
+						<cfelse>
+							,promotion = 0
+						</cfif>
                         WHERE uid = #this_keyval#
                     </cfquery>
     

@@ -66,11 +66,11 @@
       </cfoutput>
       <cfinclude template="meta.cfm">
       <cfoutput>
-         <script language="JavaScript" src="./js/utils.js"></script>
+         <script language="JavaScript" src="/js/utils.js"></script>
          <!--- <script language="JavaScript" src="./js/jquery-1.2.6.min.js"></script> --->
          <!--- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- Ensure jQuery is loaded first --> --->
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-         <script language="JavaScript" src="./js/slimbox2.js"></script>
+         <script language="JavaScript" src="/js/slimbox2.js"></script>
          <link href="./css/slimbox2.css" rel="stylesheet" type="text/css">
          <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
          <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
@@ -141,7 +141,7 @@
             });
          </script>
       </cfoutput>
-      <link href="stylesheet_.css" rel="stylesheet" type="text/css">
+      <link href="/stylesheet_.css" rel="stylesheet" type="text/css">
       <script type="text/javascript">
          var _gaq = _gaq || [];
          _gaq.push(['_setAccount', 'UA-34565365-1']);
@@ -391,8 +391,8 @@
                                                             <div class="img-sec">
                                                               
                                                                   <cfif fileexists("http://23.20.226.157/img/#productinfo.uid#.jpg")>
-                                                                     <a data-fancybox="slider-gallery" data-src="./img/#productinfo.uid#.jpg?x=randrange(1,99)" data-caption="Main Image">
-                                                                        <img src="./img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="slider-gallery-img">
+                                                                     <a data-fancybox="slider-gallery" data-src="/img/#productinfo.uid#.jpg?x=randrange(1,99)" data-caption="Main Image">
+                                                                        <img src="/img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="slider-gallery-img">
                                                                     </a>
                                                                   <cfelse>
                                                                      <a data-fancybox="slider-gallery" data-src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg" data-caption="Main Image">
@@ -413,8 +413,8 @@
                                                                         <cfif fileexists("http://23.20.226.157/img/#additionalImage#")>
 
                                                                            
-                                                                           <a data-fancybox="slider-gallery" data-src="./img/#additionalImage#?x=randrange(1,99)" data-caption="Main Image">
-                                                                              <img src="./img/#additionalImage#?x=randrange(1,99)" alt="slider-gallery-img">
+                                                                           <a data-fancybox="slider-gallery" data-src="/img/#additionalImage#?x=randrange(1,99)" data-caption="Main Image">
+                                                                              <img src="/img/#additionalImage#?x=randrange(1,99)" alt="slider-gallery-img">
                                                                           </a>
                                                                            
                                                                            
@@ -458,7 +458,7 @@
                                                                <div class="img-sec">
                                                                   
                                                                      <cfif fileexists("http://23.20.226.157/img/#productinfo.uid#.jpg") >
-                                                                        <img src="./img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="gallery-img">
+                                                                        <img src="/img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="gallery-img">
                                                                      <cfelse>
                                                                         <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
                                                                      </cfif>
@@ -473,7 +473,7 @@
                                                                   <div class="nav-slide-item">
                                                                      <div class="img-sec">
                                                                         <cfif fileexists("http://23.20.226.157/img/#additionalImage#")>
-                                                                           <img src="./img/#additionalImage#?x=randrange(1,99)" alt="gallery-img">
+                                                                           <img src="/img/#additionalImage#?x=randrange(1,99)" alt="gallery-img">
                                                                         <cfelse>
                                                                            <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
                                                                         </cfif>
@@ -509,7 +509,7 @@
                                                          
                                                       </cfif>
                                                       <!--- <cfset capitalize = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
-                                                      <a href="products.cfm?man=#URLEncodedFormat(manufacturer)#<cfif parameterexists(xss)>&xss=#xss#</cfif>" >
+                                                      <a href="/artists/#URLEncodedFormat(manufacturer)#/<cfif parameterexists(xss)>?xss=#xss#</cfif>" >
                                                          <h3 class="meta">#fullName#</h3>
                                                       </a>
                                                       <!--- <h3 class="meta">#ucase(manufacturer)#</h3> --->
@@ -590,17 +590,28 @@
                                                             <!--- <span style="color: red;">
                                                                   Price On Request
                                                             </span> --->
-                                                            <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+
+
+
+                                                           <cfif gallery_price neq 0 and gallery_price LT special_price>
+                            
                                                                <del>#DollarFormat(retail_price)# </del>
                                                                &nbsp; 
-                                                                  <b>
-                                                                     <span style="color: ##ff0000;">
-                                                                     #DollarFormat(special_price)# 
-                                                                     </span>
-                                                                  </b>
+                                                                  <b> #DollarFormat(gallery_price)# </b>
+
+                                                             <cfelse>
+                                                               <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+                                                                  <del>#DollarFormat(retail_price)# </del>
+                                                                  &nbsp; 
+                                                                        <b>
+                                                                           <span style="color: ##ff0000;">
+                                                                           #DollarFormat(special_price)# 
+                                                                           </span>
+                                                                        </b>
                                                 
-                                                                  <cfelse>
-                                                                     <b> #DollarFormat(retail_price)# </b>
+                                                                        <cfelse>
+                                                                           <b> #DollarFormat(retail_price)# </b>
+                                                               </cfif>
                                                             </cfif>
                                                 
                                                          </cfif>

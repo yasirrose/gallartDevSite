@@ -15,13 +15,13 @@
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 	</cfif>
-	<link href="./css/photogallery.css" rel="stylesheet" type="text/css">
-	<script language="JavaScript" src="./js/utils.js"></script>
-	<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
-	<script type="text/javascript" src="./js/jquery.bgpos.js"></script>
-	<script type="text/javascript" src="./js/jquery.cross-slide.js"></script>
-    <script language="JavaScript" src="./js/slimbox2.js"></script>
-	<link href="./css/slimbox2.css" rel="stylesheet" type="text/css">
+	<link href="/css/photogallery.css" rel="stylesheet" type="text/css">
+	<script language="JavaScript" src="/js/utils.js"></script>
+	<script type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
+	<script type="text/javascript" src="/js/jquery.bgpos.js"></script>
+	<script type="text/javascript" src="/js/jquery.cross-slide.js"></script>
+    <script language="JavaScript" src="/js/slimbox2.js"></script>
+	<link href="/css/slimbox2.css" rel="stylesheet" type="text/css">
 </cfoutput>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <cfquery name="qSlideshow" datasource="#application.dsource#">
@@ -101,7 +101,7 @@ a.SeeMore:hover {
 </script>
 
 
-<link href="stylesheet_.css?x=<cfoutput>#RandRange(0,100)#</cfoutput>" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css?x=<cfoutput>#RandRange(0,100)#</cfoutput>" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -230,20 +230,20 @@ a.SeeMore:hover {
 													
 												<!--- <Cfset pc = pc + 1> --->
 												<Td valign="top" align="Center">
-												<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+												<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
 													<!--- <cfset uidd = '20338'> --->
 												<!--- <IMG SRC="http://23.20.226.157/img/#uidd#.jpg?x=randrange(1,99)"  width="100" BORDER="0" ALT="#trim(modelno)#" align="Center"> 
 												
 												 SRC="./img/thumbnails/#uid#.jpg?x=randrange(1,99)"
 												--->
 												<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg") >
-													<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
+													<IMG SRC="/img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
 												<cfelse>
 													<img src="https://as2.ftcdn.net/v2/jpg/07/95/29/45/1000_F_795294547_gaBzWLhkAYBSz1ZUIZssHhvzGzstNmHK.jpg">
 												</cfif>
 												</A>
 												<Br>
-												<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+												<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
 
 													<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
@@ -325,17 +325,25 @@ a.SeeMore:hover {
 															<!--- <span style="color: red;">
 																	Price On Request
 															</span> --->
-															<cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+															<cfif gallery_price neq 0 and gallery_price LT special_price>
+                            
 																<del>#DollarFormat(retail_price)# </del>
 																&nbsp; 
-																	<b>
-																		<span style="color: ##ff0000;">
-																		#DollarFormat(special_price)# 
-																		</span>
-																	</b>
-											
-																	<cfelse>
-																		<b> #DollarFormat(retail_price)# </b>
+																	<b> #DollarFormat(gallery_price)# </b>
+
+															<cfelse>
+																<cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+																	<del>#DollarFormat(retail_price)# </del>
+																	&nbsp; 
+																		<b>
+																			<span style="color: ##ff0000;">
+																			#DollarFormat(special_price)# 
+																			</span>
+																		</b>
+												
+																		<cfelse>
+																			<b> #DollarFormat(retail_price)# </b>
+																</cfif>
 															</cfif>
 								
 														</cfif>
@@ -459,16 +467,16 @@ a.SeeMore:hover {
 													</cfif>
 													<!--- <Cfset pc = pc + 1> --->
 													<Td valign="top" align="Center">
-													<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(name))#')">
+													<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(name))#')">
 														<!--- http://#server_name#/img/thumbnails/#uid#.jpg --->
 														<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg") >
-															<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
+															<IMG SRC="/img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
 														<cfelse>
 															<img src="https://as2.ftcdn.net/v2/jpg/07/95/29/45/1000_F_795294547_gaBzWLhkAYBSz1ZUIZssHhvzGzstNmHK.jpg">
 														</cfif>
 													</A>
 													<Br>
-													<A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(name))#')">
+													<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(name))#')">
 
 														<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
@@ -569,18 +577,26 @@ a.SeeMore:hover {
 																<cfif retail_price neq 0 and retail_price GT gallery_price >
 																	<b>#DollarFormat(retail_price)#</b>
 																 <cfelse>
-																	<cfif closeout eq 1 and special_price gt 0 and special_price LT gallery_price>
-																		<del>#DollarFormat(gallery_price)# </del>
-																		&nbsp; 
-																			<b>
-																				<span style="color: ##ff0000;">
-																				#DollarFormat(special_price)# 
-																				</span>
-																			</b>
-													
-																			<cfelse>
-																				<b>#DollarFormat(gallery_price)#</b>
-																	</cfif>
+																	<cfif gallery_price neq 0 and gallery_price LT special_price>
+                            
+                            <del>#DollarFormat(retail_price)# </del>
+                            &nbsp; 
+                                <b> #DollarFormat(gallery_price)# </b>
+
+                         <cfelse>
+                            <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+                                <del>#DollarFormat(retail_price)# </del>
+                                &nbsp; 
+                                    <b>
+                                        <span style="color: ##ff0000;">
+                                        #DollarFormat(special_price)# 
+                                        </span>
+                                    </b>
+            
+                                    <cfelse>
+                                        <b> #DollarFormat(retail_price)# </b>
+                            </cfif>
+                        </cfif>
 																</cfif>
 															</cfif>
 									
@@ -661,7 +677,7 @@ a.SeeMore:hover {
 					<div class="modal-body pt-0">
 						<div class="inner-content">
 							<div class="top-image">
-								<img src="images/G-Logowhite.png" alt="logo" />
+								<img src="/images/G-Logowhite.png" alt="logo" />
 							</div>
 							<h2>Stay in touch</h2>
 							<p>Be the first to know about Gallery Art's upcoming events, recent acquisitions and sales.</p>

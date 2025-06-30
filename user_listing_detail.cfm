@@ -40,77 +40,91 @@
             <cfset modelno = "S" & modelno_numeric_new />
         
             <cfif form.quantity lt 1>
-            <cfset tquantity = 0>
+                <cfset tquantity = 0>
             <Cfelse>
-            <cfset tquantity = form.quantity>
+                <cfset tquantity = form.quantity>
             </cfif>
             
             <cfif category is not "">
             <cfif right(category,1) neq ":">
-            <cfset category = category&":">
+                <cfset category = category&":">
             <cfelse>
-            <cfset category = category>
+                <cfset category = category>
             </cfif>
+
+            </cfif>
+            
+            <cfif isDefined("session.sellerinfo.pk_users")>
+                <cfquery name="qrytocheck" datasource="#dsource#" username="#uname#" password="#pword#">
+                    SELECT * FROM products
+                    where fk_users = #session.sellerinfo.pk_users#
+                </cfquery>            
+            </cfif>
+
+            <cfif qrytocheck.recordcount LTE 5>
+                <cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                    INSERT INTO products 
+                    (
+                        fk_users,
+                        datestamp, 
+                        modelno, 
+                        modelno_numeric,
+                        code, 
+                        name, 
+                        retail_price,
+                        gallery_price,
+                        quantity, 
+                        orderable, 
+                        path, 
+                        options, 
+                        ship_weight, 
+                        Vendor, 
+                        manufacturer, 
+                        Active, 
+                        expressair, 
+                        shipinfo, 
+                        availablity, 
+                        caption,
+                        year,
+                        size
+                    )
+                    VALUES
+                    (
+                        #session.sellerinfo.pk_users#,
+                        '#datestamp#', 
+                        '#modelno#',
+                        #modelno_numeric_new#,
+                        '#form.Vendor#-#modelno#',
+                        '#form.name#', 
+                        #form.retail_price#, 
+                        #form.gallery_price#, 
+                        #tquantity#, 
+                        #orderable#, 
+                        '#category#', 
+                        '#form.options#', 
+                        #ship_weight#,
+                        '#form.Vendor#',
+                        '#ucase(form.manufacturer)#', 
+                        '#form.active#',
+                        '#expressair#', 
+                        '#shipinfo#', 
+                        '#availablity#', 
+                        '#caption#',
+                        '#year#',
+                        '#size#'
+                    )
+                    SELECT @@identity as uid 
+                </cfquery>
+            
+                <cfset thisId = insertListing.uid />
+            <cfelse>
+
+                <cfset session.limitReached = true>
+                <cflocation url="/user_listing_detail/" addtoken="No">
             </cfif>
             
             
 
-            <cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                INSERT INTO products 
-                (
-                    fk_users,
-                    datestamp, 
-                    modelno, 
-                    modelno_numeric,
-                    code, 
-                    name, 
-                    retail_price,
-                    gallery_price,
-                    quantity, 
-                    orderable, 
-                    path, 
-                    options, 
-                    ship_weight, 
-                    Vendor, 
-                    manufacturer, 
-                    Active, 
-                    expressair, 
-                    shipinfo, 
-                    availablity, 
-                    caption,
-                    year,
-                    size
-                )
-                VALUES
-                (
-                    #session.sellerinfo.pk_users#,
-                    '#datestamp#', 
-                    '#modelno#',
-                    #modelno_numeric_new#,
-                    '#form.Vendor#-#modelno#',
-                    '#form.name#', 
-                    #form.retail_price#, 
-                    #form.gallery_price#, 
-                    #tquantity#, 
-                    #orderable#, 
-                    '#category#', 
-                    '#form.options#', 
-                    #ship_weight#,
-                    '#form.Vendor#',
-                    '#ucase(form.manufacturer)#', 
-                    '#form.active#',
-                    '#expressair#', 
-                    '#shipinfo#', 
-                    '#availablity#', 
-                    '#caption#',
-                    '#year#',
-                    '#size#'
-                )
-                SELECT @@identity as uid 
-            </cfquery>
-            
-                <cfset thisId = insertListing.uid />
-            
             </cflock>
             
             <cfif isDefined('form.fileup') and form.fileup NEQ "">

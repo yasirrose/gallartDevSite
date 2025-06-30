@@ -352,6 +352,16 @@
 								</td>
 			
 							</tr>
+							<tr>
+								<td style="font-size: 10px;">
+									<strong>Promotion:</strong>
+								</td >
+								<td style="font-size: 10px;">
+									<input type="Checkbox" name="Promotion" value="1">
+									<input type="Hidden" name="Promotion" value="">
+								</td>
+			
+							</tr>
                             <tr>
 								<td style="font-size: 10px;">
 									<strong>Number of Records:</strong>
@@ -467,7 +477,8 @@
 									<input type="Checkbox" name="displayFields" value="caption" >Description <br>
 									<input type="Checkbox" name="displayFields" value="Slideshow" >Slide Show <br>
 									<input type="Checkbox" name="displayFields" value="Frontshow" >Featured on Home Page <br>
-									<input type="Checkbox" name="displayFields" value="BottomHome" >Bottom on Home Page 
+									<input type="Checkbox" name="displayFields" value="BottomHome" >Bottom on Home Page <br>
+									<input type="Checkbox" name="displayFields" value="Promotion" >Promotion  
 									
 								</td>
 							</tr>

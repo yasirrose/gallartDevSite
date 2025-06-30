@@ -77,9 +77,9 @@ getKeywords = function(){
 		}
 
 		if (email === '') {
-			toastr.error('Email is required.');
+			<!---toastr.error('Email is required.');
 			document.getElementById('leadEmail').focus();
-			return false;
+			return false;--->
 		} else {
 			// Simple email format check using regex
 			var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

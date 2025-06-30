@@ -2,12 +2,14 @@
 <cfoutput>
 	<link REL="STYLESHEET" TYPE="text/css" HREF="/admin/css/main.css">
 	<!--- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js" type="text/javascript"></script> --->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+	<!--- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script> --->
 	
-	<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
-	<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+	<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+	
 
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -45,6 +47,9 @@
 
 		// Toggle for 'BottomHome' checkboxes
 		toggleCheckboxes('BottomHomeToggle', 'BottomHomeCheckbox');
+
+		// Toggle for 'BottomHome' checkboxes
+		toggleCheckboxes('PromotionToggle', 'PromotionCheckbox');
 	});
 
 
@@ -382,6 +387,12 @@ function artSizevalue(uid) {
 							<a href="" id="BottomHomeToggle" style="color: #ffffff;">Bottom </a>
 						</td>
 					</cfif>
+					<cfif isDefined('form.displayFields') and listFind(form.displayFields,'Promotion')>
+						<td>
+							<!---  Use Promotion --->
+							<a href="" id="PromotionToggle" style="color: #ffffff;">Promotion </a>
+						</td>
+					</cfif>
 					 <td>
 						Update Record
 					 </td>
@@ -653,6 +664,11 @@ function artSizevalue(uid) {
 					<cfif isDefined('form.displayFields') and listFind(form.displayFields,'BottomHome')>
 						<td >
 							<input type="Checkbox" name="BottomHome_#uid#" <cfif family eq 1>checked</cfif> class="BottomHomeCheckbox"> 	
+						</td>
+					</cfif>
+					<cfif isDefined('form.displayFields') and listFind(form.displayFields,'Promotion')>
+						<td >
+							<input type="Checkbox" name="Promotion_#uid#" <cfif promotion eq 1>checked</cfif> class="PromotionCheckbox"> 	
 						</td>
 					</cfif>
 					

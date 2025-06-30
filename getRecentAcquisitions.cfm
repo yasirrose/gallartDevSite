@@ -90,14 +90,14 @@
             
         <!--- <Cfset pc = pc + 1> --->
         <Td valign="top" align="Center">
-        <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+        <A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
             <!--- <cfset uidd = '20338'> --->
         <!--- <IMG SRC="http://23.20.226.157/img/#uidd#.jpg?x=randrange(1,99)"  width="100" BORDER="0" ALT="#trim(modelno)#" align="Center"> 
         
          SRC="./img/thumbnails/#uid#.jpg?x=randrange(1,99)"
         --->
         <cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")> 
-            <IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
+            <IMG SRC="/img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
         <cfelse>
             <!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
             <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
@@ -105,7 +105,7 @@
         </A>
         
         <Br>
-        <A HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" class="name-hover" >
+        <A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" class="name-hover" >
             <cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
 
@@ -146,7 +146,7 @@
         <div class="product-price">
             <cfif retail_price gt 0 and retail_price gt gallery_price>
 
-                <cfif gallery_price gt 0 and  gallery_price gt special_price>
+                <cfif gallery_price gt 0 and  gallery_price gte special_price>
 
                     <cfif closeout eq 1 and special_price gt 0 >
                         <del>#DollarFormat(gallery_price)#</del>
@@ -167,17 +167,25 @@
                     <!--- <span style="color: red;">
                             Price On Request
                     </span> --->
-                    <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+                    <cfif gallery_price neq 0 and gallery_price LT special_price>
+                        
                         <del>#DollarFormat(retail_price)# </del>
                         &nbsp; 
-                            <b>
-                                <span style="color: ##ff0000;">
-                                #DollarFormat(special_price)# 
-                                </span>
-                            </b>
-    
-                            <cfelse>
-                                <b> #DollarFormat(retail_price)# </b>
+                            <b> #DollarFormat(gallery_price)# </b>
+
+                         <cfelse>
+                            <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+                                <del>#DollarFormat(retail_price)# </del>
+                                &nbsp; 
+                                    <b>
+                                        <span style="color: ##ff0000;">
+                                        #DollarFormat(special_price)# 
+                                        </span>
+                                    </b>
+            
+                                    <cfelse>
+                                        <b> #DollarFormat(retail_price)# </b>
+                            </cfif>
                     </cfif>
 
                 </cfif>

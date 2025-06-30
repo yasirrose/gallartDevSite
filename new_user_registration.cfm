@@ -175,10 +175,10 @@
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <!--- <script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script> --->
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <style>
     .custom-radio .form-check-input:checked {
         background-color: #0d6efd;
@@ -358,9 +358,9 @@
 		<cfset session.sellerinfo.login = 1 />
 		
 		<cfif isDefined('xss')>
-			<cfset url_string = "user_listing_detail.cfm?xss="&xss />
+			<cfset url_string = "user_listing_detail" />
 		<cfelse>
-			<cfset url_string = "user_listing_detail.cfm" />
+			<cfset url_string = "user_listing_detail" />
 		</cfif>
 		
 		
@@ -400,7 +400,7 @@
 			</CFQUERY>
 		
 			<cfoutput>
-			<form method="post" action="#script_name#?xss=#xss#&processed=true&entryCount=#getPreviousEntries.recordcount#" name="errorFrm2">
+			<form method="post" action="/sell-your-art/true/#getPreviousEntries.recordcount#" name="errorFrm2">
 				<input type="Hidden" name="name">
 				<input type="Hidden" name="phone">
 				<input type="Hidden" name="email_purchase">
@@ -433,7 +433,7 @@
 			 <cfelse>
 		
 				<cfif (getPreviousEntries.recordcount + 1) GTE 5>
-					<cflocation url="#script_name#?xss=#xss#&reachedMax=true" addtoken="No">
+					<cflocation url="#script_name#?reachedMax=true" addtoken="No">
 				 <cfelse>
 					
 					<!--- <cfdump var="#cgi.content_length#">
@@ -603,7 +603,8 @@
 											/> --->
 											<br><br>
 										</cfmail>
-										<cflocation url="#script_name#?xss=#xss#&processed=true&entryCount=#getPreviousEntries.recordcount#" addtoken="No">
+										<cfset session.limitReached = true>
+										<cflocation url="/sell-your-art/true/#getPreviousEntries.recordcount#" addtoken="No">
 										<cfcatch type="Any">ERROR!!<cfabort></cfcatch>
 										
 										</cftry>
@@ -666,7 +667,7 @@
 		order by path
 	</CFQUERY>
 	<cfoutput>
-		<form method="post" action="#script_name#?xss=#xss#" name="errorFrm">
+		<form method="post" action="#script_name#" name="errorFrm">
 			<input type="Hidden" name="fname">
 			<input type="Hidden" name="lname">
 			<input type="Hidden" name="email">
@@ -709,7 +710,7 @@
 
 										<div aria-label="breadcrumb">
 											<ol class="breadcrumb">
-											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
 											  <li class="breadcrumb-item active" aria-current="page">Sell Your Art</li>
 											</ol>
 										</div>
@@ -874,7 +875,7 @@
 																	toastr.success('Your Record is added successfully.');
 																</script>
 
-																<cflocation url="overView.cfm?xss=#xss#" addtoken="No">
+																<cflocation url="overView" addtoken="No">
 															<cfelse>
 																<cfoutput>
 																	<p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
@@ -946,9 +947,9 @@
 																				<cfif structKeyExists(url,'processed')>
 																					<span style="color: #ff0000; font-size: 13px;">
 																					<cfif FORM.captchaError2>
-																						<span style="color: ##ff0000; font-weight: bold;">
+																						<!---<span style="color: ##ff0000; font-weight: bold;">
 																							PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM
-																						</span>
+																						</span>--->
 																						<br><br>
 																					<cfelse>
 																						<!--- <cfset remainingEntries = 5 - (entryCount + 1)> --->
@@ -958,28 +959,9 @@
 																						<br />
 																						<!--- <cfif remainingEntries LT 5 AND remainingEntries GT 0> --->
 
-																							<script>
-																								$(document).ready(function() {
-																										toastr.options = {
-																											'closeButton': true,
-																											'debug': false,
-																											'newestOnTop': false,
-																											'progressBar': true,
-																											'positionClass': 'toast-top-right',
-																											'preventDuplicates': false,
-																											'showDuration': '1000',
-																											'hideDuration': '1000',
-																											'timeOut': '5000',
-																											'extendedTimeOut': '1000',
-																											'showEasing': 'swing',
-																											'hideEasing': 'linear',
-																											'showMethod': 'fadeIn',
-																											'hideMethod': 'fadeOut',
-																										}
-																									});
-	
-																									toastr.success('Sent');
-																							</script>
+																							<!--- <script>
+																								toastr.success('Sent');
+																							</script> --->
 
 																							<!--- YOU MAY ENTER <cfoutput>#remainingEntries#</cfoutput> MORE ITEMS
 																						<cfelse>
@@ -991,7 +973,7 @@
 																					<br /><br />
 																				</cfif>
 																				<cfoutput>
-																				<cfform name="frm1" action="#script_name#?xss=#xss#" method="post" enctype="multipart/form-data" id="generalForm" onsubmit="return validateGeneralForm()">
+																				<cfform name="frm1" action="/sell-your-art" method="post" enctype="multipart/form-data" id="generalForm" onsubmit="return validateGeneralForm()">
 																				<input	type="hidden" name="captcha_check2"	value="#FORM.captcha_check2#" />
 																				<div class="input-form">
 																					<div class="row">
@@ -1119,12 +1101,12 @@
 																			<cfoutput>
 																				<div class="user-content"> 
 																					<h3>Create an Account</h3>
-																					<h4> Already have an account? <a href="user_login_page.cfm?xss=#xss#" style="color: ##EC008C"> <b>Log in </b></a> </h4>
+																					<h4> Already have an account? <a href="login" style="color: ##EC008C"> <b>Log in </b></a> </h4>
 
 																					<br><br>
 
 																					<cfif FORM.captchaError>
-																						<span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span><br><br>
+																						<!---	<span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span><br><br>--->
 																					</cfif>
 																					<cfif FORM.errorPhone EQ 1>
 																						<span style="color: ##ff0000; font-weight: bold;">
@@ -1132,7 +1114,7 @@
 																						</span><br><br>
 																					</cfif>
 																					<!--- onsubmit="return validateSellerForm()" --->
-																					<CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST"  id="submitSellerForm">
+																					<CFFORM ACTION="#script_name#" METHOD="POST"  id="submitSellerForm">
 																						<input type="hidden" name="submitted" value="1" />
 																						<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
 																						<div class="input-form">
@@ -1196,13 +1178,12 @@
 																							</div>
 
 																							<div class="input-button mt-3">
-																								
-																								<cfif NOT structKeyExists(session, 'sellerinfo') >
-																									<input type="Hidden" name="proc_reg">
+																								<input type="Hidden" name="proc_reg">
+																								<cfif NOT structKeyExists(session, 'sellerinfo') >																								
 																									<button type="button" class="SeeMore" onclick="validateSellerForm()">Create an account</button>
 																								<cfelse>
 																									<p>
-																										You are already logged in. If you want to add listings, please <b><a href="user_listing_detail.cfm?xss=#xss#">click here</a></b>.
+																										You are already logged in. If you want to add listings, please <b><a href="user_listing_detail">click here</a></b>.
 																									</p>
 																								</cfif>
 																								
@@ -1248,6 +1229,11 @@
 	
 
 <script>
+
+	 <cfif structKeyExists(session, "limitReached") and session.limitReached>
+         toastr.success('Sent');
+         <cfset structDelete(session, "limitReached")>
+      </cfif>
 
 		var addImageIndex = 1;
 		$("#addImageButton").click(function () {
