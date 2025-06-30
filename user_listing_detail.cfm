@@ -53,63 +53,77 @@
             </cfif>
             </cfif>
             
-            
+            <cfif isDefined("session.sellerinfo.pk_users")>
+                <cfquery name="qrytocheck" datasource="#dsource#" username="#uname#" password="#pword#">
+                    SELECT * FROM products
+                    where fk_users = #session.sellerinfo.pk_users#
+                </cfquery>            
+            </cfif>
 
-            <cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                INSERT INTO products 
-                (
-                    fk_users,
-                    datestamp, 
-                    modelno, 
-                    modelno_numeric,
-                    code, 
-                    name, 
-                    retail_price,
-                    gallery_price,
-                    quantity, 
-                    orderable, 
-                    path, 
-                    options, 
-                    ship_weight, 
-                    Vendor, 
-                    manufacturer, 
-                    Active, 
-                    expressair, 
-                    shipinfo, 
-                    availablity, 
-                    caption,
-                    year,
-                    size
-                )
-                VALUES
-                (
-                    #session.sellerinfo.pk_users#,
-                    '#datestamp#', 
-                    '#modelno#',
-                    #modelno_numeric_new#,
-                    '#form.Vendor#-#modelno#',
-                    '#form.name#', 
-                    #form.retail_price#, 
-                    #form.gallery_price#, 
-                    #tquantity#, 
-                    #orderable#, 
-                    '#category#', 
-                    '#form.options#', 
-                    #ship_weight#,
-                    '#form.Vendor#',
-                    '#ucase(form.manufacturer)#', 
-                    '#form.active#',
-                    '#expressair#', 
-                    '#shipinfo#', 
-                    '#availablity#', 
-                    '#caption#',
-                    '#year#',
-                    '#size#'
-                )
-                SELECT @@identity as uid 
-            </cfquery>
-            
+            <cfif qrytocheck.recordcount LT 5>
+                <cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                    INSERT INTO products 
+                    (
+                        fk_users,
+                        datestamp, 
+                        modelno, 
+                        modelno_numeric,
+                        code, 
+                        name, 
+                        retail_price,
+                        gallery_price,
+                        quantity, 
+                        orderable, 
+                        path, 
+                        options, 
+                        ship_weight, 
+                        Vendor, 
+                        manufacturer, 
+                        Active, 
+                        expressair, 
+                        shipinfo, 
+                        availablity, 
+                        caption,
+                        year,
+                        size
+                    )
+                    VALUES
+                    (
+                        #session.sellerinfo.pk_users#,
+                        '#datestamp#', 
+                        '#modelno#',
+                        #modelno_numeric_new#,
+                        '#form.Vendor#-#modelno#',
+                        '#form.name#', 
+                        #form.retail_price#, 
+                        #form.gallery_price#, 
+                        #tquantity#, 
+                        #orderable#, 
+                        '#category#', 
+                        '#form.options#', 
+                        #ship_weight#,
+                        '#form.Vendor#',
+                        '#ucase(form.manufacturer)#', 
+                        '#form.active#',
+                        '#expressair#', 
+                        '#shipinfo#', 
+                        '#availablity#', 
+                        '#caption#',
+                        '#year#',
+                        '#size#'
+                    )
+                    SELECT @@identity as uid 
+                </cfquery>
+                
                 <cfset thisId = insertListing.uid />
+
+            <cfelse>
+
+                <cfset session.limitReached = true>
+                <cflocation url="/user_listing_detail/" addtoken="No">
+            </cfif>
+
+            
             
             </cflock>
             
@@ -177,10 +191,11 @@
             
             </cftry>
             
-            <cflocation url="user_listing_search.cfm?xss=#xss#&process=add" addtoken="No">
+            <cflocation url="/user_listing_search/add" addtoken="No">
             
      	<cfelse>
-        	<cflocation url="user_listing_detail.cfm?xss=#xss#&error=filetoolarge" addtoken="No">
+            <cfset session.filetoolarge = true>
+        	<cflocation url="/user_listing_detail/" addtoken="No">
 		</cfif>
 		
 	
@@ -298,10 +313,11 @@
             
             </cftry>
             
-            <cflocation url="user_listing_results.cfm?xss=#xss#&process=update" addtoken="No">
+            <cflocation url="/user_listing_results/update" addtoken="No">
             
       	<cfelse>
-        	<cflocation url="user_listing_detail.cfm?xss=#xss#&id=#form.uid#&error=filetoolarge" addtoken="No">
+            <cfset session.filetoolarge = true>
+        	<cflocation url="/user_listing_detail/#form.uid#" addtoken="No">
 		</cfif>
 		
 		
@@ -323,7 +339,7 @@
 			DELETE products where uid = #form.uid#	
 		</cfquery>
 		
-		<cflocation url="user_listing_results.cfm?xss=#xss#&process=delete" addtoken="No">
+		<cflocation url="/user_listing_results/delete" addtoken="No">
 	
 	</cfif>
     
@@ -497,6 +513,7 @@ document.frm1.manufacturer.value = artistvalue;
 return true;
 }
 </script>
+
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -552,15 +569,17 @@ return true;
                                                             Please reduce your file size to <cfoutput>#fileSizeLimitKb#</cfoutput>.
                                                         </span>
                                                     </cfif>
-                                                    <cfif sellerArt.recordcount GT 5>
-                                                        <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">
-                                                            Sorry, but you are only allowed 5 free uploads.  Please contact
-                                                             <b>
-                                                                <a href="mailto:info@gallart.com" style="color: #ff0000; font-size: 13px; text-decoration:underline;">
-                                                                    Gallart.com
-                                                                </a>
-                                                            </b> in order to submit additional listings at $35 apiece.
-                                                        </span>
+                                                    <cfif sellerArt.recordcount EQ 5>
+                                                        <cfif !isDefined('url.id')>
+                                                            <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">
+                                                                Sorry, but you are only allowed 5 free uploads.  Please contact
+                                                                <b>
+                                                                    <a href="mailto:info@gallart.com" style="color: #ff0000; font-size: 13px; text-decoration:underline;">
+                                                                        Gallart.com
+                                                                    </a>
+                                                                </b> in order to submit additional listings at $35 apiece.
+                                                            </span>
+                                                        </cfif>
                                                     </cfif>
                                                     <h3>SELL YOUR ART ON GALLART.COM!</h3>
                                                 </div>
@@ -575,7 +594,7 @@ return true;
                                                 <!--- <cfdump var="#session.sellerinfo#" abort="true"> --->
                                                 <cfoutput>
 
-                                                    <form name="frm1" action="user_listing_detail.cfm?xss=#xss#" method="post" enctype="multipart/form-data" onSubmit="javascript:return validEntries(document.frm1);">
+                                                    <form name="frm1" action="/user_listing_detail" method="post" enctype="multipart/form-data" onSubmit="javascript:return validEntries(document.frm1);">
                                                         <div class="input-form">
                                                             <input type="Hidden" name="fk_users" value="#session.sellerinfo.pk_users#">
                                                             <input type="hidden" name="orderable" value="0">
@@ -710,17 +729,18 @@ return true;
                                                         </div>
                                                     </form>
 
-                                                    <form name="frmDelete" action="user_listing_detail.cfm?xss=#xss#" method="post">
-                                                        <div class="input-form">
-                                                            <input type="Hidden" name="process" value="DELETE">
-                                                            <input type="hidden" name="uid" value="#detail.uid#">
+                                                    <cfif structKeyExists(detail, "uid") and len(trim(detail.uid))>
+                                                        <form name="frmDelete" action="/user_listing_detail" method="post">
+                                                            <div class="input-form">
+                                                                <input type="Hidden" name="process" value="DELETE">
+                                                                <input type="hidden" name="uid" value="#detail.uid#">
 
-                                                            <div class="input-button flex-input-btn listing-detail-btns">
-                                                                <input type="submit" name="process" class="SeeMore" value="Delete!" onClick="javascript:return confirm('Delete -- Are You Sure?');">
+                                                                <div class="input-button flex-input-btn listing-detail-btns">
+                                                                    <input type="submit" name="process" class="SeeMore" value="Delete!" onClick="javascript:return confirm('Delete -- Are You Sure?');">
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </form>
-                                                    
+                                                        </form>
+                                                    </cfif>
                                                 </cfoutput>
                                             </div>
                                         </div>
@@ -786,6 +806,17 @@ return true;
                     }
                 });
             });
+</script>
+
+<script>
+    <cfif structKeyExists(session, "limitReached") and session.limitReached>
+        toastr.error('Sorry, You are only allowed 5 free uploads.');
+        <cfset structDelete(session, "limitReached")>
+    </cfif>
+    <cfif structKeyExists(session, "filetoolarge") and session.filetoolarge>
+        toastr.error('Image size is maximum 2MB');
+        <cfset structDelete(session, "filetoolarge")>
+    </cfif>
 </script>
 
 <style>

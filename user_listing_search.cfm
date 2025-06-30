@@ -77,7 +77,7 @@
 													</div>
 													<p>Use this form to search for your listings by TITLE, ARTIST, MEDIUM, PRICE, OR DESCRIPTION:</p>
 													<cfoutput>
-														<FORM action="user_listing_results.cfm?xss=#xss#" method="post">
+														<FORM action="/user_listing_results" method="post">
 															<div class="input-form">
 																<div class="input-field">
 																	<label><b>Title:</b></label>
@@ -108,7 +108,7 @@
 																<div class="input-button flex-input-btn">
 																	<input type="submit" value="Search" name="search" class="SeeMore">
 																	<input value="Reset" type="reset" class="SeeMore"/>
-																	<input type="Button" class="SeeMore" onClick="javascript: window.location.href='user_listing_detail.cfm?xss=#xss#'" value="Enter New Lisitng" />
+																	<input type="Button" class="SeeMore" onClick="javascript: window.location.href='/user_listing_detail'" value="Enter New Lisitng" />
 																</div>
 															</div>
 														</FORM>		

@@ -124,7 +124,7 @@ password="re3objec" to="#form.email#" from="onli16@onlinegalleryart.com" subject
 		<br><br>
 	</cfmail>
 	
-	<cflocation url="alerts.cfm?xss=#xss#" addtoken="No">
+	<cflocation url="/alerts" addtoken="No">
 	
 <cfelse>
 
@@ -149,8 +149,8 @@ password="re3objec" to="#form.email#" from="onli16@onlinegalleryart.com" subject
 
 										<div aria-label="breadcrumb">
 											<ol class="breadcrumb">
-											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-											  <li class="breadcrumb-item"><a href="alerts.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Email Alerts</a></li>
+											  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item"><a href="/alerts" style="color:black;" >Email Alerts</a></li>
 											  <li class="breadcrumb-item active" aria-current="page">Email Alert Registration</li>
 											</ol>
 										</div>
@@ -161,7 +161,7 @@ password="re3objec" to="#form.email#" from="onli16@onlinegalleryart.com" subject
 													<h3>EMAIL ALERTS ON GALLERYART.COM</h3>
 												</div>
 												<cfif isDefined('session.sellerinfo')>
-													<div align="center">You are already a member.  Please click <a href="requests_submit.cfm?xss=#xss#">HERE</a> to login and submit your request.</div>
+													<div align="center">You are already a member.  Please click <a href="/requests_submit">HERE</a> to login and submit your request.</div>
 												<cfelse>
 												<cfform method="POST" action="#script_name#?#query_string#">
 													<cfoutput>

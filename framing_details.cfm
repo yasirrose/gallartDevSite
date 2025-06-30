@@ -58,7 +58,7 @@
 					<td width="168" style="color: #ffffff; font-size: 11pt; font-weight: normal; padding-top: 135px; padding-left: 12px;" valign="top">
 						Gallery Art's professional in-house custom framing department offers only the best in custom framing.<br><br>
 Here are a few samples of our more popular framing selections.<br><br>
-These are only a few of the many thousands of framing combinations we offer.<br><br>We can work with you over the phone or email to find the best framing choice for you.<br><br>You can even view our <a href="framing.cfm?xss=<cfoutput>#xss#</cfoutput>" style="font-size: 11pt; font-weight: normal; color: #db3c76">Live Framing Camera</a> to help make your choice.<br><br>The framed artwork we offer at Gallery Art is only and always framed to museum quality standards.
+These are only a few of the many thousands of framing combinations we offer.<br><br>We can work with you over the phone or email to find the best framing choice for you.<br><br>You can even view our <a href="/framing" style="font-size: 11pt; font-weight: normal; color: #db3c76">Live Framing Camera</a> to help make your choice.<br><br>The framed artwork we offer at Gallery Art is only and always framed to museum quality standards.
 					</td>
 					<td>&nbsp;
 						

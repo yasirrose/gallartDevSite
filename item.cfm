@@ -1,3 +1,7 @@
+
+
+<cfset fullURL = ""> <!-- Declare first -->
+<!--- <cfparam name="url.slug" default=""> --->
 <cfsilent>
    <cfparam name="form.fname" default="">
    <cfparam name="form.lname" default="">
@@ -172,44 +176,51 @@
       
    </head>
    <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+      
       <!--- Add Edit or Delete this Item from the Cart --->
-      <cfif parameterexists(process)>
+      <cfif parameterexists(process) AND structKeyExists(url, "pid") AND isNumeric(url.pid)>
          <cfif process is "Add" and qty gt 0>
-         <cfset opt_name="">
-         <cfset opt_value="">
+            <cfset opt_name="">
+            <cfset opt_value="">
 
-         <cfquery name="getCartRecord" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-               SELECT * FROM cart where pid = #pid# and trackerid = '#xss#'
-         </cfquery>
-
-            <!--- <cfdump var="#getCartRecord.recordCount#" abort="true"> --->
-
-            <cfif getCartRecord.recordCount eq 0>
-               <cfquery name="addtocart" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                  Insert into cart (qty, pid, trackerid,charge,options,optionvalues)values(#qty#, '#pid#', '#xss#', #charge#,'#opt_name#','#opt_value#')
-               </cfquery>
+            <cfquery name="getCartRecord" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                  SELECT * FROM cart where pid = #url.pid# and trackerid = '#session.xss#'
+            </cfquery>
                
-            </cfif>
-            <cflocation url="checkout_new.cfm?xss=#xss#" addtoken="No">
-         
-      </cfif>
+
+               <cfif getCartRecord.recordCount eq 0>
+                  <cfquery name="addtocart" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                     Insert into cart (qty, pid, trackerid,charge,options,optionvalues)values(#qty#, '#url.pid#', '#session.xss#', #charge#,'#opt_name#','#opt_value#')
+                  </cfquery>
+                  
+               </cfif>
+               <cflocation url="checkout_new" addtoken="No">
+            
+         </cfif>
       </cfif>
 
       
       <!--- End of Add Items to Cart --->
       <!--- Gather Product Information for product(s) --->
-      <cfif not isDefined('url.pid') >
-      <cfset pid = '20338' >
-      </cfif>
+      <cfset artistSlug = url.artist> <!--- from /artist/{artist}/{slug} --->
+      <cfset productSlug = url.slug>  <!--- product slug --->
       <cfquery name="productinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
          SELECT *
          FROM products where 0=0
-         AND  uid  = '#pid#' 
+         AND  slug = <cfqueryparam value="#slug#" cfsqltype="cf_sql_varchar"> 
          <cfif NOT isDefined('url.sellerlisting')>
-         AND active = 1
+         -- AND active = 1
          </cfif> 
          And (path <> '') AND (path IS NOT NULL)
       </cfquery>
+
+       <!--- Check if product found --->
+      <cfif productInfo.recordcount EQ 1>
+         <cfset pid = productInfo.uid>
+      <cfelse>
+         <cflocation url="/404" addtoken="No">
+      </cfif>
+      <!--- <cfdump var="#productinfo#" abort="true"> --->
       <cfquery name="bio_info" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
          SELECT * from bios
          WHERE artist = '#productinfo.manufacturer#'
@@ -222,13 +233,13 @@
       <cfif productinfo.use_highestimate EQ 1>
          <cfset saleprice = productinfo.high_estimate />
       </cfif>
-      <cfif isDefined("url.pid")>
+      <cfif  structKeyExists(variables, "pid") AND pid NEQ 0>
          <cfquery name="listings" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
             SELECT top 100 *
             FROM products
-            WHERE manufacturer = '#url.artist#'
+            WHERE producturl = '#url.artist#'
             AND active = 1
-            AND uid <> #url.pid#
+            AND uid <> #pid#
          </cfquery>
       <cfelse>
          <cfquery name="listings" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -238,13 +249,13 @@
          </cfquery>
       </cfif>
 
-      <cfif isDefined("url.pid")>
+      <cfif  structKeyExists(variables, "pid") AND pid NEQ 0>
          <cfquery name="listingsForSlider" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
             SELECT top 100 *
             FROM products
-            WHERE manufacturer = '#url.artist#'
+            WHERE producturl = '#url.artist#'
             AND active = 1 
-            ORDER BY CASE WHEN uid = <cfqueryparam value="#url.pid#" cfsqltype="cf_sql_integer"> THEN 0 ELSE 1 END, uid
+            ORDER BY CASE WHEN uid = <cfqueryparam value="#pid#" cfsqltype="cf_sql_integer"> THEN 0 ELSE 1 END, uid
          </cfquery>
       <cfelse>
          <cfquery name="listingsForSlider" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -316,31 +327,38 @@
          <cfset prodlist = #ListAppend(prodlist, uid)#>
          </cfloop> --->
       <cftry>
-         <cfoutput>
-
+         
+         <cfoutput query="productinfo">
             <cfscript>
+               // Assuming 'productinfo' is already defined elsewhere
+               artist = URL.artist;
+               slug = URL.slug;
+
                // Base URL
-               baseURL = "http://23.20.226.157/item.cfm";
-               // Example 'url' struct
-               url = {
-               artist: url.artist,
-               artistname: url.artistname,
-               gallery: url.gallery,
-               pid: url.pid,
-               title: url.title
-               };
-               // Construct the query string
-               queryString = "";
-               for (key in url) {
-               queryString &= (queryString EQ "" ? "" : "&") & key & "=" & URLEncodedFormat(url[key]);
-               }
-               // Combine the base URL with the query string
-               fullURL = baseURL & "?" & queryString;
+               baseURL = "http://23.20.226.157/artist/" & artist & "/" & slug;
+
+               // // Example 'url' struct
+               // url = {
+               // artist: url.artist,
+               // // artistname: url.artistname,
+               // gallery: "GALLART",
+               // pid: "#productinfo.uid#",
+               // title: "#productinfo.name#"
+               // };
+               // // Construct the query string
+               // queryString = "";
+               // for (key in url) {
+               // queryString &= (queryString EQ "" ? "" : "&") & key & "=" & URLEncodedFormat(url[key]);
+               // }
+               // // Combine the base URL with the query string
+               // fullURL = baseURL & "?" & queryString;
+                fullURL = baseURL;
 
                whatsappURL = "https://wa.me/?text=" & URLEncodedFormat(fullURL);
 
             </cfscript>
-
+         </cfoutput>
+        <cfoutput>
             <form method="post" action="#fullURL#" name="errorFrm">
                <input type="Hidden" name="fname">
                <input type="Hidden" name="lname">
@@ -374,8 +392,8 @@
                                  <div class="container user-registrations item-page new-item-page">
                                     <div aria-label="breadcrumb">
                                        <ol class="breadcrumb">
-                                         <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-                                         <!--- <li class="breadcrumb-item"><a href="new_listings.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Recent Acquisitions</a></li> --->
+                                         <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+                              
                                          <li class="breadcrumb-item active" aria-current="page">Product Details</li>
                                        </ol>
                                      </div>
@@ -509,7 +527,7 @@
                                                          
                                                       </cfif>
                                                       <!--- <cfset capitalize = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
-                                                      <a href="/artists/#URLEncodedFormat(manufacturer)#/<cfif parameterexists(xss)>?xss=#xss#</cfif>" >
+                                                      <a href="/artists/#URLEncodedFormat(producturl)#" >
                                                          <h3 class="meta">#fullName#</h3>
                                                       </a>
                                                       <!--- <h3 class="meta">#ucase(manufacturer)#</h3> --->
@@ -918,7 +936,7 @@
                                                             </div>
                                                          </div>
 
-                                                      <cfform action="item.cfm?pid=#pid#&xss=#xss#" method="POST">
+                                                      <cfform action="/item.cfm?pid=#pid#" method="POST">
                                                             <input type="hidden" name="process" value="Add">
                                                             <cfif productinfo.closeout eq 1 and saleprice gt 0 and application.showSalePrice EQ 1>
                                                             <input type="hidden" name="charge" value="#saleprice#">
@@ -930,7 +948,7 @@
                                                          <input type="HIDDEN" name="qty" value="1">
                                                          <div class="button-group">
                                                             <button type="submit" class="cart-btn" ><b>Add to Cart</b></button>
-                                                            <a class="offer-btn" href="epricing.cfm?pid=#uid#&xss=#xss#"><b>Make An Offer</b></a>
+                                                            <a class="offer-btn" href="/epricing/#uid#"><b>Make An Offer</b></a>
                                                          </div>
                                                          
                                                          </cfif>
@@ -1119,7 +1137,7 @@
 
                                                                            <div class="input-button">
                                                                               <button type="submit" class="SeeMore">Send</button>
-                                                                              <button type="reset" class="SeeMore">Reset</button>
+                                                                              <button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
                                                                            </div>
                                                                         </div>
                                                                      </CFFORM>
@@ -1200,7 +1218,7 @@
             var addData = $("#addData").val();
 
             $.ajax({
-               url: "inquiry.cfm", // ColdFusion file handling the request
+               url: "/inquiry.cfm", // ColdFusion file handling the request
                type: "POST",
                data: {
                      ProductID: productID,
@@ -1230,7 +1248,7 @@
          function updateWishlistRecord(id) {
             console.log(id);
             $.ajax({
-               url: "inquiry.cfm",
+               url: "/inquiry.cfm",
                type: "POST",
                data: {
                   action: "getUpdatedWishlist",
@@ -1262,7 +1280,7 @@
            console.log('wishlist_pk_idddddd: ' + wishlist_pk_id)
 
            $.ajax({
-              url: "inquiry.cfm", // ColdFusion file handling the request
+              url: "/inquiry.cfm", // ColdFusion file handling the request
               type: "POST",
               data: {
                     wishlist_pk_id: wishlist_pk_id,
@@ -1418,5 +1436,17 @@
             }
          }
       </style>
+
+      <script>
+         document.getElementById("resetBtn-captcha").addEventListener("click", function() {
+            if (grecaptcha) {
+                  grecaptcha.reset(); // Reset the reCAPTCHA
+            }
+            // Also clear error messages if needed
+            document.querySelectorAll('.error-message').forEach(function(el){
+                  el.innerText = '';
+            });
+         });
+      </script>
    </body>
 </html>

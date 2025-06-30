@@ -10,6 +10,25 @@
 <cfset server_name="gallart.com">
 
 <cfset COMPANYNAME="gallart">
+
+<!--- Application routing start--->
+<!--- <cfscript>
+	writeDump("testing");
+		abort;
+    // Include the router functions
+    include "router.cfm";
+
+    // Initialize routes (only once per application start)
+    // if (!structKeyExists(application, "routes")) {
+    //     initRouter();
+    // }
+	initRouter();
+    // Process the current request
+    processRoute();
+</cfscript> --->
+
+<!--- Application routing End--->
+
 <cfset dsource="gallarttest">
 <cfset uname="admin">
 <cfset pword="GAllart2022!!"> 
@@ -84,22 +103,12 @@
 
 <cfset vendoradd = "y">
 
-<cfif NOT structKeyExists(session, "xss")>
-    <!--- Generate a unique tracking ID --->
-    <cfset session.xss = randrange(1,9999) & chr(randrange(65,90)) & randrange(1,9999)>
-    
-    <!--- Insert tracking data into database --->
-    <cfquery name="insertTrack" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-        INSERT INTO tracker(sessionid, referrer, entrypage, originIP) 
-        VALUES (
-            <cfqueryparam value="#session.xss#" cfsqltype="cf_sql_varchar">,
-            <cfqueryparam value="#cgi.http_referer#" cfsqltype="cf_sql_varchar">,
-            <cfqueryparam value="#cgi.path_info#" cfsqltype="cf_sql_varchar">,
-            <cfqueryparam value="#cgi.remote_addr#" cfsqltype="cf_sql_varchar">
-        )
-    </cfquery>
+<cfif not isDefined('xss')>
+	<cfset xss = randrange(1,9999) & chr(randrange(65,90)) & randrange(1,9999)>
+	<cfquery name="insertTrack" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+		INSERT INTO tracker(sessionid, referrer, entrypage, originIP) VALUES('#xss#', '#cgi.http_referer#', '#cgi.path_info#', '#cgi.remote_addr#')
+	</cfquery>
 </cfif>
-
 
 <cfif isDefined('url.emailLogId')>
 	<cfquery name="insertTrack" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -189,9 +198,9 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
 
 
 <cfscript>
-	application.mailserver='mail2.onlinegalleryart_.com';
-	application.mailserver_un='gallart@onlinegalleryart.com';
-	application.mailserver_pw='re3objeC!P';
+	application.mailserver='smtp.sendgrid.net';
+	application.mailserver_un='apikey';
+	application.mailserver_pw='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';
 </cfscript>
 
 

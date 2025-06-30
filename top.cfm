@@ -13,7 +13,7 @@ function helpWin(url) {
 }
 </script>
 <div id="top">
-	<div class="title"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>"><img src="/images/top_01.jpg" width="634" height="123" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
+	<div class="title"><a href="/"><img src="/images/top_01.jpg" width="634" height="123" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
     <div class="mailto">
     	<img src="/images/top_02.jpg" width="166" height="53" alt="">
     	<a href="mailto:sales@gallart.com"><img src="/images/top_03.jpg" width="166" height="70" alt="20633 Biscayne Blvd, Aventura, FL 33180, 305.932.6166" border="0"></a>

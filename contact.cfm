@@ -130,7 +130,7 @@
 	<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	   <div class="main-container registration-page">
 		  <cfoutput>
-			 <form method="post" action="#script_name#?xss=#xss#" name="errorFrm">
+			 <form method="post" action="#script_name#" name="errorFrm">
 				<input type="Hidden" name="fname">
 				<input type="Hidden" name="lname">
 				<input type="Hidden" name="name">
@@ -172,7 +172,7 @@
 
 								  <div aria-label="breadcrumb">
 									 <ol class="breadcrumb">
-										<li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+										<li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
 										<li class="breadcrumb-item active" aria-current="page">Contact Us</li>
 									 </ol>
 								  </div>
@@ -301,7 +301,7 @@
 										   </cfif>
 										 <cfelse>
 											<cfoutput>
-												<CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST" name="guestFrm" onsubmit="return validateForm()">
+												<CFFORM ACTION="/contact-us" METHOD="POST" name="guestFrm" onsubmit="return validateForm()">
 													<input type="hidden" name="submitted" value="1" />
 													<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
 													<div class="top-heading">

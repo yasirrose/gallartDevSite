@@ -1,7 +1,7 @@
 <form name="frmxss" action="" method="post">
-	<cfif parameterexists(xss)>
+	<cfif structKeyExists(session, "xss") AND len(trim(session.xss))>
 		<cfoutput>
-			<input type="hidden" name="xss" value="#xss#">
+			<input type="hidden" name="xss" value="#session.xss#">
 				<cfif parameterexists(url.cat) and not parameterexists(keywords)>
 					<input type="hidden" name="tcat" value="#url.cat#">
 				<cfelseif parameterexists(keywords)>

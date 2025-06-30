@@ -57,8 +57,8 @@
                                     <div class="user-registrations">
                                        <div aria-label="breadcrumb">
                                           <ol class="breadcrumb">
-                                             <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-                                             <li class="breadcrumb-item"><a href="searchpage.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >search</a></li>
+                                             <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+                                             <li class="breadcrumb-item"><a href="/search" style="color:black;" >search</a></li>
                                              <li class="breadcrumb-item active" aria-current="page">Database</li>
                                           </ol>
                                        </div>
@@ -85,27 +85,27 @@
                                                   
                                                    <TR class="#this_row()#">
                                                       <TD style="font-family: arial; font-size: 8pt;">
-                                                         <A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                         <A HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
                                                             #manufacturer#
                                                          </a>
                                                       </TD>
                                                       <TD style="font-family: arial; font-size: 8pt;">
-                                                         <A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                         <A HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
                                                             #replace(path,':','')#
                                                          </a>
                                                       </TD>
                                                       <TD style="font-family: arial; font-size: 8pt;">
-                                                         <A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                         <A HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
                                                             #size#
                                                          </a>
                                                       </TD>
                                                       <TD style="font-family: arial; font-size: 8pt;">
-                                                         <A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                         <A HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
                                                             #name#
                                                          </a>
                                                       </TD>
                                                       <TD style="font-family: arial; font-size: 8pt;" align="right">
-                                                         <A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                                         <A HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
                                                             #dollarformat(gallery_price)#
                                                          </a>&nbsp;&nbsp;&nbsp;
                                                       </TD>

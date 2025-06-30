@@ -27,7 +27,21 @@
 				if (form) {
 					var select = form.elements[selectName];
 					if (select) {
-						parent.location = gothere + select.options[select.selectedIndex].value;
+						let value = select.options[select.selectedIndex].value;
+
+						// Sanitize: trim, remove dangerous chars, replace slashes with hyphens, replace spaces with +
+						const cleanedValue = decodeURIComponent(value.trim())
+							.replace(/[<>"'&]/g, '') // Remove dangerous characters
+							.replace(/\//g, '-')     // Replace slashes with hyphens
+							.replace(/\s+/g, '+')    // Replace spaces with +
+							.replace(/%20/g, '%2B'); // Replace %20 with %2B
+
+						// Encode final value to make it URL-safe
+						const encodedValue = encodeURIComponent(cleanedValue);
+
+						// Build the sanitized URL and redirect
+						parent.location = gothere + encodedValue;
+
 					} else {
 						console.error("Select element '" + selectName + "' not found.");
 					}
@@ -39,6 +53,14 @@
 			// Make the function globally available
 			window.drop = drop;
 		});
+		function slugify(text) {
+			return text
+				.normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove accents (ñ → n, é → e)
+				.replace(/[^a-zA-Z0-9\s]/g, '') // remove special characters
+				.trim()
+				.toLowerCase()
+				.replace(/\s+/g, '-'); // spaces → hyphens
+		}
 	</script>
 </head>
 <body>
@@ -62,7 +84,7 @@
 				<div class="row input-form">
 						<div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-2 mb-2">
 							<div class="select-option input-field">
-								<select name="artSubject" class="chosen-select m-0" data-placeholder="Search by Subject" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Subject=', 'artSubject')">
+								<select name="artSubject" class="chosen-select m-0" data-placeholder="Search by Subject" onChange="drop('/artists/subject/', 'artSubject')">
 									<option value="">Search by Subject</option>
 									<!--- Loop through the query results to create option tags --->
 									<cfoutput query="qEmployees">
@@ -79,7 +101,7 @@
 						</cfquery>
 						<div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-2 mb-2">
 							<div class="select-option input-field">
-								<select name="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Style=', 'artStyle')">
+								<select name="artStyle" class="chosen-select m-0" data-placeholder="Search by Style" onChange="drop('/artists/style/', 'artStyle')">
 									<option value="">Search by Style</option>
 									<cfoutput query="qGetStyle">
 										<option value="#filterName#">#filterName#</option>
@@ -109,7 +131,7 @@
 						</cfquery>
 					<div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-2 mb-2">
 						<div class="select-option input-field">
-							<select name="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Size=', 'artSize')">
+							<select name="artSize" class="chosen-select m-0" data-placeholder="Search by Size" onChange="drop('/artists/size/', 'artSize')">
 								<option value="">Search by Size</option>
 								<cfoutput query="qGetSize">
 									<option value="#filterName#">#filterName#</option>
@@ -122,14 +144,14 @@
 						</div>
 					</div>
 					<cfquery name="qGetType" datasource="#application.dsource#">
-						SELECT * 
+						SELECT DISTINCT filterName 
 						FROM filterOption
 						WHERE filterType = 'Type'
 						ORDER BY filterName ASC
 					</cfquery>
 					<div class="col-lg-3 col-md-4 col-sm-6 col-12 mt-2 mb-2">
 						<div class="select-option input-field">
-							<select name="artType" class="chosen-select m-0" data-placeholder="Search by Type" onChange="drop('products.cfm?xss=<cfoutput>#xss#</cfoutput>&Type=', 'artType')">
+							<select name="artType" class="chosen-select m-0" data-placeholder="Search by Type" onChange="drop('/artists/type/', 'artType')">
 								<option value="">Search by Type</option>
 								<cfoutput query="qGetType">
 									<option value="#filterName#">#filterName#</option>
@@ -147,6 +169,34 @@
 				</div>
 		</form>
 	</div>
+	<script>
+	function dropSanitized(baseURL, selectName) {
+		const value = document.getElementsByName(selectName)[0].value;
+		if (value !== '') {
+			const sanitizedURL = baseURL + encodeURIComponent(value);
+			window.location.href = sanitizedURL;
+		}
+	}
+	// Handle page load and back/forward navigation
+	window.addEventListener('pageshow', function (event) {
+		if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+			// Clear all form fields
+			document.querySelectorAll('form').forEach(form => form.reset());
+			// Temporarily disable onchange
+			const select = document.querySelector('select[name="manufact"]');
+			const oldOnChange = select.onchange;
+			select.onchange = null;
+
+			// Reset Select2
+			$('.select2').val(null).trigger('change.select2'); // Only updates UI, doesn't trigger real onchange
+
+			// Restore onchange after short delay
+			setTimeout(() => {
+				select.onchange = oldOnChange;
+			}, 100); // Wait just enough for reset to finish
+		}
+	});
+</script>
 </body>
 </html>
 

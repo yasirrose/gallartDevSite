@@ -1,3 +1,6 @@
+<cfif NOT structKeyExists(session, 'sellerinfo') >
+	<cflocation addtoken="No" url="/login">
+</cfif>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
 <html>
@@ -180,20 +183,26 @@ table tr td img{
 	<cfquery name="getSellerRecord" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			SELECT * FROM products where fk_users = #userID#
 	</cfquery>
+	<cfset seller_email = "">
+	<cfif structKeyExists(session, "sellerinfo") AND structKeyExists(session.sellerinfo, "email")>
+		<cfset seller_email = session.sellerinfo.email>
+	</cfif>
 
-	<cfquery name="get_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		  SELECT 
-        items.product_code AS pid, 
-        items.quantity AS qty, 
-        orders.email AS email, 
-		orders.total as total_price,
-        * 
-		FROM items
-		LEFT JOIN products ON products.code = items.product_code
-		LEFT JOIN orders ON orders.orderUID = items.orderUID
-		WHERE  orders.email = '#session.sellerinfo.email#'
-				order by ID DESC
-	</cfquery>
+		<cfquery name="get_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+			SELECT 
+				items.product_code AS pid, 
+				items.quantity AS qty, 
+				orders.email AS email, 
+				orders.total AS total_price,
+				* 
+			FROM items
+			LEFT JOIN products ON products.code = items.product_code
+			LEFT JOIN orders ON orders.orderUID = items.orderUID
+			WHERE orders.email = <cfqueryparam value="#seller_email#" cfsqltype="cf_sql_varchar">
+			ORDER BY ID DESC
+		</cfquery>
+	
+
     
 	<!--- <cfdump var="#get_items#" abort="true"> --->
    
@@ -247,7 +256,12 @@ table tr td img{
 
 															<tr>
 																<td valign="center">
-																	<a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+
+																	<!--- <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+																		#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																	</a> --->
+
+																	<a HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
 																		#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
 																	</a>
 																	
@@ -280,7 +294,7 @@ table tr td img{
 																	
 																</td>
 																<td align="center" valign="middle">
-																	<form action="overView.cfm?xss=#xss#" method="post">
+																	<form action="overView" method="post">
 																		<input type="hidden" name="wishlist_pk_id" id="wishlist_pk_id" value="#wishlistData.PK_ID#">
 																		<input type="hidden" name="product_id" id="product_id" value="#wishlistData.uid#">
 																		<input type="submit" class="Seemore" value="Delete" onclick="deleteWishlist(event, this)">
@@ -305,7 +319,7 @@ table tr td img{
 											<div class="table-cart-detail mt-5">
 												<h5><strong>Sell Your Art On GALLART.COM!:</strong></h5>
 												
-													<button  type="button" class="btn btn-primary mb-2 btn-sm" style="background: #ec008c; float:right; border: 2px solid #ec008c" onClick="javascript:goxss('user_listing_detail.cfm?xss=<cfoutput>#xss#</cfoutput>')">Add New Listings</button>
+													<button  type="button" class="btn btn-primary mb-2 btn-sm" style="background: #ec008c; float:right; border: 2px solid #ec008c" onClick="javascript:goxss('user_listing_detail')">Add New Listings</button>
 													
 
 												<cfif getSellerRecord.recordCount GT 0>
@@ -336,7 +350,7 @@ table tr td img{
 																</td>
 																<td align="center" valign="middle">
 																	<cfif fileexists("http://23.20.226.157/img/thumbnails/#getSellerRecord.uid#.jpg")> 
-																		<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#getSellerRecord.uid#" align="Center">
+																		<IMG SRC="./img/#uid#.jpg?x=#randrange(1,1000)#"   width="100" BORDER="0" ALT="#getSellerRecord.uid#" align="Center">
 																		<cfelse>
 																			<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
 																			<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
@@ -344,7 +358,7 @@ table tr td img{
 																</td>
 																<td align="center" valign="middle">#dollarformat(gallery_price)#</td>
 																<td align="center" valign="middle">
-																	<input type="submit" class="Seemore" value="Update" onClick="javascript:goxss('user_listing_detail.cfm?ID=#URLEncodedFormat(getSellerRecord.UID)#')">
+																	<input type="submit" class="Seemore" value="Update" onClick="javascript:goxss('/user_listing_detail/#URLEncodedFormat(getSellerRecord.UID)#')">
 																</td>
 															</tr> 
 														</cfoutput>

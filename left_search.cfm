@@ -10,12 +10,12 @@
 				</tr>
 				<tr>
 					<td style="font-size: 8pt;">
-						<li><a href="searchpage.cfm?xss=#xss#" style="font-size: 8pt; font-weight: normal;">Search Our Listings</a></li>
+						<li><a href="/search" style="font-size: 8pt; font-weight: normal;">Search Our Listings</a></li>
 					</td>
 				</tr>
 				<tr>
 					<td style="font-size: 8pt;">
-						<li><a href="buyer_info.cfm?xss=#xss#" style="font-size: 8pt; font-weight: normal;">Review Buyer Info</a></li>
+						<li><a href="/buyer_info" style="font-size: 8pt; font-weight: normal;">Review Buyer Info</a></li>
 					</td>
 				</tr>
 				<tr>
@@ -46,17 +46,17 @@
 				</tr>
 				<tr>
 					<td>
-						<li><a href="user_registration.cfm?xss=#xss#" style="font-size: 8pt; font-weight: normal;">Register</a></li>
+						<li><a href="/user_registration" style="font-size: 8pt; font-weight: normal;">Register</a></li>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<li><a href="seller_info.cfm?xss=#xss#" style="font-size: 8pt; font-weight: normal;">Review Seller Info</a></li>
+						<li><a href="/seller_info" style="font-size: 8pt; font-weight: normal;">Review Seller Info</a></li>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<li><a href="user_listing_search.cfm?xss=#xss#" style="font-size: 8pt; font-weight: normal;">List Your Art</a></li>
+						<li><a href="/user_listing_search" style="font-size: 8pt; font-weight: normal;">List Your Art</a></li>
 					</td>
 				</tr>
 				<tr>

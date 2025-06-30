@@ -6,15 +6,15 @@
 			</div>
 			<div class="col-md-4">
 				<div class="content">
-					<a href="framing_details.cfm?xss=#xss#">
+					<a href="/framing_details">
 						<img src="images/framingclick.jpg" alt="Framing" border="0">
 					</a>
 					<ul class="ul-check">
 						<li>
-							<i class="fas fa-check"></i><a href="http://gallart.com/products.cfm?man=CELEBRITY">Click Here To See Celebrity&nbsp;Link</a>
+							<i class="fas fa-check"></i><a href="http://gallart.com/artists/CELEBRITY">Click Here To See Celebrity&nbsp;Link</a>
 						</li>
 						<li>
-							<i class="fas fa-check"></i><a href="http://gallart.com/quotes.cfm">Click Here For A Free Quote</a>
+							<i class="fas fa-check"></i><a href="http://gallart.com/quotes">Click Here For A Free Quote</a>
 						</li>
 						<li>
 							<i class="fas fa-check"></i><a href="javascript: void(0)" onclick="showVideo()">Click Here To View Video</a>

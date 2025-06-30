@@ -107,5 +107,5 @@
 </body>
 </html>
 <cfelse>
-	<cflocation addtoken="No" url="overView.cfm?xss=#xss#">
+	<cflocation addtoken="No" url="/overView">
 </cfif>

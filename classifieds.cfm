@@ -174,7 +174,7 @@
 
                                     <div aria-label="breadcrumb">
                                         <ol class="breadcrumb">
-                                          <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+                                          <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
                                           <li class="breadcrumb-item active" aria-current="page">Classifieds</li>
                                         </ol>
                                     </div>
@@ -472,7 +472,6 @@
                 const form = document.getElementById('dropdownSearchForclassifieds');
                 if (form) {
                         form.reset();
-                        // window.location.href = `sales.cfm?xss=${xssValue}`;
 
                         $('#artist').val(null).trigger('change'); 
                         

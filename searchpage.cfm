@@ -82,7 +82,7 @@
 
 										<div aria-label="breadcrumb">
 											<ol class="breadcrumb">
-											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
 											  <li class="breadcrumb-item active" aria-current="page">Search</li>
 											</ol>
 										</div>
@@ -96,17 +96,17 @@
 													<div class="col-md-6 simple-search">
 												<h4>Simple Search</h4>
 												<p>Enter a keyword into the box below, and the system will find art that has that keyword in the title, description, or Artists' name.</p>
-												<form action="products.cfm?xss=<cfoutput>#xss#</cfoutput>" method="get" id="simpleSearchForm">
+												<form id="simpleSearchForm"> 
 													<div class="input-form">
 														<div class="input-field">
-															<input type="text" name="keywords">
+															<input type="text" name="keywords" id="keywords">
 														</div>
 														<div class="input-button">
-															<input type="hidden" name="xss" value="<cfoutput>#xss#</cfoutput>">
 															<button type="submit" class="SeeMore">Search</button>
 														</div>
 													</div>
 												</form>
+
 											</div>
 											<div class="col-md-6 simple-search">
 												<h4>Search our Database</h4>
@@ -147,15 +147,43 @@
 
 	<script>
 		document.getElementById("simpleSearchForm").addEventListener("submit", function(event) {
-            // Loop through each form element and remove empty ones
-            const formElements = event.target.elements;
-            for (let i = formElements.length - 1; i >= 0; i--) {
-                const element = formElements[i];
-                if (element.type !== "submit" && element.type !== "reset" && element.name !== "xss" && element.value === "") {
-                    element.parentNode.removeChild(element); // Remove empty fields except xss
-                }
-            }
-        });
+			event.preventDefault(); // prevent normal form submission
+
+			const form = event.target;
+			const rawInput = form.querySelector('[name="keywords"]').value.trim(); // <-- get value of input field
+
+			if (rawInput !== "") {
+				const cleanedValue = encodeURIComponent(rawInput.trim())
+				.replace(/[<> &]/g, '')  // Remove <, >, and & (keep ' and ())
+                .replace(/\//g, '-')     // Replace slashes with hyphens
+                .replace(/\s+/g, '+')    // Replace spaces with +
+                .replace(/%20/g, '%2B'); // Replace %20 with %2B
+				window.location.href = "/artists/search/" + encodeURIComponent(cleanedValue);
+			} else {
+				alert("Please enter a search term.");
+			}
+		});
+	</script>
+
+    <script>
+		window.addEventListener('pageshow', function (event) {
+			if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+			    // Clear all form fields
+			    document.querySelectorAll('form').forEach(form => form.reset());
+			    // Temporarily disable onchange
+			    const select = document.querySelector('select[name="manufact"]');
+			    const oldOnChange = select.onchange;
+			    select.onchange = null;
+
+			    // Reset Select2
+			    $('.select2').val(null).trigger('change.select2'); // Only updates UI, doesn't trigger real onchange
+
+			    // Restore onchange after short delay
+			    setTimeout(() => {
+			      select.onchange = oldOnChange;
+			    }, 100); // Wait just enough for reset to finish
+			}
+		});
 	</script>
 
 </body>

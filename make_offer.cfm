@@ -177,7 +177,7 @@ function popUpWin(urlPage){
 														</font>
 													</cfmail>
 													<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY<br><br>
-														<a href="index.cfm?xss=#xss#" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">CLICK HERE</a> TO MAKE ANOTHER OFFER</span>
+														<a href="/" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">CLICK HERE</a> TO MAKE ANOTHER OFFER</span>
 													<cfelse>
 													<cfif productinfo.recordcount>
 													<div class="top-heading text-left">
@@ -279,7 +279,7 @@ function popUpWin(urlPage){
 															</cfloop>
 															</cfif>
 										
-															<input type="button" value="Click Here for Other Listings" class="SeeMore" style="margin: 15px 0 0;height: 40px;max-width: 290px;text-align: center;" onClick="location.href='index.cfm?xss=#xss#'">
+															<input type="button" value="Click Here for Other Listings" class="SeeMore" style="margin: 15px 0 0;height: 40px;max-width: 290px;text-align: center;" onClick="location.href='/'">
 															</cfoutput>
 														</div>	
 													</div>

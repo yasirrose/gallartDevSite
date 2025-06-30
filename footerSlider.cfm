@@ -17,7 +17,7 @@
                                     <div>
                                         <div class="slide-content">
 
-                                          <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                          <a HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
                                              <div class="img-sec">
                                               <!-- Dynamic image source -->
                                               <cfif fileexists("http://23.20.226.157/img/#listings.uid#.jpg")>
@@ -34,7 +34,7 @@
                                               <div class="top-content">
                                                  <!-- Dynamic product title -->
 
-                                                 <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
+                                                 <a HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')" >
                                                    <h3 class="title">#name#</h3>
                                                  </a>
 
@@ -92,7 +92,7 @@
                                               </div>
                                               <!-- Dynamic meta information -->
 
-                                              <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
+                                              <a HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')" >
 
                                                 <cfset nameParts = listToArray(listings.manufacturer, ",")>
                                                 <cfif  arrayLen(nameParts) EQ 2 >
@@ -153,7 +153,7 @@
             
 
             $.ajax({
-               url: "inquiry.cfm", // ColdFusion file handling the request
+               url: "/inquiry.cfm", // ColdFusion file handling the request
                type: "POST",
                data: {
                      ProductID: productID,
@@ -188,7 +188,7 @@
 
          function updateWishlist(id) {
             $.ajax({
-               url: "inquiry.cfm",
+               url: "/inquiry.cfm",
                type: "POST",
                data: {
                   action: "getUpdatedWishlist",
@@ -220,7 +220,7 @@
             console.log('wishlist_pk_id: ' + wishlist_pk_id)
 
             $.ajax({
-               url: "inquiry.cfm", // ColdFusion file handling the request
+               url: "/inquiry.cfm", // ColdFusion file handling the request
                type: "POST",
                data: {
                      wishlist_pk_id: wishlist_pk_id,

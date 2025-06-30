@@ -186,8 +186,8 @@
 
 										<div aria-label="breadcrumb">
 											<ol class="breadcrumb">
-											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-											  <li class="breadcrumb-item"><a href="user_login_page.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Seller Login</a></li>
+											  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item"><a href="/login" style="color:black;" >Seller Login</a></li>
 											  <li class="breadcrumb-item active" aria-current="page">Forget Password</li>
 											</ol>
 										</div>
@@ -320,7 +320,7 @@
 
 			
         const formData = new FormData();
-		formData.append('g-recaptcha-response', recaptchaResponse);
+		formData.append('g-recaptcha-response', grecaptcha.getResponse());
         formData.append('email', document.getElementById('email').value);
         formData.append('proc_pw', true); // Pass this to detect the form submission on the backend
 
@@ -330,9 +330,12 @@
         })
             .then((response) => response.text())
             .then((data) => {
-				if (data.toLowerCase().includes('success')) {
+			if (data.includes('Your password has been emailed to you.')) {
                 toastr.success('Your password has been emailed to you.');
+				grecaptcha.reset();
+                $('#forgetForm')[0].reset();
             } else {
+				grecaptcha.reset();
                 toastr.error('That email address is not in our system. Please try again.');
             }
             })
@@ -367,5 +370,5 @@
 </html>
 
 <cfelse>
-	<cflocation addtoken="No" url="user_listing_detail.cfm?xss=#xss#">
+	<cflocation addtoken="No" url="/user_listing_detail">
 </cfif>

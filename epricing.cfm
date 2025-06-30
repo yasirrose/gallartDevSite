@@ -122,7 +122,7 @@
 	   <div class="main-container registration-page">
 		  <div id="Table_01">
 			 <cfoutput>
-				<form method="post" action="#script_name#?xss=#xss#" name="errorFrm">
+				<form method="post" action="#script_name#" name="errorFrm">
 				   <input type="Hidden" name="fname">
 				   <input type="Hidden" name="lname">
 				   <input type="Hidden" name="name">
@@ -352,7 +352,7 @@
 													<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">
 															THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY
 															<br><br>
-															<a href="index.cfm?xss=#xss#" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">
+															<a href="/" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">
 																CLICK HERE
 															</a> TO MAKE ANOTHER OFFER
 														</span>
@@ -360,14 +360,14 @@
 													</cfif>
 													<cfelse>
 													<div class="form-section flex-form-section">
-													   <cfform action="" method="post" name="frm1" onsubmit="return validateEpricingForm()">
+													   <cfform action="" method="post" name="frm1" onsubmit="return setFormActionAndValidate()">
 														<div class="row top-row">
 															<div class="col-lg-5 col-md-6 col-sm-12">
 																<div class="img-sec">
 																	<!--- <img src="images/Gallery-Art-Map-V2.jpg" alt="image"> --->
 
 																	<cfif fileexists("http://23.20.226.157/img/thumbnails/#productInfo.uid#.jpg")> 
-																		<IMG SRC="./img/#productInfo.uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(productInfo.modelno)#" align="Center">
+																		<IMG SRC="/img/#productInfo.uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(productInfo.modelno)#" align="Center">
 																		<cfelse>
 																			<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
 																			<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
@@ -378,7 +378,7 @@
 															<div class="col-lg-7 col-md-6 col-sm-12 border-left">
 																<input type="hidden" name="submitted" value="1" />
 																<input type="hidden" name="captcha_check" value="#form.captcha_check#" />
-																<input type="hidden" name="pid" value="#form.pid#" />
+																<input type="hidden" name="pid" id="pid" value="#form.pid#" />
 																<cfif FORM.captchaError EQ 1>
 																   <span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE
 																   EXACTLY AS YOU SEE THEM</span>
@@ -614,7 +614,7 @@
 																		<div class="col-md-12 mt-3">
 																			<div class="input-button">
 																				<button type="submit" class="SeeMore">Submit</button>
-																				<button type="reset" class="SeeMore">Reset</button>
+																				<button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
 																			 </div>
 																		</div>
 																  	</div>
@@ -675,6 +675,21 @@
 	   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 	   <script>
+
+		function setFormActionAndValidate() {
+			var pid = document.getElementById('pid').value.trim();
+
+			console.log('test pid: '+ pid);
+
+			// return false;
+			
+			// Set the form's action to the pretty URL
+			document.getElementById('frm1').action = '/epricing/' + pid;
+
+			// Call your existing validation function
+			return validateEpricingForm();
+		}
+
 		function validateEpricingForm() {
          let isValid = true;
          
@@ -934,6 +949,16 @@
 				}
 			}
 		 </style>
-
+		<script>
+			document.getElementById("resetBtn-captcha").addEventListener("click", function() {
+				if (grecaptcha) {
+					grecaptcha.reset(); // Reset the reCAPTCHA
+				}
+				// Also clear error messages if needed
+				document.querySelectorAll('.error-message').forEach(function(el){
+					el.innerText = '';
+				});
+			});
+		</script>
 	</body>
  </html>

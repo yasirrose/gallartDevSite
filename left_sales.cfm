@@ -17,7 +17,7 @@ order by path
 	<tr>
 		<td valign="top" style="padding-top: 20px;">
 			<table border="0" cellspacing="0" cellpadding="0" background="images/sales_search.jpg" style="background-repeat: no-repeat; background-position: top;" width="173" height="121">
-				<form action="sales.cfm?xss=#xss#" method="post">
+				<form action="/sale-items" method="post">
 				<tr>
 					<td style="padding-left: 20px; padding-top: 65px;">
 						<input type="text" name="keywords" style="font-size: 8pt; width: 132px;">

@@ -13,24 +13,18 @@
 	<cfset session.sellerinfo.lname = ValidUser.lname>
 	<cfset session.sellerinfo.email = ValidUser.email>
 	<cfset session.sellerinfo.login = 1 />
-	
-	
-	<cfif isDefined('xss')>
-		<cfset url_string = "requests_submit.cfm?xss="&xss />
-	<cfelse>
-		<cfset url_string = "requests_submit.cfm" />
-	</cfif>
+
+	<cfset url_string = "/requests_submit" />
+
 	
 	
 	<cflocation addtoken="No" url="#url_string#">
 	
 	<cfelse>
 	
-		<cfif isDefined('xss')>
-			<cfset url_string = "index.cfm?xss="&xss />
-		<cfelse>
-			<cfset url_string = "index.cfm" />
-		</cfif>
+
+		<cfset url_string = "/" />
+	
 	
 		<cfset session.sellerinfo.login = 0 />
 		<cflocation addtoken="No" url="#url_string#">

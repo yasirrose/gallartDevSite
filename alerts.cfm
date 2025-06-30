@@ -45,7 +45,7 @@
 
 </cfloop>
 
-<cflocation url="#script_name#?xss=#xss#&alertthanks=1" addtoken="No">
+<cflocation url="#script_name#?alertthanks=1" addtoken="No">
 
 </cfif>
 
@@ -125,7 +125,7 @@
 
 										<div aria-label="breadcrumb">
 											<ol class="breadcrumb">
-											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
 											  <li class="breadcrumb-item active" aria-current="page">Email Alerts</li>
 											</ol>
 										</div>
@@ -135,10 +135,10 @@
 												<div class="user-content">
 													<div class="top-heading">
 														<h3><strong>EMAIL ALERTS</strong></h3>
-														<p>Click <a href="alerts_info.cfm?xss=#xss#">HERE</a> for more information.</p>
+														<p>Click <a href="/alerts_info">HERE</a> for more information.</p>
 													</div>
 													<cfif not isDefined('session.sellerinfo.fname')>
-														<p>You must be a registered member in order to submit email alerts.  Please login below or click <a href="alerts_registration.cfm?xss=#xss#">HERE </a> to register.</p>
+														<p>You must be a registered member in order to submit email alerts.  Please login below or click <a href="/alerts_registration">HERE </a> to register.</p>
 														<p><cfif structKeyExists(session,'sellerinfo') AND session.sellerinfo.login EQ 0>
 																<span style="color: red;">Sorry, we couldn't find that username/password combination in our system.  Please try again.</span>
 															</cfif>

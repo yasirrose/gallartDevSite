@@ -138,7 +138,7 @@
 												</cfif>
 											</div>
 											<div class="user-registrations">
-												<input type="Button" class="SeeMore mb-2 me-0" onClick="javascript:goxss('user_listing_search.cfm?xss=<cfoutput>#xss#</cfoutput>')" value="New Search" style="margin: 0 auto;" />
+												<input type="Button" class="SeeMore mb-2 me-0" onClick="javascript:goxss('/user_listing_search')" value="New Search" style="margin: 0 auto;" />
 												<div class="table-responsive">
 													<cfif getProducts.recordcount>
 														<table border="0" cellpadding="2" cellspacing="0" width="800">
@@ -154,7 +154,7 @@
 															<CFOUTPUT query="getProducts">
 															<tr class="#this_row()#">
 																<td width="25">
-																	<input type="Button" style="background:url(images/view_button.gif) no-repeat; width: 86px; height: 30px; border: none; cursor: pointer;" onClick="javascript:goxss('user_listing_detail.cfm?ID=#URLEncodedFormat(UID)#')" value="" />
+																	<input type="Button" style="background:url(/images/view_button.gif) no-repeat; width: 86px; height: 30px; border: none; cursor: pointer;" onClick="javascript:goxss('/user_listing_detail/#URLEncodedFormat(UID)#')" value="" />
 																</td>
 																 <td><font face="arial, helvetica" size="1">#manufacturer#</font></td>
 																<td><font face="arial, helvetica" size="1">#cleaned_path#</font></td>

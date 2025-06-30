@@ -1,10 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <cfparam name="xss" default="">
 <html>
 <head>
-<cfoutput>
-<title>#companyname# - #titletext#</title>
-</cfoutput>
+<title><cfoutput>#companyname# - #titletext#</cfoutput></title>
 
 <cfinclude template="meta.cfm">
 
@@ -15,9 +13,10 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
 <script language="JavaScript" src="/js/utils.js"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheet_.css">
 </cfoutput>
 
-<link href="/stylesheet_.css" rel="/stylesheet" type="text/css">
+
 
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
@@ -49,7 +48,7 @@
 
 										<div aria-label="breadcrumb">
 											<ol class="breadcrumb">
-											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item"><a href="home" style="color:black;" >Home</a></li>
 											  <li class="breadcrumb-item active" aria-current="page">About</li>
 											</ol>
 										</div>

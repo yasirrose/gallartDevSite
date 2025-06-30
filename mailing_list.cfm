@@ -86,7 +86,7 @@
 	<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	   <div class="main-container registration-page">
 		  <cfoutput>
-			 <form method="post" action="#script_name#?xss=#xss#" name="errorFrm">
+			 <form method="post" action="#script_name#" name="errorFrm">
 				<input type="Hidden" name="fname">
 				<input type="Hidden" name="lname">
 				<input type="Hidden" name="email">
@@ -126,7 +126,7 @@
 							   <div class="art-work-content">
 								  <div aria-label="breadcrumb">
 									 <ol class="breadcrumb">
-										<li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+										<li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
 										<li class="breadcrumb-item active" aria-current="page">Mailing List</li>
 									 </ol>
 								  </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
 <cfquery name="GetuserInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT  * FROM tracker WHERE sessionid = '#xss#'
+	SELECT  * FROM tracker WHERE sessionid = '#session.xss#'
 </cfquery>
 <html>
 <head>

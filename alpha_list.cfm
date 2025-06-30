@@ -73,8 +73,8 @@
 
 										<div aria-label="breadcrumb">
 											<ol class="breadcrumb">
-											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-											  <li class="breadcrumb-item active" aria-current="page">Alpha Search</li>
+											  <li class="breadcrumb-item"><a href="home" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item active" aria-current="page">Home Artists</li>
 											</ol>
 										</div>
 
@@ -93,7 +93,7 @@
 																	<cfloop from="65" to="90" index="idx">
 																		<cfset currentLetter = chr(idx)>
 																		<div>
-																			<a href="/alpha_list/#currentLetter#/?xss=#xss#"
+																			<a href="/alpha_list/#currentLetter#"
 																				class="alpha <cfif currentLetter EQ url.man>active</cfif>">
 																				#currentLetter#
 																			</a>
@@ -107,7 +107,7 @@
 												</div>
 												<div class="searchalpha-listing">
 													<cfquery name="data" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-														SELECT distinct manufacturer,artist, LOWER(P.manufacturer) AS lower_manufacturer  
+														SELECT distinct manufacturer,artist,producturl, LOWER(P.manufacturer) AS lower_manufacturer  
 														FROM products P
 														LEFT OUTER JOIN highlighted_artists HL on P.manufacturer = HL.artist
 														WHERE manufacturer like '#man#%' 
@@ -127,7 +127,7 @@
 														ORDER BY lower_manufacturer
 													</cfquery>
 
-													<!--- <cfdump var="#alpha_info#" > --->
+													<!--- <cfdump var="#data#" abort="true"> --->
 
 													<cfif alpha_info.recordcount>
 														<!--- <h4><strong>Artists whose name begins with <cfoutput>#man#</cfoutput></strong>&nbsp;(Click artist's name to view art):</h4> --->
@@ -135,7 +135,7 @@
 															<ul>
 																<cfoutput query="alpha_info">
 																	<li>
-																		<a href="/artists/#URLEncodedFormat(manufacturer)#/<cfif parameterexists(xss)>?xss=#xss#</cfif>">
+																		<a href="/artists/#URLEncodedFormat(producturl)#">
 
 																			<!--- <cfset capitalize_artistName = REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
 

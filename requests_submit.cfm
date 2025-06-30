@@ -45,7 +45,7 @@ password="re3objec" to="#session.sellerinfo.email#" from="info@gallart.com" subj
 		<br><br>
 	</cfmail>
 	
-	<cflocation url="requests_thanks.cfm?xss=#xss#" addtoken="No">
+	<cflocation url="/requests_thanks" addtoken="No">
 
 </cfif>
 
@@ -115,7 +115,7 @@ password="re3objec" to="#session.sellerinfo.email#" from="info@gallart.com" subj
 										<div class="bottom-content">
 											<div aria-label="breadcrumb">
 												<ol class="breadcrumb">
-												  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+												  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
 												  <li class="breadcrumb-item active" aria-current="page">Requests Submit</li>
 												</ol>
 											</div>
@@ -124,7 +124,7 @@ password="re3objec" to="#session.sellerinfo.email#" from="info@gallart.com" subj
 													<h3>SUBMIT REQUEST FOR ART</h3>
 												</div>
 												<div class="user-content text-center">
-													<p>You must be a registered member in order to submit a request.  Please login below or click <a href="requests_registration.cfm?xss=#xss#">HERE </a> to register:<br><br></p>
+													<p>You must be a registered member in order to submit a request.  Please login below or click <a href="/requests_registration">HERE </a> to register:<br><br></p>
 													<cfif not isDefined('session.sellerinfo.fname')>
 														<tr>
 															<td style="padding-top: 10px;">

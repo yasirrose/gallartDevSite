@@ -29,7 +29,7 @@
 	<tr>
 		<td>
 			<table border="0" cellspacing="0" cellpadding="0" width="173" height="121">
-				<form action="classifieds.cfm?xss=#xss#" method="post">
+				<form action="/classifieds" method="post">
 				<tr>
 					<td style="padding-left: 20px; padding-top: 25px;">
 						<strong>Search Classifieds</strong>

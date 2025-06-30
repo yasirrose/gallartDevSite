@@ -75,8 +75,8 @@
 
 								<div aria-label="breadcrumb">
 									<ol class="breadcrumb">
-									  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-									  <li class="breadcrumb-item"><a href="alerts.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Email Alerts</a></li>
+									  <li class="breadcrumb-item"><a href="home" style="color:black;" >Home</a></li>
+									  <li class="breadcrumb-item"><a href="alerts" style="color:black;" >Email Alerts</a></li>
 									  <li class="breadcrumb-item active" aria-current="page">Email Alert Info</li>
 									</ol>
 								</div>

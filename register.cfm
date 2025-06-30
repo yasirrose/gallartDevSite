@@ -80,7 +80,7 @@
           <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
        </cfoutput>
        <cfinclude template="meta.cfm">
-       <link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+       <link href="stylesheet_.css" rel="stylesheet" type="text/css">
        <script type="text/javascript">
           var _gaq = _gaq || [];
           _gaq.push(['_setAccount', 'UA-34565365-1']);
@@ -110,7 +110,7 @@
     <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
        <div class="main-container registration-page">
           <cfoutput>
-             <form method="post" action="#script_name#?xss=#xss#" name="errorFrm">
+             <form method="post" action="#script_name#" name="errorFrm">
                 <input type="Hidden" name="fname">
                 <input type="Hidden" name="lname">
                 <input type="Hidden" name="email">
@@ -120,7 +120,7 @@
                 <input type="Hidden" name="otherphone">
                 <input type="Hidden" name="website">
                 <input type="Hidden" name="errorMsg">
-                <input type="Hidden" name="captchaError" value="0">
+                <!--- <input type="Hidden" name="captchaError" value="0"> --->
                 <input type="Hidden" name="errorPhone" value="0">
              </form>
           </cfoutput>
@@ -150,7 +150,7 @@
                                <div class="art-work-content">
                                   <div aria-label="breadcrumb">
                                      <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+                                        <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">Registration</li>
                                      </ol>
                                   </div>
@@ -158,8 +158,16 @@
                                      <div class="user-registrations quotes-page contact-page" style="max-width: 100%;">
                                         <!--- Check for a bot. --->
                                         <cfif FORM.submitted>
-                                           <!--- <cfdump var="#form#" abort="true"> --->
-                                           <cfif phoneError>
+                                          <!--- <cfdump var="#form#" > --->
+                                          <cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+                                          <cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+                                             <cfhttpparam type="formField" name="secret" value="#apikey#">
+                                             <cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+                                             <cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+                                          </cfhttp> 
+                                          <cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+                                           <!--- <cfdump var="#captchaResponse#" abort="true"> --->
+                                          <cfif phoneError>
                                               <cfoutput>
                                                  <!--- <cfdump var="testing 1" abort="true"> --->
                                                  <script language="JavaScript">
@@ -176,7 +184,7 @@
                                                     document.errorFrm.submit();
                                                  </script>
                                               </cfoutput>
-                                              <cfelseif blnIsBot>
+                                          <cfelseif captchaResponse.success NEQ 'YES'>
                                               <cfoutput>
                                                  <!--- <cfdump var="testing 2" abort="true"> --->
                                                  <script language="JavaScript">
@@ -303,7 +311,7 @@
                                                  
                                                  toastr.success('Your Record is added successfully.');
                                               </script>
-                                              <cflocation url="overView.cfm?xss=#xss#" addtoken="No">
+                                              <cflocation url="/overView" addtoken="No">
                                               <cfelse>
                                               <cfoutput>
                                                  <p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
@@ -314,7 +322,7 @@
                                         <cfoutput>
                                            <div class="user-content form-sectiom">
                                               <h3>Create an Account</h3>
-                                              <h4> Already have an account? <a href="user_login_page.cfm?xss=#xss#"> <b>Login In </b></a> </h4>
+                                              <h4> Already have an account? <a href="login"> <b>Login In </b></a> </h4>
                                               <br><br>
                                               <cfif FORM.captchaError>
                                                  <span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span><br><br>
@@ -326,7 +334,7 @@
                                               </cfif>
                                               <!--- onsubmit="return validateSellerForm()" --->
                                               <div class="form-style">
-                                                <CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST"  id="submitSellerForm">
+                                                <CFFORM ACTION="#script_name#" METHOD="POST"  id="submitSellerForm">
                                                     <input type="hidden" name="submitted" value="1" />
                                                     <input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
                                                     <div class="input-form">
@@ -374,26 +382,23 @@
                                                              </div>
                                                           </div>
                                                        </div>
-                                                       <div class="input-field">
-                                                          <cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
-                                                          <br><br>
-                                                          <FONT face="verdana,arial,helvetica" color="000000"><b>Please enter the characters in the image above:</b></FONT><br><br>
-                                                          <cfinput type="text" name="captcha" id="S_captcha">
-                                                          <span class="error-message" id="S_captchaError"></span>
-                                                       </div>
+                                                       <div class="input-field pt-3">
+                                                         <div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+                                                         <span class="error-message" id="recaptchaError"></span>
+                                                      </div>
                                                        <div class="input-button mt-3 register-btn">
                                                           <input type="Hidden" name="proc_reg">
                                                           <cfif NOT structKeyExists(session, 'sellerinfo') >
                                                           <button type="button" class="SeeMore" onclick="validateSellerForm()">Create an account</button>
                                                           <cfelse>
                                                           <p>
-                                                             You are already logged in. If you want to add listings, please <b><a href="user_listing_detail.cfm?xss=#xss#">click here</a></b>.
+                                                             You are already logged in. If you want to add listings, please <b><a href="/user_listing_detail">click here</a></b>.
                                                           </p>
                                                           </cfif>
                                                           <br>
                                                        </div>
                                                        <!--- <p style="text-align: center;">
-                                                          If you have already signed up as a seller, please <a href="user_login_page.cfm?xss=#xss#"> <b>Sign In </b></a>
+                                                          If you have already signed up as a seller, please <a href="/login"> <b>Sign In </b></a>
                                                           </p> --->
                                                     </div>
                                                  </cfform>
@@ -419,6 +424,7 @@
           </td>
        </tr>
        <cfinclude template="frmxss.cfm">
+       <script src="https://www.google.com/recaptcha/api.js" async defer></script>
        <script>
           function validateSellerForm(){
           // alert('test');
@@ -432,7 +438,7 @@
           const S_phone = document.getElementById('S_cellphone').value.trim();
           const S_password = document.getElementById('S_password').value.trim();
           const S_password2 = document.getElementById('S_password2').value.trim();
-          const S_captcha = document.getElementById('S_captcha').value.trim();
+         //  const S_captcha = document.getElementById('S_captcha').value.trim();
           
           const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
           
@@ -487,10 +493,10 @@
           }
           
           // Validate CAPTCHA
-          if (!S_captcha) {
-          document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
-          isValid = false;
-          }
+         //  if (!S_captcha) {
+         //  document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
+         //  isValid = false;
+         //  }
           
           if (isValid) {
           // Submit the form
@@ -535,5 +541,5 @@
     </body>
  </html>
 <cfelse>
-	<cflocation addtoken="No" url="overView.cfm?xss=#xss#">
+	<cflocation addtoken="No" url="/overView">
 </cfif>

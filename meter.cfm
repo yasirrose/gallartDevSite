@@ -28,7 +28,7 @@ where trackerid = '#xss#'
 </tr>
 <tr>
 	<td colspan="3" align="Center"><font size="1" face="arial">
-	<a href="view.cfm?xss=#xss#&co=y">View #cqty# items in List</font>
+	<a href="/view-cart/y">View #cqty# items in List</font>
 	</td>
 </tr>
 </table>

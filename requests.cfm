@@ -173,7 +173,7 @@
 
 									<div aria-label="breadcrumb">
 										<ol class="breadcrumb">
-										  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+										  <li class="breadcrumb-item"><a href="home" style="color:black;" >Home</a></li>
 										  <li class="breadcrumb-item active" aria-current="page">Requests</li>
 										</ol>
 									</div>
@@ -196,7 +196,7 @@
 																	<table cellspacing="0" cellpadding="0" border="0" width="100%">
 																		<tr>
 																			<td>
-																				Click <a href="requests_submit.cfm?xss=#xss#">HERE</a> to submit a request for a piece of art that you want listed on our REQUEST page.
+																				Click <a href="requests_submit.cfm">HERE</a> to submit a request for a piece of art that you want listed on our REQUEST page.
 																			</td>
 																		</tr>
 																	</table>

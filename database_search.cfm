@@ -44,7 +44,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<form name="db_search" method="post" action="database.cfm?xss=#xss#">
+<form name="db_search" method="post" action="database/">
 </cfoutput>
 <div class="row input-form">
 	<div class="col-lg-8 col-md-8 col-sm-8 col-12 mt-0 mb-2">

@@ -88,7 +88,7 @@ function validEntries(frm){
 				<font face="arial,helvetica" size="2"><b>There are no items in your cart.  Please choose item(s) to purchase before checking out.</b>
 			<cfelse>
 			<cfoutput>
-			<cfform action="review.cfm?xss=#xss#" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);">
+			<cfform action="/review" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);">
 			<table cellpadding="5" cellspacing="0" border="0" width="100%">
 				<tr>
 					<td>

@@ -30,13 +30,8 @@
             <cfset session.sellerinfo.lname = ValidUser.lname>
             <cfset session.sellerinfo.email = ValidUser.email>
             <cfset session.sellerinfo.login = 1>
-    
-            <cfif isDefined('xss')>
-                <cfset url_string = "overView.cfm?xss="&xss />
-                <cfelse>
-                <cfset url_string = "overView.cfm" />
-            </cfif>
-    
+            <cfset url_string = "overView" />
+
             <cfset result = {
                 "success": true,
                 "redirectURL": url_string
@@ -92,14 +87,14 @@
 						<button type="submit" style="margin: auto;" class="SeeMore">Sign In</button>
 					</div>
 					<div class="forget-message text-center">
-						<a href="forgot_password.cfm?xss=<cfoutput>#xss#</cfoutput>">Forget your password?</a>
+						<a href="forgot_password">Forget your password?</a>
 					</div>
 				</div>
 			</form>
 			<div>
 				<p style="line-height: 1.4;" class="text-center">Create an account with Gallery Art to track your purchases, create wish lists and sell your artwork</p>
 				<div align="center">
-					<a href="register.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color: #d9387c; font-size: 14px; font-weight: bold;">Create an Account</a>
+					<a href="register" style="color: #d9387c; font-size: 14px; font-weight: bold;">Create an Account</a>
 				</div>
 			</div>
 		</div>

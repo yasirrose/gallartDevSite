@@ -68,10 +68,9 @@
          <cfset session.sellerinfo.lname = ValidUser.lname>
          <cfset session.sellerinfo.email = ValidUser.email>
          <cfset session.sellerinfo.login = 1 />
-         <cfif isDefined('xss')>
-         <cfset url_string = "user_listing_detail.cfm?xss="&xss />
-         <cfelse>
-         <cfset url_string = "user_listing_detail.cfm" />
+        
+         <cfset url_string = "/user_listing_detail" />
+         
       </cfif>
       <cflocation addtoken="No" url="#url_string#">
       <cfelse>
@@ -106,7 +105,7 @@
                               <div class="art-work-content">
                                  <!---<div aria-label="breadcrumb"> 
                                     <ol class="breadcrumb">
-                                      <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+                                      <li class="breadcrumb-item"><a href="/home" style="color:black;" >Home</a></li>
                                       <li class="breadcrumb-item active" aria-current="page">Sign In</li>
                                     </ol>
                                     </div>--->
@@ -128,7 +127,7 @@
                                                    <p>If you have already signed up as a seller, please log in here:</p>
                                                    </cfif>
                                                    <cfoutput>
-                                                      <cfform name="loginFrm" method="POST" action="#script_name#?xss=#xss#" onsubmit="return validateSignForm()">
+                                                      <cfform name="loginFrm" method="POST" action="#script_name#" onsubmit="return validateSignForm()">
                                                          <input type="Hidden" name="login">
                                                          <div class="input-form signin-form">
                                                             <div class="input-field">
@@ -142,13 +141,13 @@
                                                                <span class="error-message" id="passwordError"></span>
                                                             </div>
                                                             <div class="forget-pass">
-                                                               <a href="forgot_password.cfm?xss=#xss#">Forget your password?</a>
+                                                               <a href="/forgot_password">Forget your password?</a>
                                                             </div>
                                                             <div class="input-button">
                                                                <button type="submit" class="SeeMore">Sign In</button>
                                                             </div>
                                                             <div class="join-us">
-                                                               <span>Not a member?</span> <a href="user_registration.cfm?xss=#xss#">Join us</a>
+                                                               <span>Not a member?</span> <a href="/user_registration">Join us</a>
                                                             </div>
                                                          </div>
                                                       </cfform>

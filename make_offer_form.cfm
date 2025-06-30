@@ -169,7 +169,7 @@ password="re3objec" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.Email
 					<tr>
 						<td style="padding-top: 20px;" align="center">
 							<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY<br><br>
-<a href="index.cfm?xss=#xss#" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">CLICK HERE</a> TO MAKE ANOTHER OFFER</span>
+<a href="/" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">CLICK HERE</a> TO MAKE ANOTHER OFFER</span>
 						</td>
 					</tr>
 				</table>

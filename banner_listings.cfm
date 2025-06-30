@@ -161,9 +161,9 @@
 													<tr>
 														<td valign="top">
 															<cfif manufacturer EQ "RAE" OR manufacturer EQ "SEEN">
-																<a style="font-size: 14px;" href="/artists/#manufacturer#/<cfif parameterexists(xss)>?xss=#xss#</cfif>">#ucase(manufacturer)#</a>
+																<a style="font-size: 14px;" href="/artists/#manufacturer#/">#ucase(manufacturer)#</a>
 															<cfelse>
-																<a style="font-size: 14px;" href="products.cfm?keywords=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">#ucase(manufacturer)#</a>
+																<a style="font-size: 14px;" href="/products?keywords=#manufacturer#">#ucase(manufacturer)#</a>
 															</cfif>
 														</td>
 													</tr>

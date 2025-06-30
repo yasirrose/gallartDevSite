@@ -17,7 +17,7 @@
 	</cfif>
 
 	<!--- <cfdump var="#selectedQty#" >
-	<cfdump var="#form.SELECTED_PID#" abort="true"> --->
+	<cfdump var="#form.SELECTED_PID#" abort="true">  --->
 </cfif>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -269,8 +269,9 @@ document.addEventListener("DOMContentLoaded", function () {
 		<cfquery name="contents" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			SELECT * from cart C
 			INNER JOIN products P on C.pid = P.uid
-			WHERE trackerid='#xss#'
+			WHERE trackerid='#session.xss#'
 		</cfquery>
+
 		<cfquery name="countries" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			SELECT * from countries
 		</cfquery>
@@ -316,7 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
 														<h3>VIEW CONTENTS OF YOUR CART:</h3>
 													</div>
 													<div class="table-responsive">
-														<cfform action="checkout_new.cfm?xss=#xss#" Method="post">
+														<cfform action="checkout_new" Method="post">
 														<table border="0" cellspacing="0" cellpadding="2" align="center" style="width: 100%; margin-bottom: 20px;">
 															<tr class="row0">
 																<td width="50%" height="20" style="color: ##ffffff;"><b>Name</b></td>
@@ -427,7 +428,7 @@ document.addEventListener("DOMContentLoaded", function () {
 														}
 													</script> --->
 
-													<cfform action="review.cfm?xss=#xss#" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);" id="checkOutForm">
+													<cfform action="review" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);" id="checkOutForm">
 													<div class="required-field">
 														<span class="required">* REQUIRED FIELDS</span>
 													</div>

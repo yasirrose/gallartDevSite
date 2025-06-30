@@ -16,10 +16,10 @@ where trackerid = '#xss#'
 
 <Tr>
 	<td>
-	<a href="view.cfm?xss=#xss#&co=y">#cqty# item(s) - <b>Total:</b> #dollarformat(csum)#</a>
+	<a href="/view-cart/y">#cqty# item(s) - <b>Total:</b> #dollarformat(csum)#</a>
 	</td>
 	<td align="right">
-		<a href="view.cfm?xss=#xss#&co=y">VIEW CART</a>
+		<a href="/view-cart/y">VIEW CART</a>
 	</td>
 
 </tr>

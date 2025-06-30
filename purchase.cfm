@@ -1,4 +1,4 @@
-<cfif not parameterexists(xss)>	<cflocation url="error.cfm"> </cfif>
+<!--- <cfif not parameterexists(xss)>	<cflocation url="error.cfm"> </cfif> --->
 
 <cfparam name="ORDERUSERID" default="0">
 <cfparam name="shipcost" default="0">
@@ -11,10 +11,10 @@
 
 <!--- Get contents of cart --->
 <cfquery name="GetCartInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT  * FROM cart WHERE trackerid = '#xss#'
+	SELECT  * FROM cart WHERE trackerid = '#session.xss#'
 </cfquery>
 <cfquery name="GetuserInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT  * FROM tracker WHERE sessionid = '#xss#'
+	SELECT  * FROM tracker WHERE sessionid = '#session.xss#'
 </cfquery>
 
 <!--- Insert info into customers table if new customer remove this section if not supported --->
@@ -297,7 +297,7 @@
 						<cfqueryparam value="#LINKFROM#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#WARNING#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#PARTNER#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#xss#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#session.xss#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#batchproc#" cfsqltype="cf_sql_integer" null="#NOT LEN(TRIM(batchproc))#">,
 						<cfqueryparam value="#ORIGIN#" cfsqltype="cf_sql_varchar">
 					)
@@ -515,7 +515,7 @@
 
 <!--- Delete items from cart --->
 <cfquery name="GetCartInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-DELETE FROM cart WHERE trackerid = '#xss#'
+DELETE FROM cart WHERE trackerid = '#session.xss#'
 </cfquery>
 <!--- <cfinclude template="#processtype.processcode#.proc"> --->
 
@@ -528,7 +528,7 @@ DELETE FROM cart WHERE trackerid = '#xss#'
 	update tracker
 		set orderid = '#order_id#',
 			total = #total#
-		where sessionid = '#xss#'
+		where sessionid = '#session.xss#'
 	</cfquery>
 	<cfquery name="Info" datasource="#dsource#" username="#uname#" password="#pword#">
 	update orders
@@ -541,7 +541,7 @@ DELETE FROM cart WHERE trackerid = '#xss#'
 <cfelse> <!--- Credit card failed --->
 	<cftransaction action="ROLLBACK"><!--- Delete items from cart? --->
 	<!--- <cfquery name="GetCartInfo" datasource="#dsource#" username="#uname#" password="#pword#">
-		DELETE FROM cart WHERE trackerid = '#xss#'
+		DELETE FROM cart WHERE trackerid = '#session.xss#'
 	</cfquery> --->
 </cfif>
 </cftransaction>
@@ -582,8 +582,8 @@ Total - #dollarformat(total)#<br><BR>
 Click the Log In button in the upper right corner of your screen, enter your password, then click Orders from the top menu.
 </cfmail>
 <!--- End of confirmation email --->
-<cflocation url="thankyou.cfm?val=y&xss=#xss#">
+<cflocation url="/thankyou/y">
 <cfelse>
-<cflocation url="thankyou.cfm?val=n&xss=#xss#&errormsg=#ErrorMessage#">
+<cflocation url="/thankyou/n/#ErrorMessage#">
 </cfif>
 

@@ -230,7 +230,7 @@ a.SeeMore:hover {
 													
 												<!--- <Cfset pc = pc + 1> --->
 												<Td valign="top" align="Center">
-												<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+												<A HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
 													<!--- <cfset uidd = '20338'> --->
 												<!--- <IMG SRC="http://23.20.226.157/img/#uidd#.jpg?x=randrange(1,99)"  width="100" BORDER="0" ALT="#trim(modelno)#" align="Center"> 
 												
@@ -243,7 +243,7 @@ a.SeeMore:hover {
 												</cfif>
 												</A>
 												<Br>
-												<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+												<A HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
 
 													<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
@@ -379,7 +379,7 @@ a.SeeMore:hover {
 											</div>
 											<cfoutput>
 												<div class="see-more-sec">
-													<a href="new_listings.cfm?xss=#xss#" class="SeeMore">
+													<a href="/recent-acquisitions" class="SeeMore">
 														<span>See More</span>
 														<i class="fa fa-arrow-right" aria-hidden="true"></i>
 													</a>
@@ -459,7 +459,7 @@ a.SeeMore:hover {
 													</cfif>
 													<!--- <Cfset pc = pc + 1> --->
 													<Td valign="top" align="Center">
-													<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(name))#')">
+													<A HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
 														<!--- http://#server_name#/img/thumbnails/#uid#.jpg --->
 														<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg") >
 															<IMG SRC="/img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(modelno)#" align="Center">
@@ -468,7 +468,7 @@ a.SeeMore:hover {
 														</cfif>
 													</A>
 													<Br>
-													<A HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(trim(replace(HTMLEditFormat(manufacturer),"'",'')))#&artistname=#urlencodedformat(trim(replace(artist_name_url,"'",'')))#&gallery=GALLART&title=#urlencodedformat(trim(name))#')">
+													<A HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
 
 														<cfset romanNumerals = "I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX">
 
@@ -604,7 +604,7 @@ a.SeeMore:hover {
 											
 											<cfoutput>
 												<div class="see-more-sec">
-													<a href="sales.cfm?xss=#xss#" class="SeeMore">
+													<a href="/sale-items" class="SeeMore">
 														<span>See More</span>
 														<i class="fa fa-arrow-right" aria-hidden="true"></i>
 													</a>
@@ -675,9 +675,9 @@ a.SeeMore:hover {
 									<div class="privacy-content">
 									  <p>
 										By signing up, you agree to Gallart’s
-										<a href="pns.cfm?xss=<cfoutput>#xss#</cfoutput>">Privacy Policy</a> 
+										<a href="pns.cfm">Privacy Policy</a> 
 										and 
-										<a href="shippingpolicy.cfm?xss=<cfoutput>#xss#</cfoutput>">Terms of Use</a>
+										<a href="shippingpolicy.cfm">Terms of Use</a>
 									</p>
 									</div>
 									<div class="form-btn">
@@ -746,7 +746,7 @@ a.SeeMore:hover {
 					<cfoutput>
 						<script>
 							
-							window.location.href = 'index.cfm?xss=<cfoutput>#xss#</cfoutput>';
+							window.location.href = '/';
 						</script>
 					</cfoutput>
 				<cfelse>
@@ -754,7 +754,7 @@ a.SeeMore:hover {
 					<cfoutput>
 						<script>
 							alert('You are already subscribed.');
-							window.location.href = 'index.cfm?xss=<cfoutput>#xss#</cfoutput>';
+							window.location.href = '/';
 						</script>
 					</cfoutput>
 			</cfif>
@@ -762,7 +762,7 @@ a.SeeMore:hover {
 			<cfoutput>
 				<script>
 					alert('You cannnot add record more than 2 times');
-					// window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
+					// window.location.href = '#script_name#';
 				</script>
 			</cfoutput>
 		</cfif>
@@ -849,7 +849,7 @@ a.SeeMore:hover {
 		alert('Please enter a valid email address.');
 	  } else {
 		// Navigate to the URL if the email is valid
-		window.location.href = 'mailing_list.cfm?xss=<cfoutput>#xss#</cfoutput>';
+		window.location.href = 'mailing_list.cfm';
 	  }
 	});
   </script> --->

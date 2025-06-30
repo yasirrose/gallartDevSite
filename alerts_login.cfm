@@ -24,7 +24,7 @@
 	
 	
 	<cfif isDefined('xss')>
-		<cfset url_string = "alerts.cfm?xss="&xss />
+		<cfset url_string = "alerts.cfm />
 	<cfelse>
 		<cfset url_string = "alerts.cfm" />
 	</cfif>
@@ -35,7 +35,7 @@
 	<cfelse>
 	
 		<cfif isDefined('xss')>
-			<cfset url_string = "alerts.cfm?xss="&xss />
+			<cfset url_string = "alerts.cfm />
 		<cfelse>
 			<cfset url_string = "alerts.cfm" />
 		</cfif>
@@ -88,7 +88,7 @@
 				<div class="input-button">
 					<button type="submit" class="SeeMore">Sign In</button>
 				</div>
-				<p><a href="forgot_password.cfm?xss=#xss#">Forget your password?</a></p>
+				<p><a href="/forgot_password">Forget your password?</a></p>
 			</div>
 		</cfform>
 		

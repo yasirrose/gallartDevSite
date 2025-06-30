@@ -2,7 +2,7 @@
     // Function to execute when the page loads
     document.addEventListener("DOMContentLoaded", function() {
         // Retrieve the `pid` value from the URL
-        const pid = "<cfoutput>#url.pid#</cfoutput>"; // ColdFusion dynamically sets the value from the URL parameter
+        const pid = "<cfoutput>#pid#</cfoutput>"; // ColdFusion dynamically sets the value from the URL parameter
 
         // Check if the cookie already exists
         const existingRecentCookie = document.cookie.split('; ').find(row => row.startsWith('RecentViewlistItem='))?.split('=')[1];
@@ -45,22 +45,18 @@
 
              <cfset pidArray = []>
              <cfloop array="#wishlistData#" index="item">
-                   <cfif StructKeyExists(item, "pid")>
+                   <cfif StructKeyExists(item, "pid") AND len(item.pid) GT 0>
                       <cfset ArrayAppend(pidArray, item.pid)>
                    </cfif>
              </cfloop>
 
              <cfset pidList = ArrayToList(pidArray)>
 
-             
-
              <cfquery name="productData" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
                 SELECT *
                 FROM products
-                WHERE uid IN (#pidList#) and uid != #url.pid#
+                WHERE uid IN (#pidList#) and uid != #pid#
             </cfquery>
-
-            <!--- <cfdump var="#productData#"> --->
 
              <cfoutput query="productData" >
                 <cfif listlen(manufacturer) gt 1>
@@ -86,7 +82,7 @@
                                <cfoutput query="productData" >
                                   <div>
                                      <div class="slide-content">
-                                        <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+                                        <a HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
                                           <div class="img-sec">
                                            <!-- Dynamic image source -->
                                            <cfif fileexists("http://23.20.226.157/img/#productData.uid#.jpg")>
@@ -102,7 +98,7 @@
                                            <div class="top-content">
                                               <!-- Dynamic product title -->
 
-                                              <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
+                                              <a HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')" >
                                                 <h3 class="title">#name#</h3>
                                               </a>
                                               
@@ -154,7 +150,7 @@
                                            </div>
                                            <!-- Dynamic meta information -->
 
-                                           <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(HTMLEditFormat(manufacturer))#&artistname=#urlencodedformat(trim(artist_name_urll))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')" >
+                                           <a HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')" >
 
                                              <cfset nameParts = listToArray(productData.manufacturer, ",")>
                                              <cfif  arrayLen(nameParts) EQ 2 >
@@ -224,7 +220,7 @@
       
 
       $.ajax({
-         url: "inquiry.cfm", // ColdFusion file handling the request
+         url: "/inquiry.cfm", // ColdFusion file handling the request
          type: "POST",
          data: {
                ProductID: productID,
@@ -255,7 +251,7 @@
 
          function updatePreviousList(id) {
             $.ajax({
-               url: "inquiry.cfm",
+               url: "/inquiry.cfm",
                type: "POST",
                data: {
                   action: "getUpdatedWishlist",
@@ -288,7 +284,7 @@
            console.log('wishlist_pk_id: ' + wishlist_pk_id)
 
            $.ajax({
-              url: "inquiry.cfm", // ColdFusion file handling the request
+              url: "/inquiry.cfm", // ColdFusion file handling the request
               type: "POST",
               data: {
                     wishlist_pk_id: wishlist_pk_id,

@@ -109,7 +109,7 @@
 				</tr>
 				<tr>
 					<td style="font-size: 8pt;">
-						<li><a href="contact.cfm?xss=#xss#" style="font-size: 8pt; font-weight: normal;">Contact Gallery Art</a></li>
+						<li><a href="contactus" style="font-size: 8pt; font-weight: normal;">Contact Gallery Art</a></li>
 					</td>
 				</tr>
 			</table>

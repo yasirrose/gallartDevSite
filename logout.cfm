@@ -1,10 +1,11 @@
 <cfset temp = StructDelete(session,'sellerinfo') />	
-
-<cfif isDefined('xss')>
-	<cfset url_string = "index.cfm?xss="&xss />
-<cfelse>
-	<cfset url_string = "index.cfm" />
+<cfif isDefined("session")>
+    <cfset StructClear(session) />
+    <cfset sessionInvalidate() />
 </cfif>
+
+<cfset url_string = "/" />
+
 
 <cflocation addtoken="No" url="#url_string#">
 

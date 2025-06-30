@@ -88,7 +88,7 @@ table tr td, table tr td * {
 <!--- Show current cart contents --->
 
 <cfquery name="contents" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	select * from cart  where trackerid='#xss#'
+	select * from cart  where trackerid='#session.xss#'
 </cfquery>
 
 <cfparam name="subtotal" default="0">
@@ -376,7 +376,7 @@ table tr td, table tr td * {
 							</li>
 							
 						</ul>
-						<form method="post" action="purchase.cfm?xss=#xss#">
+						<form method="post" action="/purchase">
 							<input type="Hidden" name="shipMethod" value="#shipMethod#">
 							<input type="Hidden" name="origin" value="WEBSITE">
 							<cfloop collection="#form#" item="idx">

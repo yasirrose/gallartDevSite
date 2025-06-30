@@ -7,7 +7,7 @@
 						<td width="2%">&nbsp;</td>
 						<cfloop from="65" to="90" index="idx">
 							<td width="3.8%">
-							<a href="/alpha_list/#chr(idx)#/" class="alpha">#chr(idx)#</a>
+							<a href="/alpha_list/#chr(idx)#" class="alpha">#chr(idx)#</a>
 							</td>
 						</cfloop>
 					</tr>

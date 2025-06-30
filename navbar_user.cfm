@@ -12,16 +12,16 @@
 						<p><strong>Welcome Member: #UCASE(session.sellerinfo.fname)# #UCASE(session.sellerinfo.lname)#</strong></p>
 					</li>
 					<li class="nav-item">
-						<a href="JavaScript:void(0)" class="nav-link" onclick="javascript:goxss('index.cfm?xss=#xss#')">Home</a>
+						<a href="JavaScript:void(0)" class="nav-link" onclick="javascript:goxss('/')">Home</a>
 					</li>
 					<li class="nav-item">
-						<a href="JavaScript:void(0)" class="nav-link" onclick="javascript: window.location.href='user_listing_detail.cfm?xss=#xss#'">Enter New Listing</a>
+						<a href="JavaScript:void(0)" class="nav-link" onclick="javascript: window.location.href='/user_listing_detail'">Enter New Listing</a>
 					</li>
 					<li class="nav-item">
-						<a href="JavaScript:void(0)" class="nav-link" onclick="javascript:goxss('overView.cfm?xss=#xss#')">Account Overview</a>
+						<a href="JavaScript:void(0)" class="nav-link" onclick="javascript:goxss('/overView')">Account Overview</a>
 					</li>
 					<li class="nav-item">
-						<a href="JavaScript:void(0)" class="nav-link" onclick="window.location.href='logout.cfm<cfif parameterexists(xss)>?xss=#xss#</cfif>'">Log Out</a>
+						<a href="JavaScript:void(0)" class="nav-link" onclick="window.location.href='/logout'">Log Out</a>
 					</li>
 				</ul>
 			  </div>
@@ -31,7 +31,7 @@
 	
 	<cfelse>
 	
-	<cflocation url="user_login_page.cfm" addtoken="No">
+	<cflocation url="login" addtoken="No">
 	
 	</cfif>
 	

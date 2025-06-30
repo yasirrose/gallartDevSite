@@ -122,7 +122,7 @@ password="re3objec" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.email
 		<br><br>
 	</cfmail>
 	
-	<cflocation url="requests_submit.cfm?xss=#xss#&newmember=1" addtoken="No">
+	<cflocation url="/requests_submit?newmember=1" addtoken="No">
 	
 <cfelse>
 	<div class="main-container registration-page">
@@ -154,7 +154,7 @@ password="re3objec" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.email
 											<div class="user-registrations alert-page">
 												<div aria-label="breadcrumb">
 													<ol class="breadcrumb">
-													  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+													  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
 													  <li class="breadcrumb-item active" aria-current="page">Requests Registration</li>
 													</ol>
 												</div>

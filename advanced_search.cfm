@@ -27,7 +27,7 @@ order by path
 
 <cfoutput>
 		<div class="input-form">
-			<form action="products.cfm?xss=#xss#" method="get" id="searchForm">
+			<form id="searchForm1">
 				<div class="row">
 					<div class="col-md-4">
 						<div class="input-field">
@@ -90,7 +90,7 @@ order by path
 					<div class="col-md-12">
 						<div class="input-button">
 							<input type="hidden" name="xss" value="#xss#">
-							<button type="submit" class="SeeMore" style="margin: 0;"  >Search</button>
+							<button type="submit" class="SeeMore" style="margin: 0;"  id="SeeMore">Search</button>
 							<button type="reset" value="" class="SeeMore" style="margin: 0;">Reset</button>
 						</div>
 					</div>
@@ -99,25 +99,73 @@ order by path
 		</div>
 
 		<script>
-			 $(document).ready(function() {
-				$('.select2').select2();
-			});
-		</script>
+            $(document).ready(function () {
+                const $artist = $('##adv_artist');
+                const $medium = $('##adv_medium');
 
+                $('.select2').select2();
 
-		<script>
-			 document.getElementById("searchForm").addEventListener("submit", function(event) {
-            // Loop through each form element and remove empty ones
-            const formElements = event.target.elements;
-            for (let i = formElements.length - 1; i >= 0; i--) {
-                const element = formElements[i];
-                if (element.type !== "submit" && element.type !== "reset" && element.name !== "xss" && element.value === "") {
-                    element.parentNode.removeChild(element); // Remove empty fields except xss
-                }
-            }
-        });
-		
-		</script>
+                $('##searchForm1').on('reset', function () {
+                    setTimeout(function () {
+                        $artist.val('').trigger('change');
+                        $medium.val('').trigger('change');
+                    }, 0);
+                });
+
+                document.getElementById("searchForm1").addEventListener("submit", function (event) {
+                    event.preventDefault();
+
+                    const form = event.target;
+                    const params = [
+                        'adv_title', '',
+                        'adv_artist', '',
+                        'adv_desc_keyword', '',
+                        'adv_year', '',
+                        'adv_price_range', '',
+                        'adv_medium', ''
+                    ];
+
+                    let hasInput = false;
+                    const formData = new FormData(form);
+
+                    for (const [key, value] of formData.entries()) {
+                        if (key !== 'xss' && value.trim() !== '') {
+                            const index = params.indexOf(key);
+                            if (index !== -1) {
+                                hasInput = true;
+                                const cleanedValue = encodeURIComponent(value.trim())
+                                params[index + 1] = cleanedValue;
+                            }
+                        }
+                    }
+
+                    if (!hasInput) {
+                        alert("Please fill at least one search field.");
+                        return;
+                    }
+
+                    let url = '/artists/';
+                    for (let i = 0; i < params.length; i += 2) {
+                        if (params[i + 1] !== '') {
+                            let p1 = encodeURIComponent(params[i]).replace(/[<> &]/g, '')  // Remove <, >, and & (keep ' and ())
+                                .replace(/\//g, '-')     // Replace slashes with hyphens
+                                .replace(/\s+/g, '+')    // Replace spaces with +
+                                .replace(/%20/g, '%2B'); // Replace %20 with %2B
+                            let p2 = encodeURIComponent(params[i + 1]).replace(/[<> &]/g, '')  // Remove <, >, and & (keep ' and ())
+                                .replace(/\//g, '-')     // Replace slashes with hyphens
+                                .replace(/\s+/g, '+')    // Replace spaces with +
+                                .replace(/%20/g, '%2B'); // Replace %20 with %2B
+                            url += p1 + '/' + p2;
+;
+                        }
+                    }
+
+                    console.log(`Final URL: ${url}`);
+                    window.location.href = url;
+                });
+            });
+            </script>
+
 
 </cfoutput>
 
@@ -143,7 +191,7 @@ order by path
                 year: year
             },
             success: function(data) {
-                window.location.href = 'products.cfm?xss=' + encodeURIComponent(xss);
+                window.location.href = '/products';
 				alert('data is ok ');
             },
             error: function() {

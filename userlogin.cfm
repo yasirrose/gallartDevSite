@@ -8,28 +8,20 @@
 	
 	<cfif ValidUser.recordcount>
 	
-	<cfset session.userinfo.pk_users = ValidUser.pk_users>
-	<cfset session.userinfo.fname = ValidUser.fname>
-	<cfset session.userinfo.lname = ValidUser.lname>
-	<cfset session.userinfo.email = ValidUser.email>
-	<cfset session.userinfo.login = 1 />
-	
-	<cfif isDefined('xss')>
-		<cfset url_string = "user_listing_search.cfm?xss="&xss />
-	<cfelse>
-		<cfset url_string = "user_listing_search.cfm" />
-	</cfif>
-	
-	
-	<cflocation addtoken="No" url="#url_string#">
+		<cfset session.userinfo.pk_users = ValidUser.pk_users>
+		<cfset session.userinfo.fname = ValidUser.fname>
+		<cfset session.userinfo.lname = ValidUser.lname>
+		<cfset session.userinfo.email = ValidUser.email>
+		<cfset session.userinfo.login = 1 />
+		<cfset url_string = "/user_listing_search" />
+		
+		<cflocation addtoken="No" url="#url_string#">
 	
 	<cfelse>
 	
-		<cfif isDefined('xss')>
-			<cfset url_string = "index.cfm?xss="&xss />
-		<cfelse>
-			<cfset url_string = "index.cfm" />
-		</cfif>
+		
+		<cfset url_string = "/" />
+
 	
 		<cfset session.Userinfo.login = 0 />
 		<cflocation addtoken="No" url="#url_string#">
