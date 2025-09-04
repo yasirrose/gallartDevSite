@@ -41,6 +41,51 @@ function gridChange(thisId) {
 		document.getElementById('viewListings').innerHTML = 'NO LISTINGS IN SYSTEM';
 	}
 
+	
+	<!--- console.table(strSeller);                      --->
+
+	phone = strSeller['PHONE'];
+	cellphone = strSeller['CELLPHONE'];
+	businessphone = strSeller['BUSINESSPHONE'];
+	otherphone = strSeller['OTHERPHONE'];
+
+	if(cellphone && cellphone.trim() !== ""){
+		
+        $("#phoneNumber").val(cellphone);
+        $("#PhoneType").val("Cell Phone");
+    }
+    else if(phone && phone.trim() !== ""){
+        $("#phoneNumber").val(phone);
+        $("#PhoneType").val("Home Phone");
+    }
+    else if(businessphone && businessphone.trim() !== ""){
+        $("#phoneNumber").val(businessphone);
+        $("#PhoneType").val("Business Phone");
+    }
+    else if(otherphone && otherphone.trim() !== ""){
+        $("#phoneNumber").val(otherphone);
+        $("#PhoneType").val("OutsideUS");
+    }
+    else {
+        $("#phoneNumber").val("");
+        $("#PhoneType").val(""); // default
+    }
+
+	<!--- var td =  $("##PhoneType").val(); --->
+	var phoneType = document.getElementById('PhoneType').value
+	var formatSign = document.getElementById("formatSign");
+	
+
+	if (phoneType === "OutsideUS") {
+		formatSign.style.display = "none";
+	} else {
+		formatSign.style.display = "inline";
+	}
+
+	<!--- console.log('test data: ' + td) --->
+
+	<!--- toggleFormatSign(); --->
+
 	document.getElementById('edit').value = 'Edit';
 	document.getElementById('delete').style.display = '';
 
@@ -54,6 +99,9 @@ function doEdit(type) {
 	  var lname = document.getElementById('lname').value.trim();
 	  var email = document.getElementById('seller_email').value.trim();
 	  var password = document.getElementById('password').value.trim();
+
+	  var phone = document.getElementById('phoneNumber').value.trim();
+	  var phoneType = document.getElementById('PhoneType').value;
 
 		if (fname === '') {
 			toastr.error('First Name is required.');
@@ -95,6 +143,16 @@ function doEdit(type) {
 			}
 		}
 
+		if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
+			// Format: (123) 456-7890
+			var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+			if (!phonePattern.test(phone)) {
+				alert("Please enter phone number in format: (xxx) xxx-xxxx");
+				document.getElementById('phoneNumber').focus();
+				return false;
+			}
+		}
+
     var edit = new admin.models.users();
 
     edit.setForm("editForm");
@@ -121,7 +179,9 @@ function showNew () {
    	document.getElementById('fname').value = '';
    	document.getElementById('lname').value = '';
    	document.getElementById('seller_email').value = '';
-	document.getElementById('cellphone').value = '';
+	<!--- document.getElementById('cellphone').value = ''; --->
+	document.getElementById('phoneNumber').value = '';
+	document.getElementById('PhoneType').options[0].selected = true;
 	document.getElementById('password').value = '';
 	document.getElementById('edit').value = 'Add';
    	document.getElementById('delete').style.display = 'none';

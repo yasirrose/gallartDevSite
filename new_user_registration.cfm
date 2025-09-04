@@ -6,6 +6,7 @@
 	<cfparam name="form.email" default="">
 	<cfparam name="form.cellphone" default="">
 	<cfparam name="form.phone" default="">
+	<cfparam name="form.phoneType" default="">
 	<cfparam name="form.businessphone" default="">
 	<cfparam name="form.otherphone" default="">
 	<cfparam name="form.website" default="">
@@ -93,6 +94,7 @@
 
 	<cfparam name="form.name" default="">	
 	<cfparam name="form.phone" default="">						
+	<cfparam name="form.phoneType" default="">						
 	<cfparam name="form.email_purchase" default="">
 	<cfparam name="form.artist" default="">
 	<cfparam name="form.title" default="">
@@ -481,6 +483,7 @@
 							and form.lname NEQ '' 
 							and form.size NEQ '' >
 	
+							<!--- <cfdump var="#form#" abort="true"> --->
 	
 								<cfloop collection="#form#" item="idx">
 									<cfif left(idx,9) EQ "addImage_">
@@ -490,13 +493,20 @@
 										<cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" 
 												destination="#expandpath('.')#/purchases_consignments/images/" result="fileCheck">
 										
-										<cfif fileCheck.FileSize GT maxFileSize>
+										<cfif LCase(fileCheck.clientFileExt) NEQ "jpg">
 											<cfset fileTooLarge = true />
-											<cfset oversizedImages = listAppend(oversizedImages, fileCheck.ClientFileName) />
+											<cfset oversizedImages = listAppend(oversizedImages, fileCheck.ClientFileName & " (Invalid extension)") />
+											<cffile action="delete" file="#fileCheck.ServerDirectory#/#fileCheck.ServerFile#" />
+
+										<cfelseif fileCheck.FileSize GT maxFileSize>
+											<cfset fileTooLarge = true />
+											<cfset oversizedImages = listAppend(oversizedImages, fileCheck.ClientFileName & " (Too large)") />
 											<cffile action="delete" file="#fileCheck.ServerDirectory#/#fileCheck.ServerFile#" />
 										</cfif>
 									</cfif>
 								</cfloop>
+
+								<!--- <cfdump var="#fileCheck#" abort="true"> --->
 	
 								<cfif NOT fileTooLarge>
 									<cftry>
@@ -506,6 +516,7 @@
 											(
 												fname,
 												PHONE,
+												phoneType,
 												EMAIL,
 												lname,
 												TITLE,
@@ -517,6 +528,7 @@
 											(
 												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.fname#">,
 												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.PHONE#">,
+												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.phoneType#">,
 												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.EMAIL_PURCHASE#">,
 												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.lname#">,
 												<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.TITLE#">,
@@ -585,7 +597,15 @@
 				
 										
 									
-											<cfmail server="#application.mailserver#" username="#application.mailserver_un#" password="#application.mailserver_pw#" to="#emailsupport#" cc="#emailsupportcc#" from="#form.email_purchase#" subject="GallArt.com <> Buying & Selling Fine Art <> Purchases/Consignments Form" type="HTML">
+											<cfmail 
+												server="#application.mailserver#"
+											 	username="#application.mailserver_un#" 
+												password="#application.mailserver_pw#"
+												to="#emailsupport#" cc="#emailsupportcc#" 
+												from="#form.email_purchase#"
+												 subject="GallArt.com <> Buying & Selling Fine Art <> Purchases/Consignments Form" 
+												 type="HTML"
+												 >
 										<!--- <cfmail server="#application.mailserver#" username="#application.mailserver_un#" password="#application.mailserver_pw#" to="steverucker@gmail.com" from="#form.email_purchase#" subject="GallArt.com <> Buying & Selling Fine Art <> Purchases/Consignments Form" type="HTML"> --->
 											<font style="font-size: 10pt; font-family: Arial;">
 											<strong>#form.name#</strong> entered a new product on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
@@ -615,7 +635,7 @@
 	
 											<script>
 												var oversizedImages = "#JSStringFormat(oversizedImages)#";
-												alert("The images " + oversizedImages + " exceed 5MB and were not uploaded");
+												alert("The following images were not uploaded due to errors:\n" + oversizedImages + "\n\n(Only JPG files under 5MB are allowed)");
 											</script>
 	
 										</cfoutput>
@@ -791,6 +811,30 @@
 														
 
 														<!--- <cfdump var="testing 3" abort="true"> --->
+
+														<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "Home Phone">
+															<cfset phone = form.cellphone>
+														<cfelse>
+															<cfset phone = "">
+														</cfif>
+
+														<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "Cell Phone">
+															<cfset cellphone = form.cellphone>
+														<cfelse>
+															<cfset cellphone = "">
+														</cfif>
+
+														<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "Business Phone">
+															<cfset businessphone = form.cellphone>
+														<cfelse>
+															<cfset businessphone = "">
+														</cfif>
+
+														<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "OutsideUS">
+															<cfset otherphone = form.cellphone>
+														<cfelse>
+															<cfset otherphone = "">
+														</cfif>
 														
 														<cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq '' and form.cellphone neq '' >
 															<cflock name="insertuser" timeout="10">
@@ -802,7 +846,10 @@
 																		lname,
 																		email,
 																		password,
-																		cellphone
+																		cellphone,
+																		phone,
+																		businessphone,
+																		otherphone
 																		
 																	)
 																	values
@@ -811,7 +858,10 @@
 																		<cfqueryparam value="#form.lname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
 																		<cfqueryparam value="#form.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
 																		<cfqueryparam value="#form.password#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
-																		<cfqueryparam value="#form.cellphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+																		<cfqueryparam value="#cellphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
+																		<cfqueryparam value="#phone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
+																		<cfqueryparam value="#businessphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
+																		<cfqueryparam value="#otherphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
 																		
 																	)
 																</cfquery>
@@ -833,15 +883,28 @@
 																
 																</cflock>
 																
-																<cfmail server="#servername#" username="onli16@onlinegalleryart.com"
-															password="re3objec" to="#emailsupport#" cc="#emailsupportcc#" from="#form.email#" subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller" type="HTML">
+																<cfmail 
+																server="#servername#" 
+																username="onli16@onlinegalleryart.com"
+																password="re3objec" 
+																to="#emailsupport#" 
+																cc="#emailsupportcc#" 
+																from="#form.email#" 
+																subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller" type="HTML">
 																	<font style="font-size: 10pt; font-family: Arial;">
 																	<strong>#session.sellerinfo.fname# #session.sellerinfo.lname#</strong> registered as a new Member on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
 																	<br><br>
 																</cfmail>
 																
-																<cfmail server="#servername#" username="onli16@onlinegalleryart.com"
-															password="re3objec" to="#form.email#" from="onli16@onlinegalleryart.com" subject="Gallery Art - Welcome New Member" type="HTML">
+																<cfmail 
+																server="#servername#" 
+																username="onli16@onlinegalleryart.com"
+																password="re3objec" 
+																to="#form.email#" 
+																from="onli16@onlinegalleryart.com"
+																 subject="Gallery Art - Welcome New Member" 
+																 type="HTML"
+																 >
 																	<font style="font-size: 10pt; font-family: Arial;">
 																	Thank you, #session.sellerinfo.fname# #session.sellerinfo.lname#, for registering as a Member at www.gallart.com. <br><br>
 																	Your password is:<br>
@@ -996,17 +1059,32 @@
 																								<span class="error-message" id="G_lnameError"></span>
 																							</div>
 																						</div>
-																						<div class="col-md-6 pt-4">
+																						<div class="col-md-4 pt-4">
 																							<div class="input-field">
 																								<label><b>Email<span style="color: ##ff0000;">*</span></b></label>
 																								<cfinput type="text" name="email_purchase" id="email_purchase" value="#form.email_purchase#" size="30"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$"  >
 																								<span class="error-message" id="G_email_purchaseError"></span>
 																							</div>
 																						</div>
-																						<div class="col-md-6 pt-4">
+
+																						<div class="col-md-4 pt-4">
+																							<div class="input-field">
+																								<label><b>Phone Type <span style="color: ##ff0000;">*</span></b></label>
+																								 <select name="phoneType" id="phoneType" >
+																									<option value="Cell Phone">Cell Phone</option>
+																									<option value="Home Phone">Home Phone</option>
+																									<option value="Business Phone">Business Phone</option>
+																									<option value="OutsideUS">Outside US Phone</option>
+																								</select>
+																								<span class="error-message" id="G_phoneTypeError"></span>
+																							</div>
+																						</div>
+
+																						<div class="col-md-4 pt-4">
 																							<div class="input-field">
 																								<label><b>Phone Number <span style="color: ##ff0000;">*</span></b></label>
 																								<cfinput type="text" name="phone" id="phone" value="#form.phone#" size="30"  >
+																								<span id="formatSign">(xxx) xxx-xxxx</span>
 																								<span class="error-message" id="G_phoneError"></span>
 																							</div>
 																						</div>
@@ -1133,17 +1211,32 @@
 																										<span class="error-message" id="S_lnameError"></span>
 																									</div>
 																								</div>
-																								<div class="col-md-6">
+																								<div class="col-md-4">
 																									<div class="input-field">
 																										<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
 																										<cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
 																										<span class="error-message" id="S_EmailError"></span>
 																									</div>
 																								</div>
-																								<div class="col-md-6">
+
+																								<div class="col-md-4">
 																									<div class="input-field">
-																										<label><b>Cell Phone:<span style="color: ##ff0000;">*</span></b></label>
+																										<label><b>Phone Type <span style="color: ##ff0000;">*</span></b></label>
+																										<select name="S_phoneType" id="S_phoneType" >
+																											<option value="Cell Phone">Cell Phone</option>
+																											<option value="Home Phone">Home Phone</option>
+																											<option value="Business Phone">Business Phone</option>
+																											<option value="OutsideUS">Outside US Phone</option>
+																										</select>
+																										<span class="error-message" id="S_phoneTypeError"></span>
+																									</div>
+																								</div>
+
+																								<div class="col-md-4">
+																									<div class="input-field">
+																										<label><b>Phone Number:<span style="color: ##ff0000;">*</span></b></label>
 																										<cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#"   size="30">
+																										<span id="S_formatSign">(xxx) xxx-xxxx</span>
 																										<span class="error-message" id="S_cellphoneError"></span>
 																									</div>
 																								</div>
@@ -1317,6 +1410,7 @@
 			const lname = document.getElementById('lname').value.trim();
 			const email_purchase = document.getElementById('email_purchase').value.trim();
 			const phone = document.getElementById('phone').value.trim();
+			const phoneType = document.querySelector("[name='phoneType']").value;
 			// const title = document.getElementById('title').value.trim();
 			const size = document.getElementById('size').value.trim();
 			// const additional_details = document.getElementById('additional_details').value.trim();
@@ -1357,13 +1451,33 @@
 			}
 
 			// Validate CAPTCHA
+			// if (!phone) {
+			// 	document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
+			// 	isValid = false;
+			// }else if (phone.length < 5) {
+			// 	document.getElementById('G_phoneError').textContent = 'Please enter a complete phone number digits.';
+			// 	isValid = false;
+			// }
+
 			if (!phone) {
 				document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
 				isValid = false;
-			}else if (phone.length < 5) {
-				document.getElementById('G_phoneError').textContent = 'Please enter a complete phone number digits.';
-				isValid = false;
 			}
+
+			if (!phoneType) {
+               document.getElementById('phoneTypeError').textContent = 'Please select phone type';
+               isValid = false;
+            }
+
+			if(phoneType){
+               if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
+                  if (phone && !phoneRegex.test(phone)) {
+                     document.getElementById('G_phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+                     document.getElementById('phone').focus();
+                     isValid = false;
+                  }
+               }
+            }
 
 			// if (phone && !phoneRegex.test(phone)) {
 			// 	document.getElementById('G_phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
@@ -1416,6 +1530,7 @@
 			const S_lname = document.getElementById('S_lname').value.trim();
 			const S_email = document.getElementById('S_Email').value.trim();
 			const S_phone = document.getElementById('S_cellphone').value.trim();
+			const S_phoneType = document.querySelector("[name='S_phoneType']").value;
 			const S_password = document.getElementById('S_password').value.trim();
 			const S_password2 = document.getElementById('S_password2').value.trim();
 			// const S_captcha = document.getElementById('S_captcha').value.trim();
@@ -1458,6 +1573,22 @@
 				document.getElementById('S_cellphoneError').textContent = 'Please enter a phone number.';
 				isValid = false;
 			} 
+
+			if (!S_phoneType) {
+               document.getElementById('S_phoneTypeError').textContent = 'Please select phone type';
+               isValid = false;
+            }
+
+			if(S_phoneType){
+               if(S_phoneType === "Home Phone" || S_phoneType === "Cell Phone" || S_phoneType === "Business Phone"){
+                  if (S_phone && !phoneRegex.test(S_phone)) {
+                     document.getElementById('S_cellphoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+                     document.getElementById('S_cellphone').focus();
+                     isValid = false;
+                  }
+               }
+            }
+
 			// else if (!phoneRegex.test(S_phone)) {
 			// 	document.getElementById('S_cellphoneError').textContent = 'Please enter your phone number in the format (xxx) xxx-xxxx';
 			// 	isValid false; // Prevent form submission
@@ -1471,6 +1602,14 @@
 			if (!S_password) {
 				document.getElementById('S_passwordError').textContent = 'Please enter your password.';
 				isValid = false;
+			} else{
+				 const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+
+				if (!strongPasswordPattern.test(S_password)) {
+					document.getElementById('S_passwordError').textContent =
+						'Password must be at least 8 characters long, contain uppercase, lowercase, a number, and a special character.';
+					isValid = false;
+				}
 			}
 
 			if (!S_password2) {
@@ -1495,6 +1634,93 @@
 
 			return isValid;
 		}
+
+</script>
+
+
+<script>
+
+	document.addEventListener("DOMContentLoaded", function() {
+		const phoneInput = document.getElementById("phone");
+		const phoneType = document.getElementById("phoneType");
+		const formatSign = document.getElementById("formatSign");
+
+		function toggleFormatSign() {
+			if (phoneType.value === "OutsideUS") {
+				formatSign.style.display = "none";
+			} else {
+				formatSign.style.display = "inline";
+			}
+		}
+
+		// run on load (in case form already has value)
+		toggleFormatSign();
+
+		// run on change
+		phoneType.addEventListener("change", toggleFormatSign);
+
+		phoneInput.addEventListener("input", function(e) {
+			// If type is OutsideUS → skip formatting
+			if (phoneType.value === "OutsideUS") {
+				return;
+			}
+
+			let value = e.target.value.replace(/\D/g, ""); // only digits
+			if (value.length > 10) value = value.substring(0, 10);
+
+			// Apply formatting as user types
+			if (value.length > 6) {
+				e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+			} else if (value.length > 3) {
+				e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+			} else if (value.length > 0) {
+				e.target.value = `(${value}`;
+			} else {
+				e.target.value = "";
+			}
+		});
+	});
+
+	document.addEventListener("DOMContentLoaded", function() {
+		const phoneInput = document.getElementById("S_cellphone");
+		const phoneType = document.getElementById("S_phoneType");
+		const formatSign = document.getElementById("S_formatSign");
+
+		function toggleFormatSign() {
+			if (phoneType.value === "OutsideUS") {
+				formatSign.style.display = "none";
+			} else {
+				formatSign.style.display = "inline";
+			}
+		}
+
+		// run on load (in case form already has value)
+		toggleFormatSign();
+
+		// run on change
+		phoneType.addEventListener("change", toggleFormatSign);
+
+		phoneInput.addEventListener("input", function(e) {
+			// If type is OutsideUS → skip formatting
+			if (phoneType.value === "OutsideUS") {
+				return;
+			}
+
+			let value = e.target.value.replace(/\D/g, ""); // only digits
+			if (value.length > 10) value = value.substring(0, 10);
+
+			// Apply formatting as user types
+			if (value.length > 6) {
+				e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+			} else if (value.length > 3) {
+				e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+			} else if (value.length > 0) {
+				e.target.value = `(${value}`;
+			} else {
+				e.target.value = "";
+			}
+		});
+	});
 
 </script>
 

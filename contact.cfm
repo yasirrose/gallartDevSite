@@ -6,6 +6,7 @@
 	<cfparam name="form.comments" default="">
 	<cfparam name="form.email" default="">
 	<cfparam name="form.phone" default="">
+	<cfparam name="form.phoneType" default="">
 	<cfparam name="form.otherphone" default="">
 	<cfparam name="form.list" default="">
 	<cfparam name="form.captchaError" default="0">
@@ -33,9 +34,9 @@
 
 	   <cfset errorMsg = "" />
 
-	   <cfif len(form.phone) AND NOT isValid("regex",form.phone,"^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
-	   <cfset errorMsg = "Please enter your phone number in the format (xxx) xxx-xxxx <br/>" />
-	</cfif>
+	   <!--- <cfif len(form.phone) AND NOT isValid("regex",form.phone,"^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
+			<cfset errorMsg = "Please enter your phone number in the format (xxx) xxx-xxxx <br/>" />
+		</cfif> --->
 
 	<cfif errorMsg NEQ "">
 	   <cfset phoneError = true />
@@ -95,7 +96,7 @@
 
 	   <cfinclude template="meta.cfm">
 
-	   <link href="stylesheet_.css" rel="stylesheet" type="text/css">
+	   <link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 	   <script type="text/javascript">
 
 		  var _gaq = _gaq || [];
@@ -130,7 +131,7 @@
 	<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	   <div class="main-container registration-page">
 		  <cfoutput>
-			 <form method="post" action="#script_name#?xss=#xss#" name="errorFrm">
+			 <form method="post" action="#script_name#" name="errorFrm">
 				<input type="Hidden" name="fname">
 				<input type="Hidden" name="lname">
 				<input type="Hidden" name="name">
@@ -172,7 +173,7 @@
 
 								  <div aria-label="breadcrumb">
 									 <ol class="breadcrumb">
-										<li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+										<li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
 										<li class="breadcrumb-item active" aria-current="page">Contact Us</li>
 									 </ol>
 								  </div>
@@ -201,6 +202,7 @@
 													document.errorFrm.name.value = '#form.name#'
 													document.errorFrm.email.value = '#form.email#'
 													document.errorFrm.phone.value = '#form.phone#'
+													document.errorFrm.phone.value = '#form.phoneType#'
 													document.errorFrm.otherphone.value = '#form.otherphone#'
 													document.errorFrm.comments.value = '#form.comments#'
 													document.errorFrm.errorMsg.value = '#errorMsg#'
@@ -216,6 +218,7 @@
 													document.errorFrm.name.value = '#form.name#'
 													document.errorFrm.email.value = '#form.email#'
 													document.errorFrm.phone.value = '#form.phone#'
+													document.errorFrm.phone.value = '#form.phoneType#'
 													document.errorFrm.otherphone.value = '#form.otherphone#'
 													document.errorFrm.comments.value = '#form.comments#'
 													document.errorFrm.errorMsg.value = '#errorMsg#'
@@ -231,11 +234,36 @@
 													
 													
 													<!--- <cfdump var="#form#" abort="true"> --->
+
+													<cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
+														<cfset phone = form.phone>
+													<cfelse>
+														<cfset phone = "">
+													</cfif>
+
+													<cfif len(trim(form.phone)) AND form.phoneType EQ "Cell Phone">
+														<cfset cellphone = form.phone>
+													<cfelse>
+														<cfset cellphone = "">
+													</cfif>
+
+													<cfif len(trim(form.phone)) AND form.phoneType EQ "Business Phone">
+														<cfset businessphone = form.phone>
+													<cfelse>
+														<cfset businessphone = "">
+													</cfif>
+
+													<cfif len(trim(form.phone)) AND form.phoneType EQ "OutsideUS">
+														<cfset otherphone = form.phone>
+													<cfelse>
+														<cfset otherphone = "">
+													</cfif>
+
 													
 													<cfif form.name neq '' and form.email neq ''>
 														<cfquery name="addgLead" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-															insert into leads (name, notes, email, phone, otherphone, maillist)
-															values('#form.name#', '#form.comments#', '#form.email#', '#form.phone#', '#form.otherphone#', '#form.list#')
+															insert into leads (name, notes, email, phone,cellphone, businessphone, otherphone, maillist)
+															values('#form.name#', '#form.comments#', '#form.email#', '#phone#', '#cellphone#', '#businessphone#', '#otherphone#', '#form.list#')
 														</cfquery>
 
 													
@@ -265,8 +293,16 @@
 
 													
 											  
-															<cfmail server="#servername#" username="gallart@onlinegalleryart.com"
-																password="re3objeC!P" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.email#" subject="GallArt.com <> Buying & Selling Fine Art <> Contact Form" type="HTML">
+															<cfmail 
+																server="#servername#" 
+																username="gallart@onlinegalleryart.com"
+																password="re3objeC!P" 
+																to="#emailsupport#" 
+																cc="#emailsupportcc#"  
+																from="#form.email#" 
+																subject="GallArt.com <> Buying & Selling Fine Art <> Contact Form" 
+																type="HTML"
+																>
 																<font style="font-size: 10pt; font-family: Arial;">
 																Client Information:
 																<br><br>
@@ -301,7 +337,7 @@
 										   </cfif>
 										 <cfelse>
 											<cfoutput>
-												<CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST" name="guestFrm" onsubmit="return validateForm()">
+												<CFFORM ACTION="/contact-us" METHOD="POST" name="guestFrm" onsubmit="return validateForm()">
 													<input type="hidden" name="submitted" value="1" />
 													<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
 													<div class="top-heading">
@@ -339,7 +375,7 @@
 																</div>
 															</div> --->
 
-															<div class="col-md-4">
+															<div class="col-md-6">
 																<div class="input-field">
 																<!--- <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
 																<cfinput type="text" size=40 maxsize=50 name="name" id="name" placeholder="Enter your Name*" value="#form.name#" >
@@ -348,29 +384,35 @@
 																</div>
 															</div>
 
-															<div class="col-md-4">
+															<div class="col-md-6">
 																<div class="input-field">
-																<!--- <label><FONT color="000000"><b>E-MAIL ADDRESS &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
+																
 																<cfinput type="text" size=40 maxsize=50 name="email" placeholder="Enter your Email Address*" value="#form.email#" >
-																<!--- <span class="star">*</span> --->
+																
 																<span class="error-message" id="emailError"></span>
 																</div>
 															</div>
 
-															<div class="col-md-4">
+															<div class="col-md-6">
 																<div class="input-field">
-																<!--- <label><FONT color="000000"><b>PHONE (xxx) xxx-xxxx</b></FONT></label> --->
-																<cfinput type="text" size=40 maxsize=50 name="phone" placeholder="Enter your Phone (xxx) xxx-xxxx" value="#form.phone#" required="No" mask="(999) 999-9999">
+																	<select name="phoneType" id="phoneType" >
+																		<option value="Cell Phone">Cell Phone</option>
+																		<option value="Home Phone">Home Phone</option>
+																		<option value="Business Phone">Business Phone</option>
+																		<option value="OutsideUS">Outside US Phone</option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="col-md-6">
+																<div class="input-field">
+																
+																<cfinput type="text" size=40 maxsize=50 name="phone" placeholder="Enter your Phone Number" value="#form.phone#" >
+																<span id="formatSign">(xxx) xxx-xxxx</span>
 																<span class="error-message" id="phoneError"></span>
 																</div>
 															</div>
 
-															<!--- <div class="col-md-6">
-																<div class="input-field">
-																<!--- <label><FONT color="000000"><b>PHONE OUTSIDE THE US</b></FONT></label> --->
-																<cfinput type="text" size=40 maxsize=50 name="otherphone" placeholder="Enter your Outside Phone Number" value="#form.otherphone#" required="No" >
-																</div>
-															</div> --->
 														</div>
 														<div class="input-field">
 														<!--- <label><FONT color="000000"><b>COMMENTS</b></FONT></label> --->
@@ -430,6 +472,7 @@
 			const name = document.getElementById('name').value.trim();
 			const email = document.getElementById('email').value.trim();
 			const phone = document.getElementById('phone').value.trim();
+			const phoneType = document.querySelector("[name='phoneType']").value;
 			// const captcha = document.getElementById('captcha').value.trim();
 
 			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
@@ -470,9 +513,19 @@
 			}
 
 
-			if (phone && !phoneRegex.test(phone)) {
-				document.getElementById('phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+			if (!phone) {
+				document.getElementById('phoneError').textContent = 'Please enter a valid phone number ';
 				isValid = false;
+			}
+
+			if(phoneType){
+				if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
+					if (phone && !phoneRegex.test(phone)) {
+						document.getElementById('phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+						document.getElementById('phone').focus();
+						isValid = false;
+					}
+				}
 			}
 			
 			// Validate CAPTCHA
@@ -484,6 +537,50 @@
 			return isValid;
          }
 	   </script>
+
+	    <script>
+			document.addEventListener("DOMContentLoaded", function() {
+				const phoneInput = document.getElementById("phone");
+				const phoneType = document.getElementById("phoneType");
+				const formatSign = document.getElementById("formatSign");
+
+				function toggleFormatSign() {
+					if (phoneType.value === "OutsideUS") {
+						formatSign.style.display = "none";
+					} else {
+						formatSign.style.display = "inline";
+					}
+				}
+
+				// run on load (in case form already has value)
+				toggleFormatSign();
+
+				// run on change
+				phoneType.addEventListener("change", toggleFormatSign);
+
+				phoneInput.addEventListener("input", function(e) {
+					// If type is OutsideUS → skip formatting
+					if (phoneType.value === "OutsideUS") {
+						return;
+					}
+
+					let value = e.target.value.replace(/\D/g, ""); // only digits
+					if (value.length > 10) value = value.substring(0, 10);
+
+					// Apply formatting as user types
+					if (value.length > 6) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+					} else if (value.length > 3) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+					} else if (value.length > 0) {
+						e.target.value = `(${value}`;
+					} else {
+						e.target.value = "";
+					}
+				});
+			});
+
+		</script>
 
 		<style>
 			.error-message {

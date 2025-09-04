@@ -59,20 +59,76 @@ function getCustomer(customerId) {
 	var strCustomer = customerProxy.getCustomer(customerId);
 		document.orderForm.fname.value 		= strCustomer['FNAME'];
 		document.orderForm.lname.value 		= strCustomer['LNAME'];
-		document.orderForm.Phone.value 		= strCustomer['PHONE'];
+		// document.orderForm.Phone.value 		= strCustomer['PHONE'];
 		document.orderForm.Address1.value 	= strCustomer['ADDRESS1'];
+		document.orderForm.AddressType.value 	= strCustomer['ADDRESSTYPE'];
 		document.orderForm.City.value 		= strCustomer['CITY'];
 		document.orderForm.State.value 		= strCustomer['STATE'];
 		document.orderForm.Country.value 	= strCustomer['COUNTRY'];
 		document.orderForm.Zip.value 		= strCustomer['ZIP'];
 		document.orderForm.Email.value 		= strCustomer['EMAIL'];
-		document.orderForm.BusinessPhone.value 	= strCustomer['BUSINESSPHONE'];
-		document.orderForm.CellPhone.value 	= strCustomer['CELLPHONE'];
+		// document.orderForm.BusinessPhone.value 	= strCustomer['BUSINESSPHONE'];
+		// document.orderForm.CellPhone.value 	= strCustomer['CELLPHONE'];
 		document.orderForm.website.value 	= strCustomer['WEBSITE'];
-		document.orderForm.Fax.value 		= strCustomer['FAX'];
+		// document.orderForm.Fax.value 		= strCustomer['FAX'];
 		document.orderForm.DriversLicense.value = strCustomer['DRIVERSLICENSE'];
 		document.orderForm.Consultant.value = '';
 		document.orderForm.assignedTo.value = 0;
+
+		if (strCustomer['PHONE'] && strCustomer['PHONE'].trim() !== "") {
+			document.orderForm.PhoneNumber.value = strCustomer['PHONE'];
+			document.orderForm.PhoneType.value   = "Home Phone";   
+		} else if(strCustomer['CELLPHONE'] && strCustomer['CELLPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strCustomer['CELLPHONE'];
+			document.orderForm.PhoneType.value   = "Cell Phone";
+		} else if(strCustomer['BUSINESSPHONE'] && strCustomer['BUSINESSPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strCustomer['BUSINESSPHONE'];
+			document.orderForm.PhoneType.value   = "Business Phone";
+		} else if(strCustomer['OTHERPHONE'] && strCustomer['OTHERPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strCustomer['OTHERPHONE'];
+			document.orderForm.PhoneType.value   = "OutsideUS";
+		} else {
+			document.orderForm.PhoneNumber.value = '';
+			document.orderForm.PhoneType.value   = "Cell Phone";
+		}
+
+		 if (strCustomer['ADDRESSTYPE'] === "Outside") {
+			document.orderForm.AddressType.value = "Outside";
+
+			// Fill Outside USA fields
+			document.orderForm.Address1_Outside.value = strCustomer['ADDRESS1'] || "";
+			document.orderForm.City_Outside.value     = strCustomer['CITY'] || "";
+			document.orderForm.State_Outside.value    = strCustomer['STATE'] || "";
+			document.orderForm.Zip_Outside.value      = strCustomer['ZIP'] || "";
+			document.orderForm.Country.value          = strCustomer['COUNTRY'] || "";
+
+			// Clear USA fields
+			document.orderForm.Address1.value = "";
+			document.orderForm.City.value     = "";
+			document.orderForm.State.value    = "";
+			document.orderForm.Zip.value      = "";
+
+		} else {
+			document.orderForm.AddressType.value = "USA";
+
+			// Fill USA fields
+			document.orderForm.Address1.value = strCustomer['ADDRESS1'] || "";
+			document.orderForm.City.value     = strCustomer['CITY'] || "";
+			document.orderForm.State.value    = strCustomer['STATE'] || "";
+			document.orderForm.Zip.value      = strCustomer['ZIP'] || "";
+			document.orderForm.Country.value  = strCustomer['COUNTRY'] || "";
+
+			// Clear Outside fields
+			document.orderForm.Address1_Outside.value = "";
+			document.orderForm.City_Outside.value     = "";
+			document.orderForm.State_Outside.value    = "";
+			document.orderForm.Zip_Outside.value      = "";
+		}
+
+		// Call toggle function to show relevant section
+		toggleAddressFields();
+
+
 
 }
 
@@ -84,20 +140,37 @@ function getLead(leadId) {
 	var strLead = leadProxy.getLead(leadId);
 		document.orderForm.fname.value 		= strLead['FNAME'];
 		document.orderForm.lname.value 		= strLead['LNAME'];
-		document.orderForm.Phone.value 		= strLead['PHONE'];
+		// document.orderForm.Phone.value 		= strLead['PHONE'];
 		document.orderForm.Address1.value 	= strLead['ADDRESS'];
 		document.orderForm.City.value 		= strLead['CITY'];
 		document.orderForm.State.value 		= strLead['STATE'];
 		document.orderForm.Country.value 	= strLead['COUNTRY'];
 		document.orderForm.Zip.value 		= strLead['ZIP'];
 		document.orderForm.Email.value 		= strLead['EMAIL'];
-		document.orderForm.CellPhone.value 	= strLead['CELLPHONE'];
-		document.orderForm.BusinessPhone.value 	= strLead['BUSINESSPHONE'];
+		// document.orderForm.CellPhone.value 	= strLead['CELLPHONE'];
+		// document.orderForm.BusinessPhone.value 	= strLead['BUSINESSPHONE'];
 		document.orderForm.website.value 	= strLead['WEBSITE'];
-		document.orderForm.Fax.value 		= ''
+		// document.orderForm.Fax.value 		= ''
 		document.orderForm.DriversLicense.value = ''
 		document.orderForm.Consultant.value = '';
 		document.orderForm.assignedTo.value = strLead['FK_EMPLOYEES'];
+
+		if (strLead['PHONE'] && strLead['PHONE'].trim() !== "") {
+			document.orderForm.PhoneNumber.value = strLead['PHONE'];
+			document.orderForm.PhoneType.value   = "Home Phone";   
+		} else if(strLead['CELLPHONE'] && strLead['CELLPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strLead['CELLPHONE'];
+			document.orderForm.PhoneType.value   = "Cell Phone";
+		} else if(strLead['BUSINESSPHONE'] && strLead['BUSINESSPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strLead['BUSINESSPHONE'];
+			document.orderForm.PhoneType.value   = "Business Phone";
+		}  else if(strLead['OTHERPHONE'] && strLead['OTHERPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strLead['OTHERPHONE'];
+			document.orderForm.PhoneType.value   = "OutsideUS";
+		} else {
+			document.orderForm.PhoneNumber.value = '';
+			document.orderForm.PhoneType.value   = "Cell Phone";
+		}
 }
 
 ////////////   SEARCH ALL CONTACTS WINDOW ////////////////
@@ -123,19 +196,34 @@ function getContact(email) {
 	var strContact = allContactsProxy.getContact(email);
 		document.orderForm.fname.value 		= strContact['FNAME'];
 		document.orderForm.lname.value 		= strContact['LNAME'];
-		document.orderForm.Phone.value 		= strContact['PHONE'];
+		// document.orderForm.Phone.value 		= strContact['PHONE'];
 		document.orderForm.Address1.value 	= strContact['ADDRESS'];
 		document.orderForm.City.value 		= strContact['CITY'];
 		document.orderForm.State.value 		= strContact['STATE'];
 		document.orderForm.Country.value 	= strContact['COUNTRY'];
 		document.orderForm.Zip.value 		= strContact['ZIP'];
 		document.orderForm.Email.value 		= strContact['EMAIL'];
-		document.orderForm.CellPhone.value 	= strContact['CELLPHONE'];
-		document.orderForm.BusinessPhone.value 	= strContact['BUSINESSPHONE'];
+		// document.orderForm.CellPhone.value 	= strContact['CELLPHONE'];
+		// document.orderForm.BusinessPhone.value 	= strContact['BUSINESSPHONE'];
 		document.orderForm.website.value 	= strContact['WEBSITE'];
-		document.orderForm.Fax.value 		= ''
+		// document.orderForm.Fax.value 		= ''
 		document.orderForm.DriversLicense.value = ''
 		document.orderForm.Consultant.value = '';
+
+		if (strContact['PHONE'] && strContact['PHONE'].trim() !== "") {
+			document.orderForm.PhoneNumber.value = strContact['PHONE'];
+			document.orderForm.PhoneType.value   = "Home Phone";   
+		} else if(strContact['CELLPHONE'] && strContact['CELLPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strContact['CELLPHONE'];
+			document.orderForm.PhoneType.value   = "Cell Phone";
+		} else if(strContact['BUSINESSPHONE'] && strContact['BUSINESSPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strContact['BUSINESSPHONE'];
+			document.orderForm.PhoneType.value   = "Business Phone";
+		} else {
+			document.orderForm.PhoneNumber.value = '';
+			document.orderForm.PhoneType.value   = "Cell Phone";
+		}
+
 		ColdFusion.Window.hide('searchAllContactsWindow');
 }
 
@@ -165,26 +253,46 @@ function fillLname(formname,fieldvalue){
 }
 */
 function fillLname(formname,fieldvalue){
+	
 	if(formname == 'orderform'){
 		var fieldValueArray = fieldvalue.split("|");
 		var thisId = fieldValueArray[1];
 		var thisTable = fieldValueArray[2];
+
+		console.log('test data: ' + fieldValueArray)
+		console.log('test data2: ' + fieldvalue)
+
 		var strContact = allContactsProxy.getContactById(thisId,thisTable);
 		document.orderForm.fname.value 		= strContact['FNAME'];
 		document.orderForm.lname.value 		= strContact['LNAME'];
-		document.orderForm.Phone.value 		= strContact['PHONE'];
+		// document.orderForm.Phone.value 		= strContact['PHONE'];
 		document.orderForm.Address1.value 	= strContact['ADDRESS'];
 		document.orderForm.City.value 		= strContact['CITY'];
 		document.orderForm.State.value 		= strContact['STATE'];
 		document.orderForm.Country.value 	= strContact['COUNTRY'];
 		document.orderForm.Zip.value 		= strContact['ZIP'];
 		document.orderForm.Email.value 		= strContact['EMAIL'];
-		document.orderForm.CellPhone.value 	= strContact['CELLPHONE'];
-		document.orderForm.BusinessPhone.value 	= strContact['BUSINESSPHONE'];
+		// document.orderForm.CellPhone.value 	= strContact['CELLPHONE'];
+		// document.orderForm.BusinessPhone.value 	= strContact['BUSINESSPHONE'];
 		document.orderForm.website.value 	= strContact['WEBSITE'];
-		document.orderForm.Fax.value 		= ''
+		// document.orderForm.Fax.value 		= ''
 		document.orderForm.DriversLicense.value = ''
 		document.orderForm.Consultant.value = '';
+
+		if (strContact['PHONE'] && strContact['PHONE'].trim() !== "") {
+			document.orderForm.PhoneNumber.value = strContact['PHONE'];
+			document.orderForm.PhoneType.value   = "Home Phone";   
+		} else if(strContact['CELLPHONE'] && strContact['CELLPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strContact['CELLPHONE'];
+			document.orderForm.PhoneType.value   = "Cell Phone";
+		} else if(strContact['BUSINESSPHONE'] && strContact['BUSINESSPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strContact['BUSINESSPHONE'];
+			document.orderForm.PhoneType.value   = "Business Phone";
+		}  else {
+			document.orderForm.PhoneNumber.value = '';
+			document.orderForm.PhoneType.value   = "Cell Phone";
+		}
+
 	}
 }
 /*
@@ -218,19 +326,34 @@ function fillEmail(formname,fieldvalue){
 		var strContact = allContactsProxy.getContactById(thisId,thisTable);
 		document.orderForm.fname.value 		= strContact['FNAME'];
 		document.orderForm.lname.value 		= strContact['LNAME'];
-		document.orderForm.Phone.value 		= strContact['PHONE'];
+		// document.orderForm.Phone.value 		= strContact['PHONE'];
 		document.orderForm.Address1.value 	= strContact['ADDRESS'];
 		document.orderForm.City.value 		= strContact['CITY'];
 		document.orderForm.State.value 		= strContact['STATE'];
 		document.orderForm.Country.value 	= strContact['COUNTRY'];
 		document.orderForm.Zip.value 		= strContact['ZIP'];
 		document.orderForm.Email.value 		= strContact['EMAIL'];
-		document.orderForm.CellPhone.value 	= strContact['CELLPHONE'];
-		document.orderForm.BusinessPhone.value 	= strContact['BUSINESSPHONE'];
+		// document.orderForm.CellPhone.value 	= strContact['CELLPHONE'];
+		// document.orderForm.BusinessPhone.value 	= strContact['BUSINESSPHONE'];
 		document.orderForm.website.value 	= strContact['WEBSITE'];
-		document.orderForm.Fax.value 		= ''
+		// document.orderForm.Fax.value 		= ''
 		document.orderForm.DriversLicense.value = ''
 		document.orderForm.Consultant.value = '';
+
+		if (strContact['PHONE'] && strContact['PHONE'].trim() !== "") {
+			document.orderForm.PhoneNumber.value = strContact['PHONE'];
+			document.orderForm.PhoneType.value   = "Home Phone";   
+		} else if(strContact['CELLPHONE'] && strContact['CELLPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strContact['CELLPHONE'];
+			document.orderForm.PhoneType.value   = "Cell Phone";
+		} else if(strContact['BUSINESSPHONE'] && strContact['BUSINESSPHONE'].trim() !== ""){
+			document.orderForm.PhoneNumber.value = strContact['BUSINESSPHONE'];
+			document.orderForm.PhoneType.value   = "Business Phone";
+		} else {
+			document.orderForm.PhoneNumber.value = '';
+			document.orderForm.PhoneType.value   = "Cell Phone";
+		}
+
 	}
 }
 
@@ -357,7 +480,32 @@ function addPrice(thisIndex,thisValue) {
 
 ////////////   CHECK PASSWORD ON LEAD PAGE ////////////////
 
+function validateLeadForm() {
+    let phoneType = document.getElementById("PhoneType").value;
+    let phoneInput = document.getElementById("PhoneNumber").value.trim();
+
+    if (phoneType === "OutsideUS") {
+        return true; // no validation required
+    }
+
+    // Regex for (123) 456-7890 format
+    let phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+
+    if (!phonePattern.test(phoneInput)) {
+        alert("Please enter phone number in format: (123) 456-7890");
+        document.getElementById("PhoneNumber").focus();
+        return false;
+    }
+
+    return true; // valid
+}
+
 function checkPasswordLead() {
+
+	if (!validateLeadForm()) {
+        return false; // Agar phone number valid nahi to submit stop
+    }
+
 	// remove lname validation
 	/*if(document.leadForm.lname.value == ''){alert('Please enter a last name for the lead')}
 	else{ColdFusion.Ajax.submitForm('leadForm','models/employees.cfc?method=checkPassword',passwordResponseLead);}
@@ -374,14 +522,44 @@ function passwordResponseLead(s) {
 	}
 }
 
+
+function validateForm() {
+    let phoneType = document.getElementById("PhoneType").value;
+    let phoneInput = document.getElementById("PhoneNumber").value.trim();
+
+    if (phoneType === "OutsideUS") {
+        return true; // no validation required
+    }
+
+    // Regex for (123) 456-7890 format
+    let phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+
+    if (!phonePattern.test(phoneInput)) {
+        alert("Please enter phone number in format: (123) 456-7890");
+        document.getElementById("PhoneNumber").focus();
+        return false;
+    }
+
+    return true; // valid
+}
+
 ////////////   CHECK PASSWORD ON ORDER PAGE ////////////////
 
 function checkPasswordOrder() {
+
+	 if (!validateForm()) {
+        return false; // Agar phone number valid nahi to submit stop
+    }
+
 	if(document.orderForm.lname.value == ''){alert('Please enter a last name on the order')}
 	if(document.orderForm.Email.value == ''){alert('Please enter an email address for the customer on the order')}
 	else{ColdFusion.Ajax.submitForm('orderForm','models/employees.cfc?method=checkPassword',passwordResponseOrder);}
 	return false;
 }
+
+
+
+
 
 function passwordResponseOrder(s) {
 	if(trim(s)== "true") {

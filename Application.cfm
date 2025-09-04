@@ -1,3 +1,7 @@
+<!--- Global error handler --->
+<!--- <cferror type="exception" template="/errorHandler.cfm">
+<cferror type="request" template="/errorHandler.cfm"> --->
+
 <cfapplication 
     name="galleryart"
     clientmanagement="Yes"
@@ -56,10 +60,7 @@
 <cfset imgpath = "https://#server_name#/images">
 
 <!--- all emails will be sent to this email address. To add more, send to an alias and forward to additional accounts. If an address is put into cc, it will be sent as well --->
-
-
-<!--- <cfset emailsupport = "websitegallart@gallart.com"> --->
-<cfset emailsupport = "sales@gallart.com">
+<cfset emailsupport = "websitegallart@gallart.com">
 <cfset emailsupportcc = "KENGALLART@aol.com">
 <!--- This should represent the page which should be used for secure processing.  set to a non secure page while developing, and change when ready --->
 <cfset securepage = "https://#server_name#">
@@ -87,12 +88,22 @@
 
 <cfset vendoradd = "y">
 
-<cfif not isDefined('xss')>
-	<cfset xss = randrange(1,9999) & chr(randrange(65,90)) & randrange(1,9999)>
-	<cfquery name="insertTrack" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		INSERT INTO tracker(sessionid, referrer, entrypage, originIP) VALUES('#xss#', '#cgi.http_referer#', '#cgi.path_info#', '#cgi.remote_addr#')
-	</cfquery>
+<cfif NOT structKeyExists(session, "xss")>
+    <!--- Generate a unique tracking ID --->
+    <cfset session.xss = randrange(1,9999) & chr(randrange(65,90)) & randrange(1,9999)>
+    
+    <!--- Insert tracking data into database --->
+    <cfquery name="insertTrack" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+        INSERT INTO tracker(sessionid, referrer, entrypage, originIP) 
+        VALUES (
+            <cfqueryparam value="#session.xss#" cfsqltype="cf_sql_varchar">,
+            <cfqueryparam value="#cgi.http_referer#" cfsqltype="cf_sql_varchar">,
+            <cfqueryparam value="#cgi.path_info#" cfsqltype="cf_sql_varchar">,
+            <cfqueryparam value="#cgi.remote_addr#" cfsqltype="cf_sql_varchar">
+        )
+    </cfquery>
 </cfif>
+
 
 <cfif isDefined('url.emailLogId')>
 	<cfquery name="insertTrack" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -120,7 +131,8 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
 
 <!--- <cfparam name="flashow" default="siteflash"> --->
 <!--- for mails sent from main site (contact forms, etc) --->
-<cfset servername = "mail2.onlinegalleryart.com" />
+<!--- <cfset servername = "mail2.onlinegalleryart.com" /> --->
+<cfset servername = "smtp.gmail.com" />
 
 <!--- email blast server --->
 <cfset application.email_server = "mail2.gallart_.com" />
@@ -182,9 +194,9 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
 
 
 <cfscript>
-	application.mailserver='smtp.sendgrid.net';
-	application.mailserver_un='apikey';
-	application.mailserver_pw='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';
+	application.mailserver='mail2.onlinegalleryart_.com';
+	application.mailserver_un='gallart@onlinegalleryart.com';
+	application.mailserver_pw='re3objeC!P';
 </cfscript>
 
 
@@ -193,7 +205,35 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
     <cfargument name="EventName" type="string" required="true">
   
     <!--- Display the error information --->
-    <cfdump var="#Arguments.EventName#" label="Error Information">
-    <cfdump var="#Arguments.Exception#" label="Error Information">
+    <!--- <cfdump var="#Arguments.EventName#" label="Error Information">
+    <cfdump var="#Arguments.Exception#" label="Error Information"> --->
+
+	 <!--- 1. Developer ke liye error log karein --->
+    
+
+
+	 <!--- 2. Developer ko email bhejna (optional) --->
+    
+    <cfmail 
+		to="tldz.dev12@gmail.com" 
+		from="sales@gallart.com" 
+		subject="Site Error"
+		server="#servername#"
+		username="Sales@GallArt.com"
+		password="ylzwtvepstcsammm"
+		port="587"
+		useTLS="true"
+	>
+        Event: #Arguments.EventName#
+        Message: #Arguments.Exception.message#
+        Detail: #Arguments.Exception.detail#
+        Template: #Arguments.Exception.TagContext[1].template#
+        Browser: #cgi.http_user_agent#
+        IP: #cgi.remote_addr#
+    </cfmail>
+
+	<cflocation url="/404.cfm" addtoken="false">
+   
+
     <cfabort>
   </cffunction>

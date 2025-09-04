@@ -40,14 +40,20 @@
 					destination="#path#" 
 					result="fileupload">
 
+					<cfset fileExt = lcase(fileupload.clientFileExt) >
 
-				<cfif fileupload.fileWasSaved>                    
+
+				<cfif fileupload.fileWasSaved AND (fileExt EQ "jpg" OR fileExt EQ "png")>                    
 					<cfset fileName = fileupload.CLIENTFILE />
 					<cfquery name="qUpdateImage" datasource="#application.dsource#">
 						UPDATE banners
 						SET bannerImage = <cfqueryparam value="#fileName#" cfsqltype="cf_sql_varchar">
 						WHERE id = <cfqueryparam value="#thisId#" cfsqltype="cf_sql_integer">
 					</cfquery>
+
+					<cfelse>
+						<cffile action="delete" file="#fileupload.serverDirectory#/#fileupload.serverFile#">
+						<cfset session.ext = true>
 				</cfif>
 				
             </cfif>
@@ -55,28 +61,22 @@
             <cfoutput>
                 <script>
                     // alert('Data Added Successfully!');
-					$(document).ready(function() {
-						toastr.options = {
-							'closeButton': true,
-							'debug': false,
-							'newestOnTop': false,
-							'progressBar': true,
-							'positionClass': 'toast-top-right',
-							'preventDuplicates': false,
-							'showDuration': '1000',
-							'hideDuration': '1000',
-							'timeOut': '5000',
-							'extendedTimeOut': '1000',
-							'showEasing': 'swing',
-							'hideEasing': 'linear',
-							'showMethod': 'fadeIn',
-							'hideMethod': 'fadeOut',
-						}
-					});
+				
 
-					toastr.success('Data Updated Successfully');
+					// toastr.success('Data Updated Successfully');
+
+					<cfif structKeyExists(session, "ext") AND session.ext EQ true>
+						toastr.error("Invalid image format. Only JPG and PNG allowed.");
+					<cfelse>
+						toastr.success("Data Updated Successfully");
+					</cfif>
+
                 </script>
             </cfoutput>
+
+			<cfif structKeyExists(session, "ext")>
+				<cfset structDelete(session, "ext")>
+			</cfif>
             
             <cfcatch>
                 <cfdump var="#cfcatch#" abort="true">
@@ -89,6 +89,8 @@
 
 		<cftry>    
 			<!--- Update banner details in the database --->
+
+			
 			
 			<cfquery name="qUpdateData" datasource="#application.dsource#">
 				UPDATE banners
@@ -110,43 +112,43 @@
 					filefield="bannerImage" 
 					destination="#path#" 
 					result="fileupload">
+
+					<cfset fileExt = lcase(fileupload.clientFileExt) >
 	
-				<cfif fileupload.fileWasSaved>                    
+				<cfif fileupload.fileWasSaved AND (fileExt EQ "jpg" OR fileExt EQ "png")>                    
 					<cfset fileName = fileupload.CLIENTFILE />
 					<cfquery name="qUpdateImage" datasource="#application.dsource#">
 						UPDATE banners
 						SET bannerImage = <cfqueryparam value="#fileName#" cfsqltype="cf_sql_varchar">
 						WHERE id = <cfqueryparam value="#form.id#" cfsqltype="cf_sql_integer">
 					</cfquery>
+
+				<cfelse>
+					<cffile action="delete" file="#fileupload.serverDirectory#/#fileupload.serverFile#">
+					<cfset session.ext = true>
+
 				</cfif>
+				
+
 			</cfif>
 	
 			<cfoutput>
 				<script>
 					// alert('Data Updateddd Successfully!');
 
-					$(document).ready(function() {
-						toastr.options = {
-							'closeButton': true,
-							'debug': false,
-							'newestOnTop': false,
-							'progressBar': true,
-							'positionClass': 'toast-top-right',
-							'preventDuplicates': false,
-							'showDuration': '1000',
-							'hideDuration': '1000',
-							'timeOut': '5000',
-							'extendedTimeOut': '1000',
-							'showEasing': 'swing',
-							'hideEasing': 'linear',
-							'showMethod': 'fadeIn',
-							'hideMethod': 'fadeOut',
-						}
-					});
+					<cfif structKeyExists(session, "ext") AND session.ext EQ true>
+						toastr.error("Invalid image format. Only JPG and PNG allowed.");
+					<cfelse>
+						toastr.success("Data Updated Successfully");
+					</cfif>
 
-					toastr.success('Data Updated Successfully');
+					// toastr.success('Data Updated Successfully');
 				</script>
 			</cfoutput>
+
+			<cfif structKeyExists(session, "ext")>
+				<cfset structDelete(session, "ext")>
+			</cfif>
 			
 			<cfcatch>
 				<cfdump var="#cfcatch#" abort="true">

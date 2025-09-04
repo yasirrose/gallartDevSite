@@ -1,4 +1,4 @@
-<link href="stylesheet_print.css?x=<cfoutput>#RandRange(0,1000)#</cfoutput>" rel="stylesheet" type="text/css" media="print" />
+<link href="/stylesheet_print.css?x=<cfoutput>#RandRange(0,1000)#</cfoutput>" rel="stylesheet" type="text/css" media="print" />
 <!--- <cfoutput>
 
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -21,7 +21,7 @@ function helpWin(url) {
 </script>
 <div id="top">
 	<div class="top-conteiner">
-		<div class="site-logo"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>"><img src="images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
+		<div class="site-logo"><a href="/"><img src="/images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
 		<!--- <div class="mailto">
 			<div class="mailto-text">
 				<p>20633 Biscayne Blvd Aventura, FL 33180</p>
@@ -30,9 +30,18 @@ function helpWin(url) {
 			<a class="btn" href="mailto:sales@gallart.com">Email Us! CLICK!</a>
 		</div> --->
 		<div class="productSearch-filed web-search">
-			<form action="products.cfm?xss=<cfoutput>#xss#</cfoutput>" method="get">
-			<input type="text" name="keywords" id="keywords" placeholder="Search by artist, medium, keywords">                  
-			<button type="submit" class="search-btn"  id="searchButton" ><i class="fas fa-search"></i></button>
+
+			<cfif structKeyExists(url, "keywords")>
+				<cfset decodedKeyword = urlDecode(url.keywords)>
+			<cfelse>
+				<cfset decodedKeyword = "">
+			</cfif>
+
+			<form id="searchForm" method="get">
+				<input type="text" name="keywords"  id="keywords"  value="<cfoutput>#htmlEditFormat(decodedKeyword)#</cfoutput>" placeholder="Search by artist, medium, keywords">                  
+				<button type="submit" class="search-btn" id="searchButton">
+					<i class="fas fa-search"></i>
+				</button>
 			</form>
 		</div>
 		<div class="top_icons">
@@ -41,8 +50,8 @@ function helpWin(url) {
 				<div class="mailto-text">
 					<div class="resigter">
 						<ul>
-							<li><a href="/user_login_page.cfm?xss=<cfoutput>#xss#</cfoutput>"><i class="far fa-user"></i></a></li>
-							<li><a href="/view.cfm?xss=<cfoutput>#xss#</cfoutput>"><i class="fas fa-shopping-cart"></i></a></li>
+							<li><a href="/login"><i class="far fa-user"></i></a></li>
+							<li><a href="/view-cart"><i class="fas fa-shopping-cart"></i></a></li>
 						</ul>
 					</div>
 					<!---<p>20633 Biscayne Blvd Aventura, FL 33180</p> --->
@@ -51,7 +60,7 @@ function helpWin(url) {
 				<!--- <a class="btn" href="mailto:sales@gallart.com">Email Us! CLICK!</a> --->
 			</div>
 			<!--- <div class="productSearch-filed web-search">
-				<form action="products.cfm?xss=<cfoutput>#xss#</cfoutput>" method="get">
+				<form action="products.cfm" method="get">
 				<input type="text" name="keywords" id="keywords" placeholder="Product Search">                  
 				<button type="submit" class="search-btn"  id="searchButton" ><i class="fas fa-search"></i></button>
 				</form>
@@ -80,4 +89,22 @@ function helpWin(url) {
 		</div>
 	</div>
 </div>
+<script>
+  document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent default submission
+
+    // const keyword = document.getElementById('keywords').value.trim().replace(/[<>"'&]/g, '').replace(/\s+/g, '+');
+    // const keyword = document.getElementById('keywords').value.replace(/\s+/g, '%2B');
+
+    const rawInput = document.getElementById('keywords').value;
+	const keyword = encodeURIComponent(rawInput).replace(/%20/g, '%2B');
+
+    if (keyword !== '') {
+      // Redirect using clean URL
+      const encodedKeyword = encodeURIComponent(keyword);
+      window.location.href = '/artists/search/' + encodedKeyword;
+    }
+  });
+  
+</script>
 

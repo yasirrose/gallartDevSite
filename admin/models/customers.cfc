@@ -59,7 +59,7 @@
 	      	<cfif gridsortcolumn neq ''>
 	      		ORDER BY #gridsortcolumn# #gridsortdirection#
 			<cfelse>
-				ORDER BY C.lname,C.fname
+				ORDER BY id desc
 	      	</cfif>
 	   	</cfquery>
 	   	
@@ -72,11 +72,11 @@
 		<cfset var qCustomers='' />
 
 	   	<cfquery name="qCustomers" datasource="#application.dsource#">
-	      	SELECT UPPER(lname)+','+UPPER(fname) as full_customer_name,*
+	      	SELECT lname+',	'+fname as full_customer_name,*
 	      	FROM customers
 			  WHERE lname IS NOT NULL AND fname IS NOT NULL 
 				AND lname != '' AND fname != ''
-				AND fname != '1' AND fname != 'admin'
+				AND fname != '1' AND fname != 'admin' and fname != '!S!WCRTESTINPUT000000!E!'
 			ORDER BY lname
 	   	</cfquery>
 	   	
@@ -95,7 +95,7 @@
 	
 		<cfquery name="qCustomer" datasource="#application.dsource#"> 
            	SELECT email as customer_email,* from customers
-            WHERE id = '#arguments.customerId#'
+            WHERE id = '#arguments.customerId#' order by id desc
         </cfquery>
 		
 		<cfcatch type="any"></cfcatch>
@@ -226,31 +226,67 @@
 	<!--- from order module --->
 	
 	<cffunction name="editCustomer" access="remote" returntype="struct">
-		<cfargument name="id" type="string" default="#session.invoiceInfo.customerId#">
+
+		
+		<!--- <cfargument name="id" type="string" default="#session.invoiceInfo.customerId#"> --->
 		<cfargument name="assignedto" type="string" default="#session.invoiceInfo.assignedto#">
 	    <cfargument name="fname" type="string" default="#session.invoiceInfo.fname#">
 	    <cfargument name="lname" type="string" default="#session.invoiceInfo.lname#">
 	    <cfargument name="email" type="string" default="#session.invoiceInfo.email#">
-		<cfargument name="phone" type="string" default="#session.invoiceInfo.phone#">
-		<cfargument name="otherphone" type="string" default="#session.invoiceInfo.otherphone#">
+		<!--- <cfargument name="phone" type="string" default="#session.invoiceInfo.phone#"> --->
+		<!--- <cfargument name="otherphone" type="string" default="#session.invoiceInfo.otherphone#"> --->
 		<cfargument name="Address1" type="string" default="#session.invoiceInfo.Address1#">
 		<cfargument name="City" type="string" default="#session.invoiceInfo.City#">
 		<cfargument name="State" type="string" default="#session.invoiceInfo.State#">
 		<cfargument name="Zip" type="string" default="#session.invoiceInfo.Zip#">
 		<cfargument name="Country" type="string" default="#session.invoiceInfo.Country#">
-		<cfargument name="CellPhone" type="string" default="#session.invoiceInfo.CellPhone#">
-		<cfargument name="Fax" type="string" default="#session.invoiceInfo.Fax#">
+		<!--- <cfargument name="CellPhone" type="string" default="#session.invoiceInfo.CellPhone#"> --->
+		<cfargument name="Fax" type="string" default="">
 		<cfargument name="DriversLicense" type="string" default="#session.invoiceInfo.DriversLicense#">
 		<cfargument name="Consultant" type="string" default="#session.invoiceInfo.Consultant#">
-	    <cfargument name="businessphone" type="string" default="#session.invoiceInfo.businessphone#">
+	    <!--- <cfargument name="businessphone" type="string" default="#session.invoiceInfo.businessphone#"> --->
 		<cfargument name="website" type="string" default="#session.invoiceInfo.website#">
+		<cfargument name="phoneNumber" type="string" default="#session.invoiceInfo.PhoneNumber#">
+		<cfargument name="phoneType" type="string" default="#session.invoiceInfo.phoneType#">
+		<cfargument name="AddressType" type="string" default="#session.invoiceInfo.AddressType#">
+    	<cfargument name="id" type="string" default="#(isDefined('session.invoiceInfo.customerId') and session.invoiceInfo.customerId neq '' ? session.invoiceInfo.customerId : '')#">
+
+
+		<!--- <cfdump var="#session.invoiceinfo#" abort="true"> --->
 		
 		<cfset var returnStruct = structNew() />
 	    <cfset returnStruct.success = true />
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Home Phone">
+			<cfset phone = arguments.phoneNumber>
+		<cfelse>
+			<cfset phone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Cell Phone">
+			<cfset Cellphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset Cellphone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Business Phone">
+			<cfset businessphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset businessphone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "OutsideUS">
+			<cfset otherphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset otherphone = "">
+		</cfif>
+
+
 		
 			<cfscript>
 				getCustomerIdFromEmail = application.objectFactoryAdmin.getInstance('customers').getCustomerIdFromEmail(arguments.email);
 			</cfscript>
+			
 			
 		
 	    	<cftry>
@@ -266,7 +302,8 @@
 	                	email,
 						phone,
 						otherphone,
-						Address1,	
+						Address1,
+						AddressType,	
 						City,	
 						State,	
 						Zip,	
@@ -284,18 +321,19 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.phone#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.otherphone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Country#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CellPhone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#Cellphone#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Fax#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.DriversLicense#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Consultant#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.businessphone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">
 					)
 					SELECT @@identity as uid 
@@ -310,18 +348,19 @@
 	                fname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
 	                lname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
 					email 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#">,
-					phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.phone#">,
-					otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.otherphone#">,
+					phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+					otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
 					Address1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
+					AddressType 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
 					City 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
 					State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
 					Zip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
 					Country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Country#">,
-					CellPhone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CellPhone#">,
+					CellPhone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#CellPhone#">,
 					Fax 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Fax#">,
 					DriversLicense 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.DriversLicense#">,
 					Consultant 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Consultant#">,
-					businessphone	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.businessphone#">,
+					businessphone	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
 					website 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">
 	                WHERE id 		= <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#getCustomerIdFromEmail#">
 	            </cfquery>
@@ -335,18 +374,19 @@
 	                fname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
 	                lname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
 					email 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#">,
-					phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.phone#">,
-					otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.otherphone#">,
+					phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+					otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
 					Address1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
+					AddressType 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
 					City 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
 					State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
 					Zip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
 					Country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Country#">,
-					CellPhone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CellPhone#">,
+					CellPhone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#CellPhone#">,
 					Fax 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Fax#">,
 					DriversLicense 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.DriversLicense#">,
 					Consultant 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Consultant#">,
-					businessphone	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.businessphone#">,
+					businessphone	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
 					website 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">
 	                WHERE id 		= <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
 	            </cfquery>

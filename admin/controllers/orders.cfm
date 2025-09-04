@@ -12,14 +12,24 @@
 	<cfdefaultcase>
 		<cfinclude template="../views/layout.top.cfm" />
 
-		<cfset fieldList = "assignedTo,customerId,leadId,phone,otherphone,CellPhone,BusinessPhone,Fax,Consultant,Company,lname,fname,Address1,City,State,Country,Zip,website,Email,Payment_Method,CardNumber,cardexpm,cardexpy,authcode,DriversLicense,tobeshipped,special_instructions,origin,estimate" />
+		<cfset fieldList = "assignedTo,customerId,leadId,PhoneNumber,PhoneType,Consultant,Company,lname,fname,AddressType,Address1,City,State,Country,Zip,Address1_Outside,City_Outside,State_Outside,Zip_Outside,website,Email,Payment_Method,CardNumber,cardexpm,cardexpy,authcode,DriversLicense,tobeshipped,special_instructions,origin,estimate" />
+
 		<cfloop list="#fieldList#" index="idx">
-			<cfif structKeyExists(session,'invoiceInfo')>
+			<cfif structKeyExists(session,'invoiceInfo')  AND structKeyExists(session.invoiceInfo, idx)>
 				<cfset "form.#idx#" = evaluate("session.invoiceInfo."&idx) />
 			<cfelse>
 				<cfset "form.#idx#" = "" />
 			</cfif>
 		</cfloop>
+		
+
+		<!--- <cfloop list="#fieldList#" index="idx">
+			<cfif structKeyExists(session, "invoiceInfo") AND structKeyExists(session.invoiceInfo, idx)>
+				<cfset "form.#idx#" = session.invoiceInfo[idx] />
+			<cfelse>
+				<cfset "form.#idx#" = "" />
+			</cfif>
+		</cfloop> --->
 
 		<cfif structKeyExists(session,'invoiceInfo')>
 			<cfif structKeyExists(session.invoiceInfo,'Framing')>
@@ -30,6 +40,8 @@
 		<cfelse>
 			<cfset form.Framing = "" />
 		</cfif>
+
+		<!--- <cfdump var="#form#" abort="true"> --->
 
 		<cfscript>
 			getCustomers = application.objectFactoryAdmin.getInstance('customers').getAllCustomers();
@@ -75,13 +87,16 @@
 			processNewOrder = application.objectFactoryAdmin.getInstance('orders').processNewOrder();
 		</cfscript>
 
-		<cfif session.invoiceinfo.leadId NEQ ''>
+		<cfif structKeyExists(session, 'invoiceinfo.leadId') and session.invoiceinfo.leadId NEQ ''>
 			<cfscript>
 				deleteLead = application.objectFactoryAdmin.getInstance('leads').deleteLead(session.invoiceinfo.leadId);
 			</cfscript>
 		</cfif>
+
+
 		<cfset session.invoiceinfo.invoiceNumber = processNewOrder.thisOrderId />
 		<cfset session.invoiceinfo.displayInvoiceNumber = processNewOrder.thisDisplayOrderId />
+		
 
 
 		<cfset printFields = 1 />
@@ -170,7 +185,7 @@
 	<cfcase value="newOrder">
 		<cfinclude template="../views/layout.top.cfm" />
 
-		<cfset fieldList = "assignedTo,customerId,leadId,phone,otherphone,CellPhone,BusinessPhone,Fax,Consultant,Company,lname,fname,Address1,City,State,Country,Zip,website,Email,Payment_Method,CardNumber,cardexpm,cardexpy,authcode,DriversLicense,tobeshipped,special_instructions,origin,estimate" />
+		<cfset fieldList = "assignedTo,customerId,leadId,PhoneNumber,PhoneType,Consultant,Company,lname,fname,AddressType,Address1,City,State,Country,Zip,Address1_Outside,City_Outside,State_Outside,Zip_Outside,website,Email,Payment_Method,CardNumber,cardexpm,cardexpy,authcode,DriversLicense,tobeshipped,special_instructions,origin,estimate" />
 		<cfloop list="#fieldList#" index="idx">
 			<cfset "form.#idx#" = "" />
 		</cfloop>
@@ -312,6 +327,8 @@
 		<cfscript>
 			editProductOrder = application.objectFactoryAdmin.getInstance('orders').editProductOrder( argumentcollection = form );
 		</cfscript>
+
+		
 
 
 		<cfset searchString = "" />

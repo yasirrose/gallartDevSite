@@ -129,12 +129,28 @@ function validEntries(frm) {
 									<cfinput type="text" name="name" id="name"  bind="{data.user_name}" size="25">
 								</td>
 							</tr>
+
+							<tr>
+								<td style="font-size: 10px;">
+									Phone Type:
+								</td>
+								<td>
+									<select name="PhoneType"  id="PhoneType" style="font-size: 8pt;">
+										<option value="Cell Phone" >Mobile</option>
+										<option value="Home Phone" >Home</option>
+										<option value="Business Phone" >Business</option>
+										<option value="OutsideUS" >Outside US</option>
+									</select>
+								</td>
+							</tr>
+
 							<tr>
 								<td style="font-size: 10px;">
 									Phone:
 								</td>
 								<td>
 									<cfinput type="text" name="phone" id="phone"  bind="{data.phone}" size="25">
+									<span id="formatSign">(xxx) xxx-xxxx</span>
 								</td>
 							</tr>
 							<tr>
@@ -215,4 +231,47 @@ function validEntries(frm) {
 		</td>
 	</tr>
 </table>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		const phoneInput = document.getElementById("phone");
+		const phoneType = document.getElementById("PhoneType");
+		const formatSign = document.getElementById("formatSign");
+
+		function toggleFormatSign() {
+			if (phoneType.value === "OutsideUS") {
+				formatSign.style.display = "none";
+			} else {
+				formatSign.style.display = "inline";
+			}
+		}
+
+		// run on load (in case form already has value)
+		toggleFormatSign();
+
+		// run on change
+		phoneType.addEventListener("change", toggleFormatSign);
+
+		phoneInput.addEventListener("input", function(e) {
+			// If type is OutsideUS → skip formatting
+			if (phoneType.value === "OutsideUS") {
+				return;
+			}
+
+			let value = e.target.value.replace(/\D/g, ""); // only digits
+			if (value.length > 10) value = value.substring(0, 10);
+
+			// Apply formatting as user types
+			if (value.length > 6) {
+				e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+			} else if (value.length > 3) {
+				e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+			} else if (value.length > 0) {
+				e.target.value = `(${value}`;
+			} else {
+				e.target.value = "";
+			}
+		});
+	});
+</script>
 

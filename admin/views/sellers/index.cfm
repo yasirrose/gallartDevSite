@@ -118,7 +118,8 @@ getSellerEmail = function(){
 				<tr>
 					<td colspan="2">&nbsp;</td>
 					<td>
-						<input type="Reset"><cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false); fillSearchFields();" />
+						<input type="Reset" onclick="setTimeout(function(){location.reload();},100);">
+						<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false); fillSearchFields();" />
 					</td>
 				</tr>
 				<tr>
@@ -166,7 +167,7 @@ getSellerEmail = function(){
 						<span  id="emailLink"></span>
 					</td>
 				</tr>
-				<tr>
+				<!--- <tr>
 					<td>
 						Cell Phone:
 					</td>
@@ -197,7 +198,81 @@ getSellerEmail = function(){
 					<td>
 						<cfinput type="text" name="otherphone" id="otherphone"  bind="{data.otherphone}" size="30">&nbsp;
 					</td>
+				</tr> --->
+
+				
+
+				<tr>
+					<td>
+						Select Phone Number type:
+					</td>
+					<td>		
+
+						<select name="PhoneType" id="PhoneType">
+							<option value="Cell Phone" >Mobile</option>
+							<option value="Home Phone" >Home</option>
+							<option value="Business Phone" >Business</option>
+							<option value="OutsideUS" >Outside US</option>
+						</select>
+					</td>
 				</tr>
+
+				<tr>
+					<td>
+						Phone Number:
+					</td>
+					<td>
+						<cfinput type="text" name="phoneNumber" id="phoneNumber" size="30">&nbsp;
+						<span id="formatSign">(xxx) xxx-xxxx</span>
+					</td>
+				</tr>
+
+				<cfoutput>
+					<script>
+						document.addEventListener("DOMContentLoaded", function() {
+							const phoneInput = document.getElementById("phoneNumber");
+							const phoneType = document.getElementById("PhoneType");
+							const formatSign = document.getElementById("formatSign");
+
+							function toggleFormatSign() {
+								if (phoneType.value === "OutsideUS") {
+									formatSign.style.display = "none";
+								} else {
+									formatSign.style.display = "inline";
+								}
+							}
+
+							// run on load (in case form already has value)
+							toggleFormatSign();
+
+							// run on change
+							phoneType.addEventListener("change", toggleFormatSign);
+
+							phoneInput.addEventListener("input", function(e) {
+								// If type is OutsideUS → skip formatting
+								if (phoneType.value === "OutsideUS") {
+									return;
+								}
+
+								let value = e.target.value.replace(/\D/g, ""); // only digits
+								if (value.length > 10) value = value.substring(0, 10);
+
+								// Apply formatting as user types
+								if (value.length > 6) {
+									e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+								} else if (value.length > 3) {
+									e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+								} else if (value.length > 0) {
+									e.target.value = `(${value}`;
+								} else {
+									e.target.value = "";
+								}
+							});
+						});
+
+					</script>
+				</cfoutput>
+
 				<tr>
 					<td>
 						Website:

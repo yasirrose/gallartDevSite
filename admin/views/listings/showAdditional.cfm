@@ -51,7 +51,8 @@
 
 <cfloop list="#qImages.additional_images#" index="idx">
 
-    <img src="http://23.20.226.157/img/#idx#" width="100" class="addImg" /><img src="#imgpath#/trash.gif" class="deleteImg" onclick="return confirm('DELETE -- ARE YOU SURE?')" />
+    <!--- <img src="http://23.20.226.157/img/#idx#" width="100" class="addImg" /><img src="#imgpath#/trash.gif" class="deleteImg" onclick="return confirm('DELETE -- ARE YOU SURE?')" /> --->
+	<img src="http://23.20.226.157/img/#idx#" width="100" class="addImg" /><img src="#imgpath#/trash.gif" class="deleteImg"  />
 	
 
 </cfloop>
@@ -65,16 +66,32 @@
 </cfoutput>
 
 <script>
+// $(document).ready(function(){
+// 	$('.deleteImg').each(function(idx){
+// 		$(this).attr('index',idx)
+// 	});
+// 	$('.deleteImg').click(function(){ 
+// 		$('#imgIndex').val($(this).attr('index'));
+// 		deleteFrm.submit();
+// 	});
+	
+// });
+
 $(document).ready(function(){
 	$('.deleteImg').each(function(idx){
-		$(this).attr('index',idx)
+		$(this).attr('index', idx);
 	});
-	$('.deleteImg').click(function(){ 
-		$('#imgIndex').val($(this).attr('index'));
-		deleteFrm.submit();
+
+	$('.deleteImg').click(function(){
+		const confirmDelete = confirm('DELETE -- ARE YOU SURE?');
+
+		if (confirmDelete) {
+			$('#imgIndex').val($(this).attr('index'));
+			deleteFrm.submit();
+		}
 	});
-	
 });
+
 </script>
 
 

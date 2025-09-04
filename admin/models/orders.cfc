@@ -15,6 +15,8 @@
 		<cfset returnStruct.success = true />
 		<cfset returnStruct.error = "" />
 
+		
+
 		<cftry>
 
 			<cfscript>
@@ -23,6 +25,9 @@
 			</cfscript>
 
 			<cfset returnStruct.editCustomer = editCustomer />
+
+			<!--- <cfdump var="#returnStruct.editCustomer#" abort="true"> --->
+			
 
 			<cfif editCustomer.success EQ true>
 
@@ -39,6 +44,33 @@
 				<CFSET PARTNER = '' />
 
 
+				<cfif session.invoiceinfo.PhoneType EQ 'Home Phone'>
+					<cfset phone = session.invoiceinfo.PhoneNumber>
+				<cfelse>
+					<cfset phone = ''>
+				</cfif>
+
+				<cfif session.invoiceinfo.PhoneType EQ 'Cell Phone'>
+					<cfset Cellphone = session.invoiceinfo.PhoneNumber>
+				<cfelse>
+					<cfset Cellphone = ''>
+				</cfif>
+
+				<cfif session.invoiceinfo.PhoneType EQ 'Business Phone'>
+					<cfset businessphone = session.invoiceinfo.PhoneNumber>
+				<cfelse>
+					<cfset businessphone = ''>
+				</cfif>
+
+				<cfif session.invoiceinfo.PhoneType EQ 'OutsideUS'>
+					<cfset otherphone = session.invoiceinfo.PhoneNumber>
+				<cfelse>
+					<cfset otherphone = ''>
+				</cfif>
+
+				
+
+
 				<CFSET SHIPNAME = session.invoiceinfo.fname&' '&session.invoiceinfo.lname />
 				<CFSET SHIPADDRESS1 = session.invoiceinfo.address1 />
 				<CFSET SHIPADDRESS2 = '' />
@@ -46,7 +78,10 @@
 				<CFSET SHIPSTATE = session.invoiceinfo.state />
 				<CFSET SHIPCOUNTRY = session.invoiceinfo.country />
 				<CFSET SHIPZIP = session.invoiceinfo.zip />
-				<CFSET SHIPPHONE = session.invoiceinfo.phone />
+
+				<!--- <CFSET SHIPPHONE = session.invoiceinfo.phone /> --->
+				<CFSET SHIPPHONE = phone />
+				
 				<CFSET SHIPMETHOD = '' />
 				<CFSET INSURANCE = 0 />
 				<CFSET BILLNAME = session.invoiceinfo.fname&' '&session.invoiceinfo.lname />
@@ -58,9 +93,17 @@
 				<CFSET BILLSTATE = session.invoiceinfo.state />
 				<CFSET BILLCOUNTRY = session.invoiceinfo.country />
 				<CFSET BILLZIP = session.invoiceinfo.zip />
-				<CFSET BILLPHONE = session.invoiceinfo.phone />
+
+
+				<!--- <CFSET BILLPHONE = session.invoiceinfo.phone />
 				<CFSET OTHERPHONE = session.invoiceinfo.otherphone />
-				<CFSET CELLPHONE = session.invoiceinfo.cellphone />
+				<CFSET CELLPHONE = session.invoiceinfo.cellphone /> --->
+
+				<CFSET BILLPHONE = phone />
+				<CFSET OTHERPHONE = otherphone />
+				<CFSET CELLPHONE = Cellphone />
+
+
 				<CFSET CONSULTANT = session.invoiceinfo.consultant />
 				<CFSET COMPANY = session.invoiceinfo.company />
 				<CFSET DRIVERSLICENSE = session.invoiceinfo.driverslicense />
@@ -73,8 +116,12 @@
 				<CFSET COMMENTS = session.invoiceinfo.special_instructions />
 				<CFSET ORIGIN = session.invoiceinfo.origin />
 				<CFSET XSS = '' />
+				<cfset session.xss = "">
 				<CFSET TBC = 0 />
-				<CFSET BUSINESSPHONE = session.invoiceinfo.businessphone />
+
+				<!--- <CFSET BUSINESSPHONE = session.invoiceinfo.businessphone /> --->
+				<CFSET BUSINESSPHONE = businessphone />
+				
 				<CFSET WEBSITE = session.invoiceinfo.website />
 				<CFSET ESTIMATE = session.invoiceinfo.estimate />
 				<cfif structKeyExists(session.invoiceinfo,'incomplete')>
@@ -108,6 +155,8 @@
 				</cfif>
 
 				<CFSET BALANCEDUE	= session.invoiceInfo.balanceDueValue />
+
+				<!--- <cfdump var="test data" abort="true"> --->
 
 				<cfquery name="qOrders" datasource="#application.dsource#">
 		           	INSERT INTO orders
@@ -238,7 +287,7 @@
 								,1
 							</cfif>
 						)
-						SELECT @@identity as uid
+						SELECT SCOPE_IDENTITY() as uid
 		        </cfquery>
 
 		        <cfquery name="qInternationalOrders" datasource="#application.dsource#">
@@ -269,22 +318,26 @@
 
 		        <cfset returnStruct.thisOrderId = qOrders.uid />
 
+				
+
 		        <cfif listFindNoCase(session.userinfo.roles,'international')>
-			<!--		<cfset returnStruct.thisDisplayOrderId = "C" & (qInternationalOrders.recordcount + 1) />
+					<cfset returnStruct.thisDisplayOrderId = "C" & (qInternationalOrders.recordcount + 1) />
 				<cfelseif listFindNoCase(session.userinfo.roles,'b orders')>>
 					<cfset returnStruct.thisDisplayOrderId = "B" & (qBOrders.recordcount + 1) />
 				<cfelse>
 					<cfset returnStruct.thisDisplayOrderId = "A" & qOrders.uid />
 				</cfif>
--->
-
+			
 			<cfelse>
-
+				
 				<cfset returnStruct.success = false />
 
 			</cfif>
 
-			<cfcatch type="any"><cfset returnStruct.error = cfcatch.detail /><cfset returnStruct.success = false /></cfcatch>
+			<cfcatch type="any">
+				<cfset returnStruct.error = cfcatch.detail />
+				<cfset returnStruct.success = false />
+			</cfcatch>
 		</cftry>
 
 
@@ -450,13 +503,13 @@
 			GROUP BY O.orderuid, C.fname, C.lname, C.Email, O.date, C.email, C.address1, C.city, C.state,C.country,C.zip,C.phone,C.otherphone,C.cellphone,C.businessphone,C.website,C.fax,C.driverslicense,L.name, E.emp_lname, E.emp_fname, A.emp_lname, A.emp_fname,O.orderuid,O.customerid,O.consultant,O.date,O.saleCode,O.percentMarkdown,O.shipCost,O.insurance,O.discount,O.CardNumber,O.CardExpiry,O.shipMethod,O.tax,O.amountSale,O.Total,O.amountPaid,O.balanceDue,O.framingAmount,O.company,O.tracking_number,O.businessphone,O.estimate,O.incomplete
 	      	<cfif gridsortcolumn neq ''>
 				<cfif gridsortcolumn EQ 'orderDate'>
-					ORDER BY cast(O.date as datetime) #gridsortdirection#
+					ORDER BY O.orderuid desc
 				<cfelse>
-					ORDER BY #gridsortcolumn# #gridsortdirection#
+					ORDER BY O.orderuid desc
 				</cfif>
 
 			<cfelse>
-				ORDER BY cast(O.date as datetime) desc
+				ORDER BY O.orderuid desc
 	      	</cfif>
 	   	</cfquery>
 
@@ -510,7 +563,7 @@
 		<cfset var itemTable ='' />
 
 		<cfquery name="qOrderItems" datasource="#application.dsource#">
-	      	SELECT  P.name as productTitle,P.manufacturer as productArtist,I.unit_price as price,I.id as itemId,I.framing as itemFraming,C.email as customer_email,CAST(C.zip as CHAR(100)) as customer_zip,*
+	      	SELECT  P.name as productTitle,P.manufacturer as productArtist,I.unit_price as price,I.id as itemId,I.framing as itemFraming,C.businessphone as customer_businessphone,C.otherphone as customer_otherphone,C.phone as customer_phone,C.cellphone as customer_cellphone,C.email as customer_email,CAST(C.zip as CHAR(100)) as customer_zip,*
 			FROM orders O
 			INNER JOIN items I ON O.OrderID = I.Order_ID
 			INNER JOIN customers C on C.ID = O.customerID
@@ -521,10 +574,13 @@
 			AND (I.Product_ID IS NULL OR (I.Product_ID IS NOT NULL AND I.Product_ID <> 'tax'))
 	   	</cfquery>
 
+
 		<cfscript>
 			getCancelcodeOptions = application.objectFactory.getInstance('orders').getCancelcodeOptions();
 		</cfscript>
 
+		
+		
 		<cfsavecontent variable="itemTable">
 		<table bgcolor="FFFFFF">
 			<tr bgcolor="000000">
@@ -597,20 +653,30 @@
 		</table>
 		</cfoutput>
 		</cfsavecontent>
+		
 
 		<cfset returnStruct['itemTable'] = itemTable />
 
+		
 		<cfloop list="#qOrderItems.ColumnList#" index="idx">
 			<cfset returnStruct[idx] = "" />
 		</cfloop>
+		
 
-		<cfset orderItemsList = "AMOUNTSALE,TAX,INSURANCE,SHIPCOST,TOTAL,DISCOUNT,AMOUNTPAID,BALANCEDUE,TOBESHIPPED,INCOMPLETE,CUSTOMER_EMAIL,COMMENTS,PAYMENT_METHOD,SHIPMETHOD,ORIGIN,LEXY" />
+		<cfset orderItemsList = "AMOUNTSALE,TAX,INSURANCE,SHIPCOST,TOTAL,DISCOUNT,AMOUNTPAID,BALANCEDUE,TOBESHIPPED,INCOMPLETE,CUSTOMER_EMAIL,COMMENTS,PAYMENT_METHOD,SHIPMETHOD,ORIGIN,LEXY,ADDRESSTYPE,STATE,CUSTOMER_PHONE,CUSTOMER_CELLPHONE,CUSTOMER_BUSINESSPHONE,CUSTOMER_OTHERPHONE" />
+
+		
+
 		<cfloop list="#orderItemsList#" index="idx">
 			<cfset returnStruct[idx] = evaluate("qOrderItems."&idx) />
 		</cfloop>
 
+		<!--- <cfdump var="#orderItemsList#" abort="true"> --->
 
 		<cfset returnStruct['customer_zip'] = " "&qOrderItems.customer_zip />
+
+		
+
 
 		<cfreturn returnStruct />
 
@@ -618,6 +684,32 @@
 
 	<cffunction name="editProductOrder" access="remote" output="false" returntype="boolean">
 	    <cfargument name="form" type="struct">
+
+		<!--- <cfdump var="#form#" abort="true"> --->
+
+			<cfif len(trim(form.phoneNumber)) AND form.phoneType EQ "Home Phone">
+				<cfset phone = form.phoneNumber>
+			<cfelse>
+				<cfset phone = "">
+			</cfif>
+
+			<cfif len(trim(form.phoneNumber)) AND form.phoneType EQ "Cell Phone">
+				<cfset cellphone = form.phoneNumber>
+			<cfelse>
+				<cfset cellphone = "">
+			</cfif>
+
+			<cfif len(trim(form.phoneNumber)) AND form.phoneType EQ "Business Phone">
+				<cfset businessphone = form.phoneNumber>
+			<cfelse>
+				<cfset businessphone = "">
+			</cfif>
+
+			<cfif len(trim(form.phoneNumber)) AND form.phoneType EQ "OutsideUS">
+				<cfset otherphone = form.phoneNumber>
+			<cfelse>
+				<cfset otherphone = "">
+			</cfif>
 
 	    <cfset var success = true />
 
@@ -628,15 +720,16 @@
 	                fname 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.fname#">,
 	                lname 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.lname#">,
 					address1 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.address1#">,
+					
 					city 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.city#">,
 					state 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.state#">,
 					country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.country#">,
 					zip 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.zip#">,
 					email 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_email#">,
-					phone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_phone#">,
-					otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_otherphone#">,
-					cellphone 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_cellphone#">,
-					businessphone 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_businessphone#">,
+					phone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+					otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
+					cellphone 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cellphone#">,
+					businessphone 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
 					website 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_website#">,
 					driverslicense 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_driverslicense#">,
 					fax 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_fax#">
@@ -705,7 +798,10 @@
 			            </cfquery>
 					</cfif>
 				</cfloop>--->
-			<cfcatch type="any"><cfset success = false /></cfcatch>
+				<cfcatch type="any">
+					<cfdump var="#cfcatch#" abort="true">
+					<cfset success = false />
+				</cfcatch>
 			</cftry>
 
 		<cfreturn success>
@@ -1113,6 +1209,15 @@
 		<cfset var success = true />
 
 		<cftry>
+
+			<!--- Map Outside fields to standard fields if AddressType is Outside --->
+		<cfif structKeyExists(form, "AddressType") AND form.AddressType EQ "Outside">
+			<cfset form.Address1 = form.Address1_Outside>
+			<cfset form.City = form.City_Outside>
+			<cfset form.State = form.State_Outside>
+			<cfset form.Zip = form.Zip_Outside>
+			<cfset form.Country = form.Country>
+		</cfif>
 			
 		<cfloop collection="#form#" item="idx">
 			<cfset "session.invoiceInfo.#idx#" = evaluate('form.'&idx) />

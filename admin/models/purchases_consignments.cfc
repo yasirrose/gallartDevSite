@@ -80,6 +80,7 @@
 		<cfargument name="MEDIUM" type="string" default="">
 		<cfargument name="SIZE" type="string" default="">
 		<cfargument name="ADDITIONAL_DETAILS" type="string" default="">
+		<cfargument name="PHONETYPE" type="string" default="">
 	    
 	    <cfset var success = true />
 		
@@ -136,6 +137,7 @@
 						TITLE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.TITLE#">,
 						MEDIUM = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MEDIUM#">,
 						SIZE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
+						PHONETYPE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PHONETYPE#">,
 						ADDITIONAL_DETAILS = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDITIONAL_DETAILS#">
 	                WHERE pk_purchases_consignments = #arguments.pk_purchases_consignments#
 	            </cfquery>

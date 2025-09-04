@@ -103,11 +103,23 @@ function validEntries(frm) {
 		frm.quantity.focus();
 		return false;
 	}
-	if(!isValidSize(frm.size.value)){
-		alert('You must enter a valid SIZE: only numbers and the letter x');
+	// if(!isValidSize(frm.size.value)){
+	// 	alert('You must enter a valid SIZE: only numbers and the letter x');
+	// 	frm.size.focus();
+	// 	return false;
+	// }
+	function isValidSize(value) {
+    // Regex: numbers, optional spaces, 'x' (case insensitive), optional spaces, numbers
+		var pattern = /^\d+\s*[xX]\s*\d+$/;
+		return pattern.test(value.trim());
+	}
+
+	if (!isValidSize(frm.size.value)) {
+		alert('You must enter a valid SIZE in format: height x width (only numbers and the letter x)');
 		frm.size.focus();
 		return false;
 	}
+
 	return true;
 
 }
@@ -130,6 +142,18 @@ function popupWin(url) {
 <cfform method="POST" action="/admin/index.cfm?event=listings.procListing" name="editForm" id="editForm"  enctype="multipart/form-data" onsubmit="javascript:return validEntries(document.editForm);">
 <cfinput type="hidden" name="uid" id="uid">
 <table border = "0" width = "700" cellpadding = "3" cellspacing = "0" class="editBox">
+
+	<!--- <cfif> --->
+		<cfoutput>
+			<script>
+				<cfif structKeyExists(session, "ext") and session.ext eq 'true'>
+					alert('Only JGP files add');
+					<cfset structDelete(session, "ext")>
+				</cfif>
+			</script>
+		</cfoutput>
+	<!--- </cfif> --->
+
 	<cfif structKeyExists(url,'gridRefresh')>
 		<tr>
 			<td colspan="2" valign="top" id="gridRefreshMsg"><span style="color: #ff0000;">LISTING EDIT SUCCESSFUL</span></td>
@@ -348,6 +372,7 @@ function popupWin(url) {
 					<td>
 						<cfinput type="text" name="retail_price" id="retail_price" size="20">
 					</td>
+					
 				</tr>
 				<tr>
 					<td style="font-size: 10px;">
@@ -355,7 +380,9 @@ function popupWin(url) {
 					</td>
 					<td>
 						<cfinput type="text" name="gallery_price" id="gallery_price" size="20">
+						<!--- <span style="color: red;">(This should be less then from Retail price)</span> --->
 					</td>
+				
 				</tr>
 				<tr>
 					<td style="font-size: 10px;">
@@ -363,11 +390,15 @@ function popupWin(url) {
 					</td>
 					<td>
 						<cfinput type="text" name="special_price" id="special_price" size="20">
+						
 						&nbsp;<input type="Checkbox" name="closeout" value="1">&nbsp;Use sale price
 						&nbsp;<input type="Checkbox" name="promotion" value="1">&nbsp;Use promotion
 						<input type="hidden" name="closeout">
-						<input type="hidden" name="promotion">
+						<input type="hidden" name="promotion"> <br>
+						<span style="color: red;">(Sale Price should be less then from Retail and Gallery price)</span> 
+						
 					</td>
+					
 				</tr>
 				
 				<tr>

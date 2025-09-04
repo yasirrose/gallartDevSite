@@ -40,19 +40,19 @@
             <cfset modelno = "S" & modelno_numeric_new />
         
             <cfif form.quantity lt 1>
-                <cfset tquantity = 0>
+            <cfset tquantity = 0>
             <Cfelse>
-                <cfset tquantity = form.quantity>
+            <cfset tquantity = form.quantity>
             </cfif>
             
             <cfif category is not "">
             <cfif right(category,1) neq ":">
-                <cfset category = category&":">
+            <cfset category = category&":">
             <cfelse>
-                <cfset category = category>
+            <cfset category = category>
             </cfif>
-
             </cfif>
+            
             
             <cfif isDefined("session.sellerinfo.pk_users")>
                 <cfquery name="qrytocheck" datasource="#dsource#" username="#uname#" password="#pword#">
@@ -61,7 +61,7 @@
                 </cfquery>            
             </cfif>
 
-            <cfif qrytocheck.recordcount LTE 5>
+            <cfif qrytocheck.recordcount LT 5>
                 <cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
                     INSERT INTO products 
                     (
@@ -115,46 +115,64 @@
                     )
                     SELECT @@identity as uid 
                 </cfquery>
-            
+                
                 <cfset thisId = insertListing.uid />
+
             <cfelse>
 
                 <cfset session.limitReached = true>
                 <cflocation url="/user_listing_detail/" addtoken="No">
             </cfif>
-            
-            
 
+            
+            
             </cflock>
             
             <cfif isDefined('form.fileup') and form.fileup NEQ "">
                         
-                <cffile action="upload" nameconflict="overwrite" filefield="fileup" destination="#uploaddir#/#thisId#.jpg" result="fileupload">
-        
-                <cfif fileupload.fileWasSaved>
+                <cffile action="upload" nameconflict="overwrite" filefield="fileup" destination="#uploaddir#" result="fileupload">
+
+                <cfset fileExt = lcase(fileupload.clientFileExt)>
+
+                <cfif fileExt EQ "jpg">
+                    <!--- <cfif fileupload.fileWasSaved> --->
                     
-                    <cfimage 
-                        action="read" 
-                        source="#application.uploaddir#/#thisId#.jpg" 
-                        name="oImage" 
-                    />
-            
-                    <cfimage
-                        action="resize"
-                        source="#oImage#"
-                        width="100"
-                        height=""
-                        name="oImageSmall"
-                    />
-                   
-                    <cfimage
-                        action="WRITE"
-                        source="#oImageSmall#"
-                        destination="#application.uploaddir#/thumbnails/#thisId#.jpg"
-                        overwrite="true"
-                    />
-                
+                       <cffile 
+                            action="rename" 
+                            source="#fileupload.serverDirectory#/#fileupload.serverFile#" 
+                            destination="#fileupload.serverDirectory#/#thisId#.jpg">
+
+                        <!--- Step 5: Process image --->
+                        <cfimage 
+                            action="read" 
+                            source="#application.uploaddir#/#thisId#.jpg" 
+                            name="oImage" 
+                        />
+
+                        <cfimage
+                            action="resize"
+                            source="#oImage#"
+                            width="100"
+                            height=""
+                            name="oImageSmall"
+                        />
+
+                        <cfimage
+                            action="write"
+                            source="#oImageSmall#"
+                            destination="#application.uploaddir#/thumbnails/#thisId#.jpg"
+                            overwrite="true"
+                        />
+                    
+                    <!--- </cfif> --->
+                <cfelse>
+
+                    <cfset session.ext = true>
+                    <cflocation url="/user_listing_detail/#thisId#" addtoken="No">
+
                 </cfif>
+        
+                
                             
             </cfif>
             
@@ -191,49 +209,21 @@
             
             </cftry>
             
-            <cflocation url="user_listing_search.cfm?xss=#xss#&process=add" addtoken="No">
+            <cflocation url="/overView" addtoken="No">
             
      	<cfelse>
-        	<cflocation url="user_listing_detail.cfm?xss=#xss#&error=filetoolarge" addtoken="No">
+            <cfset session.filetoolarge = true>
+        	<cflocation url="/user_listing_detail/" addtoken="No">
 		</cfif>
 		
 	
 	<cfelseif structKeyExists(form, "process") AND ListFirst(form.process, ",") EQ "UPDATE">
 
-        <!--- <cfdump var="testing 2" abort="true"> --->
+       
     
     	<cfif cgi.content_length LTE fileSizeLimit>
 	
-		<cfif isDefined('form.fileup') and form.fileup NEQ "">
-                    
-            <cffile action="upload" nameconflict="overwrite" filefield="fileup" destination="#uploaddir#/#form.uid#.jpg" result="fileupload">
-    
-            <cfif fileupload.fileWasSaved>
-                
-                <cfimage 
-                    action="read" 
-                    source="#application.uploaddir#/#form.uid#.jpg" 
-                    name="oImage" 
-                />
-        
-                <cfimage
-                    action="resize"
-                    source="#oImage#"
-                    width="100"
-                    height=""
-                    name="oImageSmall"
-                />
-               
-                <cfimage
-                    action="WRITE"
-                    source="#oImageSmall#"
-                    destination="#application.uploaddir#/thumbnails/#form.uid#.jpg"
-                    overwrite="true"
-                />
-            
-            </cfif>
-                        
-        </cfif>
+  
 	
 		<!--- parse out unwanted chars --->
         <cfset form.retail_price 	= rereplace(form.retail_price, "[^0-9|.]", "", "all")> 
@@ -278,6 +268,55 @@
                     size = '#size#'
                 WHERE uid = #form.uid#
             </cfquery>
+
+
+            <cfif isDefined('form.fileup') and form.fileup NEQ "">
+            
+                <cffile action="upload" nameconflict="overwrite" filefield="fileup" destination="#uploaddir#" result="fileupload">
+
+                <cfset fileExt = lcase(fileupload.clientFileExt)>
+
+                <cfif fileExt EQ 'jpg'>
+                    <cfif fileupload.fileWasSaved>
+
+                        <cffile 
+                            action="rename" 
+                            source="#fileupload.serverDirectory#/#fileupload.serverFile#" 
+                            destination="#fileupload.serverDirectory#/#form.uid#.jpg"
+                        >
+                    
+                        <cfimage 
+                            action="read" 
+                            source="#application.uploaddir#/#form.uid#.jpg" 
+                            name="oImage" 
+                        />
+                
+                        <cfimage
+                            action="resize"
+                            source="#oImage#"
+                            width="100"
+                            height=""
+                            name="oImageSmall"
+                        />
+                    
+                        <cfimage
+                            action="WRITE"
+                            source="#oImageSmall#"
+                            destination="#application.uploaddir#/thumbnails/#form.uid#.jpg"
+                            overwrite="true"
+                        />
+                    
+                    </cfif>
+
+                <cfelse>
+                    <cffile action="delete" file="#fileupload.serverDirectory#/#fileupload.serverFile#">
+                    <cfset session.ext = true>
+                    <cflocation url="/user_listing_detail/#form.uid#" addtoken="No">
+                </cfif>
+        
+            
+                            
+            </cfif>
             
             <cftry>
             
@@ -312,10 +351,11 @@
             
             </cftry>
             
-            <cflocation url="user_listing_results.cfm?xss=#xss#&process=update" addtoken="No">
+            <cflocation url="/overView" addtoken="No">
             
       	<cfelse>
-        	<cflocation url="user_listing_detail.cfm?xss=#xss#&id=#form.uid#&error=filetoolarge" addtoken="No">
+            <cfset session.filetoolarge = true>
+        	<cflocation url="/user_listing_detail/#form.uid#" addtoken="No">
 		</cfif>
 		
 		
@@ -337,7 +377,7 @@
 			DELETE products where uid = #form.uid#	
 		</cfquery>
 		
-		<cflocation url="user_listing_results.cfm?xss=#xss#&process=delete" addtoken="No">
+		<cflocation url="/user_listing_results/delete" addtoken="No">
 	
 	</cfif>
     
@@ -406,10 +446,10 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-	<script language="JavaScript" src="./js/utils.js"></script>
+	<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -483,14 +523,28 @@ function validEntries(frm) {
 	// return false;
     isValid = false;
 	}
-	if (frm.size.value.trim() === '') {
-        toastr.error('You must enter a valid SIZE: only numbers and the letter x');
-        // document.getElementById('SizeError').textContent = 'You must enter a valid SIZE: only numbers and the letter x';
-        isValid = false;
-    } else if (!isValidSize(frm.size.value)) {
-        toastr.error('You must enter a valid SIZE: only numbers and the letter x');
-        // document.getElementById('SizeError').textContent = 'You must enter a valid SIZE: only numbers and the letter x';
-        isValid = false;
+	// if (frm.size.value.trim() === '') {
+    //     toastr.error('You must enter a valid SIZE: only numbers and the letter x');
+    //     // document.getElementById('SizeError').textContent = 'You must enter a valid SIZE: only numbers and the letter x';
+    //     isValid = false;
+    // } else if (!isValidSize(frm.size.value)) {
+    //     toastr.error('You must enter a valid SIZE: only numbers and the letter x');
+    //     // document.getElementById('SizeError').textContent = 'You must enter a valid SIZE: only numbers and the letter x';
+    //     isValid = false;
+    // }
+
+
+    if (frm.size.value.trim() === '') {
+    toastr.error('You must enter a valid SIZE in the format height x width (e.g. 12x24)');
+    isValid = false;
+    } else {
+        // Regex: numbers + optional spaces + 'x' or 'X' + optional spaces + numbers
+        const sizePattern = /^\d+\s*[xX]\s*\d+$/;
+
+        if (!sizePattern.test(frm.size.value.trim())) {
+            toastr.error('Size must be in the format height x width (e.g. 12x24)');
+            isValid = false;
+        }
     }
 
     if(frm.caption.value == ''){
@@ -511,6 +565,7 @@ document.frm1.manufacturer.value = artistvalue;
 return true;
 }
 </script>
+
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -566,15 +621,17 @@ return true;
                                                             Please reduce your file size to <cfoutput>#fileSizeLimitKb#</cfoutput>.
                                                         </span>
                                                     </cfif>
-                                                    <cfif sellerArt.recordcount GT 5>
-                                                        <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">
-                                                            Sorry, but you are only allowed 5 free uploads.  Please contact
-                                                             <b>
-                                                                <a href="mailto:info@gallart.com" style="color: #ff0000; font-size: 13px; text-decoration:underline;">
-                                                                    Gallart.com
-                                                                </a>
-                                                            </b> in order to submit additional listings at $35 apiece.
-                                                        </span>
+                                                    <cfif sellerArt.recordcount EQ 5>
+                                                        <cfif !isDefined('url.id')>
+                                                            <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">
+                                                                Sorry, but you are only allowed 5 free uploads.  Please contact
+                                                                <b>
+                                                                    <a href="mailto:info@gallart.com" style="color: #ff0000; font-size: 13px; text-decoration:underline;">
+                                                                        Gallart.com
+                                                                    </a>
+                                                                </b> in order to submit additional listings at $35 apiece.
+                                                            </span>
+                                                        </cfif>
                                                     </cfif>
                                                     <h3>SELL YOUR ART ON GALLART.COM!</h3>
                                                 </div>
@@ -589,7 +646,7 @@ return true;
                                                 <!--- <cfdump var="#session.sellerinfo#" abort="true"> --->
                                                 <cfoutput>
 
-                                                    <form name="frm1" action="user_listing_detail.cfm?xss=#xss#" method="post" enctype="multipart/form-data" onSubmit="javascript:return validEntries(document.frm1);">
+                                                    <form name="frm1" action="/user_listing_detail" method="post" enctype="multipart/form-data" onSubmit="javascript:return validEntries(document.frm1);">
                                                         <div class="input-form">
                                                             <input type="Hidden" name="fk_users" value="#session.sellerinfo.pk_users#">
                                                             <input type="hidden" name="orderable" value="0">
@@ -724,17 +781,18 @@ return true;
                                                         </div>
                                                     </form>
 
-                                                    <form name="frmDelete" action="user_listing_detail.cfm?xss=#xss#" method="post">
-                                                        <div class="input-form">
-                                                            <input type="Hidden" name="process" value="DELETE">
-                                                            <input type="hidden" name="uid" value="#detail.uid#">
+                                                    <cfif structKeyExists(detail, "uid") and len(trim(detail.uid))>
+                                                        <form name="frmDelete" action="/user_listing_detail" method="post">
+                                                            <div class="input-form">
+                                                                <input type="Hidden" name="process" value="DELETE">
+                                                                <input type="hidden" name="uid" value="#detail.uid#">
 
-                                                            <div class="input-button flex-input-btn listing-detail-btns">
-                                                                <input type="submit" name="process" class="SeeMore" value="Delete!" onClick="javascript:return confirm('Delete -- Are You Sure?');">
+                                                                <div class="input-button flex-input-btn listing-detail-btns">
+                                                                    <input type="submit" name="process" class="SeeMore" value="Delete!" onClick="javascript:return confirm('Delete -- Are You Sure?');">
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </form>
-                                                    
+                                                        </form>
+                                                    </cfif>
                                                 </cfoutput>
                                             </div>
                                         </div>
@@ -800,6 +858,21 @@ return true;
                     }
                 });
             });
+</script>
+
+<script>
+    <cfif structKeyExists(session, "limitReached") and session.limitReached>
+        toastr.error('Sorry, You are only allowed 5 free uploads.');
+        <cfset structDelete(session, "limitReached")>
+    </cfif>
+    <cfif structKeyExists(session, "filetoolarge") and session.filetoolarge>
+        toastr.error('Image size is maximum 2MB');
+        <cfset structDelete(session, "filetoolarge")>
+    </cfif>
+    <cfif structKeyExists(session, "ext") and session.ext>
+        toastr.error('Only JGP files add');
+        <cfset structDelete(session, "ext")>
+    </cfif>
 </script>
 
 <style>

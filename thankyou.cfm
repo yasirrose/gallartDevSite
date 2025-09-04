@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
 <cfquery name="GetuserInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT  * FROM tracker WHERE sessionid = '#xss#'
+	SELECT  * FROM tracker WHERE sessionid = '#session.xss#'
 </cfquery>
 <html>
 <head>
@@ -16,46 +16,46 @@
 <cfinclude template="meta.cfm">
 
 <style>
-	table tr td * {
-		font-size: 13px !important;
-	}
-	.billing-section .billing-listing ul li:not(:last-child) {
-		border-bottom: 1px solid #c7c8c9;
-	}
-	.billing-section .billing-listing ul li {
-		padding-bottom: 10px;
-	}
-	.table-cart-detail {
-		background: #F2F2F2;
-		padding: 30px;
-		border-radius: 15px;	
-	}
-	.table-cart-detail {
-		background: #F2F2F2;
-		padding: 30px;
-		border-radius: 15px;	
-	}
-	.table-cart-detail tbody, .table-cart-detail td, .table-cart-detail tfoot, .table-cart-detail th, .table-cart-detail thead, .table-cart-detail tr {
-		border-color: #c7c8c94f; 
-		border-width: 1px;	
-		padding: 10px;
-	}
+table tr td * {
+    font-size: 13px !important;
+}
+.billing-section .billing-listing ul li:not(:last-child) {
+    border-bottom: 1px solid #c7c8c9;
+}
+.billing-section .billing-listing ul li {
+	padding-bottom: 10px;
+}
+.table-cart-detail {
+	background: #F2F2F2;
+    padding: 30px;
+    border-radius: 15px;	
+}
+.table-cart-detail {
+	background: #F2F2F2;
+    padding: 30px;
+    border-radius: 15px;	
+}
+.table-cart-detail tbody, .table-cart-detail td, .table-cart-detail tfoot, .table-cart-detail th, .table-cart-detail thead, .table-cart-detail tr {
+	border-color: #c7c8c94f; 
+    border-width: 1px;	
+	padding: 10px;
+}
+.billing-section .billing-listing ul li * {
+    width: 50%; 
+    min-width: 50%;
+}
+@media (max-width: 991px) {
 	.billing-section .billing-listing ul li * {
-		width: 50%; 
 		min-width: 50%;
-	}
-	@media (max-width: 991px) {
-		.billing-section .billing-listing ul li * {
-			min-width: 50%;
-		}	
-	}
-	</style>
+	}	
+}
+</style>
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
@@ -99,9 +99,6 @@
 												SELECT * FROM orders
 													WHERE orderid='#getuserinfo.orderid#'
 													</cfquery>
-
-                                          <!--- <cfdump var="#get_order_info#"> --->
-
 													<Cfoutput>
 														<div class="top-heading">
 															<h4>Thank you for your order. Your order number is #getuserinfo.orderid#</h4>
@@ -133,22 +130,35 @@
 																			<b>Country:</b>
 																			#billcountry#
 																		</li>
-																		<li>
-																			<b>Cell Phone:</b>
-																			#cellphone#
-																		</li>
-																		<li>
-																			<b>Home Phone:</b>
-																			#billphone#
-																		</li>
-																		<li>
-																			<b>Business Phone:</b>
-																			#businessphone#
-																		</li>
-																		<li>
-																			<b>Phone Outside the US:</b>
-																			#otherphone#
-																		</li>
+
+																		<cfif cellphone neq ''>
+																			<li>
+																				<b>Cell Phone:</b>
+																				#cellphone#
+																			</li>
+																		</cfif>
+																		
+																		<cfif billphone neq ''>
+																			<li>
+																				<b>Home Phone:</b>
+																				#billphone#	
+																			</li>
+																		</cfif>
+																		
+																		<cfif businessphone neq ''>
+																			<li>
+																				<b>Business Phone:</b>
+																				#businessphone#
+																			</li>
+																		</cfif>
+																		
+																		<cfif otherphone neq ''>
+																			<li>
+																				<b>Phone Outside the US:</b>
+																				#otherphone#
+																			</li>
+																		</cfif>
+																		
 																		<li>
 																			<b>Email:</b>
 																			#email#
@@ -158,86 +168,68 @@
 																			#website#
 																		</li>
 																	</ul>
-																	<div class="main-title">
-																		<h2>Payment Information</h2>
-																	</div>
-																	<ul>
-																		<li>
-																			<b>Card Type:</b>
-																			#payment_method#
-																		</li>
-																		<li>
-																			<b>Card Number:</b>
-																			xxxx-xxxx-xxxx-#Right(CardNumber,4)#
-																		</li>
-																		<li>
-																			<b>Expiration Date:</b>
-																			#CardExpiry#
-																		</li>
-																	</ul>
+																	
 																</div>
 																<div class="billing-listing">
 																	<div class="mb-4">
-																	<div class="main-title mb-4">
-																		<h2>Shipping Information</h2>
-																	</div>
-																	<ul>
-																		
-																		
-																		<li>
-																			<b>Name:</b>
-																			<cfif shipname lt "1">#billname#<cfelse>#shipname#</cfif>
-																		</li>
-																		<li>
-																			<b>Address1:</b>
-																			<cfif shipaddress1 lt "1">#billaddress1#<Cfelse>#shipaddress1#</Cfif>
-																		</li>
-																		<li>
-																			<b>Address2:</b>
-																			<Cfif shipaddress2 lt "1">#billaddress2#<cfelse>#shipaddress2#</cfif>
-																		</li>
-																		<li>
-																			<b>City, State,  Zip</b>
-																			<cfif shipcity lt "1">#billcity#, #billstate# #billzip#<cfelse>#shipcity#, #shipstate#&nbsp;&nbsp;#shipzip#</cfif>
-																		</li>
-																		<li>
-																			<b>Phone:</b>
-																			<cfif shipphone lt "1">#billphone#<cfelse>#shipphone#</cfif>
-																		</li>
-																		<li>
-																			<b>Shipping Method:</b>
-																			#shipMethod#
-																		</li>
-																	</ul>
-																</div> 
-																<div>
-																	<div class="main-title">
-																		<h2>Payment Information</h2>
-																	</div>
-																	<ul>
-																		<li>
-																			<b>Card Type:</b>
-																			#payment_method#
-																		</li>
-																		<li>
-																			<b>Card Number:</b>
-																			xxxx-xxxx-xxxx-#Right(CardNumber,4)#
-																		</li>
-																		<li>
-																			<b>Expiration Date:</b>
-																			#CardExpiry#
-																		</li>
-																	</ul>
-																</div> 
+																		<div class="main-title mb-4">
+																			<h2>Shipping Information</h2>
+																		</div>
+																		<ul> 
+																			<li>
+																				<b>Name:</b>
+																				<cfif shipname lt "1">#billname#<cfelse>#shipname#</cfif>
+																			</li>
+																			<li>
+																				<b>Address1:</b>
+																				<cfif shipaddress1 lt "1">#billaddress1#<Cfelse>#shipaddress1#</Cfif>
+																			</li>
+																			<li>
+																				<b>Address2:</b>
+																				<Cfif shipaddress2 lt "1">#billaddress2#<cfelse>#shipaddress2#</cfif>
+																			</li>
+																			<li>
+																				<b>City, State,  Zip</b>
+																				<cfif shipcity lt "1">#billcity#, #billstate# #billzip#<cfelse>#shipcity#, #shipstate#&nbsp;&nbsp;#shipzip#</cfif>
+																			</li>
+																			<li>
+																				<b>Phone:</b>
+																				<cfif shipphone lt "1">#billphone#<cfelse>#shipphone#</cfif>
+																			</li>
+																			<li>
+																				<b>Shipping Method:</b>
+																				#shipMethod#
+																			</li>
+																		</ul>
+																	</div> 
+																	<div>
+																		<div class="main-title">
+																			<h2>Payment Information</h2>
+																		</div>
+																		<ul>
+																			<li>
+																				<b>Card Type:</b>
+																				#payment_method#
+																			</li>
+																			<li>
+																				<b>Card Number:</b>
+																				xxxx-xxxx-xxxx-#Right(CardNumber,4)#
+																			</li>
+																			<li>
+																				<b>Expiration Date:</b>
+																				#CardExpiry#
+																			</li>
+																		</ul>
+																	</div> 
 																</div>
 															</div>
 															<div class="table-cart-detail mt-4">
-															<table cellpadding="0" cellspacing="0" border="0" width="100%">
+																<table cellpadding="0" cellspacing="0" border="0" width="100%">
 																</cfoutput>		
-																	<!--- <tr>
+																	<!-- <tr>
 																		<td colspan=4 align="center"><hr>
 																		</td>
-																	</tr> --->
+																	</tr> -->
 																	<tr>
 																		<td width="13%"><font size="1" face="verdana, arial, helvetica"><b>Number</b></font></td>
 																		<td width="55%"><font size="1" face="verdana, arial, helvetica"><b>Name</b></font></td>
@@ -245,10 +237,10 @@
 																		<td align="Center" width="5%"><font size="1" face="verdana, arial, helvetica"><b>Qty</b></font></td>
 																		<td width="20%" align="center"><font size="1" face="verdana, arial, helvetica"><b>Price</b></font></td>
 																	</tr>
-																	<!--- <tr>
+																	<!-- <tr>
 																		<td colspan=4 align="center"><hr>
 																		</td>
-																	</tr> --->
+																	</tr> -->
 																	<cfloop query="get_items">
 																	<cfoutput>
 																		<tr>
@@ -263,10 +255,10 @@
 																</cfoutput>
 															</cfloop>
 															<cfoutput query="get_order_info">
-																<!--- <tr>
+																<!-- <tr>
 																	<td colspan=4 align="right"><hr>
 																	</td>
-																</tr> --->
+																</tr> -->
 																<tr>
 																	<td colspan=4 align="right"><font size="2" color="##ff0000" face="arial, helvetica">We will contact you with the shipping cost.</font>
 																	</td>
@@ -280,13 +272,13 @@
 																	</td>
 																</tr>
 															</cfoutput>
-																<!--- <tr>
+																<!-- <tr>
 																	<td colspan=4 align="center"><br><br>
 																	</td>
-																</tr> --->
+																</tr> -->
 															</table>
-														</div>
-														
+															</div>
+
 															<cfelse>
 																<table cellpadding="0" cellspacing="0" border="0" width="100%">
 																	<tr>

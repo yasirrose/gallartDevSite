@@ -294,7 +294,7 @@ function popupWinEmail(url) {
 		</td>
 		<td valign="top">
 
-			<cfform name="editForm" method="POST" id="editForm" action="index.cfm?event=orders.productOrdersProcess">
+			<cfform name="editForm" method="POST" id="editForm" action="index.cfm?event=orders.productOrdersProcess" onsubmit="return validateOrderForm();">
 			<cfinput type="hidden" name="orderuid" id="orderuid" bind="{data.orderuid}">
 			<cfinput type="hidden" name="a_orders" id="a_orders" bind="{data.a_orders}">
 			<cfinput type="hidden" name="b_orders" id="b_orders" bind="{data.b_orders}">
@@ -363,6 +363,24 @@ function popupWinEmail(url) {
 									<cfinput type="text" name="lname" id="lname"  bind="{data.customer_lname}" size="35" class="displayInput">
 								</td>
 							</tr>
+
+							<!--- <tr>
+								<td style="font-size: 10px;">
+									Address Type:
+								</td>
+								<td>
+									<cfset Addtype = "USA,Outside" />
+									<cfoutput>
+										<select name="Addresstype" id="Addresstype" onchange="toggleStateField();">
+											<option value="">Please Select</option>
+											<cfloop list="#Addtype#" index="idx">
+												<option value="#idx#">#idx#</option>
+											</cfloop>
+										</select>
+									</cfoutput>
+								</td>	
+							</tr> --->
+
 							<tr>
 								<td style="font-size: 10px;">
 									Address
@@ -379,6 +397,7 @@ function popupWinEmail(url) {
 									<cfinput type="text" name="city" id="city"  bind="{data.city}" size="35" class="displayInput">
 								</td>
 							</tr>
+
 							<tr>
 								<td style="font-size: 10px;">
 									State
@@ -387,6 +406,32 @@ function popupWinEmail(url) {
 									<cfinput type="text" name="state" id="state"  bind="{data.state}" size="35" class="displayInput">
 								</td>
 							</tr>
+
+							<!--- <tr id="stateTextRow" style="display:none;">
+								<td style="font-size: 10px;">
+									State
+								</td>
+								<td>
+									<cfinput type="text" name="state" id="state"  bind="{data.state}" size="35" class="displayInput">
+								</td>
+							</tr>
+							
+							<tr id="stateDropdownRow" style="display:none;">
+								<td style="font-size: 10px;">
+									State
+								</td>
+								<td>
+									<cfoutput>
+										<select name="state_dropdown" id="state_dropdown">
+											<option value="">Please Select</option>
+											<cfloop query="getStates">
+												<option value="#getStates.stateAbb#">#getStates.state#</option>
+											</cfloop>
+										</select>
+									</cfoutput>
+								</td>	
+							</tr> --->
+
 							<tr>
 								<td style="font-size: 10px;">
 									Country
@@ -413,7 +458,81 @@ function popupWinEmail(url) {
 									<!--<span  id="emailLink"></span>-->
 								</td>
 							</tr>
+
+							
+
 							<tr>
+								<td style="font-size: 10px;">
+									Phone Type:
+								</td>
+								<td>
+									<select name="PhoneType" id="PhoneType">
+										<option value="Home Phone" >Home</option>
+										<option value="Cell Phone">Mobile</option>
+										<option value="Business Phone">Business</option>
+										<option value="OutsideUS">Outside US</option>
+									</select>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="font-size: 10px;">
+									Phone Number:
+								</td>
+								<td>
+									<cfinput type="text" name="phoneNumber" id="phoneNumber" >
+									<span id="formatSign">(xxx) xxx-xxxx</span>
+								</td>
+							</tr>
+
+							<cfoutput>
+								<script>
+									document.addEventListener("DOMContentLoaded", function() {
+										const phoneInput = document.getElementById("phoneNumber");
+										const phoneType = document.getElementById("PhoneType");
+										const formatSign = document.getElementById("formatSign");
+
+										function toggleFormatSign() {
+											if (phoneType.value === "OutsideUS") {
+												formatSign.style.display = "none";
+											} else {
+												formatSign.style.display = "inline";
+											}
+										}
+
+										// run on load (in case form already has value)
+										toggleFormatSign();
+
+										// run on change
+										phoneType.addEventListener("change", toggleFormatSign);
+
+										phoneInput.addEventListener("input", function(e) {
+											// If type is OutsideUS → skip formatting
+											if (phoneType.value === "OutsideUS") {
+												return;
+											}
+
+											let value = e.target.value.replace(/\D/g, ""); // only digits
+											if (value.length > 10) value = value.substring(0, 10);
+
+											// Apply formatting as user types
+											if (value.length > 6) {
+												e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+											} else if (value.length > 3) {
+												e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+											} else if (value.length > 0) {
+												e.target.value = `(${value}`;
+											} else {
+												e.target.value = "";
+											}
+										});
+									});
+
+								</script>
+							</cfoutput>
+
+							
+							<!--- <tr>
 								<td style="font-size: 10px;">
 									Home Phone:
 								</td>
@@ -444,7 +563,7 @@ function popupWinEmail(url) {
 								<td>
 									<cfinput type="text" name="customer_otherphone" id="customer_otherphone"  bind="{data.customer_otherphone}" size="35" class="displayInput">
 								</td>
-							</tr>
+							</tr> --->
 							<tr>
 								<td style="font-size: 10px;">
 									Fax:
@@ -737,7 +856,7 @@ function popupWinEmail(url) {
 									<cfif session.userinfo.sa EQ 1>
 										<cfinput type="button" name="delete" id="delete" value="Delete Order" onclick="javascript:deleteOrder(document.editForm.orderuid.value);" />&nbsp;
 									</cfif>
-									<cfinput type="button" name="printInvoice" id="printInvoice" value="Print Invoice" onclick="if (confirm('Save your changes before printing - continue?')) { popupWin('http://#server_name#/admin/views/orders/manage/print_product_invoice.cfm'); };" />
+									<cfinput type="button" name="printInvoice" id="printInvoice" value="Print Invoice" onclick="if (confirm('Save your changes before printing - continue?')) { popupWin('http://23.20.226.157/admin/views/orders/manage/print_product_invoice.cfm'); };" />
 									<cfif NOT listFindNoCase(session.userinfo.roles,'special admin')>
 										<cfinput type="button" style="display:none;" name="emailInvoice" id="emailInvoice" value="Email Invoice" onclick="if (confirm('Save your changes before emailing - continue?')) { popupWinEmail('http://#server_name#/admin/views/orders/manage/email_product_invoice.cfm'); };" />
 									</cfif>
@@ -753,11 +872,37 @@ function popupWinEmail(url) {
 </table>
 
 
+
 <!--- <cfset ajaxOnLoad("init")> --->
 <script language="JavaScript">
 	function formatPriceEdit(){
 		document.itemEditForm.price.value = decimalFormat(document.itemEditForm.priceInputEdit.value);
 	}
+
+	function validateOrderForm() {
+		let phoneType = document.getElementById("PhoneType").value;
+		let phone = document.getElementById("phoneNumber").value.trim();
+
+		// Agar phone empty hai aur required nahi, to skip
+		if (phone === "") {
+			return true;
+		}
+
+		// Sirf Home / Cell / Business ke liye format check
+		if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
+			let phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;   // (123) 456-7890 format
+			if (!phonePattern.test(phone)) {
+				alert("Please enter phone number in format: (xxx) xxx-xxxx");
+				document.getElementById("phoneNumber").focus();
+				return false;
+			}
+		}
+
+		// OutsideUS ke liye koi restriction nahi
+		return true;
+	}
+
+
 </script>
 <!--- <cfwindow name="itemEditWindow" center="true" modal="true" resizable="false" closable="false" title="Edit Item" width="350" height="250" headerStyle="background-color:##dd3a7d;">
 	<table cellspacing="0" cellpadding="3" border="0" width="100%" bgcolor="#ffffff">
@@ -1079,4 +1224,24 @@ function popupWinEmail(url) {
 	});
 </script>
 
+
+<!--- <script>
+function toggleStateField() {
+    var addressType = document.getElementById("Addresstype").value;
+
+    if (addressType === "Outside") {
+        // Show text field, hide dropdown
+        document.getElementById("stateTextRow").style.display = "";
+        document.getElementById("stateDropdownRow").style.display = "none";
+    } else if (addressType === "USA") {
+        // Show dropdown, hide text field
+        document.getElementById("stateDropdownRow").style.display = "";
+        document.getElementById("stateTextRow").style.display = "none";
+    } else {
+        // Hide both if nothing selected
+        document.getElementById("stateTextRow").style.display = "none";
+        document.getElementById("stateDropdownRow").style.display = "none";
+    }
+}
+</script> --->
 

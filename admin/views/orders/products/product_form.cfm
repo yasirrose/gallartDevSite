@@ -1,4 +1,13 @@
 <!--- <cfset temp = structDelete(session,'orderArray') /> --->
+<cfhtmlhead text='
+		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	
+	'>
+
 <table border = "0" width = "600" cellpadding = "5" cellspacing = "0" bgcolor="ffffff">
 	<tr>
 		<td align="center" valign="top">
@@ -20,7 +29,7 @@
 				Search Existing Customers:
 			</td>
 			<td>
-				<cfselect query="getCustomers" name="customerId" display="full_customer_name" value="id" selected="#form.customerId#" onChange="getCustomer(this.value);" queryPosition="below">
+				<cfselect query="getCustomers" name="customerId" id="customerId" class="select2" display="full_customer_name" value="id" selected="#form.customerId#" onChange="getCustomer(this.value);" queryPosition="below">
 				<option value="">Please Select</option>
 				</cfselect>
 			</td>
@@ -30,7 +39,7 @@
 				Search Leads:
 			</td>
 			<td>
-				<cfselect query="getLeads" name="leadId" display="full_lead_name" value="pk_leads" selected="#form.leadId#" onChange="getLead(this.value);" queryPosition="below">
+				<cfselect query="getLeads" name="leadId" id="leadId" display="full_lead_name" class="select2" value="pk_leads" selected="#form.leadId#" onChange="getLead(this.value);" queryPosition="below">
 				<option value="">Please Select</option>
 				</cfselect>
 			</td>
@@ -42,7 +51,64 @@
 		</tr>
 	</cfif>
 	
+	<cfoutput>
+		<script>
+			// $(document).ready(function() {
+			// 	$('##customerId').select2({
+			// 	placeholder: "Please Select",
+			// 	allowClear: true
+			// 	});
+			// });
 
+			 $(document).ready(function () {
+                $('.select2').select2({
+                    matcher: function (params, data) {
+                        if ($.trim(params.term) === '') {
+                            return data;
+                        }
+
+                        // Prevent matching placeholder during search
+                        if (data.id === '') {
+                            return null;
+                        }
+
+                        var term = params.term.toLowerCase();
+                        var text = data.text.toLowerCase();
+
+                        // Starts with match
+                        if (text.startsWith(term)) {
+                            return data;
+                        }
+
+                        // Contains match (less priority)
+                        if (text.indexOf(term) > -1) {
+                            var modifiedData = $.extend({}, data, true);
+                            modifiedData.text = data.text + ' ';
+                            return modifiedData;
+                        }
+
+                        return null;
+                    },
+
+                    sorter: function (data) {
+                        var term = $('.select2-search__field').val().toLowerCase();
+                        return data.sort(function (a, b) {
+                            var aStarts = a.text.toLowerCase().startsWith(term);
+                            var bStarts = b.text.toLowerCase().startsWith(term);
+
+                            if (aStarts && !bStarts) return -1;
+                            if (!aStarts && bStarts) return 1;
+                            return 0;
+                        });
+                    }
+                });
+            });
+
+
+			
+
+		</script>
+	</cfoutput>
 
 
 	<tr>
@@ -71,11 +137,11 @@
 		</td>
 		<td>
 			<cfinput name="Email" id="Email" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromEmail({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" align="left" style="z-index:1000;" tabindex="0" value="#form.Email#">&nbsp;
-<input type="Button" value="Fill" onclick="fillEmail('orderform',document.getElementById('Email').value)">
+			<input type="Button" value="Fill" onclick="fillEmail('orderform',document.getElementById('Email').value)">
 			<!--- <input type="text" name="Email" id="Email" size="50" value="#form.Email#"> --->
 		</td>
 	</tr>
-	<tr>
+	<!--- <tr>
 		<td>
 			<span style="color: ##ff0000;">Cell Phone</span>
 		</td>
@@ -106,15 +172,92 @@
 		<td>
 			<input type="text" name="OtherPhone" id="OtherPhone"  size="50"  value="#form.OtherPhone#">
 		</td>
-	</tr>
+	</tr> --->
+
 	<tr>
+		<td>
+			Select Phone Number type
+		</td>
+		<td>		
+
+			 <select name="PhoneType" id="PhoneType">
+				<option value="Home Phone" <cfif form.PhoneType EQ "Home Phone">selected</cfif>>Home</option>
+				<option value="Cell Phone" <cfif form.PhoneType EQ "Cell Phone">selected</cfif>>Mobile</option>
+				<option value="Business Phone" <cfif form.PhoneType EQ "Business Phone">selected</cfif>>Business</option>
+				<option value="OutsideUS" <cfif form.PhoneType EQ "OutsideUS">selected</cfif>>Outside US</option>
+			</select>
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			Phone Number
+		</td>
+		<td>
+
+			<input type="text" name="PhoneNumber" id="PhoneNumber"  size="50" value="#form.PhoneNumber#">
+			<span id="formatSign">(xxx) xxx-xxxx</span>
+		</td>
+	</tr>
+
+
+	<cfoutput>
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				const phoneInput = document.getElementById("PhoneNumber");
+				const phoneType = document.getElementById("PhoneType");
+				const formatSign = document.getElementById("formatSign");
+
+				function toggleFormatSign() {
+					if (phoneType.value === "OutsideUS") {
+						formatSign.style.display = "none";
+					} else {
+						formatSign.style.display = "inline";
+					}
+				}
+
+				// run on load (in case form already has value)
+				toggleFormatSign();
+
+				// run on change
+				phoneType.addEventListener("change", toggleFormatSign);
+
+				phoneInput.addEventListener("input", function(e) {
+					// If type is OutsideUS → skip formatting
+					if (phoneType.value === "OutsideUS") {
+						return;
+					}
+
+					let value = e.target.value.replace(/\D/g, ""); // only digits
+					if (value.length > 10) value = value.substring(0, 10);
+
+					// Apply formatting as user types
+					if (value.length > 6) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+					} else if (value.length > 3) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+					} else if (value.length > 0) {
+						e.target.value = `(${value}`;
+					} else {
+						e.target.value = "";
+					}
+				});
+			});
+
+		</script>
+	</cfoutput>
+
+	
+
+	<!--- <tr>
 		<td>
 			Fax:
 		</td>
 		<td>
 			<input type="text" name="Fax" id="Fax" size="50"  value="#form.Fax#">
 		</td>
-	</tr>
+	</tr> --->
+
 	<tr>
 		<td>
 			Consultant:
@@ -131,7 +274,7 @@
 			<input type="text" name="Company" id="Company"  size="50"  value="#form.Company#">
 		</td>
 	</tr>
-	<tr>
+	<!--- <tr>
 		<td>
 			Address:
 		</td>
@@ -176,7 +319,83 @@
 		<td>
 			<input type="text" name="Zip" id="Zip" size="50" value="#form.Zip#">
 		</td>
+	</tr> --->
+
+	<tr>
+		<td>
+			Address Type:
+		</td>
+		<td>
+			<select name="AddressType" id="AddressType" onchange="toggleAddressFields()">
+				<option value="">Please Select</option>
+				<option value="USA" <cfif form.AddressType eq 'USA'>selected</cfif> >USA Address</option>
+				<option value="Outside" <cfif form.AddressType eq 'Outside'>selected</cfif>>Outside USA</option>
+			</select>
+		</td>
 	</tr>
+
+	<!-- USA Address Section -->
+	<tbody id="USAAddress" style="display:none;">
+		<tr>
+			<td>Street Address:</td>
+			<td><input type="text" name="Address1" id="Address1" size="50" value="#form.Address1#"></td>
+		</tr>
+		<tr>
+			<td>City:</td>
+			<td><input type="text" name="City" id="City" size="50" value="#form.City#"></td>
+		</tr>
+		<tr>
+			<td>State:</td>
+			<td>
+				<select name="State" id="State">
+					<option value="">Please Select</option>
+					<cfloop query="getStates">
+						<option value="#stateAbb#" <cfif form.State EQ stateAbb>selected</cfif> >#state#</option>
+					</cfloop>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Zip Code:</td>
+			<td><input type="text" name="Zip" id="Zip" size="50" value="#form.Zip#"></td>
+		</tr>
+	</tbody>
+
+	<!-- Outside USA Address Section -->
+	<tbody id="OutsideAddress" style="display:none;">
+		<tr>
+			<td>Street Address:</td>
+			<td><input type="text" name="Address1_Outside" id="Address1_Outside" size="50" value="#form.Address1_Outside#"></td>
+		</tr>
+		<tr>
+			<td>City:</td>
+			<td><input type="text" name="City_Outside" id="City_Outside" size="50" value="#form.City_Outside#"></td>
+		</tr>
+		<tr>
+			<td>State/Province:</td>
+			<td><input type="text" name="State_Outside" id="State_Outside" size="50" value="#form.State_Outside#"></td>
+		</tr>
+		<tr>
+			<td>Zip Code:</td>
+			<td><input type="text" name="Zip_Outside" id="Zip_Outside" size="50" value="#form.Zip_Outside#"></td>
+		</tr>
+		<tr>
+			<td>Country:</td>
+			<td><input type="text" name="Country" id="Country" size="50" value="#form.Country#"></td>
+		</tr>
+	</tbody>
+
+	<script>
+		function toggleAddressFields() {
+			var type = document.getElementById("AddressType").value;
+			document.getElementById("USAAddress").style.display = (type === "USA") ? "" : "none";
+			document.getElementById("OutsideAddress").style.display = (type === "Outside") ? "" : "none";
+		}
+
+		// Run on page load if form already has a value
+		window.onload = toggleAddressFields;
+	</script>
+
 	<tr>
 		<td>
 			Website:
@@ -516,6 +735,108 @@
 		</cfform>
 	</table>
 </cfwindow> --->
+
+
+<!--- <script>
+  // yeh code aapke getCustomer() / getLead() ko bilkul change nahi karta
+  document.addEventListener('DOMContentLoaded', function () {
+    var $cust = window.jQuery ? jQuery('#customerId') : null;
+    var $lead = window.jQuery ? jQuery('#leadId') : null;
+
+    // Agar jQuery/Select2 hai to yeh path; warna plain JS fallback niche hai
+    if ($cust && $lead && $cust.length && $lead.length) {
+      function disableLead(disable) {
+        $lead.prop('disabled', disable).trigger('change.select2');
+      }
+      function disableCustomer(disable) {
+        $cust.prop('disabled', disable).trigger('change.select2');
+      }
+
+      // Page load par existing values check
+      if ($cust.val()) disableLead(true);
+      if ($lead.val()) disableCustomer(true);
+
+      // Customer change -> Leads disable/enable
+      $cust.on('change', function () {
+        if (this.value) {
+          disableLead(true);
+        } else {
+          disableLead(false);
+        }
+      });
+
+      // Lead change -> Customers disable/enable
+      $lead.on('change', function () {
+        if (this.value) {
+          disableCustomer(true);
+        } else {
+          disableCustomer(false);
+        }
+      });
+      return; // jQuery branch done
+    }
+
+    // ------- Plain JS fallback (agar jQuery/Select2 nahi laga) -------
+    var customerDropdown = document.getElementById('customerId');
+    var leadDropdown = document.getElementById('leadId');
+    if (!customerDropdown || !leadDropdown) return;
+
+    if (customerDropdown.value) leadDropdown.disabled = true;
+    if (leadDropdown.value) customerDropdown.disabled = true;
+
+    customerDropdown.addEventListener('change', function () {
+      leadDropdown.disabled = !!this.value;
+    });
+
+    leadDropdown.addEventListener('change', function () {
+      customerDropdown.disabled = !!this.value;
+    });
+  });
+</script> --->
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const customerSelect = $("#customerId");
+    const leadSelect = $("#leadId");
+
+    function toggleDropdowns() {
+        const customerVal = customerSelect.val();
+        const leadVal = leadSelect.val();
+
+        if (customerVal) {
+            // Customer selected → disable leads
+            leadSelect.prop("disabled", true).trigger("change.select2");
+            customerSelect.prop("disabled", false).trigger("change.select2");
+        } 
+        else if (leadVal) {
+            // Lead selected → disable customers
+            customerSelect.prop("disabled", true).trigger("change.select2");
+            leadSelect.prop("disabled", false).trigger("change.select2");
+        } 
+        else {
+            // Both empty → enable both
+            customerSelect.prop("disabled", false).trigger("change.select2");
+            leadSelect.prop("disabled", false).trigger("change.select2");
+        }
+    }
+
+    // Run once on page load
+    toggleDropdowns();
+
+    // Run on change
+    customerSelect.on("change", toggleDropdowns);
+    leadSelect.on("change", toggleDropdowns);
+});
+</script>
+
+
+
+
+
+
+
 
 <cfwindow name="searchAllContactsWindow" center="true" modal="true" resizable="false" closable="false" title="Search All Contacts" width="500" height="500" headerStyle="background-color:##dd3a7d;">
 	<table cellspacing="0" cellpadding="3" border="0" width="100%" bgcolor="#ffffff">

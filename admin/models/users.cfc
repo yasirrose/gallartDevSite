@@ -120,6 +120,30 @@
 		<cfargument name="password" type="string" default="">
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Home Phone">
+			<cfset phone = arguments.phoneNumber>
+		<cfelse>
+			<cfset phone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Cell Phone">
+			<cfset Cellphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset Cellphone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Business Phone">
+			<cfset businessphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset businessphone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "OutsideUS">
+			<cfset otherphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset otherphone = "">
+		</cfif>
 	    
 	    <cfset var success = true />
 	    
@@ -134,6 +158,9 @@
 	                	lname,
 	                	email,
 						phone,
+						cellphone,
+						businessphone,
+						otherphone,
 						password
 	                )
 	                values
@@ -141,7 +168,10 @@
 						'#arguments.fname#',
 						'#arguments.lname#',
 						'#arguments.seller_email#',
-						'#arguments.phone#',
+						'#phone#',
+						'#cellphone#',
+						'#businessphone#',
+						'#otherphone#',
 						'#arguments.password#'
 					)
 	            </cfquery>
@@ -154,7 +184,10 @@
 	                fname = '#arguments.fname#',
 	                lname = '#arguments.lname#',
 					email = '#arguments.seller_email#',
-					phone = '#arguments.phone#',
+					phone = '#phone#',
+					cellphone = '#cellphone#',
+					businessphone = '#businessphone#',
+					otherphone = '#otherphone#',
 					password = '#arguments.password#'
 	                WHERE pk_users = '#arguments.pk_users#'
 	            </cfquery>

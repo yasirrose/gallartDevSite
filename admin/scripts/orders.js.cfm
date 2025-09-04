@@ -114,6 +114,81 @@ function gridChange(thisId) {
 			frm.lexy.checked = false;
 		}
 	}
+
+
+	let phoneTypeField = document.getElementById("PhoneType");
+	let phoneNumberField = document.getElementById("phoneNumber");
+
+	// Reset first
+	phoneTypeField.value = "";
+	phoneNumberField.value = "";
+
+	
+
+	if(strOrder['CUSTOMER_CELLPHONE'] && strOrder['CUSTOMER_CELLPHONE'].trim() !== ""){
+		phoneTypeField.value = "Cell Phone";
+		phoneNumberField.value = strOrder['CUSTOMER_CELLPHONE'];
+	}
+	else if(strOrder['CUSTOMER_BUSINESSPHONE'] && strOrder['CUSTOMER_BUSINESSPHONE'].trim() !== ""){
+		phoneTypeField.value = "Business Phone";
+		phoneNumberField.value = strOrder['CUSTOMER_BUSINESSPHONE'];
+	}
+	else if(strOrder['CUSTOMER_OTHERPHONE'] && strOrder['CUSTOMER_OTHERPHONE'].trim() !== ""){
+		phoneTypeField.value = "OutsideUS";
+		phoneNumberField.value = strOrder['CUSTOMER_OTHERPHONE'];
+	}
+	else if(strOrder['CUSTOMER_PHONE'] && strOrder['CUSTOMER_PHONE'].trim() !== ""){
+		phoneTypeField.value = "Home Phone";
+		phoneNumberField.value = strOrder['CUSTOMER_PHONE'];
+	} else {
+		phoneTypeField.value = "Cell Phone";
+		phoneNumberField.value = '';
+	}
+
+	<!--- console.log("Phone Type Selected: " + phoneTypeField.value);
+	console.log("Phone Number: " + phoneNumberField.value); --->
+
+
+
+
+
+
+
+	
+	<!--- Addresstype = strOrder['ADDRESSTYPE']
+
+	console.log('test data: ' + Addresstype)
+
+	for(i = 0; i < frm.Addresstype.options.length; i++){
+		if(frm.Addresstype.options[i].value == Addresstype){
+			frm.Addresstype.options[i].selected = true;
+		}
+		else{
+			frm.Addresstype.options[i].selected = false;
+		}
+	}
+
+	if (Addresstype && Addresstype.toLowerCase() === "outside") {
+		document.getElementById("stateTextRow").style.display = "";
+		document.getElementById("stateDropdownRow").style.display = "none";
+	} else {
+		document.getElementById("stateTextRow").style.display = "none";
+		document.getElementById("stateDropdownRow").style.display = "";
+
+		state = strOrder['STATE']
+
+		for(i = 0; i < frm.state_dropdown.options.length; i++){
+		if(frm.state_dropdown.options[i].value == state){
+			frm.state_dropdown.options[i].selected = true;
+		}
+		else{
+			frm.state_dropdown.options[i].selected = false;
+		}
+	}
+	} --->
+
+
+
 	document.getElementById('productTable').innerHTML = strOrder['itemTable'];
 
 	document.getElementById('amountSaleDisplay').value 	= formatAsDollars(1*strOrder['AMOUNTSALE']);

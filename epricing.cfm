@@ -228,6 +228,31 @@
 														  </cfoutput>
 														  <cfelse>
 															<!--- <cfdump var="#form#" abort="true"> --->
+
+															<cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
+																<cfset phone = form.phone>
+															<cfelse>
+																<cfset phone = "">
+															</cfif>
+
+															<cfif len(trim(form.phone)) AND form.phoneType EQ "Cell Phone">
+																<cfset cellphone = form.phone>
+															<cfelse>
+																<cfset cellphone = "">
+															</cfif>
+
+															<cfif len(trim(form.phone)) AND form.phoneType EQ "Business Phone">
+																<cfset businessphone = form.phone>
+															<cfelse>
+																<cfset businessphone = "">
+															</cfif>
+
+															<cfif len(trim(form.phone)) AND form.phoneType EQ "OutsideUS">
+																<cfset otherphone = form.phone>
+															<cfelse>
+																<cfset otherphone = "">
+															</cfif>
+
 														  <cfif form.name neq ''  and form.Offer neq '' and (form.email NEQ '' OR form.phone NEQ '')>
 														  <cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 															 SELECT * from customers where (email = '#trim(email)#')
@@ -240,12 +265,18 @@
 																(
 																NAME,
 																PHONE,
+																cellphone,
+																businessphone,
+																otherphone,
 																EMAIL
 																)
 																VALUES
 																(
 																'#form.NAME#',
-																'#form.PHONE#',
+																'#phone#',
+																'#cellphone#',
+																'#businessphone#',
+																'#otherphone#',
 																'#form.EMAIL#'
 																)
 																SELECT @@identity as uid 
@@ -259,12 +290,18 @@
 																(
 																NAME,
 																PHONE,
+																cellphone,
+																businessphone,
+																otherphone,
 																EMAIL
 																)
 																VALUES
 																(
 																'#form.NAME#',
-																'#form.PHONE#',
+																'#phone#',
+																'#cellphone#',
+																'#businessphone#',
+																'#otherphone#',
 																'#form.EMAIL#'
 																)
 																SELECT @@identity as uid
@@ -308,38 +345,39 @@
 															<cftry>
 
 																<cfmail 
-													   server="#application.mailserver#" 
-													   username="#application.mailserver_un#"
-													   password="#application.mailserver_pw#" 
-													   to="tldz.dev12@gmail.com"   
-													   from="sales@gallart.com" 
-													   subject="GallArt.com <> We Buy & Sell Fine Art <> Make An Offer" 
-													   port="587" type="HTML">
-													   <font style="font-size: 10pt; font-family: Arial;">
-													   The following user made an offer on the piece below:
-													   <br><br>
-													   <!--- Name: #form.FNAME# #form.LNAME#<br> --->
-													   Name: #form.NAME#<br>
-													   Email Address: #form.Email#<br>
-													   Phone: #form.phone#<br>
-													   Best time to call: #form.best_time#<br>
-													   Offer: $#form.Offer#<br>
-													   Artist: #ucase(productinfo.manufacturer)#<br>
-													   Title: #productinfo.name#<br>
-													   Art ID: #productinfo.modelno#<br>
-													   Retail Price: #dollarFormat(productinfo.retail_price)#<br>
-													   Gallery Price: #dollarFormat(productinfo.gallery_price)#<br>
-													   <!--- removed for make offer 5/6/15 --->
-													   <!--- Sale Price: #dollarFormat(productinfo.sale_price)# --->
-													   <cfif productinfo.fk_users GT 1>
-														   <br>
-														   Seller: #productinfo.fname# #productinfo.lname#<br>
-														   Seller Email: #productinfo.email#<br>
-														   Seller Phone: #productinfo.phone#
-													   </cfif>
-													   <br><br>
-													   </font>
-												   </cfmail>
+																	server="#application.mailserver#" 
+																	username="#application.mailserver_un#"
+																	password="#application.mailserver_pw#" 
+																	to="tldz.dev12@gmail.com"   
+																	from="sales@gallart.com" 
+																	subject="GallArt.com <> We Buy & Sell Fine Art <> Make An Offer" 
+																	port="587" type="HTML"
+																	>
+																	<font style="font-size: 10pt; font-family: Arial;">
+																	The following user made an offer on the piece below:
+																	<br><br>
+																	<!--- Name: #form.FNAME# #form.LNAME#<br> --->
+																	Name: #form.NAME#<br>
+																	Email Address: #form.Email#<br>
+																	Phone: #form.phone#<br>
+																	Best time to call: #form.best_time#<br>
+																	Offer: $#form.Offer#<br>
+																	Artist: #ucase(productinfo.manufacturer)#<br>
+																	Title: #productinfo.name#<br>
+																	Art ID: #productinfo.modelno#<br>
+																	Retail Price: #dollarFormat(productinfo.retail_price)#<br>
+																	Gallery Price: #dollarFormat(productinfo.gallery_price)#<br>
+																	<!--- removed for make offer 5/6/15 --->
+																	<!--- Sale Price: #dollarFormat(productinfo.sale_price)# --->
+																	<cfif productinfo.fk_users GT 1>
+																		<br>
+																		Seller: #productinfo.fname# #productinfo.lname#<br>
+																		Seller Email: #productinfo.email#<br>
+																		Seller Phone: #productinfo.phone#
+																	</cfif>
+																	<br><br>
+																	</font>
+																</cfmail>
 
 																<cfcatch>
 																	<cfdump var="#cfcatch#" abort="true">
@@ -553,14 +591,30 @@
 																			</div>
 																		</div>
 																		<!--- <label><b>OR</b></label> --->
+
+																		<div class="col-md-12">
+																			<div class="input-field">
+																				<select name="phoneType" id="phoneType" class="form-control" style="width:100% !important;">
+																					<option value="Cell Phone">Cell Phone</option>
+																					<option value="Home Phone">Home Phone</option>
+																					<option value="Business Phone">Business Phone</option>
+																					<option value="OutsideUS">Outside US Phone</option>
+																				</select>
+																			
+																			</div>
+																		</div>
+
 																		<div class="col-md-12">
 																			<div class="input-field">
 																				
 																				<cfinput type="text" size=40 maxsize=50 name="phone" placeholder="Enter your Phone Number" id="phone" value="#form.phone#" required="No">
 																				<!--- <span class="star">*</span> --->
-																					<span class="error-message" id="phoneError"></span>
+																				<span id="formatSign">(xxx) xxx-xxxx</span>
+																				<span class="error-message" id="phoneError"></span>
 																			</div>
 																		</div>
+
+																		
 
 																		<!--- <div class="col-md-12">
 																			<div class="input-field">
@@ -702,7 +756,8 @@
          const name = document.getElementById('name').value.trim();
          const email = document.getElementById('email').value.trim();
         //  const captcha = document.getElementById('captcha').value.trim();
-        //  const phone = document.getElementById('phone').value.trim();
+         const phone = document.getElementById('phone').value.trim();
+		 const phoneType = document.querySelector("[name='phoneType']").value;
         //  const best_time = document.getElementById('best_time').value.trim();
          const Offer = document.getElementById('Offer').value.trim();
          const actualPrice = document.getElementById('actualPrice').value.trim();
@@ -756,6 +811,16 @@
 			isValid = false;
 		}
 
+		if(phoneType){
+			if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
+				if (!phoneRegex.test(phone)) {
+					document.getElementById('phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+					document.getElementById('phone').focus();
+					isValid = false;
+				}
+			}
+		}
+
 		// If phone is entered, validate minimum length
 		// if (phone) {
 		// 	if (phone.length < 5) {
@@ -806,6 +871,51 @@
          return isValid;
          }
 	   </script>
+
+
+	   <script>
+			document.addEventListener("DOMContentLoaded", function() {
+				const phoneInput = document.getElementById("phone");
+				const phoneType = document.getElementById("phoneType");
+				const formatSign = document.getElementById("formatSign");
+
+				function toggleFormatSign() {
+					if (phoneType.value === "OutsideUS") {
+						formatSign.style.display = "none";
+					} else {
+						formatSign.style.display = "inline";
+					}
+				}
+
+				// run on load (in case form already has value)
+				toggleFormatSign();
+
+				// run on change
+				phoneType.addEventListener("change", toggleFormatSign);
+
+				phoneInput.addEventListener("input", function(e) {
+					// If type is OutsideUS → skip formatting
+					if (phoneType.value === "OutsideUS") {
+						return;
+					}
+
+					let value = e.target.value.replace(/\D/g, ""); // only digits
+					if (value.length > 10) value = value.substring(0, 10);
+
+					// Apply formatting as user types
+					if (value.length > 6) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+					} else if (value.length > 3) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+					} else if (value.length > 0) {
+						e.target.value = `(${value}`;
+					} else {
+						e.target.value = "";
+					}
+				});
+			});
+
+		</script>
 	   
 	    <style>
 			.error-message {

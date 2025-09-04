@@ -29,6 +29,9 @@ function populateForm(thisId){
  	var frm = document.forms["editForm"];
  	strPurchasesConsignments = edit.getPurchasesConsignmentsFromId(thisId);
 	medium = strPurchasesConsignments['MEDIUM'];
+
+
+	phoneType = strPurchasesConsignments['PHONETYPE'];
 	
 	<!--- image = strPurchasesConsignments['IMAGE_NAME']; --->
 
@@ -40,6 +43,15 @@ function populateForm(thisId){
 		}
 		else{
 			frm.medium.options[i].selected = false;
+		}
+	}
+
+	for(i = 0; i < frm.PhoneType.options.length; i++){
+		if(frm.PhoneType.options[i].value == phoneType){
+			frm.PhoneType.options[i].selected = true;
+		}
+		else{
+			frm.PhoneType.options[i].selected = false;
 		}
 	}
 
@@ -88,6 +100,19 @@ function populateForm(thisId){
 }
 
   function doEdit(type) {
+
+	 var phone = document.getElementById('phone').value.trim();
+	 var phoneType = document.getElementById('PhoneType').value;
+
+	if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
+		// Format: (123) 456-7890
+		var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+		if (!phonePattern.test(phone)) {
+			alert("Please enter phone number in format: (xxx) xxx-xxxx");
+			document.getElementById('phone').focus();
+			return false;
+		}
+	}
 
       var edit = new admin.models.purchases_consignments();
       edit.setForm("editForm");

@@ -1,3 +1,7 @@
+
+
+<cfset fullURL = ""> <!-- Declare first -->
+<!--- <cfparam name="url.slug" default=""> --->
 <cfsilent>
    <cfparam name="form.fname" default="">
    <cfparam name="form.lname" default="">
@@ -172,44 +176,51 @@
       
    </head>
    <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+      
       <!--- Add Edit or Delete this Item from the Cart --->
-      <cfif parameterexists(process)>
+      <cfif parameterexists(process) AND structKeyExists(url, "pid") AND isNumeric(url.pid)>
          <cfif process is "Add" and qty gt 0>
-         <cfset opt_name="">
-         <cfset opt_value="">
+            <cfset opt_name="">
+            <cfset opt_value="">
 
-         <cfquery name="getCartRecord" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-               SELECT * FROM cart where pid = #pid# and trackerid = '#xss#'
-         </cfquery>
-
-            <!--- <cfdump var="#getCartRecord.recordCount#" abort="true"> --->
-
-            <cfif getCartRecord.recordCount eq 0>
-               <cfquery name="addtocart" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                  Insert into cart (qty, pid, trackerid,charge,options,optionvalues)values(#qty#, '#pid#', '#xss#', #charge#,'#opt_name#','#opt_value#')
-               </cfquery>
+            <cfquery name="getCartRecord" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                  SELECT * FROM cart where pid = #url.pid# and trackerid = '#session.xss#'
+            </cfquery>
                
-            </cfif>
-            <cflocation url="checkout_new.cfm?xss=#xss#" addtoken="No">
-         
-      </cfif>
+
+               <cfif getCartRecord.recordCount eq 0>
+                  <cfquery name="addtocart" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                     Insert into cart (qty, pid, trackerid,charge,options,optionvalues)values(#qty#, '#url.pid#', '#session.xss#', #charge#,'#opt_name#','#opt_value#')
+                  </cfquery>
+                  
+               </cfif>
+               <cflocation url="checkout_new" addtoken="No">
+            
+         </cfif>
       </cfif>
 
       
       <!--- End of Add Items to Cart --->
       <!--- Gather Product Information for product(s) --->
-      <cfif not isDefined('url.pid') >
-      <cfset pid = '20338' >
-      </cfif>
+      <cfset artistSlug = url.artist> <!--- from /artist/{artist}/{slug} --->
+      <cfset productSlug = url.slug>  <!--- product slug --->
       <cfquery name="productinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
          SELECT *
          FROM products where 0=0
-         AND  uid  = '#pid#' 
+         AND  slug = <cfqueryparam value="#slug#" cfsqltype="cf_sql_varchar"> 
          <cfif NOT isDefined('url.sellerlisting')>
-         AND active = 1
+         -- AND active = 1
          </cfif> 
          And (path <> '') AND (path IS NOT NULL)
       </cfquery>
+
+       <!--- Check if product found --->
+      <cfif productInfo.recordcount EQ 1>
+         <cfset pid = productInfo.uid>
+      <cfelse>
+         <cflocation url="/404" addtoken="No">
+      </cfif>
+      <!--- <cfdump var="#productinfo#" abort="true"> --->
       <cfquery name="bio_info" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
          SELECT * from bios
          WHERE artist = '#productinfo.manufacturer#'
@@ -222,13 +233,13 @@
       <cfif productinfo.use_highestimate EQ 1>
          <cfset saleprice = productinfo.high_estimate />
       </cfif>
-      <cfif isDefined("url.pid")>
+      <cfif  structKeyExists(variables, "pid") AND pid NEQ 0>
          <cfquery name="listings" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
             SELECT top 100 *
             FROM products
-            WHERE manufacturer = '#url.artist#'
+            WHERE producturl = '#url.artist#'
             AND active = 1
-            AND uid <> #url.pid#
+            AND uid <> #pid#
          </cfquery>
       <cfelse>
          <cfquery name="listings" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -238,13 +249,13 @@
          </cfquery>
       </cfif>
 
-      <cfif isDefined("url.pid")>
+      <cfif  structKeyExists(variables, "pid") AND pid NEQ 0>
          <cfquery name="listingsForSlider" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
             SELECT top 100 *
             FROM products
-            WHERE manufacturer = '#url.artist#'
+            WHERE producturl = '#url.artist#'
             AND active = 1 
-            ORDER BY CASE WHEN uid = <cfqueryparam value="#url.pid#" cfsqltype="cf_sql_integer"> THEN 0 ELSE 1 END, uid
+            ORDER BY CASE WHEN uid = <cfqueryparam value="#pid#" cfsqltype="cf_sql_integer"> THEN 0 ELSE 1 END, uid
          </cfquery>
       <cfelse>
          <cfquery name="listingsForSlider" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -316,31 +327,38 @@
          <cfset prodlist = #ListAppend(prodlist, uid)#>
          </cfloop> --->
       <cftry>
-         <cfoutput>
-
+         
+         <cfoutput query="productinfo">
             <cfscript>
+               // Assuming 'productinfo' is already defined elsewhere
+               artist = URL.artist;
+               slug = URL.slug;
+
                // Base URL
-               baseURL = "http://23.20.226.157/item.cfm";
-               // Example 'url' struct
-               url = {
-               artist: url.artist,
-               artistname: url.artistname,
-               gallery: url.gallery,
-               pid: url.pid,
-               title: url.title
-               };
-               // Construct the query string
-               queryString = "";
-               for (key in url) {
-               queryString &= (queryString EQ "" ? "" : "&") & key & "=" & URLEncodedFormat(url[key]);
-               }
-               // Combine the base URL with the query string
-               fullURL = baseURL & "?" & queryString;
+               baseURL = "http://23.20.226.157/artist/" & artist & "/" & slug;
+
+               // // Example 'url' struct
+               // url = {
+               // artist: url.artist,
+               // // artistname: url.artistname,
+               // gallery: "GALLART",
+               // pid: "#productinfo.uid#",
+               // title: "#productinfo.name#"
+               // };
+               // // Construct the query string
+               // queryString = "";
+               // for (key in url) {
+               // queryString &= (queryString EQ "" ? "" : "&") & key & "=" & URLEncodedFormat(url[key]);
+               // }
+               // // Combine the base URL with the query string
+               // fullURL = baseURL & "?" & queryString;
+                fullURL = baseURL;
 
                whatsappURL = "https://wa.me/?text=" & URLEncodedFormat(fullURL);
 
             </cfscript>
-
+         </cfoutput>
+        <cfoutput>
             <form method="post" action="#fullURL#" name="errorFrm">
                <input type="Hidden" name="fname">
                <input type="Hidden" name="lname">
@@ -374,8 +392,8 @@
                                  <div class="container user-registrations item-page new-item-page">
                                     <div aria-label="breadcrumb">
                                        <ol class="breadcrumb">
-                                         <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-                                         <!--- <li class="breadcrumb-item"><a href="new_listings.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Recent Acquisitions</a></li> --->
+                                         <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+                              
                                          <li class="breadcrumb-item active" aria-current="page">Product Details</li>
                                        </ol>
                                      </div>
@@ -509,7 +527,7 @@
                                                          
                                                       </cfif>
                                                       <!--- <cfset capitalize = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
-                                                      <a href="/artists/#URLEncodedFormat(manufacturer)#/<cfif parameterexists(xss)>?xss=#xss#</cfif>" >
+                                                      <a href="/artists/#URLEncodedFormat(producturl)#" >
                                                          <h3 class="meta">#fullName#</h3>
                                                       </a>
                                                       <!--- <h3 class="meta">#ucase(manufacturer)#</h3> --->
@@ -590,28 +608,17 @@
                                                             <!--- <span style="color: red;">
                                                                   Price On Request
                                                             </span> --->
-
-
-
-                                                           <cfif gallery_price neq 0 and gallery_price LT special_price>
-                            
+                                                            <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
                                                                <del>#DollarFormat(retail_price)# </del>
                                                                &nbsp; 
-                                                                  <b> #DollarFormat(gallery_price)# </b>
-
-                                                             <cfelse>
-                                                               <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
-                                                                  <del>#DollarFormat(retail_price)# </del>
-                                                                  &nbsp; 
-                                                                        <b>
-                                                                           <span style="color: ##ff0000;">
-                                                                           #DollarFormat(special_price)# 
-                                                                           </span>
-                                                                        </b>
+                                                                  <b>
+                                                                     <span style="color: ##ff0000;">
+                                                                     #DollarFormat(special_price)# 
+                                                                     </span>
+                                                                  </b>
                                                 
-                                                                        <cfelse>
-                                                                           <b> #DollarFormat(retail_price)# </b>
-                                                               </cfif>
+                                                                  <cfelse>
+                                                                     <b> #DollarFormat(retail_price)# </b>
                                                             </cfif>
                                                 
                                                          </cfif>
@@ -929,7 +936,7 @@
                                                             </div>
                                                          </div>
 
-                                                      <cfform action="item.cfm?pid=#pid#&xss=#xss#" method="POST">
+                                                      <cfform action="/item.cfm?pid=#pid#" method="POST">
                                                             <input type="hidden" name="process" value="Add">
                                                             <cfif productinfo.closeout eq 1 and saleprice gt 0 and application.showSalePrice EQ 1>
                                                             <input type="hidden" name="charge" value="#saleprice#">
@@ -941,7 +948,7 @@
                                                          <input type="HIDDEN" name="qty" value="1">
                                                          <div class="button-group">
                                                             <button type="submit" class="cart-btn" ><b>Add to Cart</b></button>
-                                                            <a class="offer-btn" href="epricing.cfm?pid=#uid#&xss=#xss#"><b>Make An Offer</b></a>
+                                                            <a class="offer-btn" href="/epricing/#uid#"><b>Make An Offer</b></a>
                                                          </div>
                                                          
                                                          </cfif>
@@ -1004,48 +1011,72 @@
                                                                      </cfoutput>
                                                                      <cfelse>
                                                                      <cftry>
+
+                                                                        <cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
+                                                                           <cfset phone = form.phone>
+                                                                        <cfelse>
+                                                                           <cfset phone = "">
+                                                                        </cfif>
+
+                                                                        <cfif len(trim(form.phone)) AND form.phoneType EQ "Cell Phone">
+                                                                           <cfset cellphone = form.phone>
+                                                                        <cfelse>
+                                                                           <cfset cellphone = "">
+                                                                        </cfif>
+
+                                                                        <cfif len(trim(form.phone)) AND form.phoneType EQ "Business Phone">
+                                                                           <cfset businessphone = form.phone>
+                                                                        <cfelse>
+                                                                           <cfset businessphone = "">
+                                                                        </cfif>
+
+                                                                        <cfif len(trim(form.phone)) AND form.phoneType EQ "OutsideUS">
+                                                                           <cfset otherphone = form.phone>
+                                                                        <cfelse>
+                                                                           <cfset otherphone = "">
+                                                                        </cfif>
                                                                      
                                                                         
                                                                         <cfif form.name neq '' and form.email neq ''>
-                                                                        <cfquery name="addgLead" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                                                                           insert into leads (name, notes, email, phone, otherphone, maillist, artists, titles)
-                                                                           values('#form.name#', '#form.comments#', '#form.email#', '#form.phone#', '#form.otherphone#', '#form.list#','#productinfo.manufacturer#','#productinfo.name#')
-                                                                        </cfquery>
+                                                                           <cfquery name="addgLead" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                                                                              insert into leads (name, notes, email, phone, otherphone, cellphone, businessphone, maillist, artists, titles)
+                                                                              values('#form.name#', '#form.comments#', '#form.email#', '#phone#', '#otherphone#', '#cellphone#', '#businessphone#', '#form.list#','#productinfo.manufacturer#','#productinfo.name#')
+                                                                           </cfquery>
                                                                         
                                                                        
-                                                                        <cfmail 
-                                                                              server="#servername#" 
-                                                                              username="gallart@onlinegalleryart.com"
-                                                                              password="re3objeC!P" 
-                                                                              to="#emailsupport#" 
-                                                                              cc="#emailsupportcc#" 
-                                                                              from="#form.email#" 
-                                                                              subject="GallArt.com <> Buying & Selling Fine Art <> Contact Form" type="HTML">
-                                                                              <font style="font-size: 10pt; font-family: Arial;">
-                                                                              Client Information:
-                                                                              <br><br>
-                                                                              <!--- Name: #form.fname# #form.lname#<br> --->
-                                                                              Name: #form.name# <br>
-                                                                              Email Address: #form.email#<br>
-                                                                              Phone: #form.phone#<br>
-                                                                              Phone Outside the US: #form.otherphone#<br>
-                                                                              Comments: #form.comments#<br>
-                                                                              <br><br>
-                                                                              </font>
-                                                                        </cfmail>
-                                                                     <p>
-                                                                        <b>
-                                                                           Thank you 
-                                                                           <!--- <cfoutput>#form.fname# #form.lname#</cfoutput> --->
-                                                                           <cfoutput>#form.name#</cfoutput>
-                                                                           . <br><br> Your Email has been sent to the respective personnel. <br><br>   We hope that your visit has been a pleasant experience so far.
-                                                                        </b>
-                                                                     </p>
-                                                                  <cfelse>
-                                                                     <cfoutput>
-                                                                        <p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
-                                                                     </cfoutput>
-                                                                  </cfif>
+                                                                           <cfmail 
+                                                                                 server="#servername#" 
+                                                                                 username="gallart@onlinegalleryart.com"
+                                                                                 password="re3objeC!P" 
+                                                                                 to="#emailsupport#" 
+                                                                                 cc="#emailsupportcc#" 
+                                                                                 from="#form.email#" 
+                                                                                 subject="GallArt.com <> Buying & Selling Fine Art <> Contact Form" type="HTML">
+                                                                                 <font style="font-size: 10pt; font-family: Arial;">
+                                                                                 Client Information:
+                                                                                 <br><br>
+                                                                                 <!--- Name: #form.fname# #form.lname#<br> --->
+                                                                                 Name: #form.name# <br>
+                                                                                 Email Address: #form.email#<br>
+                                                                                 Phone: #form.phone#<br>
+                                                                                 Phone Outside the US: #form.otherphone#<br>
+                                                                                 Comments: #form.comments#<br>
+                                                                                 <br><br>
+                                                                                 </font>
+                                                                           </cfmail>
+                                                                        <p>
+                                                                           <b>
+                                                                              Thank you 
+                                                                              <!--- <cfoutput>#form.fname# #form.lname#</cfoutput> --->
+                                                                              <cfoutput>#form.name#</cfoutput>
+                                                                              . <br><br> Your Email has been sent to the respective personnel. <br><br>   We hope that your visit has been a pleasant experience so far.
+                                                                           </b>
+                                                                        </p>
+                                                                     <cfelse>
+                                                                        <cfoutput>
+                                                                           <p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
+                                                                        </cfoutput>
+                                                                     </cfif>
 
                                                                      <cfcatch type="Any">
                                                                         Sorry - we have encountered a processing error.  Please try again.
@@ -1100,9 +1131,22 @@
                                                                               <!--- <span class="star">*</span> --->
                                                                               <span class="error-message" id="emailError"></span>
                                                                            </div>
+
+                                                                           <div class="input-field">
+                                                                               <!--- <label><b>Phone Type:<span style="color: ##ff0000;">*</span></b></label> --->
+                                                                                 <select name="phoneType" id="phoneType" >
+                                                                                    <option value="Cell Phone">Cell Phone</option>
+                                                                                    <option value="Home Phone">Home Phone</option>
+                                                                                    <option value="Business Phone">Business Phone</option>
+                                                                                    <option value="OutsideUS">Outside US Phone</option>
+                                                                                 </select>
+                                                                                 <span class="error-message" id="phoneTypeError"></span>
+                                                                           </div>
+
                                                                            <div class="input-field">
                                                                               <!--- <label><FONT color="000000"><b>PHONE (xxx) xxx-xxxx</b></FONT></label> --->
-                                                                              <cfinput type="text" name="phone" value="#form.phone#" required="No" placeholder="Enter your Phone Number" id="phone" mask="(999) 999-9999">
+                                                                              <cfinput type="text" name="phone" value="#form.phone#" required="No" placeholder="Enter your Phone Number" id="phone">
+                                                                              <span id="formatSign">(xxx) xxx-xxxx</span>
                                                                               <span class="error-message" id="phoneError"></span>
                                                                            </div>
 
@@ -1130,7 +1174,7 @@
 
                                                                            <div class="input-button">
                                                                               <button type="submit" class="SeeMore">Send</button>
-                                                                              <button type="reset" class="SeeMore">Reset</button>
+                                                                              <button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
                                                                            </div>
                                                                         </div>
                                                                      </CFFORM>
@@ -1211,7 +1255,7 @@
             var addData = $("#addData").val();
 
             $.ajax({
-               url: "inquiry.cfm", // ColdFusion file handling the request
+               url: "/inquiry.cfm", // ColdFusion file handling the request
                type: "POST",
                data: {
                      ProductID: productID,
@@ -1241,7 +1285,7 @@
          function updateWishlistRecord(id) {
             console.log(id);
             $.ajax({
-               url: "inquiry.cfm",
+               url: "/inquiry.cfm",
                type: "POST",
                data: {
                   action: "getUpdatedWishlist",
@@ -1273,7 +1317,7 @@
            console.log('wishlist_pk_idddddd: ' + wishlist_pk_id)
 
            $.ajax({
-              url: "inquiry.cfm", // ColdFusion file handling the request
+              url: "/inquiry.cfm", // ColdFusion file handling the request
               type: "POST",
               data: {
                     wishlist_pk_id: wishlist_pk_id,
@@ -1333,6 +1377,7 @@
             const email = document.getElementById('email').value.trim();
             // const captcha = document.getElementById('captcha').value.trim();
             const phone = document.getElementById('phone').value.trim();
+            const phoneType = document.querySelector("[name='phoneType']").value;
 
             const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
             
@@ -1370,10 +1415,26 @@
                isValid = false;
             }
 
-            if (phone && !phoneRegex.test(phone)) {
-               document.getElementById('phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+            // if (phone && !phoneRegex.test(phone)) {
+            //    document.getElementById('phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+            //    isValid = false;
+            // }
+
+            if (!phoneType) {
+               document.getElementById('phoneTypeError').textContent = 'Please Select phone type';
                isValid = false;
             }
+
+            if(phoneType){
+               if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
+                  if (phone && !phoneRegex.test(phone)) {
+                     document.getElementById('phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+                     document.getElementById('phone').focus();
+                     isValid = false;
+                  }
+               }
+            }
+
             // Validate CAPTCHA
             // if (!captcha) {
             //    document.getElementById('captchaError').textContent = 'Please enter the characters in the image.';
@@ -1384,6 +1445,51 @@
          }
 
       </script>
+
+
+      <script>
+			document.addEventListener("DOMContentLoaded", function() {
+				const phoneInput = document.getElementById("phone");
+				const phoneType = document.getElementById("phoneType");
+				const formatSign = document.getElementById("formatSign");
+
+				function toggleFormatSign() {
+					if (phoneType.value === "OutsideUS") {
+						formatSign.style.display = "none";
+					} else {
+						formatSign.style.display = "inline";
+					}
+				}
+
+				// run on load (in case form already has value)
+				toggleFormatSign();
+
+				// run on change
+				phoneType.addEventListener("change", toggleFormatSign);
+
+				phoneInput.addEventListener("input", function(e) {
+					// If type is OutsideUS → skip formatting
+					if (phoneType.value === "OutsideUS") {
+						return;
+					}
+
+					let value = e.target.value.replace(/\D/g, ""); // only digits
+					if (value.length > 10) value = value.substring(0, 10);
+
+					// Apply formatting as user types
+					if (value.length > 6) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+					} else if (value.length > 3) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+					} else if (value.length > 0) {
+						e.target.value = `(${value}`;
+					} else {
+						e.target.value = "";
+					}
+				});
+			});
+
+		</script>
 
 
       <style>
@@ -1429,5 +1535,17 @@
             }
          }
       </style>
+
+      <script>
+         document.getElementById("resetBtn-captcha").addEventListener("click", function() {
+            if (grecaptcha) {
+                  grecaptcha.reset(); // Reset the reCAPTCHA
+            }
+            // Also clear error messages if needed
+            document.querySelectorAll('.error-message').forEach(function(el){
+                  el.innerText = '';
+            });
+         });
+      </script>
    </body>
 </html>

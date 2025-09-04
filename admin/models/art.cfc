@@ -252,8 +252,11 @@
 						SIZE,
 						EDITION,
 						RETAIL_PRICE,
-						GALLERY_PRICE,
-						SPECIAL_PRICE,
+						GALLERY_PRICE
+						<cfif arguments.SPECIAL_PRICE LT arguments.RETAIL_PRICE and arguments.SPECIAL_PRICE LT arguments.GALLERY_PRICE>
+							SPECIAL_PRICE
+						</cfif>,
+						
 						CLOSEOUT,
 						LOW_ESTIMATE,
 						HIGH_ESTIMATE,
@@ -287,8 +290,11 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EDITION#">,
 						<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.RETAIL_PRICE NEQ '', DE(arguments.RETAIL_PRICE), DE('0'))#">,
-						<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.GALLERY_PRICE NEQ '', DE(arguments.GALLERY_PRICE), DE('0'))#">,
-						<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.SPECIAL_PRICE NEQ '', DE(arguments.SPECIAL_PRICE), DE('0'))#">,
+						<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.GALLERY_PRICE NEQ '', DE(arguments.GALLERY_PRICE), DE('0'))#">
+						<cfif arguments.SPECIAL_PRICE LT arguments.RETAIL_PRICE and arguments.SPECIAL_PRICE LT arguments.GALLERY_PRICE>
+							,<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.SPECIAL_PRICE NEQ '', DE(arguments.SPECIAL_PRICE), DE('0'))#">
+						</cfif>,
+						
 						<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.CLOSEOUT),DE(arguments.CLOSEOUT),DE(0))#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOW_ESTIMATE#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.HIGH_ESTIMATE#">,
@@ -328,7 +334,11 @@
 						EDITION			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EDITION#">,
 						RETAIL_PRICE 	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.RETAIL_PRICE NEQ '', DE(arguments.RETAIL_PRICE), DE('0'))#">,
 						GALLERY_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.GALLERY_PRICE NEQ '', DE(arguments.GALLERY_PRICE), DE('0'))#">,
-						SPECIAL_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.SPECIAL_PRICE NEQ '', DE(arguments.SPECIAL_PRICE), DE('0'))#">,
+
+						<cfif arguments.SPECIAL_PRICE LT arguments.RETAIL_PRICE and arguments.SPECIAL_PRICE LT arguments.GALLERY_PRICE>
+							SPECIAL_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.SPECIAL_PRICE NEQ '', DE(arguments.SPECIAL_PRICE), DE('0'))#">,
+						</cfif>
+						
 						CLOSEOUT		= <cfqueryparam cfsqltype="CF_SQL_BIT"value="#iif(len(arguments.CLOSEOUT),DE(arguments.CLOSEOUT),DE(0))#">,
 						LOW_ESTIMATE 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOW_ESTIMATE#">,
 						HIGH_ESTIMATE 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.HIGH_ESTIMATE#">,
@@ -362,9 +372,16 @@
 
 			<cfif len(arguments.thisImage)>
 
-                <cffile action="upload" nameconflict="overwrite" filefield="thisImage" destination="#application.uploaddir#/#thisId#.jpg" result="fileupload">
+                <cffile action="upload" nameconflict="overwrite" filefield="thisImage" destination="#application.uploaddir#" result="fileupload">
 
-                <cfif fileupload.fileWasSaved>
+				<cfset fileExt = lcase(fileupload.clientFileExt)>
+
+                <cfif fileupload.fileWasSaved AND fileExt EQ "jpg">
+
+					<cffile 
+						action="rename" 
+						source="#fileupload.serverDirectory#/#fileupload.serverFile#" 
+						destination="#fileupload.serverDirectory#/#thisId#.jpg">
 
                     <cfimage
                         action="read"
@@ -387,6 +404,10 @@
                         overwrite="true"
                     />
 
+					<cfelse>
+						<cffile action="delete" file="#fileupload.serverDirectory#/#fileupload.serverFile#">
+						<cfset session.ext = true>
+
                 </cfif>
 
 			</cfif>
@@ -395,6 +416,9 @@
             <cfset additionalImages = "" />
             <cfset uploaddir = "#application.uploaddir#" />
             <cfset addImageIdx = 1 />
+			<cfset validJPG = true /> 
+			<cfset uploadedImages = [] />
+
             <cfif arguments.uid NEQ 0>
 
             	<cfquery name="getAdditional" datasource="#application.dsource#">
@@ -408,7 +432,7 @@
             </cfif>
 
 
-			<cfloop collection="#form#" item="idx">
+			<!--- <cfloop collection="#form#" item="idx">
 				<cfif left(idx,9) EQ "addImage_">
 					<cfset currImage = evaluate("form." & idx) />
 					
@@ -424,16 +448,64 @@
 						<cfset addImageIdx = addImageIdx + 1 />
 					</cfif>
 				</cfif>
+			</cfloop> --->
+
+			<cfloop collection="#form#" item="idx">
+				<cfif left(idx,9) EQ "addImage_">
+					<cfset currImage = evaluate("form." & idx) />
+					<cfif len(trim(currImage)) GT 0>
+						<cffile 
+							action="upload" 
+							nameconflict="makeunique" 
+							filefield="#idx#" 
+							destination="#uploaddir#" 
+							result="fileuploadTemp" />
+
+						<cfset fileExt = lcase(listLast(fileuploadTemp.serverFile, "."))>
+
+						<cfif fileExt NEQ "jpg">
+							<!--- Not JPG? Set flag to false and delete file --->
+							<cfset validJPG = false />
+							<cffile action="delete" file="#fileuploadTemp.serverDirectory#/#fileuploadTemp.serverFile#">
+							<cfset session.ext = true>
+						<cfelse>
+							<!--- Store for saving if all files are JPG --->
+							<cfset thisImageId = "#thisId#_#addImageIdx#.jpg" />
+							<cfset arrayAppend(uploadedImages, {
+								source = "#fileuploadTemp.serverDirectory#/#fileuploadTemp.serverFile#",
+								destination = "#uploaddir#/#thisImageId#",
+								imageId = thisImageId
+							}) />
+							<cfset addImageIdx++ />
+							<cfset structDelete(session, "ext")>
+						</cfif>
+					</cfif>
+				</cfif>
 			</cfloop>
 			
 
-            <cfif additionalImages NEQ "">
+            <!--- <cfif additionalImages NEQ "">
                 <cfquery name="editListing" datasource="#application.dsource#">
                     UPDATE products SET
                         ADDITIONAL_IMAGES 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#additionalImages#">
                     WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
                 </cfquery>
-           	</cfif>
+           	</cfif> --->
+
+			<cfif validJPG AND arrayLen(uploadedImages) GT 0>
+				<cfloop array="#uploadedImages#" index="imgData">
+					<cffile action="move" source="#imgData.source#" destination="#imgData.destination#" />
+					<cfset additionalImages = listAppend(additionalImages, imgData.imageId) />
+				</cfloop>
+
+				<cfquery name="editListing" datasource="#application.dsource#">
+					UPDATE products SET
+						ADDITIONAL_IMAGES = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#additionalImages#">
+					WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
+				</cfquery>
+				<cfset structDelete(session, "ext")>
+			
+			</cfif>
 
 		<cfreturn success>
 
@@ -942,6 +1014,8 @@
 		      	</cfif>
         	</cfquery>
 
+			
+
 
 			<cfif qGetArt.recordcount>
 				<cfset session.orderArray[arrayLen(session.orderArray)+1][1] = qGetArt.uid />
@@ -949,11 +1023,13 @@
 				<cfset session.orderArray[arrayLen(session.orderArray)][3] = qGetArt.manufacturer />
 				<cfset session.orderArray[arrayLen(session.orderArray)][4] = left(qGetArt.caption,25)&'...' />
 				<cfset session.orderArray[arrayLen(session.orderArray)][5] = qGetArt.modelno />
-				<cfset session.orderArray[arrayLen(session.orderArray)][6] = qGetArt.sale_price />
+				<cfset session.orderArray[arrayLen(session.orderArray)][6] = qGetArt.gallery_price />
 				<cfset session.orderArray[arrayLen(session.orderArray)][7] = 1 />
 				<cfset session.orderArray[arrayLen(session.orderArray)][8] = 0 />
 				<cfset thisReturn = true />
 			</cfif>
+
+			
 
 		<cfcatch type="Any"><cfset thisReturn = false /></cfcatch>
 
@@ -1069,6 +1145,7 @@
 				<td width="5%">Delete</td>
 			</tr>
 			<cfoutput>
+				
 				<cfloop from="1" to="#arrayLen(session.orderArray)#" index="idx">
 					<tr>
 						<td>
@@ -2098,7 +2175,7 @@
 		      	</cfif>
 	       	</cfquery>
 
-			<cfset thisImagePath = "http://gallart.com/img/#qGetImage.uid#.jpg" />
+			<cfset thisImagePath = "http://23.20.226.157/img/#qGetImage.uid#.jpg" />
 
 		<cfreturn thisImagePath />
 

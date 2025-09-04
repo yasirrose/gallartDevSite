@@ -42,7 +42,7 @@ function gridChange(thisId) {
  	var frm 			= document.forms["editForm"];
  	strCustomer 		= edit.getCustomer(thisId);
 	customer_email 		= strCustomer['CUSTOMER_EMAIL'];
-	document.getElementById('emailLink').innerHTML = '<a href="mailto:'+customer_email+'" style="color: #000000; text-decoration: none;">[SEND EMAIL]</a>';
+	document.getElementById('emailLink').innerHTML = '<a href="mailto:'+customer_email+'" style="color: black; text-decoration: none;">[SEND EMAIL]</a>';
 	maillist			= strCustomer['MAILLIST'];
 	for(i = 0; i < frm.maillist.length; i++){
 		if(frm.maillist[i].value == maillist){
@@ -52,11 +52,64 @@ function gridChange(thisId) {
 			frm.maillist[i].checked = false;
 		}
 	}
+
+	phone = strCustomer['PHONE'];
+	cellphone = strCustomer['CELLPHONE'];
+	businessphone = strCustomer['BUSINESSPHONE'];
+	otherphone = strCustomer['OTHERPHONE'];
+
+	if(cellphone && cellphone.trim() !== ""){
+		
+        $("#phoneNumber").val(cellphone);
+        $("#PhoneType").val("Cell Phone");
+    }
+    else if(phone && phone.trim() !== ""){
+        $("#phoneNumber").val(phone);
+        $("#PhoneType").val("Home Phone");
+    }
+    else if(businessphone && businessphone.trim() !== ""){
+        $("#phoneNumber").val(businessphone);
+        $("#PhoneType").val("Business Phone");
+    }
+    else if(otherphone && otherphone.trim() !== ""){
+        $("#phoneNumber").val(otherphone);
+        $("#PhoneType").val("OutsideUS");
+    }
+    else {
+        $("#phoneNumber").val("");
+        $("#PhoneType").val('Cell Phone'); // default
+    }
+
+	<!--- var td =  $("##PhoneType").val(); --->
+	var phoneType = document.getElementById('PhoneType').value
+	var formatSign = document.getElementById("formatSign");
+	
+
+	if (phoneType === "OutsideUS") {
+		formatSign.style.display = "none";
+	} else {
+		formatSign.style.display = "inline";
+	}
+
+
 }
 	
 // edit form functions
 
 function doEdit(type) {
+
+	var phone = document.getElementById('phoneNumber').value.trim();
+	var phoneType = document.getElementById('PhoneType').value;
+
+	if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
+		// Format: (123) 456-7890
+		var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+		if (!phonePattern.test(phone)) {
+			alert("Please enter phone number in format: (xxx) xxx-xxxx");
+			document.getElementById('phoneNumber').focus();
+			return false;
+		}
+	}
 
     var edit = new admin.models.customers();
 
@@ -76,7 +129,7 @@ function doEdit(type) {
      } 
      else { alert( 'There was a problem in the processing.')}
       }
-document.getElementById('edit').value = 'Edit';
+	document.getElementById('edit').value = 'Edit';
 	document.getElementById('delete').style.display = '';
 }
 

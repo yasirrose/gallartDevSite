@@ -608,6 +608,9 @@ a.dbl_arrows {
     flex-wrap: wrap;
     flex-direction: column;
     gap: 6px;
+	/* padding: 1rem;
+    border-radius: 8px;
+    background-color: #f2f2f2; */
 }
 .content-section .banner-section .art-work-content .bottom-content .gallery-lists .list-item br {
     display: none;
@@ -1991,16 +1994,16 @@ footer .footer-container .footer-wrapper .footer__newsletter .footer__newsletter
 }
 .bottom-row-fields select {
 	padding: 10px;
-	text-align: center;
+	text-align: left;
 	border: 1px solid #d9d6d2;
 	border-radius: 0px;
-	font-size: 16px !important;
-	text-align: center;
+	/* font-size: 16px !important; */
+	/* text-align: center; */
 	line-height: normal;
 	width: 100%;
 	background-color: #fff;
 	color: #000;
-	text-transform: uppercase;
+	text-transform: capitalize;
 	box-shadow: none;
 	outline: none;
 }

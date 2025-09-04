@@ -13,7 +13,7 @@
 		<cftry>
 	
 		<cfquery name="qLeads" datasource="#application.dsource#"> 
-           	SELECT UPPER(lname) + ',' + UPPER(fname) AS full_lead_name, pk_leads 
+           	SELECT lname + ',	' + fname AS full_lead_name, pk_leads 
             FROM leads 
             WHERE fname != '' AND lname != '' and fname Is not null and lname is not null and fname !='*' and lname!='*' and fname !='?' and lname !='????????'
             GROUP BY EMAIL, pk_leads, lname, fname 
@@ -168,10 +168,10 @@
 	    <cfargument name="fname" type="string" default="">
 	    <cfargument name="lname" type="string" default="">
 	    <cfargument name="leadEmail" type="string" default="">
-		<cfargument name="cellphone" type="string" default="">
+		<!--- <cfargument name="cellphone" type="string" default="">
 		<cfargument name="phone" type="string" default="">
 		<cfargument name="businessphone" type="string" default="">
-		<cfargument name="otherphone" type="string" default="">
+		<cfargument name="otherphone" type="string" default=""> --->
 		<cfargument name="besttime" type="string" default="">
 		<cfargument name="address" type="string" default="">
 		<cfargument name="city" type="string" default="">
@@ -181,13 +181,40 @@
 		<cfargument name="company" type="string" default="">
 		<cfargument name="website" type="string" default="">
 		<cfargument name="theartists" type="string" default="">
+		<cfargument name="artists" type="string" default="">
 		<cfargument name="titles" type="string" default="">
 	    <cfargument name="notes" type="string" default="">
 		<cfargument name="password" type="string" default="">
 		<cfargument name="maillist" type="string" default="">
 		<cfargument name="name" type="string" default="">
+		<cfargument name="phoneNumber" type="string" default="">
+		<cfargument name="phoneType" type="string" default="">
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Home Phone">
+			<cfset phone = arguments.phoneNumber>
+		<cfelse>
+			<cfset phone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Cell Phone">
+			<cfset cellphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset cellphone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Business Phone">
+			<cfset businessphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset businessphone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "OutsideUS">
+			<cfset otherphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset otherphone = "">
+		</cfif>
 	    
 	    <cfset var success = true />
 
@@ -229,10 +256,10 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.name#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.leadEmail#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.cellphone#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.phone#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.businessphone#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.otherphone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cellphone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.besttime#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.address#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.city#">,
@@ -241,7 +268,7 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.zip#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.company#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">,
-						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.theartists#">,
+						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.artists#">,
 						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.titles#">,
 						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.notes#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.origin#">
@@ -264,10 +291,10 @@
 	                lname 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
 	                name 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.name#">,
 					email 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.leadEmail#">,
-					cellphone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.cellphone#">,
-					phone 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.phone#">,
-					businessphone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.businessphone#">,
-					otherphone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.otherphone#">,
+					cellphone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cellphone#">,
+					phone 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+					businessphone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
+					otherphone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
 					besttime 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.besttime#">,
 					address 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.address#">,
 					city 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.city#">,

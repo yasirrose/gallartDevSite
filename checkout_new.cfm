@@ -17,7 +17,7 @@
 	</cfif>
 
 	<!--- <cfdump var="#selectedQty#" >
-	<cfdump var="#form.SELECTED_PID#" abort="true"> --->
+	<cfdump var="#form.SELECTED_PID#" abort="true">  --->
 </cfif>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -32,7 +32,7 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -112,10 +112,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		const billcity = document.getElementById('billcity').value.trim();
 		const billzip = document.getElementById('billzip').value.trim();
 		const billcountry = document.getElementById('billcountry').value.trim();
-		const cellphone = document.getElementById('cellphone').value.trim();
+		// const cellphone = document.getElementById('cellphone').value.trim();
 		const Email = document.getElementById('Email').value.trim();
-		const BillPhone = document.getElementById('BillPhone').value.trim();
-		const businessphone = document.getElementById('businessphone').value.trim();
+		// const BillPhone = document.getElementById('BillPhone').value.trim();
+		const phoneNumber = document.getElementById('phoneNumber').value.trim();
+		const phoneType = document.querySelector("[name='phoneType']").value;
+		// const businessphone = document.getElementById('businessphone').value.trim();
 		const cardInput = document.getElementById("cardnum");
 		const cardnum = cardInput.value.replace(/\s+/g, '').trim();
 		const selectedCardType = document.querySelector("[name='cardtype']").value;
@@ -160,24 +162,24 @@ document.addEventListener("DOMContentLoaded", function () {
 			isValid = false;
 		}
 	
-		if (!cellphone) {
-			document.getElementById('cellphoneError').textContent = 'We require your cell phone number ';
-			isValid = false;
-		} 
+		// if (!cellphone) {
+		// 	document.getElementById('cellphoneError').textContent = 'We require your cell phone number ';
+		// 	isValid = false;
+		// } 
 		// else if (!phoneRegex.test(cellphone)) {
 		// 	document.getElementById('cellphoneError').textContent = 'We require your cell phone number in the format (xxx) xxx-xxxx.';
 		// 	isValid = false;
 		// }
 	
-		if (BillPhone && !phoneRegex.test(BillPhone)) {
-			document.getElementById('BillphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
-			isValid = false;
-		}
+		// if (BillPhone && !phoneRegex.test(BillPhone)) {
+		// 	document.getElementById('BillphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+		// 	isValid = false;
+		// }
 	
-		if (businessphone && !phoneRegex.test(businessphone)) {
-			document.getElementById('businessphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
-			isValid = false;
-		}
+		// if (businessphone && !phoneRegex.test(businessphone)) {
+		// 	document.getElementById('businessphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+		// 	isValid = false;
+		// }
 	
 		if (!cardnum) {
 			document.getElementById('cardnumError').textContent = 'You must enter a Credit Card Number.';
@@ -186,6 +188,23 @@ document.addEventListener("DOMContentLoaded", function () {
 			document.getElementById('cardnumError').textContent = `Invalid ${selectedCardType} Card Number.`;
 			isValid = false;
 		}
+
+		
+
+		if(!phoneNumber) {
+			document.getElementById('phoneNumberError').textContent = 'We require your cell phone number ';
+			isValid = false;
+		} else if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
+			// Format: (123) 456-7890
+			// var phoneRegex = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+			if (!phoneRegex.test(phoneNumber)) {
+				document.getElementById('phoneNumberError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+				document.getElementById('phoneNumber').focus();
+				isValid = false;
+			}
+		}
+
+
 	
 		if (!isValid) {
 			return false;
@@ -236,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 </style>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -269,8 +288,9 @@ document.addEventListener("DOMContentLoaded", function () {
 		<cfquery name="contents" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			SELECT * from cart C
 			INNER JOIN products P on C.pid = P.uid
-			WHERE trackerid='#xss#'
+			WHERE trackerid='#session.xss#'
 		</cfquery>
+
 		<cfquery name="countries" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			SELECT * from countries
 		</cfquery>
@@ -316,7 +336,7 @@ document.addEventListener("DOMContentLoaded", function () {
 														<h3>VIEW CONTENTS OF YOUR CART:</h3>
 													</div>
 													<div class="table-responsive">
-														<cfform action="checkout_new.cfm?xss=#xss#" Method="post">
+														<cfform action="checkout_new" Method="post">
 														<table border="0" cellspacing="0" cellpadding="2" align="center" style="width: 100%; margin-bottom: 20px;">
 															<tr class="row0">
 																<td width="50%" height="20" style="color: ##ffffff;"><b>Name</b></td>
@@ -427,7 +447,7 @@ document.addEventListener("DOMContentLoaded", function () {
 														}
 													</script> --->
 
-													<cfform action="review.cfm?xss=#xss#" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);" id="checkOutForm">
+													<cfform action="review" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);" id="checkOutForm">
 													<div class="required-field">
 														<span class="required">* REQUIRED FIELDS</span>
 													</div>
@@ -507,7 +527,30 @@ document.addEventListener("DOMContentLoaded", function () {
 																</div>
 															</div>
 														</div>
+
 														<div class="input-field #this_row()#">
+															<div class="row align-items-center">
+																<div class="col-md-2">
+																	<label><span class="required">*</span><b>Phone Number, Phone Type</b></label>
+																</div>
+																<div class="col-md-5">
+																	<cfinput type="text" name="phoneNumber" id="phoneNumber" size="25" >
+																	<span id="formatSign">(xxx) xxx-xxxx</span>
+																	<span class="error-message" id="phoneNumberError"></span>
+																</div>
+																<div class="col-md-5">
+																	<select name="phoneType" id="phoneType">
+																		<option value="Cell Phone">Cell Phone</option>
+																		<option value="Home Phone">Home Phone</option>
+																		<option value="Business Phone">Business Phone</option>
+																		<option value="OutsideUS">Outside US Phone</option>
+																	</select>
+																</div>
+																
+															</div>
+														</div>
+
+														<!--- <div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
 																	<label><span class="required">*</span><b>Cell Phone</b></label>
@@ -549,7 +592,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<cfinput type="text" name="otherphone" size="35" required="No">
 																</div>
 															</div>
-														</div>
+														</div> --->
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
@@ -780,6 +823,51 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 </script>
 
+
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		const phoneInput = document.getElementById("phoneNumber");
+		const phoneType = document.getElementById("phoneType");
+		const formatSign = document.getElementById("formatSign");
+
+		function toggleFormatSign() {
+			if (phoneType.value === "OutsideUS") {
+				formatSign.style.display = "none";
+			} else {
+				formatSign.style.display = "inline";
+			}
+		}
+
+		// run on load (in case form already has value)
+		toggleFormatSign();
+
+		// run on change
+		phoneType.addEventListener("change", toggleFormatSign);
+
+		phoneInput.addEventListener("input", function(e) {
+			// If type is OutsideUS → skip formatting
+			if (phoneType.value === "OutsideUS") {
+				return;
+			}
+
+			let value = e.target.value.replace(/\D/g, ""); // only digits
+			if (value.length > 10) value = value.substring(0, 10);
+
+			// Apply formatting as user types
+			if (value.length > 6) {
+				e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+			} else if (value.length > 3) {
+				e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+			} else if (value.length > 0) {
+				e.target.value = `(${value}`;
+			} else {
+				e.target.value = "";
+			}
+		});
+	});
+
+</script>
+
 <style>
 
 	body{
@@ -788,13 +876,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	.select2-container--default .select2-selection--single {
         background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        height: 38px;
+        border: 1px solid #bbbbbb;
+        border-radius: 0;
+        height: 40px;
         padding: 5px 10px;
         font-size: 14px;
         font-family: inherit;
         box-sizing: border-box;
+		margin-bottom: 10px;
     }
 
     .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -820,7 +909,9 @@ document.addEventListener("DOMContentLoaded", function () {
         height: 30px;
         font-size: 14px;
     }
-
+	.user-registrations .input-form .input-field input, .user-registrations .input-form .input-field select, .user-registrations .input-form .input-field textarea{
+		width: 100% !important;
+	}
     /* Styleing of Select2 dropdown end */
 </style>
 	

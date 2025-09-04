@@ -52,10 +52,13 @@ getKeywords = function(){
 
    function doEdit(type) {
 
-	<!--- var fname = document.getElementById('fname').value.trim(); --->
-	<!--- var lname = document.getElementById('lname').value.trim(); --->
+	var fname = document.getElementById('fname').value.trim();
+	var lname = document.getElementById('lname').value.trim();
 	var name = document.getElementById('name').value.trim();
 	var email = document.getElementById('leadEmail').value.trim();
+
+	var phone = document.getElementById('phoneNumber').value.trim();
+    var phoneType = document.getElementById('PhoneType').value;
 	
 
 	  <!--- if (fname === '') {
@@ -90,6 +93,16 @@ getKeywords = function(){
 			}
 	  }
 
+	   if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
+			// Format: (123) 456-7890
+			var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+			if (!phonePattern.test(phone)) {
+				alert("Please enter phone number in format: (123) 456-7890");
+				document.getElementById('phoneNumber').focus();
+				return false;
+			}
+		}
+
 	  
 
        var edit = new admin.models.leads();
@@ -118,14 +131,16 @@ getKeywords = function(){
    function showNew () {
    	document.getElementById('pk_leads').value = '';
 	document.getElementById('fk_employees').value = '<cfoutput>#session.userinfo.pk_employees#</cfoutput>';
-   	<!--- document.getElementById('fname').value = ''; --->
-   	<!--- document.getElementById('lname').value = ''; --->
+   	document.getElementById('fname').value = '';
+   	document.getElementById('lname').value = '';
    	document.getElementById('name').value = '';
    	document.getElementById('leadEmail').value = '';
-	document.getElementById('cellphone').value = '';
-	document.getElementById('phone').value = '';
-	document.getElementById('otherphone').value = '';
-	document.getElementById('businessphone').value = '';
+	<!--- document.getElementById('cellphone').value = ''; --->
+	<!--- document.getElementById('phone').value = ''; --->
+	<!--- document.getElementById('otherphone').value = ''; --->
+	<!--- document.getElementById('businessphone').value = ''; --->
+	document.getElementById('phoneNumber').value = '';
+	document.getElementById('PhoneType').options[0].selected = true;
 	document.getElementById('besttime').value = '';
 	document.getElementById('address').value = '';
 	document.getElementById('city').value = '';
@@ -152,12 +167,44 @@ getKeywords = function(){
 	populateForm(); // populate the form with values
  	});
 	// ds.on('load',function(){populateForm()});
+
+
+	var ds = leadGrid.getStore();
+    
+	 ds.on('load', function(store){
+        <!--- console.log("Grid store loaded, checking first record..."); --->
+        
+        if (store.getCount() > 0) {
+            var firstRecord = store.getAt(0); // first row
+            var pk = firstRecord.get("PK_LEADS"); // column name from cfgrid
+            
+            if (pk) {
+                // form field me pk_leads set karo
+                document.getElementById("pk_leads").value = pk;
+
+                <!--- console.log("Auto-selecting first record, pk_leads=" + pk); --->
+                populateForm(); // ab safe call hoga
+            }
+        }
+    });
+  
+
  }
 
  function populateForm(){
+
+	var frm = document.forms["editForm"];
+	 var pk = frm.pk_leads.value;
+
+    // agar PK empty hai to kuch mat karo
+    if (!pk || isNaN(pk)) {
+        console.log("populateForm() skipped - no pk_leads yet");
+        return;
+    }
+
  	var edit = new admin.models.leads();
- 	var frm = document.forms["editForm"];
- 	strLead = edit.getLeadFromId(frm.pk_leads.value);
+ 	
+ 	strLead = edit.getLeadFromId(pk);
 	empDisplay = strLead['EMPDISPLAY'];
 	origin = strLead['ORIGIN'];
 	maillist = strLead['MAILLIST'];
@@ -167,8 +214,49 @@ getKeywords = function(){
 	var lname = strLead.RESULTSET.DATA[0][5]; // LNAME
 	var name = strLead.RESULTSET.DATA[0][31]; // NAME
 
+	var phone = strLead.RESULTSET.DATA[0][7] //otherphone
+	var cellphone = strLead.RESULTSET.DATA[0][8] //otherphone
+	var businessphone = strLead.RESULTSET.DATA[0][9] //otherphone
+	var otherphone = strLead.RESULTSET.DATA[0][26] //otherphone
+
+	if(cellphone && cellphone.trim() !== ""){
+		
+        $("#phoneNumber").val(cellphone);
+        $("#PhoneType").val("Cell Phone");
+    }
+    else if(phone && phone.trim() !== ""){
+        $("#phoneNumber").val(phone);
+        $("#PhoneType").val("Home Phone");
+    }
+    else if(businessphone && businessphone.trim() !== ""){
+        $("#phoneNumber").val(businessphone);
+        $("#PhoneType").val("Business Phone");
+    }
+    else if(otherphone && otherphone.trim() !== ""){
+        $("#phoneNumber").val(otherphone);
+        $("#PhoneType").val("OutsideUS");
+    }
+    else {
+        $("#phoneNumber").val("");
+        $("#PhoneType").val(""); // default
+    }
+
+	var phoneType = document.getElementById('PhoneType').value
+	var formatSign = document.getElementById("formatSign");
 	
-	<!--- console.log('test1: ' + fname); --->
+
+	if (phoneType === "OutsideUS") {
+		formatSign.style.display = "none";
+	} else {
+		formatSign.style.display = "inline";
+	}
+
+	
+	<!--- console.log('test1: ' + strLead.RESULTSET.DATA[0][9]); // businessphone
+	console.log('test1: ' + strLead.RESULTSET.DATA[0][8]); // cellphone
+	console.log('test1: ' + strLead.RESULTSET.DATA[0][7]); //phone
+	console.log('test1: ' + strLead.RESULTSET.DATA[0][26]); --->
+	
 
 
     // Set the name field based on logic

@@ -22,6 +22,11 @@
 	</tr>
 </table>
 
+
+
+	
+
+
 <cfform action="index.cfm?event=leads.insertLead" id="leadForm" name="leadForm">
 <cfinput type="hidden" name="pk_leads" id="pk_leads" value="">
 <!--- <cfinput type="hidden" name="fk_employees" id="fk_employees" value="#session.userinfo.pk_employees#"> --->
@@ -53,7 +58,7 @@
 			<!--- <cfinput type="text" name="leadEmail" id="leadEmail"  size="30"> --->
 		</td>
 	</tr>
-	<tr>
+	<!--- <tr>
 		<td>
 			Cell Phone:
 		</td>
@@ -84,7 +89,84 @@
 		<td>
 			<cfinput type="text" name="otherphone" id="otherphone" size="30">
 		</td>
+	</tr> --->
+
+	
+
+	<tr>
+		<td>
+			Select Phone Number type
+		</td>
+		<td>		
+
+			 <select name="PhoneType" id="PhoneType">
+				<option value="Home Phone" >Home</option>
+				<option value="Cell Phone" >Mobile</option>
+				<option value="Business Phone" >Business</option>
+				<option value="OutsideUS" >Outside US</option>
+			</select>
+		</td>
 	</tr>
+
+
+	<tr>
+		<td>
+			Phone Number
+		</td>
+		<td>
+
+			<input type="text" name="PhoneNumber" id="PhoneNumber"  size="50" >
+			<span id="formatSign">(xxx) xxx-xxxx</span>
+		</td>
+	</tr>
+
+	<cfoutput>
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				const phoneInput = document.getElementById("PhoneNumber");
+				const phoneType = document.getElementById("PhoneType");
+				const formatSign = document.getElementById("formatSign");
+
+				function toggleFormatSign() {
+					if (phoneType.value === "OutsideUS") {
+						formatSign.style.display = "none";
+					} else {
+						formatSign.style.display = "inline";
+					}
+				}
+
+				// run on load (in case form already has value)
+				toggleFormatSign();
+
+				// run on change
+				phoneType.addEventListener("change", toggleFormatSign);
+
+				phoneInput.addEventListener("input", function(e) {
+					// If type is OutsideUS → skip formatting
+					if (phoneType.value === "OutsideUS") {
+						return;
+					}
+
+					let value = e.target.value.replace(/\D/g, ""); // only digits
+					if (value.length > 10) value = value.substring(0, 10);
+
+					// Apply formatting as user types
+					if (value.length > 6) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+					} else if (value.length > 3) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+					} else if (value.length > 0) {
+						e.target.value = `(${value}`;
+					} else {
+						e.target.value = "";
+					}
+				});
+			});
+
+		</script>
+	</cfoutput>
+
+
 	<tr>
 		<td>
 			Best Time To Call:
@@ -93,7 +175,7 @@
 			<cfinput type="text" name="besttime" id="besttime" size="30">
 		</td>
 	</tr>
-	<tr>
+	<!--- <tr>
 		<td>
 			Address:
 		</td>
@@ -139,7 +221,87 @@
 		<td>
 			<cfinput type="text" name="zip" id="zip" size="30" value="">
 		</td>
+	</tr> --->
+
+
+	<tr>
+		<td>
+			Address Type:
+		</td>
+		<td>
+			<select name="AddressType" id="AddressType" onchange="toggleAddressFields()">
+				<option value="">Please Select</option>
+				<option value="USA"  >USA Address</option>
+				<option value="Outside" >Outside USA</option>
+			</select>
+		</td>
 	</tr>
+
+	<!-- USA Address Section -->
+	<tbody id="USAAddress" style="display:none;">
+		<tr>
+			<td>Street Address:</td>
+			<td><input type="text" name="Address1" id="Address1" size="50" ></td>
+		</tr>
+		<tr>
+			<td>City:</td>
+			<td><input type="text" name="City" id="City" size="50" ></td>
+		</tr>
+		<tr>
+			<td>State:</td>
+			<td>
+				<cfoutput>
+					<select name="State" id="State">
+						<option value="">Please Select</option>
+						<cfloop query="getStates">
+							<option value="#stateAbb#" >#state#</option>
+						</cfloop>
+					</select>
+				</cfoutput>
+			</td>
+		</tr>
+		<tr>
+			<td>Zip Code:</td>
+			<td><input type="text" name="Zip" id="Zip" size="50" ></td>
+		</tr>
+	</tbody>
+
+	<!-- Outside USA Address Section -->
+	<tbody id="OutsideAddress" style="display:none;">
+		<tr>
+			<td>Street Address:</td>
+			<td><input type="text" name="Address1_Outside" id="Address1_Outside" size="50" ></td>
+		</tr>
+		<tr>
+			<td>City:</td>
+			<td><input type="text" name="City_Outside" id="City_Outside" size="50" ></td>
+		</tr>
+		<tr>
+			<td>State/Province:</td>
+			<td><input type="text" name="State_Outside" id="State_Outside" size="50"></td>
+		</tr>
+		<tr>
+			<td>Zip Code:</td>
+			<td><input type="text" name="Zip_Outside" id="Zip_Outside" size="50" ></td>
+		</tr>
+		<tr>
+			<td>Country:</td>
+			<td><input type="text" name="Country" id="Country" size="50" ></td>
+		</tr>
+	</tbody>
+
+	<script>
+		function toggleAddressFields() {
+			var type = document.getElementById("AddressType").value;
+			document.getElementById("USAAddress").style.display = (type === "USA") ? "" : "none";
+			document.getElementById("OutsideAddress").style.display = (type === "Outside") ? "" : "none";
+		}
+
+		// Run on page load if form already has a value
+		window.onload = toggleAddressFields;
+	</script>
+
+
 	<tr>
 		<td>
 			Company:
@@ -217,3 +379,5 @@
 	
 </table>		
 </cfform>
+
+

@@ -1,4 +1,4 @@
-<cfif not parameterexists(xss)>	<cflocation url="error.cfm"> </cfif>
+<!--- <cfif not parameterexists(xss)>	<cflocation url="error.cfm"> </cfif> --->
 
 <cfparam name="ORDERUSERID" default="0">
 <cfparam name="shipcost" default="0">
@@ -11,10 +11,10 @@
 
 <!--- Get contents of cart --->
 <cfquery name="GetCartInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT  * FROM cart WHERE trackerid = '#xss#'
+	SELECT  * FROM cart WHERE trackerid = '#session.xss#'
 </cfquery>
 <cfquery name="GetuserInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT  * FROM tracker WHERE sessionid = '#xss#'
+	SELECT  * FROM tracker WHERE sessionid = '#session.xss#'
 </cfquery>
 
 <!--- Insert info into customers table if new customer remove this section if not supported --->
@@ -23,6 +23,30 @@
 </cfquery>
 
 	<!--- <cfdump var="#form#" abort="true"> --->
+
+	<cfif form.phoneNumber NEQ '' and form.phoneType EQ 'Cell Phone'>
+		<cfset CELLPHONE = form.phoneNumber>
+	<cfelse>
+		<cfset CELLPHONE = ''>
+	</cfif>
+
+	<cfif form.phoneNumber NEQ '' and form.phoneType EQ 'Home Phone'>
+		<cfset BILLPHONE = form.phoneNumber>
+	<cfelse>
+		<cfset BILLPHONE = ''>
+	</cfif>
+
+	<cfif form.phoneNumber NEQ '' and form.phoneType EQ 'Business Phone'>
+		<cfset BUSINESSPHONE = form.phoneNumber>
+	<cfelse>
+		<cfset BUSINESSPHONE = ''>
+	</cfif>
+
+	<cfif form.phoneNumber NEQ '' and form.phoneType EQ 'OutsideUS'>
+		<cfset OTHERPHONE = form.phoneNumber>
+	<cfelse>
+		<cfset OTHERPHONE = ''>
+	</cfif>
 
 <cfif not find_cust.recordcount>
 	<!--- <cfdump var="test1" abort="true"> --->
@@ -52,7 +76,8 @@
 		VALUES
 		(
 			'#BILLNAME#', 
-			'#BILLNAME#', '#BILLNAMEF#',
+			'#BILLNAME#', 
+			'#BILLNAMEF#',
 			'#BILLADDRESS1#',
 			'#BILLADDRESS2#',
 			'#BILLCITY#',
@@ -297,7 +322,7 @@
 						<cfqueryparam value="#LINKFROM#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#WARNING#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#PARTNER#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#xss#" cfsqltype="cf_sql_varchar">,
+						<cfqueryparam value="#session.xss#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#batchproc#" cfsqltype="cf_sql_integer" null="#NOT LEN(TRIM(batchproc))#">,
 						<cfqueryparam value="#ORIGIN#" cfsqltype="cf_sql_varchar">
 					)
@@ -356,6 +381,9 @@
 		<CFSET TITLE=extproductinfo.name>
 		<CFSET ARTIST=extproductinfo.manufacturer>
 <!--- Put cart items in items table --->
+
+
+
 		<cflock name="insert" timeout="15">
 			<!--- <cfdump var="test4" abort="true"> --->
 		<cfquery name="insert_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -426,6 +454,9 @@
 	<cfset subtotal = #subtotal# + #ext#>
 	<cfset line_id = line_id + 1>
 </CFLOOP>
+
+
+
 
 <!--- Calculate and Enter Taxes --->
 <cfif #form.billstate# is #taxst#>
@@ -502,12 +533,14 @@
 			INSERT into items
 			(ORDERDATE,COST,CANCELCODE,ORDER_ID,LINE_ID,product_id,PRODUCT_CODE,QUANTITY,UNIT_PRICE,VENDORCODE,EXPSHIP,VENDORACCEPT,DODONE,TRACKREQ,TRACKINGNUMBER,VCAN,CHECKNO,FLAG,PARTNER,LINETOTAL,ITEMEXT,PROCCHOICE,OrderUid,MODELNO,PRODUCTUID,TITLE,ARTIST)
 			VALUES
-			('#ORDERDATE#',0,'#CANCELCODE#','#ORDER_ID#','#LINE_ID#','Tax','Tax','1',#tax#,'Tax','#EXPSHIP#','1','1','0','','#VCAN#','#CHECKNO#','#FLAG#','#PARTNER#',0,'#ITEMEXT#','#PROCCHOICE#','#OrderUid#','#MODELNO#','#PRODUCTUID#','#TITLE#','#ARTISTfoo#')
+			('#ORDERDATE#',0,'#CANCELCODE#','#ORDER_ID#','#LINE_ID#','Tax','Tax','1',#tax#,'Tax','#EXPSHIP#','1','1','0','','#VCAN#','#CHECKNO#','#FLAG#','#PARTNER#',0,'#ITEMEXT#','#PROCCHOICE#','#OrderUid#','#MODELNO#','#PRODUCTUID#','#TITLE#','#ARTIST#')
 		</cfquery>
 
 	</cflock>
 
 </cfif>
+
+
 
 <Cfset total = tax + insurance + subtotal>
 
@@ -515,7 +548,7 @@
 
 <!--- Delete items from cart --->
 <cfquery name="GetCartInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-DELETE FROM cart WHERE trackerid = '#xss#'
+DELETE FROM cart WHERE trackerid = '#session.xss#'
 </cfquery>
 <!--- <cfinclude template="#processtype.processcode#.proc"> --->
 
@@ -528,7 +561,7 @@ DELETE FROM cart WHERE trackerid = '#xss#'
 	update tracker
 		set orderid = '#order_id#',
 			total = #total#
-		where sessionid = '#xss#'
+		where sessionid = '#session.xss#'
 	</cfquery>
 	<cfquery name="Info" datasource="#dsource#" username="#uname#" password="#pword#">
 	update orders
@@ -541,15 +574,22 @@ DELETE FROM cart WHERE trackerid = '#xss#'
 <cfelse> <!--- Credit card failed --->
 	<cftransaction action="ROLLBACK"><!--- Delete items from cart? --->
 	<!--- <cfquery name="GetCartInfo" datasource="#dsource#" username="#uname#" password="#pword#">
-		DELETE FROM cart WHERE trackerid = '#xss#'
+		DELETE FROM cart WHERE trackerid = '#session.xss#'
 	</cfquery> --->
 </cfif>
 </cftransaction>
 <cfif approved eq 1>
 
 <!--- Send out confirmation email --->
-<cfmail server="#servername#" username="onli16@onlinegalleryart.com"
-password="re3objec" to="#form.email#" from="onli16@onlinegalleryart.com" subject="Order - Confirmation" type="HTML">
+<cfmail 
+server="#servername#"
+ username="onli16@onlinegalleryart.com"
+password="re3objec" 
+to="#form.email#" 
+from="onli16@onlinegalleryart.com" 
+subject="Order - Confirmation" 
+type="HTML"
+>
 <br><br>
 Thank you very much for your order.
 <br><br>
@@ -564,8 +604,16 @@ Total:  #dollarformat(total)#
 <br><br>
 </cfmail>
 
-<cfmail server="#servername#" username="onli16@onlinegalleryart.com"
-password="re3objec" to="#emailsupport#" cc="#emailsupportcc#" from="onli16@onlinegalleryart.com" subject="GallArt.com <> Buying & Selling Fine Art <> New Order Placed" type="HTML"> 
+<cfmail 
+server="#servername#"
+ username="onli16@onlinegalleryart.com"
+password="re3objec" 
+to="#emailsupport#"
+ cc="#emailsupportcc#" 
+ from="onli16@onlinegalleryart.com" 
+ subject="GallArt.com <> Buying & Selling Fine Art <> New Order Placed" 
+ type="HTML"
+ > 
 <br><br>
 An order was placed on #DateFormat(createodbcdate(now()),"mmm dd, yyyy")#.
 <br><br>
@@ -582,8 +630,8 @@ Total - #dollarformat(total)#<br><BR>
 Click the Log In button in the upper right corner of your screen, enter your password, then click Orders from the top menu.
 </cfmail>
 <!--- End of confirmation email --->
-<cflocation url="thankyou.cfm?val=y&xss=#xss#">
+<cflocation url="/thankyou/y">
 <cfelse>
-<cflocation url="thankyou.cfm?val=n&xss=#xss#&errormsg=#ErrorMessage#">
+<cflocation url="/thankyou/n/#ErrorMessage#">
 </cfif>
 

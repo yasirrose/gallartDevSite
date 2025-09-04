@@ -8,6 +8,7 @@
     <cfparam name="form.email" default="">
     <cfparam name="form.cellphone" default="">
     <cfparam name="form.phone" default="">
+    <cfparam name="form.phoneType" default="">
     <cfparam name="form.businessphone" default="">
     <cfparam name="form.otherphone" default="">
     <cfparam name="form.website" default="">
@@ -110,7 +111,7 @@
     <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
        <div class="main-container registration-page">
           <cfoutput>
-             <form method="post" action="#script_name#?xss=#xss#" name="errorFrm">
+             <form method="post" action="#script_name#" name="errorFrm">
                 <input type="Hidden" name="fname">
                 <input type="Hidden" name="lname">
                 <input type="Hidden" name="email">
@@ -120,7 +121,7 @@
                 <input type="Hidden" name="otherphone">
                 <input type="Hidden" name="website">
                 <input type="Hidden" name="errorMsg">
-                <input type="Hidden" name="captchaError" value="0">
+                <!--- <input type="Hidden" name="captchaError" value="0"> --->
                 <input type="Hidden" name="errorPhone" value="0">
              </form>
           </cfoutput>
@@ -150,7 +151,7 @@
                                <div class="art-work-content">
                                   <div aria-label="breadcrumb">
                                      <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+                                        <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">Registration</li>
                                      </ol>
                                   </div>
@@ -158,8 +159,16 @@
                                      <div class="user-registrations quotes-page contact-page" style="max-width: 100%;">
                                         <!--- Check for a bot. --->
                                         <cfif FORM.submitted>
-                                           <!--- <cfdump var="#form#" abort="true"> --->
-                                           <cfif phoneError>
+                                          <!--- <cfdump var="#form#" > --->
+                                          <cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+                                          <cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+                                             <cfhttpparam type="formField" name="secret" value="#apikey#">
+                                             <cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+                                             <cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+                                          </cfhttp> 
+                                          <cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+                                           <!--- <cfdump var="#captchaResponse#" abort="true"> --->
+                                          <cfif phoneError>
                                               <cfoutput>
                                                  <!--- <cfdump var="testing 1" abort="true"> --->
                                                  <script language="JavaScript">
@@ -168,6 +177,7 @@
                                                     document.errorFrm.email.value = '#form.email#'
                                                     document.errorFrm.cellphone.value = '#form.cellphone#'
                                                     document.errorFrm.phone.value = '#form.phone#'
+                                                    document.errorFrm.phone.value = '#form.phoneType#'
                                                     document.errorFrm.businessphone.value = '#form.businessphone#'
                                                     document.errorFrm.otherphone.value = '#form.otherphone#'
                                                     document.errorFrm.website.value = '#form.website#'
@@ -176,7 +186,7 @@
                                                     document.errorFrm.submit();
                                                  </script>
                                               </cfoutput>
-                                              <cfelseif blnIsBot>
+                                          <cfelseif captchaResponse.success NEQ 'YES'>
                                               <cfoutput>
                                                  <!--- <cfdump var="testing 2" abort="true"> --->
                                                  <script language="JavaScript">
@@ -185,6 +195,7 @@
                                                     document.errorFrm.email.value = '#form.email#'
                                                     document.errorFrm.cellphone.value = '#form.cellphone#'
                                                     document.errorFrm.phone.value = '#form.phone#'
+                                                    document.errorFrm.phone.value = '#form.phoneType#'
                                                     document.errorFrm.businessphone.value = '#form.businessphone#'
                                                     document.errorFrm.otherphone.value = '#form.otherphone#'
                                                     document.errorFrm.website.value = '#form.website#'
@@ -213,30 +224,57 @@
                                                  <cfabort>
                                               </cfif>
                                               <!--- <cfdump var="testing 3" abort="true"> --->
+
+                                                <cfif len(trim(form.cellphone)) AND form.phoneType EQ "Home Phone">
+                                                   <cfset phone = form.cellphone>
+                                                <cfelse>
+                                                   <cfset phone = "">
+                                                </cfif>
+
+                                                <cfif len(trim(form.cellphone)) AND form.phoneType EQ "Cell Phone">
+                                                   <cfset cellphone = form.cellphone>
+                                                <cfelse>
+                                                   <cfset cellphone = "">
+                                                </cfif>
+
+                                                <cfif len(trim(form.cellphone)) AND form.phoneType EQ "Business Phone">
+                                                   <cfset businessphone = form.cellphone>
+                                                <cfelse>
+                                                   <cfset businessphone = "">
+                                                </cfif>
+
+                                                <cfif len(trim(form.cellphone)) AND form.phoneType EQ "OutsideUS">
+                                                   <cfset otherphone = form.cellphone>
+                                                <cfelse>
+                                                   <cfset otherphone = "">
+                                                </cfif>
+
                                               <cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq ''  >
                                               <cflock name="insertuser" timeout="10">
                                                  <!--- <cfdump var="test data" abort="true"> --->
                                                  <cfquery name="insertUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
                                                     INSERT into users
-                                                    (
-                                                    fname,
-                                                    lname,
-                                                    email,
-                                                    password,
-                                                    cellphone
-                                                    )
-                                                    values
-                                                    (
-                                                    <cfqueryparam value="#form.fname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-                                                    ,
-                                                    <cfqueryparam value="#form.lname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-                                                    ,
-                                                    <cfqueryparam value="#form.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-                                                    ,
-                                                    <cfqueryparam value="#form.password#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-                                                    ,
-                                                    <cfqueryparam value="#form.cellphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
-                                                    )
+                                                      (
+                                                         fname,
+                                                         lname,
+                                                         email,
+                                                         password,
+                                                         cellphone,
+                                                         phone,
+                                                         businessphone,
+                                                         otherphone
+                                                      )
+                                                      values
+                                                      (
+                                                         <cfqueryparam value="#form.fname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+                                                         ,<cfqueryparam value="#form.lname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+                                                         ,<cfqueryparam value="#form.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+                                                         ,<cfqueryparam value="#form.password#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+                                                         ,<cfqueryparam value="#cellphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+                                                         ,<cfqueryparam value="#phone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+                                                         ,<cfqueryparam value="#businessphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+                                                         ,<cfqueryparam value="#otherphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+                                                      )
                                                  </cfquery>
                                                  <!--- getting the last input UID --->
                                                  <cfquery name="lastUID" datasource="#dsource#" username="#uname#" password="#pword#">
@@ -303,7 +341,7 @@
                                                  
                                                  toastr.success('Your Record is added successfully.');
                                               </script>
-                                              <cflocation url="overView.cfm?xss=#xss#" addtoken="No">
+                                              <cflocation url="/overView" addtoken="No">
                                               <cfelse>
                                               <cfoutput>
                                                  <p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
@@ -314,7 +352,7 @@
                                         <cfoutput>
                                            <div class="user-content form-sectiom">
                                               <h3>Create an Account</h3>
-                                              <h4> Already have an account? <a href="user_login_page.cfm?xss=#xss#" style="color: ##EC008C"> <b>Login In </b></a> </h4>
+                                              <h4> Already have an account? <a href="login" style="color: ##EC008C"> <b> Login </b></a> </h4>
                                               <br><br>
                                               <cfif FORM.captchaError>
                                                  <span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span><br><br>
@@ -326,7 +364,7 @@
                                               </cfif>
                                               <!--- onsubmit="return validateSellerForm()" --->
                                               <div class="form-style">
-                                                <CFFORM ACTION="#script_name#?xss=#xss#" METHOD="POST"  id="submitSellerForm">
+                                                <CFFORM ACTION="#script_name#" METHOD="POST"  id="submitSellerForm">
                                                     <input type="hidden" name="submitted" value="1" />
                                                     <input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
                                                     <div class="input-form">
@@ -345,17 +383,32 @@
                                                                 <span class="error-message" id="S_lnameError"></span>
                                                              </div>
                                                           </div>
-                                                          <div class="col-md-6">
+                                                          <div class="col-md-4">
                                                              <div class="input-field">
                                                                 <label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
                                                                 <cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
                                                                 <span class="error-message" id="S_EmailError"></span>
                                                              </div>
                                                           </div>
-                                                          <div class="col-md-6">
+
+                                                          <div class="col-md-4">
                                                              <div class="input-field">
-                                                                <label><b>Cell Phone:<span style="color: ##ff0000;">*</span></b></label>
+                                                               <label><b>Phone Type:<span style="color: ##ff0000;">*</span></b></label>
+                                                               <select name="phoneType" id="phoneType" >
+                                                                  <option value="Cell Phone">Cell Phone</option>
+                                                                  <option value="Home Phone">Home Phone</option>
+                                                                  <option value="Business Phone">Business Phone</option>
+                                                                  <option value="OutsideUS">Outside US Phone</option>
+                                                               </select>
+                                                               <span class="error-message" id="S_phoneTypeError"></span>
+                                                             </div>
+                                                          </div>
+
+                                                          <div class="col-md-4">
+                                                             <div class="input-field">
+                                                                <label><b>Phone Number:<span style="color: ##ff0000;">*</span></b></label>
                                                                 <cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#"   size="30">
+                                                                <span id="formatSign">(xxx) xxx-xxxx</span>
                                                                 <span class="error-message" id="S_cellphoneError"></span>
                                                              </div>
                                                           </div>
@@ -374,26 +427,23 @@
                                                              </div>
                                                           </div>
                                                        </div>
-                                                       <div class="input-field">
-                                                          <cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
-                                                          <br><br>
-                                                          <FONT face="verdana,arial,helvetica" color="000000"><b>Please enter the characters in the image above:</b></FONT><br><br>
-                                                          <cfinput type="text" name="captcha" id="S_captcha">
-                                                          <span class="error-message" id="S_captchaError"></span>
-                                                       </div>
+                                                       <div class="input-field pt-3">
+                                                         <div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+                                                         <span class="error-message" id="recaptchaError"></span>
+                                                      </div>
                                                        <div class="input-button mt-3 register-btn">
                                                           <input type="Hidden" name="proc_reg">
                                                           <cfif NOT structKeyExists(session, 'sellerinfo') >
                                                           <button type="button" class="SeeMore" onclick="validateSellerForm()">Create an account</button>
                                                           <cfelse>
                                                           <p>
-                                                             You are already logged in. If you want to add listings, please <b><a href="user_listing_detail.cfm?xss=#xss#">click here</a></b>.
+                                                             You are already logged in. If you want to add listings, please <b><a href="/user_listing_detail">click here</a></b>.
                                                           </p>
                                                           </cfif>
                                                           <br>
                                                        </div>
                                                        <!--- <p style="text-align: center;">
-                                                          If you have already signed up as a seller, please <a href="user_login_page.cfm?xss=#xss#"> <b>Sign In </b></a>
+                                                          If you have already signed up as a seller, please <a href="/login"> <b>Sign In </b></a>
                                                           </p> --->
                                                     </div>
                                                  </cfform>
@@ -419,89 +469,150 @@
           </td>
        </tr>
        <cfinclude template="frmxss.cfm">
+       <script src="https://www.google.com/recaptcha/api.js" async defer></script>
        <script>
+       
           function validateSellerForm(){
-          // alert('test');
-          document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
-          
-          let isValid = true;
-          
-          const S_fname = document.getElementById('S_fname').value.trim();
-          const S_lname = document.getElementById('S_lname').value.trim();
-          const S_email = document.getElementById('S_Email').value.trim();
-          const S_phone = document.getElementById('S_cellphone').value.trim();
-          const S_password = document.getElementById('S_password').value.trim();
-          const S_password2 = document.getElementById('S_password2').value.trim();
-          const S_captcha = document.getElementById('S_captcha').value.trim();
-          
-          const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
-          
-          if (!S_fname) {
-          document.getElementById('S_fnameError').textContent = 'Please fill in your first name.';
-          isValid = false;
+            // alert('test');
+            document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+            
+            let isValid = true;
+            
+            const S_fname = document.getElementById('S_fname').value.trim();
+            const S_lname = document.getElementById('S_lname').value.trim();
+            const S_email = document.getElementById('S_Email').value.trim();
+            const S_phone = document.getElementById('S_cellphone').value.trim();
+            const phoneType = document.querySelector("[name='phoneType']").value;
+            const S_password = document.getElementById('S_password').value.trim();
+            const S_password2 = document.getElementById('S_password2').value.trim();
+            //  const S_captcha = document.getElementById('S_captcha').value.trim();
+            
+            const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+            
+            if (!S_fname) {
+               document.getElementById('S_fnameError').textContent = 'Please fill in your first name.';
+               isValid = false;
+            }
+            
+            // Validate LAST NAME
+            if (!S_lname) {
+               document.getElementById('S_lnameError').textContent = 'Please fill in your last name.';
+               isValid = false;
+            }
+            
+            // Validate EMAIL
+            if (!S_email) {
+               document.getElementById('S_EmailError').textContent = 'Please fill in your email address.';
+               isValid = false;
+            } else if (!/\S+@\S+\.\S+/.test(S_email)) {
+               document.getElementById('S_EmailError').textContent = 'Please enter a valid email address.';
+               isValid = false;
+            }
+            
+            
+            //  if (!S_phone) {
+            //  document.getElementById('S_cellphoneError').textContent = 'Please enter a phone number.';
+            //  isValid = false;
+            //  } 
+            // else if (!phoneRegex.test(S_phone)) {
+            // 	document.getElementById('S_cellphoneError').textContent = 'Please enter your phone number in the format (xxx) xxx-xxxx';
+            // 	isValid false; // Prevent form submission
+            // }
+            
+            // if (S_phone && !phoneRegex.test(S_phone)) {
+            // 	document.getElementById('S_cellphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+            // 	isValid = false;
+            // }
+            
+            if (!S_password) {
+               document.getElementById('S_passwordError').textContent = 'Please enter your password.';
+               isValid = false;
+            }
+            
+            if (!S_password2) {
+               document.getElementById('S_password2Error').textContent = 'Please re-enter your password.';
+               isValid = false;
+            }
+            
+            if (S_password && S_password2 && S_password !== S_password2) {
+               document.getElementById('S_password2Error').textContent = 'Passwords do not match.';
+               isValid = false;
+            }
+
+            if (!phoneType) {
+               document.getElementById('S_phoneTypeError').textContent = 'Please enter phone number';
+               isValid = false;
+            }
+
+            if(phoneType){
+               if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
+                  if (S_phone && !phoneRegex.test(S_phone)) {
+                     document.getElementById('S_cellphoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+                     document.getElementById('S_cellphone').focus();
+                     isValid = false;
+                  }
+               }
+            }
+            
+            // Validate CAPTCHA
+            //  if (!S_captcha) {
+            //  document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
+            //  isValid = false;
+            //  }
+            
+            if (isValid) {
+            // Submit the form
+               document.getElementById('submitSellerForm').submit();
+            }
+            
+            return isValid;
           }
-          
-          // Validate LAST NAME
-          if (!S_lname) {
-          document.getElementById('S_lnameError').textContent = 'Please fill in your last name.';
-          isValid = false;
-          }
-          
-          // Validate EMAIL
-          if (!S_email) {
-          document.getElementById('S_EmailError').textContent = 'Please fill in your email address.';
-          isValid = false;
-          } else if (!/\S+@\S+\.\S+/.test(S_email)) {
-          document.getElementById('S_EmailError').textContent = 'Please enter a valid email address.';
-          isValid = false;
-          }
-          
-          
-         //  if (!S_phone) {
-         //  document.getElementById('S_cellphoneError').textContent = 'Please enter a phone number.';
-         //  isValid = false;
-         //  } 
-          // else if (!phoneRegex.test(S_phone)) {
-          // 	document.getElementById('S_cellphoneError').textContent = 'Please enter your phone number in the format (xxx) xxx-xxxx';
-          // 	isValid false; // Prevent form submission
-          // }
-          
-          // if (S_phone && !phoneRegex.test(S_phone)) {
-          // 	document.getElementById('S_cellphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
-          // 	isValid = false;
-          // }
-          
-          if (!S_password) {
-          document.getElementById('S_passwordError').textContent = 'Please enter your password.';
-          isValid = false;
-          }
-          
-          if (!S_password2) {
-          document.getElementById('S_password2Error').textContent = 'Please re-enter your password.';
-          isValid = false;
-          }
-          
-          if (S_password && S_password2 && S_password !== S_password2) {
-          document.getElementById('S_password2Error').textContent = 'Passwords do not match.';
-          isValid = false;
-          }
-          
-          // Validate CAPTCHA
-          if (!S_captcha) {
-          document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
-          isValid = false;
-          }
-          
-          if (isValid) {
-          // Submit the form
-          document.getElementById('submitSellerForm').submit();
-          }
-          
-          return isValid;
-          }
-          
-          
+ 
        </script>
+
+       <script>
+            document.addEventListener("DOMContentLoaded", function() {
+               const phoneInput = document.getElementById("phone");
+               const phoneType = document.getElementById("phoneType");
+               const formatSign = document.getElementById("formatSign");
+
+               function toggleFormatSign() {
+                  if (phoneType.value === "OutsideUS") {
+                     formatSign.style.display = "none";
+                  } else {
+                     formatSign.style.display = "inline";
+                  }
+               }
+
+               // run on load (in case form already has value)
+               toggleFormatSign();
+
+               // run on change
+               phoneType.addEventListener("change", toggleFormatSign);
+
+               phoneInput.addEventListener("input", function(e) {
+                  // If type is OutsideUS → skip formatting
+                  if (phoneType.value === "OutsideUS") {
+                     return;
+                  }
+
+                  let value = e.target.value.replace(/\D/g, ""); // only digits
+                  if (value.length > 10) value = value.substring(0, 10);
+
+                  // Apply formatting as user types
+                  if (value.length > 6) {
+                     e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+                  } else if (value.length > 3) {
+                     e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+                  } else if (value.length > 0) {
+                     e.target.value = `(${value}`;
+                  } else {
+                     e.target.value = "";
+                  }
+               });
+            });
+       </script>
+
        <style>
           .error-message {
           color: #ff0000;
@@ -535,5 +646,5 @@
     </body>
  </html>
 <cfelse>
-	<cflocation addtoken="No" url="overView.cfm?xss=#xss#">
+	<cflocation addtoken="No" url="/overView">
 </cfif>
