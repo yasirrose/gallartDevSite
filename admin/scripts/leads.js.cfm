@@ -210,6 +210,43 @@ getKeywords = function(){
 	maillist = strLead['MAILLIST'];
 
 
+	Addresstype = strLead['ADDRESSTYPE'];
+
+	console.log('test address: ' + Addresstype);
+
+	if (!Addresstype || Addresstype.trim() === "") {
+		Addresstype = "USA";
+	}
+
+	for(i = 0; i < frm.Addresstype.options.length; i++){
+		if(frm.Addresstype.options[i].value == Addresstype){
+			frm.Addresstype.options[i].selected = true;
+		}
+		else{
+			frm.Addresstype.options[i].selected = false;
+		}
+	}
+
+	if (Addresstype && Addresstype.toLowerCase() === "outside") {
+		document.getElementById("stateTextRow").style.display = "";
+		document.getElementById("stateDropdownRow").style.display = "none";
+	} else {
+		document.getElementById("stateTextRow").style.display = "none";
+		document.getElementById("stateDropdownRow").style.display = "";
+
+		state = strLead['STATE']
+
+			for(i = 0; i < frm.state.options.length; i++){
+			if(frm.state.options[i].value == state){
+				frm.state.options[i].selected = true;
+			}
+			else{
+				frm.state.options[i].selected = false;
+			}
+		}
+	} 
+
+
 	var fname = strLead.RESULTSET.DATA[0][4]; // FNAME
 	var lname = strLead.RESULTSET.DATA[0][5]; // LNAME
 	var name = strLead.RESULTSET.DATA[0][31]; // NAME

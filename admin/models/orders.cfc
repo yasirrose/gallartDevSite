@@ -429,13 +429,13 @@
 	   	<cfquery name="qOrders" datasource="#application.dsource#">
 			SELECT 'A' + CAST (row_number() OVER(ORDER BY O.orderuid) as varchar) as a_orders,'B' + CAST (row_number() OVER(ORDER BY O.orderuid) as varchar) as b_orders, O.orderuid,'C' + CAST (row_number() OVER(ORDER BY O.orderuid) as varchar) as c_orders, C.fname as customer_fname, C.lname as customer_lname, CONVERT(CHAR(9),O.date,6) as orderDate,C.email as customer_email,C.address1, C.city, C.state,C.country, C.zip, C.phone as customer_phone, C.otherphone as customer_otherphone, C.cellphone as customer_cellphone,C.businessphone as customer_businessphone,C.website as customer_website,C.fax as customer_fax,C.driverslicense as customer_driverslicense,L.name as location_name, E.emp_lname + ', ' + E.emp_fname as emp_name,A.emp_lname + ', ' + A.emp_fname as assignedto_name,O.orderuid,O.customerid,O.consultant as order_consultant,O.date,O.saleCode,O.percentMarkdown,O.shipCost,O.insurance,O.discount,O.CardNumber,O.CardExpiry,O.shipMethod,O.tax,O.amountSale,O.Total,O.amountPaid,O.balanceDue,O.framingAmount,O.company as order_company,O.tracking_number,O.estimate,O.incomplete
 			FROM   orders AS O
-			INNER JOIN Customers AS C ON C.ID = O.customerid
+			LEFT JOIN Customers AS C ON C.ID = O.customerid
 			INNER JOIN locations AS L ON O.fk_locations = L.pk_locations
 			INNER JOIN items AS I ON O.OrderID = I.Order_ID
 			LEFT OUTER JOIN products AS P ON I.productUID = P.UID
 			LEFT OUTER JOIN employees AS E ON O.fk_employees = E.pk_employees
 			LEFT OUTER JOIN employees AS A ON C.assignedTo = A.pk_employees
-			WHERE 0=0
+			WHERE 0=0 and O.customerid IN (SELECT ID FROM Customers)
 			<cfif arguments.Lname neq ''>
 	      		AND C.lname like '#arguments.Lname#%'
 	      	</cfif>
@@ -512,6 +512,8 @@
 				ORDER BY O.orderuid desc
 	      	</cfif>
 	   	</cfquery>
+
+		
 
    		<cfreturn queryconvertforgrid(qOrders,page,pagesize)/>
 

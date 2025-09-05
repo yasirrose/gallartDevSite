@@ -98,8 +98,22 @@ function gridChange(thisId) {
 
 function doEdit(type) {
 
-	var phone = document.getElementById('phoneNumber').value.trim();
-	var phoneType = document.getElementById('PhoneType').value;
+	
+
+	console.log('test type: ' + type)
+
+	<!--- return false; --->
+
+    var edit = new admin.models.customers();
+
+
+
+    edit.setForm("editForm");
+    
+    if (type == 'edit'){
+
+		var phone = document.getElementById('phoneNumber').value.trim();
+		var phoneType = document.getElementById('PhoneType').value;
 
 	if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
 		// Format: (123) 456-7890
@@ -110,12 +124,6 @@ function doEdit(type) {
 			return false;
 		}
 	}
-
-    var edit = new admin.models.customers();
-
-    edit.setForm("editForm");
-    
-    if (type == 'edit'){
     		
      if ( edit.editCustomerFromForm()) {
          ColdFusion.Grid.refresh('data',true);

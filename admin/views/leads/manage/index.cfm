@@ -208,7 +208,7 @@
 
 								
 
-								<div class="col-md-6">
+								<div class="col-md-4">
 									<div class="form-group">
 										<label>Phone Type:</label>
 										<select name="PhoneType" id="PhoneType">
@@ -220,7 +220,7 @@
 									</div>
 								</div>
 
-								<div class="col-md-6">
+								<div class="col-md-4">
 									<div class="form-group">
 										<label>Phone Number:</label>
 										<cfinput type="text" name="phoneNumber" id="phoneNumber" >
@@ -280,12 +280,56 @@
 										<cfinput type="text" name="otherphone" id="otherphone"  bind="{leadGrid.otherphone}">
 									</div>
 								</div> --->
+
+
 								<div class="col-md-4">
 									<div class="form-group">
-										<label>Best Time To Call:</label>
-										<cfinput type="text" name="besttime" id="besttime"  bind="{leadGrid.besttime}">
+										<label>Address Type:</label>
+										<cfset Addtype = "USA,Outside" />
+										<cfoutput>
+											<select name="Addresstype" id="Addresstype" onchange="toggleStateField();">
+												<option value="">Please Select</option>
+												<cfloop list="#Addtype#" index="idx">
+													<option value="#idx#">#idx#</option>
+												</cfloop>
+											</select>
+										</cfoutput>
 									</div>
 								</div>
+
+								<div id="stateTextRow" style="display:none;">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>State:</label>
+											<cfinput type="text" name="State_Outside" id="State_Outside"  bind="{leadGrid.state}">
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>Country:</label>
+											<cfinput type="text" name="country" id="country"  bind="{leadGrid.country}">
+										</div>
+									</div>
+								</div>
+
+								<div id="stateDropdownRow" style="display:none;">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>State:</label>
+											<cfoutput>
+												<select name="state" id="state">
+													<option value="">Please Select</option>
+													<cfloop query="getStates">
+														<option value="#getStates.stateAbb#">#getStates.state#</option>
+													</cfloop>
+												</select>
+											</cfoutput>
+										</div>
+									</div>
+									
+								</div>
+
+								
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Address:</label>
@@ -298,18 +342,14 @@
 										<cfinput type="text" name="city" id="city"  bind="{leadGrid.city}">
 									</div>
 								</div>
+
 								<div class="col-md-4">
 									<div class="form-group">
-										<label>State:</label>
-										<cfinput type="text" name="state" id="state"  bind="{leadGrid.state}">
+										<label>Best Time To Call:</label>
+										<cfinput type="text" name="besttime" id="besttime"  bind="{leadGrid.besttime}">
 									</div>
 								</div>
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>Country:</label>
-										<cfinput type="text" name="country" id="country"  bind="{leadGrid.country}">
-									</div>
-								</div>
+								
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Zip Code:</label>
@@ -452,6 +492,27 @@
 
 </cfwindow>
 </div>
+
+
+<script>
+function toggleStateField() {
+    var addressType = document.getElementById("Addresstype").value;
+
+    if (addressType === "Outside") {
+        // Show text field, hide dropdown
+        document.getElementById("stateTextRow").style.display = "";
+        document.getElementById("stateDropdownRow").style.display = "none";
+    } else if (addressType === "USA") {
+        // Show dropdown, hide text field
+        document.getElementById("stateDropdownRow").style.display = "";
+        document.getElementById("stateTextRow").style.display = "none";
+    } else {
+        // Hide both if nothing selected
+        document.getElementById("stateTextRow").style.display = "none";
+        document.getElementById("stateDropdownRow").style.display = "none";
+    }
+}
+</script> 
 
 <iframe id="leadExport" src="" frameborder="0"></iframe>
 <iframe id="createXls" src="" frameborder="0"></iframe>

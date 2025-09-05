@@ -25,7 +25,7 @@
 
 
 	
-
+ 
 
 <cfform action="index.cfm?event=leads.insertLead" id="leadForm" name="leadForm">
 <cfinput type="hidden" name="pk_leads" id="pk_leads" value="">
@@ -175,54 +175,6 @@
 			<cfinput type="text" name="besttime" id="besttime" size="30">
 		</td>
 	</tr>
-	<!--- <tr>
-		<td>
-			Address:
-		</td>
-		<td>
-			<cfinput type="text" name="address" id="address" size="30">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			City:
-		</td>
-		<td>
-			<cfinput type="text" name="city" id="city" size="30">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			State:
-		</td>
-		<td>
-        	<cfoutput>
-        	<select name="state" id="state">
-            <cfloop query="getStates">
-                <option value="#stateAbb#">#state#</option>
-            </cfloop>
-            </select>
-            </cfoutput>
-			<!---<cfinput type="text" name="state" id="state" size="30">--->
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Country:
-		</td>
-		<td>
-			<cfinput type="text" name="country" id="country" size="30">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Zip Code:
-		</td>
-		<td>
-			<cfinput type="text" name="zip" id="zip" size="30" value="">
-		</td>
-	</tr> --->
-
 
 	<tr>
 		<td>
@@ -239,14 +191,7 @@
 
 	<!-- USA Address Section -->
 	<tbody id="USAAddress" style="display:none;">
-		<tr>
-			<td>Street Address:</td>
-			<td><input type="text" name="Address1" id="Address1" size="50" ></td>
-		</tr>
-		<tr>
-			<td>City:</td>
-			<td><input type="text" name="City" id="City" size="50" ></td>
-		</tr>
+		
 		<tr>
 			<td>State:</td>
 			<td>
@@ -260,30 +205,17 @@
 				</cfoutput>
 			</td>
 		</tr>
-		<tr>
-			<td>Zip Code:</td>
-			<td><input type="text" name="Zip" id="Zip" size="50" ></td>
-		</tr>
+		
 	</tbody>
 
 	<!-- Outside USA Address Section -->
 	<tbody id="OutsideAddress" style="display:none;">
-		<tr>
-			<td>Street Address:</td>
-			<td><input type="text" name="Address1_Outside" id="Address1_Outside" size="50" ></td>
-		</tr>
-		<tr>
-			<td>City:</td>
-			<td><input type="text" name="City_Outside" id="City_Outside" size="50" ></td>
-		</tr>
+		
 		<tr>
 			<td>State/Province:</td>
 			<td><input type="text" name="State_Outside" id="State_Outside" size="50"></td>
 		</tr>
-		<tr>
-			<td>Zip Code:</td>
-			<td><input type="text" name="Zip_Outside" id="Zip_Outside" size="50" ></td>
-		</tr>
+		
 		<tr>
 			<td>Country:</td>
 			<td><input type="text" name="Country" id="Country" size="50" ></td>
@@ -300,6 +232,57 @@
 		// Run on page load if form already has a value
 		window.onload = toggleAddressFields;
 	</script>
+
+	<tr>
+		<td>
+			Address:
+		</td>
+		<td>
+			<cfinput type="text" name="address" id="address" size="30">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			City:
+		</td>
+		<td>
+			<cfinput type="text" name="city" id="city" size="30">
+		</td>
+	</tr>
+	<!--- <tr>
+		<td>
+			State:
+		</td>
+		<td>
+        	<cfoutput>
+        	<select name="state" id="state">
+            <cfloop query="getStates">
+                <option value="#stateAbb#">#state#</option>
+            </cfloop>
+            </select>
+            </cfoutput>
+			<!---<cfinput type="text" name="state" id="state" size="30">--->
+		</td>
+	</tr> --->
+	<!--- <tr>
+		<td>
+			Country:
+		</td>
+		<td>
+			<cfinput type="text" name="country" id="country" size="30">
+		</td>
+	</tr> --->
+	<tr>
+		<td>
+			Zip Code:
+		</td>
+		<td>
+			<cfinput type="text" name="zip" id="zip" size="30" value="">
+		</td>
+	</tr>
+
+
+	
 
 
 	<tr>

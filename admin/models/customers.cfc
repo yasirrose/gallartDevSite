@@ -200,6 +200,8 @@
 	
 	<cffunction name="deleteCustomer" access="remote">
 		<cfargument name="id" type="string" default="">
+
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 		
 		<cfset var success = true />
 		
@@ -210,12 +212,15 @@
             WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
         </cfquery>
 		
-		<cfquery name="deleteCustomerRoles" datasource="#application.dsource#"> 
-                DELETE from employees_roles
-                WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
-            </cfquery>
+		<!--- <cfquery name="deleteCustomerRoles" datasource="#application.dsource#"> 
+			DELETE from employees_roles
+			WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
+		</cfquery> --->
 		
-		<cfcatch type="any"><cfset success = false /></cfcatch>
+		<cfcatch type="any">
+			<cfdump var="#cfcatch#" abort="true">
+			<cfset success = false />
+		</cfcatch>
 		</cftry>
 	
 		<cfreturn success />

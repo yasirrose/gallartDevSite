@@ -189,6 +189,8 @@
 		<cfargument name="name" type="string" default="">
 		<cfargument name="phoneNumber" type="string" default="">
 		<cfargument name="phoneType" type="string" default="">
+		<cfargument name="addressType" type="string" default="">
+		<cfargument name="State_Outside" type="string" default="">
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
 
@@ -219,6 +221,19 @@
 	    <cfset var success = true />
 
 
+		<cfif arguments.addressType EQ "USA">
+			<cfset finalState = arguments.state>
+		<cfelseif arguments.addressType EQ "Outside">
+			<cfset finalState = arguments.state_outside>
+			<cfset country = arguments.country>
+		<cfelse>
+			<cfset finalState = "">
+			<cfset country = "">
+		</cfif>
+
+		
+		
+
    
 	    <cftry>
 	    	
@@ -247,7 +262,8 @@
 						artists,
 						titles,
 						notes,
-						origin
+						origin,
+						addressType
 	                )
 	                values
                 	(
@@ -263,15 +279,16 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.besttime#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.address#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.city#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.state#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.country#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#finalState#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#country#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.zip#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.company#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">,
 						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.artists#">,
 						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.titles#">,
 						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.notes#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.origin#">
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.origin#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.addressType#">
 					)
 	            </cfquery>
 		
@@ -298,8 +315,8 @@
 					besttime 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.besttime#">,
 					address 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.address#">,
 					city 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.city#">,
-					state 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.state#">,
-					country 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.country#">,
+					state 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#finalState#">,
+					country 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#country#">,
 					zip 				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.zip#">,
 					company 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.company#">,
 					website 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">,
@@ -307,13 +324,16 @@
 					titles 				= <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.titles#">,
 					notes 				= <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.notes#">,
 					origin				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.origin#">,
+					addressType				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.addressType#">,
 					maillist			= <cfqueryparam cfsqltype="cf_sql_tinyint" value="#maillist_value#">
 	                WHERE pk_leads		 = '#arguments.pk_leads#'
 	            </cfquery>
 			
 			</cfif>
 	    
-	    	<cfcatch type="any"></cfcatch>
+	    	<cfcatch type="any">
+				<cfdump var="#cfcatch#" abort="true">
+			</cfcatch>
 		</cftry>
 			
 		<cfreturn success> 
@@ -358,6 +378,8 @@
 		<cfset returnStruct.empId 		= qLead.fk_employees />
 		<cfset returnStruct.origin 		= qLead.origin />
 		<cfset returnStruct.maillist 	= qLead.maillist />
+		<cfset returnStruct.addressType 	= qLead.addressType />
+		<cfset returnStruct.state 	= qLead.state />
 		<cfset returnStruct.resultset	= qLead />
 		
 		<cfreturn returnStruct />
