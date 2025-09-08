@@ -103,6 +103,14 @@ function doEdit(type) {
 	  var phone = document.getElementById('phoneNumber').value.trim();
 	  var phoneType = document.getElementById('PhoneType').value;
 
+		
+
+    var edit = new admin.models.users();
+
+    edit.setForm("editForm");
+    
+    if (type == 'edit'){
+
 		if (fname === '') {
 			toastr.error('First Name is required.');
 			document.getElementById('fname').focus();
@@ -153,17 +161,17 @@ function doEdit(type) {
 			}
 		}
 
-    var edit = new admin.models.users();
 
-    edit.setForm("editForm");
-    
-    if (type == 'edit'){
     		
      if ( edit.editUserFromForm()) {
          ColdFusion.Grid.refresh('data',true);
      } 
-     else { alert( 'There was a problem in the processing.')}
+     else 
+	 	{ 
+			alert( 'There was a problem in the processing.')
+		}
       }
+	  
    else if (type == 'delete'){
    	if ( edit.deleteUser()) {
          ColdFusion.Grid.refresh('data',true);

@@ -194,7 +194,11 @@ table tr td * {
 																			</li>
 																			<li>
 																				<b>Phone:</b>
-																				<cfif shipphone lt "1">#billphone#<cfelse>#shipphone#</cfif>
+																				<cfif shipphone lt "1">
+																					#billphone#
+																				<cfelse>
+																					#shipphone#
+																				</cfif>
 																			</li>
 																			<li>
 																				<b>Shipping Method:</b>

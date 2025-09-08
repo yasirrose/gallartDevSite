@@ -111,12 +111,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		const BillAddress1 = document.getElementById('BillAddress1').value.trim();
 		const billcity = document.getElementById('billcity').value.trim();
 		const billzip = document.getElementById('billzip').value.trim();
-		const billcountry = document.getElementById('billcountry').value.trim();
+		// const billcountry = document.getElementById('billcountry').value.trim();
 		// const cellphone = document.getElementById('cellphone').value.trim();
 		const Email = document.getElementById('Email').value.trim();
 		// const BillPhone = document.getElementById('BillPhone').value.trim();
 		const phoneNumber = document.getElementById('phoneNumber').value.trim();
 		const phoneType = document.querySelector("[name='phoneType']").value;
+		const addressType = document.querySelector("[name='AddressType']").value;
+		const ShipaddressType = document.querySelector("[name='ShipAddressType']").value;
 		// const businessphone = document.getElementById('businessphone').value.trim();
 		const cardInput = document.getElementById("cardnum");
 		const cardnum = cardInput.value.replace(/\s+/g, '').trim();
@@ -156,11 +158,12 @@ document.addEventListener("DOMContentLoaded", function () {
 			document.getElementById('billzipError').textContent = 'We require the billing postal code.';
 			isValid = false;
 		}
+		
 	
-		if (!billcountry) {
-			document.getElementById('billcountryError').textContent = 'We require the billing country.';
-			isValid = false;
-		}
+		// if (!billcountry) {
+		// 	document.getElementById('billcountryError').textContent = 'We require the billing country.';
+		// 	isValid = false;
+		// }
 	
 		// if (!cellphone) {
 		// 	document.getElementById('cellphoneError').textContent = 'We require your cell phone number ';
@@ -468,6 +471,40 @@ document.addEventListener("DOMContentLoaded", function () {
 																</div>
 															</div>
 														</div>
+
+														<div class="input-field #this_row()#">
+															<div class="row align-items-center">
+																<div class="col-md-2">
+																	<label><span class="required">*</span><b>Address Type, City, Zip</b></label>
+																</div>
+																<div class="col-md-4">
+																	
+																	<select name="AddressType" id="AddressType" onchange="toggleAddressFields();">
+																		<option value="USA"  >USA Address</option>
+																		<option value="Outside" >Outside USA</option>
+																	</select>
+
+																</div>
+																<div class="col-md-3">
+																	<!--- <select name="billstate" class="select2">
+																		<option value="">Please Select</option>
+																		<cfloop query="states">
+																			<option value="#stateAbb#">#state#</option>
+																		</cfloop>
+																	
+																	</select> --->
+
+																	<cfinput type="text" name="billcity" id="billcity" size="25" >
+																	<span class="error-message" id="billcityError"></span>
+
+																</div>
+																<div class="col-md-3">
+																	<cfinput type="text" name="billzip" size="13" id="billzip" >
+																	<span class="error-message" id="billzipError"></span>
+																</div>
+															</div>
+														</div>
+
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
@@ -479,6 +516,8 @@ document.addEventListener("DOMContentLoaded", function () {
 																</div>
 															</div>
 														</div>
+
+
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
@@ -489,33 +528,42 @@ document.addEventListener("DOMContentLoaded", function () {
 																</div>
 															</div>
 														</div>
-														<div class="input-field #this_row()#">
+
+
+														<div class="input-field #this_row()#" id="stateDropdownDiv" style="display:none;">
 															<div class="row align-items-center">
 																<div class="col-md-2">
-																	<label><span class="required">*</span><b>City, St Zip</b></label>
+																	<label><span class="required">&nbsp;</span><b>State</b></label>
 																</div>
-																<div class="col-md-4">
-																	<cfinput type="text" name="billcity" id="billcity" size="25" >
-																	<span class="error-message" id="billcityError"></span>
-																</div>
-																<div class="col-md-3">
-																	<select name="billstate" class="select2">
+																<div class="col-md-10">
+																	<select name="billstateDropdown" id="billstateDropdown" class="select2">
 																		<option value="">Please Select</option>
 																		<cfloop query="states">
 																			<option value="#stateAbb#">#state#</option>
 																		</cfloop>
 																	</select>
 																</div>
-																<div class="col-md-3">
-																	<cfinput type="text" name="billzip" size="13" id="billzip" >
-																	<span class="error-message" id="billzipError"></span>
+															</div>
+														</div>
+
+														<div class="input-field #this_row()#" id="stateTextDiv" style="display:none;">
+															<div class="row align-items-center">
+																<div class="col-md-2">
+																	<label><span class="required">&nbsp;</span><b>State/Province</b></label>
+																</div>
+																<div class="col-md-10">
+																	<cfinput type="text" name="billstateText" id="billstateText" size="25">
 																</div>
 															</div>
 														</div>
-														<div class="input-field #this_row()#">
+
+														<!-- COUNTRY FIELD -->
+														<div class="input-field #this_row()#" id="countryDiv" style="display:none;">
 															<div class="row align-items-center">
 																<div class="col-md-2">
-																	<label><span class="required">*</span><b>Country:</b></label>
+																	<label>
+																		<!--- <span class="required">*</span> --->
+																		<b>Country:</b></label>
 																</div>
 																<div class="col-md-10">
 																	<select name="billcountry" id="billcountry" class="select2">
@@ -524,7 +572,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																		</cfloop>
 																	</select>
 																	<span class="error-message" id="billcountryError"></span>
-																</div>
+																</div>															
 															</div>
 														</div>
 
@@ -633,6 +681,38 @@ document.addEventListener("DOMContentLoaded", function () {
 																</div>
 															</div>
 														</div>
+
+														<div class="input-field #this_row()#">
+															<div class="row align-items-center">
+																<div class="col-md-2">
+																	<label><span class="required">&nbsp;</span><b>Address Type, City, Zip</b></label>
+																</div>
+																<div class="col-md-4">
+
+																	<select name="ShipAddressType" id="ShipAddressType" onchange="ShiptoggleAddressFields();">
+																		<option value="USA"  >USA Address</option>
+																		<option value="Outside" >Outside USA</option>
+																	</select>
+
+																	
+																</div>
+																<div class="col-md-3">
+
+																	<input type="text" name="shipcity" size="25">
+
+
+																	<!--- <select name="shipstate" class="select2">
+																		<cfloop query="states">
+																			<option value="#stateAbb#">#state#</option>
+																		</cfloop>
+																	</select> --->
+																</div>
+																<div class="col-md-3">
+																	<input type="text" name="shipzip" size="13">
+																</div>
+															</div>
+														</div>
+
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
@@ -653,27 +733,56 @@ document.addEventListener("DOMContentLoaded", function () {
 																</div>
 															</div>
 														</div>
-														<div class="input-field #this_row()#">
+
+
+														<div class="input-field #this_row()#" id="ShipstateDropdownDiv" style="display:none;">
 															<div class="row align-items-center">
 																<div class="col-md-2">
-																	<label><span class="required">&nbsp;</span><b>City, St Zip</b></label>
+																	<label><span class="required">&nbsp;</span><b>State</b></label>
 																</div>
-																<div class="col-md-4">
-																	<input type="text" name="shipcity" size="25">
-																</div>
-																<div class="col-md-3">
-																	<select name="shipstate" class="select2">
+																<div class="col-md-10">
+																	<select name="ShipstateDropdown" id="ShipstateDropdown" class="select2">
+																		<option value="">Please Select</option>
 																		<cfloop query="states">
 																			<option value="#stateAbb#">#state#</option>
 																		</cfloop>
 																	</select>
 																</div>
-																<div class="col-md-3">
-																	<input type="text" name="shipzip" size="13">
+															</div>
+														</div>
+
+														<div class="input-field #this_row()#" id="ShipstateTextDiv" style="display:none;">
+															<div class="row align-items-center">
+																<div class="col-md-2">
+																	<label><span class="required">&nbsp;</span><b>State/Province</b></label>
+																</div>
+																<div class="col-md-10">
+																	<cfinput type="text" name="ShipstateText" id="ShipstateText" size="25">
 																</div>
 															</div>
 														</div>
-														<div class="input-field #this_row()#">
+
+														<!-- COUNTRY FIELD -->
+														<div class="input-field #this_row()#" id="ShipcountryDiv" style="display:none;">
+															<div class="row align-items-center">
+																<div class="col-md-2">
+																	<label>
+																		<!--- <span class="required">*</span> --->
+																		<b>Country:</b></label>
+																</div>
+																<div class="col-md-10">
+																	<select name="shipcountry" id="shipcountry" class="select2">
+																		<cfloop query="countries">
+																			<option value="#CountryCode#">#Country#</option>
+																		</cfloop>
+																	</select>
+																	<!--- <span class="error-message" id="billcountryError"></span> --->
+																</div>															
+															</div>
+														</div>
+
+
+														<!--- <div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
 																	<label><span class="required">&nbsp;</span><b>Country:</b></label>
@@ -686,7 +795,9 @@ document.addEventListener("DOMContentLoaded", function () {
 																	</select>
 																</div>
 															</div>
-														</div>
+														</div> --->
+
+
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
@@ -825,6 +936,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <script>
+
+	function toggleAddressFields() {
+		var type = document.getElementById("AddressType").value;
+
+		if (type === "USA") {
+			// Show state dropdown, hide text
+			document.getElementById("stateDropdownDiv").style.display = "block";
+			document.getElementById("stateTextDiv").style.display = "none";
+
+			// Hide country
+			document.getElementById("countryDiv").style.display = "none";
+
+		} else if (type === "Outside") {
+			// Show state as text field
+			document.getElementById("stateDropdownDiv").style.display = "none";
+			document.getElementById("stateTextDiv").style.display = "block";
+
+			// Show country
+			document.getElementById("countryDiv").style.display = "block";
+
+		} else {
+			// Default (nothing selected)
+			document.getElementById("stateDropdownDiv").style.display = "none";
+			document.getElementById("stateTextDiv").style.display = "none";
+			document.getElementById("countryDiv").style.display = "none";
+		}
+	}
+
+
+	function ShiptoggleAddressFields() {
+		var type = document.getElementById("ShipAddressType").value;
+
+		if (type === "USA") {
+			// Show state dropdown, hide text
+			document.getElementById("ShipstateDropdownDiv").style.display = "block";
+			document.getElementById("ShipstateTextDiv").style.display = "none";
+
+			// Hide country
+			document.getElementById("ShipcountryDiv").style.display = "none";
+
+		} else if (type === "Outside") {
+			// Show state as text field
+			document.getElementById("ShipstateDropdownDiv").style.display = "none";
+			document.getElementById("ShipstateTextDiv").style.display = "block";
+
+			// Show country
+			document.getElementById("ShipcountryDiv").style.display = "block";
+
+		} else {
+			// Default (nothing selected)
+			document.getElementById("ShipstateDropdownDiv").style.display = "none";
+			document.getElementById("ShipstateTextDiv").style.display = "none";
+			document.getElementById("ShipcountryDiv").style.display = "none";
+		}
+	}
+
+
 	document.addEventListener("DOMContentLoaded", function() {
 		const phoneInput = document.getElementById("phoneNumber");
 		const phoneType = document.getElementById("phoneType");

@@ -262,11 +262,7 @@
 		<td>
 			Consultant:
 		</td>
-		<td>
-			<cfif structKeyExists(session, "invoiceInfo") AND structKeyExists(session.invoiceInfo, "Consultant") AND len(trim(session.invoiceInfo.Consultant))>
-				<cfdump var="#session.invoiceInfo.Consultant#">
-				<cfdump var="#form.Consultant#">
-			</cfif>
+		<td>			
 			
 			<input type="text" name="Consultant" id="Consultant"  size="50"  value="#form.Consultant#">
 		</td>

@@ -93,6 +93,24 @@ table tr td, table tr td * {
 
 <cfparam name="subtotal" default="0">
 
+	<cfif form.AddressType EQ 'Outside'>
+		<cfset BILLSTATE = form.billstateText>
+		<cfset billcountry = form.billcountry>
+	<cfelse>
+		<cfset BILLSTATE = form.billstateDropdown>
+		<cfset billcountry = ''>
+	</cfif>
+
+	<cfif form.ShipAddressType EQ 'Outside'>
+		<cfset Shipstate = form.ShipstateText>
+		<cfset shipcountry = form.Shipcountry>
+	<cfelse>
+		<cfset Shipstate = form.ShipstateDropdown>
+		<cfset Shipcountry = ''>
+	</cfif>
+
+	<!--- <cfdump var="#BILLSTATE#" abort="true">  --->
+
 <CFIF shipnamef GT 1>
 <CFSET shipnamef=#trim(shipnamef)#>
 <CFELSE>
@@ -118,11 +136,13 @@ table tr td, table tr td * {
 <CFELSE>
 <CFSET SHIPCITY=#trim(BILLCITY)#>
 </CFIF>
+
 <CFIF SHIPSTATE GT 1>
-<CFSET SHIPSTATE=#trim(SHIPSTATE)#>
+	<CFSET SHIPSTATE=#trim(SHIPSTATE)#>
 <CFELSE>
-<CFSET SHIPSTATE=#trim(BILLSTATE)#>
+	<CFSET SHIPSTATE=#trim(BILLSTATE)#>
 </CFIF>
+
 <CFIF SHIPCOUNTRY GT 1>
 <CFSET SHIPCOUNTRY=#trim(SHIPCOUNTRY)#>
 <CFELSE>
@@ -208,7 +228,7 @@ table tr td, table tr td * {
 							
 							</cfoutput>
 							<!--- Calculate and Enter Taxes --->
-							<cfif #form.billstate# is #taxst#>
+							<cfif #billstate# is #taxst#>
 								<cfset tax = (taxamount*0.01)*subtotal />
 							<cfelse>
 								<cfset tax = 0 />
@@ -294,10 +314,15 @@ table tr td, table tr td * {
 									<b>Address 2</b> #form.BillAddress2#
 								</li>
 								<li>
-									<b>City, St Zip</b> #form.billcity#, #form.billstate# #form.billzip#
+									<b>Address Type, City, Zip</b>  #form.Addresstype#,#form.billcity#, #form.billzip#
 								</li>
 								<li>
-									<b>Country:</b> #form.billcountry#
+									<cfif form.addressType EQ 'Outside'>
+										<b>State/Province ,Country:</b> #form.billstateText# ,#form.billcountry#
+									<cfelse>
+										<b>State: </b> #form.billstateDropdown#
+									</cfif>
+									
 								</li>
 								<!--- <li>
 									<b>Cell Phone</b> #form.cellphone# 
@@ -351,12 +376,19 @@ table tr td, table tr td * {
 								<b>Address 2</b> #shipAddress2#
 							</li>
 							<li>
-							   <b>City, St Zip</b>  
-								#shipcity#, #shipstate# #shipzip# 
+							   <b>Address Type,City, Zip</b>  
+								#form.ShipAddressType# , #shipcity#,  #shipzip# 
 							</li>
 							<li>
-								 <b>Country:</b> 
-								 #shipcountry# 
+								 <!--- <b>Country:</b> 
+								 #shipcountry#  --->
+
+								 <cfif form.ShipaddressType EQ 'Outside'>
+									<b>State/Province ,Country:</b> #form.ShipstateText# ,#form.shipcountry#
+								<cfelse>
+									<b>State: </b> #form.ShipstateDropdown#
+								</cfif>
+
 							</li>
 							<li>
 								 <b>Phone</b> 

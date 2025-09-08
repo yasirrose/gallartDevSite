@@ -48,6 +48,23 @@
 		<cfset OTHERPHONE = ''>
 	</cfif>
 
+
+	<cfif form.AddressType EQ 'Outside'>
+		<cfset BILLSTATE = form.billstateText>
+		<cfset billcountry = form.billcountry>
+	<cfelse>
+		<cfset BILLSTATE = form.billstateDropdown>
+		<cfset billcountry = ''>
+	</cfif>
+
+	<cfif form.ShipAddressType EQ 'Outside'>
+		<cfset Shipstate = form.ShipstateText>
+		<cfset shipcountry = form.Shipcountry>
+	<cfelse>
+		<cfset Shipstate = form.ShipstateDropdown>
+		<cfset Shipcountry = ''>
+	</cfif>
+
 <cfif not find_cust.recordcount>
 	<!--- <cfdump var="test1" abort="true"> --->
 	<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -71,7 +88,8 @@
 			SADDRESS2,
 			SCITY,
 			SSTATE,
-			WEBSITE
+			WEBSITE,
+			AddressType
 		)
 		VALUES
 		(
@@ -93,7 +111,8 @@
 			'#SHIPADDRESS2#', 
 			'#SHIPCITY#',
 			'#SHIPSTATE#',
-			'#WEBSITE#'
+			'#WEBSITE#',
+			'#ADDRESSTYPE#'
 		);
 		SELECT SCOPE_IDENTITY() AS uid
 	</cfquery>
@@ -459,7 +478,7 @@
 
 
 <!--- Calculate and Enter Taxes --->
-<cfif #form.billstate# is #taxst#>
+<cfif #billstate# is #taxst#>
 
 		<cfset tax = (taxamount*0.01)*subtotal />
 
@@ -548,7 +567,7 @@
 
 <!--- Delete items from cart --->
 <cfquery name="GetCartInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-DELETE FROM cart WHERE trackerid = '#session.xss#'
+	DELETE FROM cart WHERE trackerid = '#session.xss#'
 </cfquery>
 <!--- <cfinclude template="#processtype.processcode#.proc"> --->
 
@@ -581,54 +600,54 @@ DELETE FROM cart WHERE trackerid = '#session.xss#'
 <cfif approved eq 1>
 
 <!--- Send out confirmation email --->
-<cfmail 
-server="#servername#"
- username="onli16@onlinegalleryart.com"
-password="re3objec" 
-to="#form.email#" 
-from="onli16@onlinegalleryart.com" 
-subject="Order - Confirmation" 
-type="HTML"
->
-<br><br>
-Thank you very much for your order.
-<br><br>
-If you have any questions regarding your order,
-please reference it by using the order ID listed below.
-<br><br>
-Internet Order Number:  #orderID#
-<br><br>
-Total:  #dollarformat(total)#
-<br><br>
-#companyname#
-<br><br>
-</cfmail>
+	<cfmail 
+		server="#servername#"
+		username="onli16@onlinegalleryart.com"
+		password="re3objec" 
+		to="#form.email#" 
+		from="onli16@onlinegalleryart.com" 
+		subject="Order - Confirmation" 
+		type="HTML"
+	>
+		<br><br>
+		Thank you very much for your order.
+		<br><br>
+		If you have any questions regarding your order,
+		please reference it by using the order ID listed below.
+		<br><br>
+		Internet Order Number:  #orderID#
+		<br><br>
+		Total:  #dollarformat(total)#
+		<br><br>
+		#companyname#
+		<br><br>
+	</cfmail>
 
-<cfmail 
-server="#servername#"
- username="onli16@onlinegalleryart.com"
-password="re3objec" 
-to="#emailsupport#"
- cc="#emailsupportcc#" 
- from="onli16@onlinegalleryart.com" 
- subject="GallArt.com <> Buying & Selling Fine Art <> New Order Placed" 
- type="HTML"
- > 
-<br><br>
-An order was placed on #DateFormat(createodbcdate(now()),"mmm dd, yyyy")#.
-<br><br>
-Shipping Name: #SHIPNAME#<br>
- Address: <br>
- #SHIPADDRESS1# #SHIPADDRESS2#<br>
- #SHIPCITY#, #SHIPSTATE# #SHIPZIP#<br>
-#SHIPCOUNTRY#<br>
-Phone: #SHIPPHONE#<br>
-Email: #EMAIL#<br>
-Order - #orderID#<BR>
-Total - #dollarformat(total)#<br><BR>
-<a href="http://#sitename#/admin">Click Here to review Order</a><br>
-Click the Log In button in the upper right corner of your screen, enter your password, then click Orders from the top menu.
-</cfmail>
+	<cfmail 
+		server="#servername#"
+		username="onli16@onlinegalleryart.com"
+		password="re3objec" 
+		to="#emailsupport#"
+		cc="#emailsupportcc#" 
+		from="onli16@onlinegalleryart.com" 
+		subject="GallArt.com <> Buying & Selling Fine Art <> New Order Placed" 
+		type="HTML"
+	> 
+		<br><br>
+		An order was placed on #DateFormat(createodbcdate(now()),"mmm dd, yyyy")#.
+		<br><br>
+		Shipping Name: #SHIPNAME#<br>
+		Address: <br>
+		#SHIPADDRESS1# #SHIPADDRESS2#<br>
+		#SHIPCITY#, #SHIPSTATE# #SHIPZIP#<br>
+		#SHIPCOUNTRY#<br>
+		Phone: #SHIPPHONE#<br>
+		Email: #EMAIL#<br>
+		Order - #orderID#<BR>
+		Total - #dollarformat(total)#<br><BR>
+		<a href="http://#sitename#/admin">Click Here to review Order</a><br>
+		Click the Log In button in the upper right corner of your screen, enter your password, then click Orders from the top menu.
+	</cfmail>
 <!--- End of confirmation email --->
 <cflocation url="/thankyou/y">
 <cfelse>

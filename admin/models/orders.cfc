@@ -689,6 +689,16 @@
 
 		<!--- <cfdump var="#form#" abort="true"> --->
 
+		<cfif form.addressType EQ "USA">
+			<cfset finalState = form.state_dropdown>
+		<cfelseif form.addressType EQ "Outside">
+			<cfset finalState = form.state>
+			<cfset country = form.country>
+		<cfelse>
+			<cfset finalState = "">
+			<cfset country = "">
+		</cfif>
+
 			<cfif len(trim(form.phoneNumber)) AND form.phoneType EQ "Home Phone">
 				<cfset phone = form.phoneNumber>
 			<cfelse>
@@ -722,10 +732,10 @@
 	                fname 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.fname#">,
 	                lname 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.lname#">,
 					address1 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.address1#">,
-					
+					AddressType = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.AddressType#">,
 					city 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.city#">,
-					state 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.state#">,
-					country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.country#">,
+					state 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#finalState#">,
+					country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#country#">,
 					zip 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.zip#">,
 					email 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_email#">,
 					phone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,

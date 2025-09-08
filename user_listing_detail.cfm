@@ -45,14 +45,15 @@
             <cfset tquantity = form.quantity>
             </cfif>
             
-            <cfif category is not "">
-            <cfif right(category,1) neq ":">
-            <cfset category = category&":">
-            <cfelse>
-            <cfset category = category>
-            </cfif>
-            </cfif>
+            <!--- <cfif category is not "">
+                <cfif right(category,1) neq ":">
+                    <cfset category = category&":">
+                <cfelse> --->
+                    <cfset category = category>
+                <!--- </cfif>
+            </cfif> --->
             
+
             
             <cfif isDefined("session.sellerinfo.pk_users")>
                 <cfquery name="qrytocheck" datasource="#dsource#" username="#uname#" password="#pword#">
@@ -104,7 +105,7 @@
                         '#form.options#', 
                         #ship_weight#,
                         '#form.Vendor#',
-                        '#ucase(form.manufacturer)#', 
+                        '#form.manufacturer#', 
                         '#form.active#',
                         '#expressair#', 
                         '#shipinfo#', 
@@ -235,13 +236,13 @@
             <cfset tquantity = form.quantity>
         </cfif>
         
-        <cfif category is not "">
+        <!--- <cfif category is not "">
             <cfif right(category,1) neq ":">
                 <cfset category = category&":">
-            <cfelse>
+            <cfelse> --->
                  <cfset category = category>
-             </cfif>
-        </cfif>
+             <!--- </cfif>
+        </cfif> --->
         
             <cfquery name="currentaction" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
                 UPDATE products SET
@@ -258,7 +259,7 @@
                     <cfif isDefined('Form.fileup') and Form.fileup is not "">
                     imageURL = '#uploaddirweb#/#uid#.jpg', 
                     </cfif>
-                    manufacturer = '#ucase(form.manufacturer)#', 
+                    manufacturer = '#form.manufacturer#', 
                     active = #form.active#,
                     expressair = '#expressair#',
                     shipinfo = '#shipinfo#',

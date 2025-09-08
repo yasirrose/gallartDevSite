@@ -364,7 +364,7 @@ function popupWinEmail(url) {
 								</td>
 							</tr>
 
-							<!--- <tr>
+							<tr>
 								<td style="font-size: 10px;">
 									Address Type:
 								</td>
@@ -379,7 +379,7 @@ function popupWinEmail(url) {
 										</select>
 									</cfoutput>
 								</td>	
-							</tr> --->
+							</tr>
 
 							<tr>
 								<td style="font-size: 10px;">
@@ -398,21 +398,24 @@ function popupWinEmail(url) {
 								</td>
 							</tr>
 
-							<tr>
+							<!--- <tr>
 								<td style="font-size: 10px;">
 									State
 								</td>
 								<td>
 									<cfinput type="text" name="state" id="state"  bind="{data.state}" size="35" class="displayInput">
 								</td>
-							</tr>
+							</tr> --->
 
-							<!--- <tr id="stateTextRow" style="display:none;">
+							<tr id="stateTextRow" style="display:none;">
 								<td style="font-size: 10px;">
-									State
+									State/Province
 								</td>
 								<td>
-									<cfinput type="text" name="state" id="state"  bind="{data.state}" size="35" class="displayInput">
+									<cfinput type="text" name="state" id="state"  bind="{data.state}" size="35" class="displayInput"> &nbsp;&nbsp;
+									Country &nbsp;&nbsp;
+									<cfinput type="text" name="country" id="country"  bind="{data.country}" size="35" class="displayInput">
+
 								</td>
 							</tr>
 							
@@ -430,16 +433,16 @@ function popupWinEmail(url) {
 										</select>
 									</cfoutput>
 								</td>	
-							</tr> --->
+							</tr>
 
-							<tr>
+							<!--- <tr>
 								<td style="font-size: 10px;">
 									Country
 								</td>
 								<td>
 									<cfinput type="text" name="country" id="country"  bind="{data.country}" size="35" class="displayInput">
 								</td>
-							</tr>
+							</tr> --->
 							<tr>
 								<td style="font-size: 10px;">
 									Zipcode
@@ -1225,7 +1228,7 @@ function popupWinEmail(url) {
 </script>
 
 
-<!--- <script>
+<script>
 function toggleStateField() {
     var addressType = document.getElementById("Addresstype").value;
 
@@ -1243,5 +1246,5 @@ function toggleStateField() {
         document.getElementById("stateDropdownRow").style.display = "none";
     }
 }
-</script> --->
+</script>
 

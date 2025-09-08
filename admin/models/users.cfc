@@ -213,6 +213,10 @@
            	DELETE from users
             WHERE pk_users = '#arguments.pk_users#'
         </cfquery>
+
+		<cfquery name="deleteUserListings" datasource="#application.dsource#">
+			DELETE from products WHERE fk_users = '#arguments.pk_users#'
+		</cfquery>
 		
 		<cfcatch type="any"><cfset success = false /></cfcatch>
 		</cftry>

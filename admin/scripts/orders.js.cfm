@@ -155,7 +155,7 @@ function gridChange(thisId) {
 
 
 	
-	<!--- Addresstype = strOrder['ADDRESSTYPE']
+	Addresstype = strOrder['ADDRESSTYPE']
 
 	console.log('test data: ' + Addresstype)
 
@@ -178,14 +178,14 @@ function gridChange(thisId) {
 		state = strOrder['STATE']
 
 		for(i = 0; i < frm.state_dropdown.options.length; i++){
-		if(frm.state_dropdown.options[i].value == state){
-			frm.state_dropdown.options[i].selected = true;
-		}
-		else{
-			frm.state_dropdown.options[i].selected = false;
+			if(frm.state_dropdown.options[i].value == state){
+				frm.state_dropdown.options[i].selected = true;
+			}
+			else{
+				frm.state_dropdown.options[i].selected = false;
+			}
 		}
 	}
-	} --->
 
 
 
