@@ -58,6 +58,8 @@ function gridChange(thisId) {
 	businessphone = strCustomer['BUSINESSPHONE'];
 	otherphone = strCustomer['OTHERPHONE'];
 
+	
+
 	if(cellphone && cellphone.trim() !== ""){
 		
         $("#phoneNumber").val(cellphone);
@@ -80,6 +82,36 @@ function gridChange(thisId) {
         $("#PhoneType").val('Cell Phone'); // default
     }
 
+	Addresstype = strCustomer['ADDRESSTYPE'];
+
+	for(i = 0; i < frm.Addresstype.options.length; i++){
+		if(frm.Addresstype.options[i].value == Addresstype){
+			frm.Addresstype.options[i].selected = true;
+		}
+		else{
+			frm.Addresstype.options[i].selected = false;
+		}
+	}
+
+	if (Addresstype && Addresstype.toLowerCase() === "outside") {
+		document.getElementById("stateTextRow").style.display = "";
+		document.getElementById("stateDropdownRow").style.display = "none";
+	} else {
+		document.getElementById("stateTextRow").style.display = "none";
+		document.getElementById("stateDropdownRow").style.display = "";
+
+		state = strCustomer['STATE']
+
+		for(i = 0; i < frm.state_dropdown.options.length; i++){
+			if(frm.state_dropdown.options[i].value == state){
+				frm.state_dropdown.options[i].selected = true;
+			}
+			else{
+				frm.state_dropdown.options[i].selected = false;
+			}
+		}
+	}
+
 	<!--- var td =  $("##PhoneType").val(); --->
 	var phoneType = document.getElementById('PhoneType').value
 	var formatSign = document.getElementById("formatSign");
@@ -97,12 +129,11 @@ function gridChange(thisId) {
 // edit form functions
 
 function doEdit(type) {
-
 	
 
-	console.log('test type: ' + type)
 
-	<!--- return false; --->
+
+	
 
     var edit = new admin.models.customers();
 
@@ -129,7 +160,7 @@ function doEdit(type) {
          ColdFusion.Grid.refresh('data',true);
 		 toastr.success('Data is Updated Successfully!');
      } 
-     else { alert( 'There was a problem in the processing.')}
+     	else { alert( 'There was a problem in the processing.')}
       }
    else if (type == 'delete'){
    	if ( edit.deleteCustomer()) {

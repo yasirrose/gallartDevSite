@@ -128,7 +128,9 @@
 						<span  id="emailLink"></span>
 					</td>
 				</tr>
-				<tr>
+
+
+				<!--- <tr>
 					<td>
 						Phone:
 					</td>
@@ -159,7 +161,7 @@
 					<td>
 						<cfinput type="text" name="OtherPhone" id="OtherPhone"  bind="{data.otherphone}" size="30">&nbsp;
 					</td>
-				</tr>
+				</tr> --->
 
 				<tr>
 					<td>
@@ -231,6 +233,23 @@
 
 					</script>
 				</cfoutput>
+				
+				<tr>
+					<td style="font-size: 10px;">
+						Address Type:
+					</td>
+					<td>
+						<cfset Addtype = "USA,Outside" />
+						<cfoutput>
+							<select name="Addresstype" id="Addresstype" onchange="toggleStateField();">
+								<option value="">Please Select</option>
+								<cfloop list="#Addtype#" index="idx">
+									<option value="#idx#">#idx#</option>
+								</cfloop>
+							</select>
+						</cfoutput>
+					</td>	
+				</tr>
 
 				<tr>
 					<td valign="top">
@@ -243,20 +262,50 @@
 				</tr>
 				<tr>
 					<td>
-						City, State, Zip:
+						City, Zip:
 					</td>
 					<td>
-						<cfinput type="text" name="City" id="City"  bind="{data.City}" size="25">&nbsp;<cfinput type="text" name="State" id="State"  bind="{data.State}" size="15">&nbsp;<cfinput type="text" name="Zip" id="Zip"  bind="{data.Zip}" size="10">
+						<cfinput type="text" name="City" id="City"  bind="{data.City}" size="25">&nbsp;
+						<!--- <cfinput type="text" name="State" id="State"  bind="{data.State}" size="15">&nbsp; --->
+						<cfinput type="text" name="Zip" id="Zip"  bind="{data.Zip}" size="10">
 					</td>
 				</tr>
-				<tr>
+				<!--- <tr>
 					<td>
 						Country:
 					</td>
 					<td>
 						<cfinput type="text" name="Country" id="Country"  bind="{data.Country}" size="30">&nbsp;
 					</td>
+				</tr> --->
+
+				<tr id="stateTextRow" style="display:none;">
+					<td style="font-size: 10px;">
+						State/Province, Country
+					</td>
+					<td>
+						<cfinput type="text" name="state" id="state"  bind="{data.state}" size="25" class="displayInput"> &nbsp;
+						<cfinput type="text" name="country" id="country"  bind="{data.country}" size="25" class="displayInput">
+
+					</td>
 				</tr>
+				
+				<tr id="stateDropdownRow" style="display:none;">
+					<td style="font-size: 10px;">
+						State
+					</td>
+					<td>
+						<cfoutput>
+							<select name="state_dropdown" id="state_dropdown">
+								<option value="">Please Select</option>
+								<cfloop query="getStates">
+									<option value="#getStates.stateAbb#">#getStates.state#</option>
+								</cfloop>
+							</select>
+						</cfoutput>
+					</td>	
+				</tr>
+
 				<tr>
 					<td valign="top">
 						Shipping Address:
@@ -325,5 +374,26 @@
 		</td>
 	</tr>
 </table>
+
+<script>
+	function toggleStateField() {
+		var addressType = document.getElementById("Addresstype").value;
+
+		if (addressType === "Outside") {
+			// Show text field, hide dropdown
+			document.getElementById("stateTextRow").style.display = "";
+			document.getElementById("stateDropdownRow").style.display = "none";
+		} else if (addressType === "USA") {
+			// Show dropdown, hide text field
+			document.getElementById("stateDropdownRow").style.display = "";
+			document.getElementById("stateTextRow").style.display = "none";
+		} else {
+			// Hide both if nothing selected
+			document.getElementById("stateTextRow").style.display = "none";
+			document.getElementById("stateDropdownRow").style.display = "none";
+		}
+	}
+</script>
+
 <iframe id="createXls" src="" frameborder="0"></iframe>
 <!--- <cfset ajaxOnLoad("init")> --->

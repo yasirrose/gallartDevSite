@@ -134,6 +134,49 @@
 		<cfargument name="maillist" type="string" default="">
 		<cfargument name="optout" type="string" default="">
 		<cfargument name="comments" type="string" default="">
+		<cfargument name="addressType" type="string" default="">
+		<cfargument name="state_dropdown" type="string" default="">
+		<cfargument name="phoneNumber" type="string" default="">
+		<cfargument name="phoneType" type="string" default="">
+		
+
+
+		<cfif arguments.addressType EQ "USA">
+			<cfset finalState = arguments.state_dropdown>
+		<cfelseif arguments.addressType EQ "Outside">
+			<cfset finalState = arguments.state>
+			<cfset country = arguments.country>
+		<cfelse>
+			<cfset finalState = "">
+			<cfset country = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Home Phone">
+			<cfset phone = arguments.phoneNumber>
+		<cfelse>
+			<cfset phone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Cell Phone">
+			<cfset cellphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset cellphone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Business Phone">
+			<cfset businessphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset businessphone = "">
+		</cfif>
+
+		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "OutsideUS">
+			<cfset otherphone = arguments.phoneNumber>
+		<cfelse>
+			<cfset otherphone = "">
+		</cfif>
+
+		<!--- <cfdump var="#arguments#" abort="true"> --->
+
 	    
 	    <cfset var success = true />
 		
@@ -147,14 +190,20 @@
 	                	fname,
 	                	lname,
 	                	email,
-						phone
+						phone,
+						CellPhone,
+						businessphone,
+						otherphone
 	                )
 	                values
                 	(
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.phone#">
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cellphone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">
 					)
 					SELECT @@identity as uid 
 	            </cfquery>
@@ -173,9 +222,10 @@
 					Address1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
 					Address2 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
 					City 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
-					State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
+					AddressType 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.addressType#">,
+					State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#finalState#">,
 					Zip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
-					Country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Country#">,
+					Country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#country#">,
 					saddress1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.saddress1#">,
 					saddress2 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.saddress2#">,
 					scity 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.scity#">,
@@ -208,14 +258,17 @@
 		<cftry>
 	
 		<cfquery name="deleteCustomer" datasource="#application.dsource#"> 
-           	DELETE from customers
-            WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
+           	DELETE from customers WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
         </cfquery>
 		
 		<!--- <cfquery name="deleteCustomerRoles" datasource="#application.dsource#"> 
 			DELETE from employees_roles
 			WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
 		</cfquery> --->
+
+		<cfquery name="deleteCustomerOrders" datasource="#application.dsource#">
+				DELETE from orders where customerid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
+		</cfquery>
 		
 		<cfcatch type="any">
 			<cfdump var="#cfcatch#" abort="true">
