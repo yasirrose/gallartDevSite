@@ -56,7 +56,7 @@
 			CASE WHEN active = '0' THEN 'Inactive' ELSE 'Active' END AS Status,*
 	      	FROM products P
 			LEFT OUTER JOIN users U on P.fk_users = U.pk_users
-			WHERE 0=0 and P.fk_users IN (SELECT pk_users FROM users)
+			WHERE 0=0 and ( P.fk_users IS NULL OR U.pk_users IS NOT NULL)
 			<cfif isDefined('arguments.modelno') AND arguments.modelno neq ''>
 	      		AND modelno like '#arguments.modelno#%'
 	      	</cfif>
