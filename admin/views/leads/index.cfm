@@ -190,9 +190,9 @@
 	</tr>
 
 	<!-- USA Address Section -->
-	<tbody id="USAAddress" style="display:none;">
+	<!--- <tbody id="USAAddress" style="display:none;">
 		
-		<tr>
+		<tr id="StateUSA" style="display:none;">
 			<td>State:</td>
 			<td>
 				<cfoutput>
@@ -206,32 +206,23 @@
 			</td>
 		</tr>
 		
-	</tbody>
+	</tbody> --->
 
 	<!-- Outside USA Address Section -->
-	<tbody id="OutsideAddress" style="display:none;">
+	<!--- <tbody id="OutsideAddress" style="display:none;">
 		
-		<tr>
+		<tr id="outSideState" style="display:none;">
 			<td>State/Province:</td>
 			<td><input type="text" name="State_Outside" id="State_Outside" size="50"></td>
 		</tr>
 		
-		<tr>
+		<tr id="outSideCountry" style="display:none;">
 			<td>Country:</td>
 			<td><input type="text" name="Country" id="Country" size="50" ></td>
 		</tr>
-	</tbody>
+	</tbody> --->
 
-	<script>
-		function toggleAddressFields() {
-			var type = document.getElementById("AddressType").value;
-			document.getElementById("USAAddress").style.display = (type === "USA") ? "" : "none";
-			document.getElementById("OutsideAddress").style.display = (type === "Outside") ? "" : "none";
-		}
 
-		// Run on page load if form already has a value
-		window.onload = toggleAddressFields;
-	</script>
 
 	<tr>
 		<td>
@@ -249,6 +240,27 @@
 			<cfinput type="text" name="city" id="city" size="30">
 		</td>
 	</tr>
+
+	<tr id="StateUSA" style="display:none;">
+		<td>State:</td>
+		<td>
+			<cfoutput>
+				<select name="State" id="State">
+					<option value="">Please Select</option>
+					<cfloop query="getStates">
+						<option value="#stateAbb#" >#state#</option>
+					</cfloop>
+				</select>
+			</cfoutput>
+		</td>
+	</tr>
+
+	<tr id="outSideState" style="display:none;">
+		<td>State/Province:</td>
+		<td><input type="text" name="State_Outside" id="State_Outside" size="50"></td>
+	</tr>
+
+
 	<!--- <tr>
 		<td>
 			State:
@@ -282,7 +294,10 @@
 	</tr>
 
 
-	
+	<tr id="outSideCountry" style="display:none;">
+		<td>Country:</td>
+		<td><input type="text" name="Country" id="Country" size="50" ></td>
+	</tr>
 
 
 	<tr>
@@ -362,5 +377,33 @@
 	
 </table>		
 </cfform>
+
+	<script>
+		function toggleAddressFields() {
+			var type = document.getElementById("AddressType").value;
+			// document.getElementById("USAAddress").style.display = (type === "USA") ? "" : "none";
+			// document.getElementById("OutsideAddress").style.display = (type === "Outside") ? "" : "none";
+
+			if (type === "Outside") {
+				// Show text field, hide dropdown
+				document.getElementById("outSideState").style.display = "";
+				document.getElementById("outSideCountry").style.display = "";
+				document.getElementById("StateUSA").style.display = "none";
+			} else if (type === "USA") {
+				// Show dropdown, hide text field
+				document.getElementById("outSideState").style.display = "none";
+				document.getElementById("outSideCountry").style.display = "none";
+				document.getElementById("StateUSA").style.display = "";
+			} else {
+				// Hide both if nothing selected
+				document.getElementById("outSideState").style.display = "none";
+				document.getElementById("outSideCountry").style.display = "none";
+				document.getElementById("StateUSA").style.display = "none";
+			}
+		}
+
+		// Run on page load if form already has a value
+		window.onload = toggleAddressFields;
+	</script>
 
 

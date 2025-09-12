@@ -11,6 +11,8 @@
 	  	
 		<cfargument name="allcontacts_lname" required="no" type="string" default="">
 		<cfargument name="allcontacts_email" required="no" type="string" default="">
+
+		
 	
 		<cfset var returnStruct = structNew() />
 		
@@ -26,7 +28,7 @@
 		      			AND U.lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						U.email like '#arguments.allcontacts_lname#%'
+						AND U.email like '#arguments.allcontacts_lname#%'
 					</cfif>
 		      	</cfif>
 				UNION ALL
@@ -40,7 +42,7 @@
 		      			AND L.lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						L.email like '#arguments.allcontacts_lname#%'
+						and L.email like '#arguments.allcontacts_lname#%'
 					</cfif>
 		      	</cfif>
 				UNION ALL
@@ -54,7 +56,7 @@
 		      			AND G.lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						G.email like '#arguments.allcontacts_lname#%'
+						and G.email like '#arguments.allcontacts_lname#%'
 					</cfif>
 		      	</cfif>
 				UNION ALL
@@ -68,7 +70,7 @@
 		      			AND C.lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						C.email like '#arguments.allcontacts_lname#%'
+						and C.email like '#arguments.allcontacts_lname#%'
 					</cfif>
 		      	</cfif>
 				UNION ALL
@@ -82,7 +84,7 @@
 		      			AND E.emp_lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						E.emp_email like '#arguments.allcontacts_lname#%'
+						and E.emp_email like '#arguments.allcontacts_lname#%'
 					</cfif>
 		      	</cfif>
 				UNION ALL
@@ -96,10 +98,12 @@
 		      			AND EI.lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						EI.email like '#arguments.allcontacts_lname#%'
+						and EI.email like '#arguments.allcontacts_lname#%'
 					</cfif>
 		      	</cfif>
 		   	</cfquery>
+
+			<!--- <cfdump var="#qContacts#" abort="true"> --->
 			
 			<cfsavecontent variable="contactsTable">
 			<cfif qContacts.recordcount>

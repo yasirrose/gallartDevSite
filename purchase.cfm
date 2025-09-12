@@ -124,16 +124,16 @@
 	<cfquery name="update_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 		UPDATE customers SET 
 			EMAIL = '#EMAIL#'
-			<cfif form.BILLPHONE NEQ "">
+			<cfif BILLPHONE NEQ "">
 				,PHONE = '#BILLPHONE#'
 			</cfif>
-			<cfif form.CELLPHONE NEQ "">
+			<cfif CELLPHONE NEQ "">
 				,CELLPHONE = '#CELLPHONE#'
 			</cfif>
-			<cfif form.BUSINESSPHONE NEQ "">
+			<cfif BUSINESSPHONE NEQ "">
 				,BUSINESSPHONE = '#BUSINESSPHONE#'
 			</cfif>
-			<cfif form.OTHERPHONE NEQ "">
+			<cfif OTHERPHONE NEQ "">
 				,OTHERPHONE = '#OTHERPHONE#'
 			</cfif>
 		WHERE id = #find_cust.cusid#
@@ -143,6 +143,8 @@
 		
 
 </cfif>
+
+
 
 <CFSET ORDERUSERID = customerId >
 <!--- end of customer insert --->
@@ -233,11 +235,11 @@
 
 
 <!--- Set values for orders table --->
-<Cfif isDefined('find_cust.cusid')>
-<cfset customerid = #find_cust.cusid#>
+<!--- <Cfif isDefined('find_cust.cusid')>
+	<cfset customerid = #find_cust.cusid#>
 <cfelse>
-<cfset customerid = "">
-</cfif>
+	<cfset customerid = "">
+</cfif> --->
 <cfset FK_LOCATIONS = '#form.FK_LOCATIONS#'>
 <CFSET DATE=#createodbcdate(now())#>
 <cfset comments = '#form.comments#'>
@@ -248,6 +250,9 @@
 <CFSET WARNING="">
 <CFSET PARTNER="#partner#">
 <CFSET ORIGIN="#ORIGIN#">
+
+<!--- <cfdump var="#ORDERUSERID#" ><br>
+<cfdump var="#customerId#" abort="true"> --->
 
 <!--- Insert info into orders table --->
 <cflock name="insert" timeout="10">

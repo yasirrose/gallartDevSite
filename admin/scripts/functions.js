@@ -186,8 +186,10 @@ function openSearchAllContactsWindow() {
 var allContactsProxy = new getAllContacts();
 
 function submitSearchAllContacts(lname,email) {
+	
 	document.getElementById('displayAllContacts').innerHTML = '';
 	var result = allContactsProxy.getAllContacts(lname,email);
+	console.log('test fun:' + result);
 	document.getElementById('displayAllContacts').innerHTML = result;
 }
 

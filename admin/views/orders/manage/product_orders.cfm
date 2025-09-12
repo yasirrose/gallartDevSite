@@ -288,9 +288,9 @@ function popupWinEmail(url) {
 			</table>
 			</cfform>
 
-			<span>
+			<!--- <span>
 				<input type="button" value="Create Order Report" onclick="createReport();" />
-			</span>
+			</span> --->
 		</td>
 		<td valign="top">
 
@@ -413,8 +413,8 @@ function popupWinEmail(url) {
 								</td>
 								<td>
 									<cfinput type="text" name="state" id="state"  bind="{data.state}" size="35" class="displayInput"> &nbsp;&nbsp;
-									Country &nbsp;&nbsp;
-									<cfinput type="text" name="country" id="country"  bind="{data.country}" size="35" class="displayInput">
+									<!--- Country &nbsp;&nbsp;
+									<cfinput type="text" name="country" id="country"  bind="{data.country}" size="35" class="displayInput"> --->
 
 								</td>
 							</tr>
@@ -435,14 +435,7 @@ function popupWinEmail(url) {
 								</td>	
 							</tr>
 
-							<!--- <tr>
-								<td style="font-size: 10px;">
-									Country
-								</td>
-								<td>
-									<cfinput type="text" name="country" id="country"  bind="{data.country}" size="35" class="displayInput">
-								</td>
-							</tr> --->
+							
 							<tr>
 								<td style="font-size: 10px;">
 									Zipcode
@@ -451,6 +444,16 @@ function popupWinEmail(url) {
 									<cfinput type="text" name="zip" id="zip" size="35" class="displayInput">
 								</td>
 							</tr>
+
+							<tr id="OutsideCountry" style="display:none;">
+								<td style="font-size: 10px;">
+									Country
+								</td>
+								<td>
+									<cfinput type="text" name="country" id="country"  bind="{data.country}" size="35" class="displayInput">
+								</td>
+							</tr>
+
 							<tr>
 								<td style="font-size: 10px;">
 									Email:
@@ -1229,22 +1232,25 @@ function popupWinEmail(url) {
 
 
 <script>
-function toggleStateField() {
-    var addressType = document.getElementById("Addresstype").value;
+	function toggleStateField() {
+		var addressType = document.getElementById("Addresstype").value;
 
-    if (addressType === "Outside") {
-        // Show text field, hide dropdown
-        document.getElementById("stateTextRow").style.display = "";
-        document.getElementById("stateDropdownRow").style.display = "none";
-    } else if (addressType === "USA") {
-        // Show dropdown, hide text field
-        document.getElementById("stateDropdownRow").style.display = "";
-        document.getElementById("stateTextRow").style.display = "none";
-    } else {
-        // Hide both if nothing selected
-        document.getElementById("stateTextRow").style.display = "none";
-        document.getElementById("stateDropdownRow").style.display = "none";
-    }
-}
+		if (addressType === "Outside") {
+			// Show text field, hide dropdown
+			document.getElementById("stateTextRow").style.display = "";
+			document.getElementById("OutsideCountry").style.display = "";
+			document.getElementById("stateDropdownRow").style.display = "none";
+		} else if (addressType === "USA") {
+			// Show dropdown, hide text field
+			document.getElementById("stateDropdownRow").style.display = "";
+			document.getElementById("OutsideCountry").style.display = "none";
+			document.getElementById("stateTextRow").style.display = "none";
+		} else {
+			// Hide both if nothing selected
+			document.getElementById("stateTextRow").style.display = "none";
+			document.getElementById("stateDropdownRow").style.display = "none";
+			document.getElementById("OutsideCountry").style.display = "none";
+		}
+	}
 </script>
 

@@ -195,7 +195,18 @@ table tr td * {
 																			<li>
 																				<b>Phone:</b>
 																				<cfif shipphone lt "1">
-																					#billphone#
+																					<!--- #billphone# --->
+																					<cfif billphone neq ''>
+																						#billphone#
+																					<cfelseif cellphone neq ''>
+																						#cellphone#
+																					<cfelseif businessphone neq ''>
+																						#businessphone#
+																					<cfelseif otherphone neq ''>
+																						#otherphone#
+																					<cfelse>
+																						
+																					</cfif>
 																				<cfelse>
 																					#shipphone#
 																				</cfif>

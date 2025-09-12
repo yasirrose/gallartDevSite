@@ -841,7 +841,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <cfwindow name="searchAllContactsWindow" center="true" modal="true" resizable="false" closable="false" title="Search All Contacts" width="500" height="500" headerStyle="background-color:##dd3a7d;">
 	<table cellspacing="0" cellpadding="3" border="0" width="100%" bgcolor="#ffffff">
-		<cfform method="post" action="" onsubmit="submitSearchAllContacts(document.getElementById('allcontacts_lname').value,document.getElementById('allcontacts_email').value); return false;" name="searchAllContactsForm">
+		<cfform method="post" action="" name="searchAllContactsForm">
 		<tr>
 			<td align="center" colspan="2" style="font-family: Arial; font-size: 11px;">
 				Use the following to search all contacts in the database:<br><br>
@@ -861,7 +861,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		</tr>
 		<tr>
 			<td align="center" colspan="2" style="font-family: Arial; font-size: 11px;">
-				<input type="Reset" value="RESET" /> <input type="Submit" value="SEARCH" />
+				<input type="Reset" value="RESET" /> 
+				<!--- <input type="Submit" value="SEARCH" /> --->
+				<input type="button" value="SEARCH" 
+       onclick="submitSearchAllContacts(
+         document.getElementById('allcontacts_lname').value,
+         document.getElementById('allcontacts_email').value
+       )">
 			</td>
 		</tr>
 		<tr>
