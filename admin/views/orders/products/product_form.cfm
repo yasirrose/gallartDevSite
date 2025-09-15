@@ -411,7 +411,7 @@
 		</td>
 		<td>
 			<cfset paymentOptions = "VISA/MC,AMEX,CHECK,CASH,OTHER" />
-			<select name="Payment_Method">
+			<select name="Payment_Method" id="Payment_Method">
 				<option value="">Please Select</option>
 				<cfloop list="#paymentOptions#" index="idx">
 					<option value="#idx#" <cfif idx EQ form.Payment_Method>selected</cfif>>#idx#</option>
@@ -424,6 +424,7 @@
 			Credit Card Number:
 		</td>
 		<td>
+			
 			<input type="text" name="CardNumber" id="CardNumber" size="50" value="#form.CardNumber#">
 		</td>
 	</tr>
@@ -432,23 +433,25 @@
 			Expiration Date:
 		</td>
 		<td>
+			
 			MM&nbsp;
 			<select name="cardexpm">
-			<cfloop from="1" to="12" index="monthis">
-			<cfif len(monthis) EQ 1>
-			<option value="0#monthis#" <cfif monthis EQ form.cardexpm>selected</cfif>>0#monthis#</option>
-			<cfelse>
-			<option value="#monthis#" <cfif monthis EQ form.cardexpm>selected</cfif>>#monthis#</option>
-			</cfif>
-			</cfloop>
+				<cfloop from="1" to="12" index="monthis">
+					<cfif len(monthis) EQ 1>
+						<option value="0#monthis#" <cfif monthis EQ form.cardexpm>selected</cfif>>0#monthis#</option>
+					<cfelse>
+						<option value="#monthis#" <cfif monthis EQ form.cardexpm>selected</cfif>>#monthis#</option>
+					</cfif>
+				</cfloop>
 			</select>
 			YY&nbsp;
 			<select name="cardexpy">
-			<cfset toyear = #Year(Now())# + 10>
-			<cfloop from="#Year(Now())#" to="#toyear#" index="yearis">
-			<option value="#right(yearis,2)#" <cfif right(yearis,2) EQ form.cardexpy>selected</cfif>>#right(yearis,2)#</option>
+				<cfset toyear = #Year(Now())# + 10>
+				<cfloop from="#Year(Now())#" to="#toyear#" index="yearis">
+					<option value="#right(yearis,2)#" <cfif right(yearis,2) EQ form.cardexpy>selected</cfif>>#right(yearis,2)#</option>
 
-		</cfloop></td>
+				</cfloop>
+			</td>
 	</tr>
 	<tr>
 		<td valign="top">
@@ -861,7 +864,9 @@ document.addEventListener("DOMContentLoaded", function() {
 		</tr>
 		<tr>
 			<td align="center" colspan="2" style="font-family: Arial; font-size: 11px;">
-				<input type="Reset" value="RESET" /> 
+				<input type="Reset" value="RESET"  onclick="document.forms['searchAllContactsForm'].reset(); 
+          document.getElementById('allcontacts_lname').value='';
+          document.getElementById('allcontacts_email').value='';" /> 
 				<!--- <input type="Submit" value="SEARCH" /> --->
 				<input type="button" value="SEARCH" 
        onclick="submitSearchAllContacts(
@@ -883,4 +888,80 @@ document.addEventListener("DOMContentLoaded", function() {
 	</table>
 </cfwindow>
 </div>
+
+
+<script>
+
+	var cardRules = {
+		"VISA/MC": { length: 19, pattern: /^(4\d{15}|5[1-5]\d{14})$/, format: "#### #### #### ####", placeholder: "4111 1111 1111 1111 or 5100 0000 0000 0000" },
+		// "MC": { length: 19, pattern: /^5[1-5]\d{14}$/, format: "#### #### #### ####", placeholder: "5100 0000 0000 0000" },
+		"AMEX": { length: 17, pattern: /^3[47]\d{13}$/, format: "#### ###### #####", placeholder: "3712 345678 90123" },
+		// "Discover": { length: 19, pattern: /^6(?:011|5\d{2})\d{12}$/, format: "#### #### #### ####", placeholder: "6011 0000 0000 0000" }
+	};
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const cardInput = document.getElementById("CardNumber");
+		const cardTypeSelect = document.querySelector("[name='Payment_Method']");
+
+		// Function to update card validation rules on card type change
+		function updateCardValidation() {
+			const selectedCardType = cardTypeSelect.value;
+			if (cardRules[selectedCardType]) {
+				cardInput.maxLength = cardRules[selectedCardType].length;
+				cardInput.setAttribute("data-pattern", cardRules[selectedCardType].pattern);
+				cardInput.placeholder = cardRules[selectedCardType].placeholder;
+				cardInput.value = ""; // Reset input on type change
+			} else{
+				cardInput.removeAttribute("maxLength");
+				cardInput.removeAttribute("data-pattern");
+
+				// yahan placeholder hata dein
+				cardInput.placeholder = "";
+			}
+		}
+
+		// Format card number according to selected card type
+		  // Format card number according to selected card type's format mask
+        function formatCardNumber(value, selectedCardType) {
+            const rule = cardRules[selectedCardType];
+            if (!rule) return value; // no formatting if no rule
+
+            let cleanValue = value.replace(/\D/g, ''); // digits only
+            let format = rule.format || "#### #### #### ####";
+            let formattedValue = "";
+            let index = 0;
+
+            for (let i = 0; i < format.length && index < cleanValue.length; i++) {
+                let ch = format.charAt(i);
+                if (ch === "#") {
+                    formattedValue += cleanValue.charAt(index++);
+                } else {
+                    formattedValue += ch;
+                }
+            }
+
+            return formattedValue;
+        }
+
+        // Only format while typing if selected payment method has a rule (Visa/Amex)
+        if (cardInput) {
+            cardInput.addEventListener("input", function (e) {
+                const selectedCardType = cardTypeSelect ? cardTypeSelect.value : "";
+                if (cardRules[selectedCardType]) {
+                    // format the value
+                    e.target.value = formatCardNumber(e.target.value, selectedCardType);
+                } else {
+                    // do nothing (leave the user's input as-is)
+                }
+            });
+        }
+
+        if (cardTypeSelect) {
+            cardTypeSelect.addEventListener("change", updateCardValidation);
+        }
+
+        // run once at load to set initial state (in case form has a saved value)
+        updateCardValidation();
+    });
+</script>
 

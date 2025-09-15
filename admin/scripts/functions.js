@@ -189,13 +189,14 @@ function submitSearchAllContacts(lname,email) {
 	
 	document.getElementById('displayAllContacts').innerHTML = '';
 	var result = allContactsProxy.getAllContacts(lname,email);
-	console.log('test fun:' + result);
+	
 	document.getElementById('displayAllContacts').innerHTML = result;
 }
 
 
 function getContact(email) {
 	var strContact = allContactsProxy.getContact(email);
+
 		document.orderForm.fname.value 		= strContact['FNAME'];
 		document.orderForm.lname.value 		= strContact['LNAME'];
 		// document.orderForm.Phone.value 		= strContact['PHONE'];
@@ -529,6 +530,13 @@ function validateForm() {
     let phoneType = document.getElementById("PhoneType").value;
     let phoneInput = document.getElementById("PhoneNumber").value.trim();
 
+	const selectedCardType = document.querySelector("[name='Payment_Method']").value;
+	const cardInput = document.getElementById("CardNumber");
+	const cardnum = cardInput.value.replace(/\s+/g, '').trim();
+
+	// console.log('test fun: ' , cardRules);
+	// return false;
+
     if (phoneType === "OutsideUS") {
         return true; // no validation required
     }
@@ -542,6 +550,16 @@ function validateForm() {
         return false;
     }
 
+	  // Only validate card number when payment method is one that needs validation
+    if (cardRules[selectedCardType]) {
+		// console.log()
+        // cardnum is digits-only, pattern expects digit counts (e.g. 4\d{15})
+        if (!cardRules[selectedCardType].pattern.test(cardnum)) {
+            alert('Invalid ' + selectedCardType + ' Card Number.');
+            cardInput.focus();
+            return false;
+        }
+    }
     return true; // valid
 }
 
@@ -553,9 +571,15 @@ function checkPasswordOrder() {
         return false; // Agar phone number valid nahi to submit stop
     }
 
-	if(document.orderForm.lname.value == ''){alert('Please enter a last name on the order')}
-	if(document.orderForm.Email.value == ''){alert('Please enter an email address for the customer on the order')}
-	else{ColdFusion.Ajax.submitForm('orderForm','models/employees.cfc?method=checkPassword',passwordResponseOrder);}
+	if(document.orderForm.lname.value == ''){
+		alert('Please enter a last name on the order')
+	}
+	if(document.orderForm.Email.value == ''){
+		alert('Please enter an email address for the customer on the order')
+	}
+	else{
+		ColdFusion.Ajax.submitForm('orderForm','models/employees.cfc?method=checkPassword',passwordResponseOrder);
+	}
 	return false;
 }
 

@@ -28,9 +28,12 @@
 		      			AND U.lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						AND U.email like '#arguments.allcontacts_lname#%'
+						AND U.email like '#arguments.allcontacts_email#%'
 					</cfif>
 		      	</cfif>
+
+				
+
 				UNION ALL
 				SELECT lname,fname,email 
 				FROM leads L
@@ -42,7 +45,7 @@
 		      			AND L.lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						and L.email like '#arguments.allcontacts_lname#%'
+						and L.email like '#arguments.allcontacts_email#%'
 					</cfif>
 		      	</cfif>
 				UNION ALL
@@ -56,7 +59,7 @@
 		      			AND G.lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						and G.email like '#arguments.allcontacts_lname#%'
+						and G.email like '#arguments.allcontacts_email#%'
 					</cfif>
 		      	</cfif>
 				UNION ALL
@@ -70,7 +73,7 @@
 		      			AND C.lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						and C.email like '#arguments.allcontacts_lname#%'
+						and C.email like '#arguments.allcontacts_email#%'
 					</cfif>
 		      	</cfif>
 				UNION ALL
@@ -84,7 +87,7 @@
 		      			AND E.emp_lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						and E.emp_email like '#arguments.allcontacts_lname#%'
+						and E.emp_email like '#arguments.allcontacts_email#%'
 					</cfif>
 		      	</cfif>
 				UNION ALL
@@ -98,7 +101,7 @@
 		      			AND EI.lname like '#arguments.allcontacts_lname#%'
 					</cfif>
 					<cfif arguments.allcontacts_email NEQ ''>
-						and EI.email like '#arguments.allcontacts_lname#%'
+						and EI.email like '#arguments.allcontacts_email#%'
 					</cfif>
 		      	</cfif>
 		   	</cfquery>
@@ -125,7 +128,8 @@
 				<cfoutput query="qContacts">
 				<tr>
 					<td style="font-size: 12px;">
-						<a href="##" onclick="getContact('#email#');">#lname#</a>, <a href="##" onclick="getContact('#email#');">#fname#</a>
+						<a href="##" onclick="getContact('#email#');">#lname#</a>, 
+						<a href="##" onclick="getContact('#email#');">#fname#</a>
 					</td>
 					<td style="font-size: 12px;">
 						<a href="##" onclick="getContact('#email#');">#email#</a>
@@ -272,32 +276,43 @@
 		<cfset var returnStruct = structNew() />
 
 		<cfset var qUser = '' />
+
+		<!--- <cfdump var="test query" abort="true"> --->
 		
 		<cfquery name="qContact" datasource="#application.dsource#"> 
-           	SELECT lname,fname,email,phone,'' as address,'' as city,'' as state,'' as country,'' as zip,cellphone,businessphone,website
+           	SELECT lname,fname,email,phone,'' as address,'' as city,'' as state,'' as country,'' as zip,cellphone,businessphone,website,otherphone, '' as addressType
 		      	FROM users U
 				WHERE U.email = '#arguments.email#'
 				UNION
-				SELECT lname,fname,email,phone,address,city,state,country,zip,cellphone,businessphone,website
+
+				
+
+				SELECT lname,fname,email,phone,address,city,state,country,zip,cellphone,businessphone,website,otherphone,addressType
 				FROM leads L
 				WHERE L.email = '#arguments.email#'
 				UNION
-				SELECT lname,fname,email,'' as phone,'' as address,'' as city,'' as state,'' as country,'' as zip,'' as cellphone,'' as businessphone,'' as website
+				SELECT lname,fname,email,'' as phone,'' as address,'' as city,'' as state,'' as country,'' as zip,'' as cellphone,'' as businessphone,'' as website, '' as otherphone, '' as addressType
 				FROM guests G
 				WHERE G.email = '#arguments.email#'
 				UNION
-				SELECT lname,fname,email,phone,address1 as address,city,state,country,zip,cellphone,businessphone,website
+
+				SELECT lname,fname,email,phone,address1 as address,city,state,country,zip,cellphone,businessphone,website,otherphone,addressType
 				FROM customers C
 				WHERE C.email = '#arguments.email#'
 				UNION
-				SELECT emp_lname as lname,emp_fname as fname,emp_email as email,emp_phone as phone,'' as address,'' as city,'' as state,'' as country,'' as zip,'' as cellphone,'' as businessphone,'' as website
+
+				SELECT emp_lname as lname,emp_fname as fname,emp_email as email,emp_phone as phone,'' as address,'' as city,'' as state,'' as country,'' as zip,'' as cellphone,'' as businessphone,'' as website, '' as otherphone, '' as addressType
 				FROM employees E
 				WHERE E.emp_email = '#arguments.email#'
+
 				UNION
-				SELECT lname,fname,email,'' as phone,'' as address,'' as city,'' as state,'' as country,'' as zip,'' as cellphone,'' as businessphone,'' as website   
+				SELECT lname,fname,email,'' as phone,'' as address,'' as city,'' as state,'' as country,'' as zip,'' as cellphone,'' as businessphone,'' as website, '' as otherphone, '' as addressType   
 				FROM email_imports EI
 				WHERE EI.email = '#arguments.email#'
         </cfquery>
+
+		
+		
 		
 		<cfloop list="#qContact.ColumnList#" index="idx">
 			<cfset returnStruct[idx] = evaluate("qContact."&idx) />
