@@ -26,13 +26,14 @@
       	<cfargument name="gridsortdirection" required="yes">
 		<cfargument name="artist" required="no" type="string" default="">
 
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 
 		<cfset var qBios='' />
 
 	   	<cfquery name="qBios" datasource="#application.dsource#">
 	      	SELECT * from bios
 			WHERE 0=0
-			<cfif arguments.artist neq ''>
+			<cfif arguments.artist neq '' and arguments.artist neq 'searchArtist'>
 	      		AND artist like '#arguments.artist#%'
 	      	</cfif>
 	      	<cfif gridsortcolumn neq ''>

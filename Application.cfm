@@ -11,7 +11,7 @@
 
 <cfset enableRobustException="true">
 <cfset application.dsource="gallarttest">
-<cfset server_name="gallart.com">
+<cfset server_name="23.20.226.157">
 
 <cfset COMPANYNAME="gallart">
 <cfset dsource="gallarttest">

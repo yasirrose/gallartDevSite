@@ -1,4 +1,5 @@
-	getLname = function(){
+	
+		getLname = function(){
 		   var s = ColdFusion.getElementValue('searchLname');
 		   return s;
 		}
@@ -52,6 +53,8 @@
 			if(typeof(gridForm.searchLexy[0]) != 'undefined' && gridForm.searchLexy[0].checked){s = 1}
 		   return s;
 		}
+	
+	
 /*
 function init(){
  	orderGrid = ColdFusion.Grid.getGridObject("data");
@@ -275,6 +278,7 @@ function computeAmountProductOrder() {
 		decimalFormat(document.editForm.shipCostDisplay.value) +
 		decimalFormat(document.editForm.insuranceDisplay.value) -
 		decimalFormat(document.editForm.amountPaidDisplay.value)
+		console.log('test total: ')
 }
 
 
@@ -290,6 +294,7 @@ function updateSubtotal(status,currStatus,itemPrice,itemId){
 
 	}
 	else if (status != 'Canceled' && document.getElementById(itemId).value == 1){
+		
 		document.editForm.amountSaleDisplay.value =
 		formatAsDollars
 		(
@@ -358,6 +363,7 @@ function deleteOrderItem(itemId,orderId) {
 }
 
 function openItemAddWindow(orderId) {
+	console.log('test orderid: ' + orderId)
 	document.getElementById('orderId_mainWindow').value = orderId;
 	ColdFusion.Window.show('newItemWindow');
 

@@ -112,7 +112,8 @@
 			</cfif>
 	    			
 			<cfcatch type="any">
-                <cfset success = false /></cfcatch>
+                <cfset success = false />
+			</cfcatch>
 			</cftry> 
 			
 		<cfreturn success> 
@@ -169,15 +170,15 @@
 	      		AND ERT.event_title like '%#arguments.EventTitle#%'
 	      	</cfif>
 			<cfif arguments.fromDate neq ''>
-				AND ER.regdate >= '#dateFormat(arguments.fromDate)#'
+				AND ER.datestamp >= '#dateFormat(arguments.fromDate)#'
 			</cfif>
 			<cfif arguments.toDate neq ''>
-				AND ER.regdate <= '#dateFormat(arguments.toDate)#'
+				AND ER.datestamp <= '#dateFormat(arguments.toDate)#'
 			</cfif>
 	      	<cfif gridsortcolumn neq ''>
 	      		ORDER BY #gridsortcolumn# #gridsortdirection#
 			<cfelse>
-				ORDER BY ER.regdate desc
+				ORDER BY ER.datestamp desc
 	      	</cfif>
 	   	</cfquery>
 	   	

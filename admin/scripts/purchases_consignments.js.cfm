@@ -101,30 +101,32 @@ function populateForm(thisId){
 
   function doEdit(type) {
 
-	 var phone = document.getElementById('phone').value.trim();
-	 var phoneType = document.getElementById('PhoneType').value;
-
-	if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
-		// Format: (123) 456-7890
-		var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
-		if (!phonePattern.test(phone)) {
-			alert("Please enter phone number in format: (xxx) xxx-xxxx");
-			document.getElementById('phone').focus();
-			return false;
-		}
-	}
+	 
 
       var edit = new admin.models.purchases_consignments();
       edit.setForm("editForm");
       
       if (type == 'edit'){
+
+		var phone = document.getElementById('phone').value.trim();
+	 	var phoneType = document.getElementById('PhoneType').value;
+
+		if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
+			// Format: (123) 456-7890
+			var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+			if (!phonePattern.test(phone)) {
+				alert("Please enter phone number in format: (xxx) xxx-xxxx");
+				document.getElementById('phone').focus();
+				return false;
+			}
+		}
       		
-       if ( edit.editPurchasesConsignmentsFromForm()) {
-           ColdFusion.Grid.refresh('data',true);
-		   toastr.success('Purchase Consignment updated successfully!', 'Success'); 
-       } 
-       else { alert( 'There was a problem in the processing.')}
-        }
+		if ( edit.editPurchasesConsignmentsFromForm()) {
+			ColdFusion.Grid.refresh('data',true);
+			toastr.success('Purchase Consignment updated successfully!', 'Success'); 
+		} 
+       	else { alert( 'There was a problem in the processing.')}
+    }
      else {
      	
      	if ( edit.deletePurchasesConsignments()) {

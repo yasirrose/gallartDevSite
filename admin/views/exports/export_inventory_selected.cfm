@@ -50,7 +50,7 @@
 	</tr>
 	<tr>
 		<td valign="top">
-			<input type="Button" value="Back" onclick="location.href='index.cfm?event=exports'" />
+			<input type="Button" value="Back" onclick="location.href='index.cfm?event=exports.selected'" />
 		</td>
 	</tr>
 </table>	

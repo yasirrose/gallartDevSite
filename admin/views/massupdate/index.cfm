@@ -487,7 +487,8 @@
 				</tr>
 				<tr>
 			    	<td colspan="2" style="padding-top: 10px;" align="center">
-						<input type="Reset" value="Reset"><input type="Submit" value="Search">
+						<input type="Reset" value="Reset">
+						<input type="Submit" value="Search">
 					</td>
 			  	</tr>
 			</table>
@@ -540,5 +541,17 @@
 					 });
 				 }
 			 });
+
+			  $('form').on('reset', function () {
+				// Wait a tiny bit for the form to actually reset its elements
+				setTimeout(function () {
+					$('.select2').val(null).trigger('change'); // clear the select2
+				}, 0);
+			});
+
 		 });
+
+
+		 
+
 </script>

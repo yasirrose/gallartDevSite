@@ -145,14 +145,17 @@ function deleteBio(s)
 	// if user choose to delete, then send the CFC call, otherwise just sit back!
 	if (s == 'yes')
 	{
-	var grid = ColdFusion.Grid.getGridObject("bioGrid");
-	// var record = grid.getSelectionModel().getSelected();
-	// remember, CF makes column names to all UPPERCASE, so dont forget to do that
-	dataproxy.deleteBio(grid.selection.data.PK_BIOS);
+		var grid = ColdFusion.Grid.getGridObject("bioGrid");
+		// var record = grid.getSelectionModel().getSelected();
+		// remember, CF makes column names to all UPPERCASE, so dont forget to do that
+		dataproxy.deleteBio(grid.selection.data.PK_BIOS);
 	}
+
+
 	setTimeout(function(){
-    	ColdFusion.Grid.refresh('bioGrid', true);
+    	ColdFusion.Grid.refresh('bioGrid', false);
    	},1000);
+	
 	//ColdFusion.Grid.refresh('bioGrid', true);
 	ColdFusion.Window.hide('deleteBioWin');
 }

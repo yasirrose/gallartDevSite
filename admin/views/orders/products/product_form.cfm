@@ -195,7 +195,7 @@
 		</td>
 		<td>
 
-			<input type="text" name="PhoneNumber" id="PhoneNumber"  size="50" value="#form.PhoneNumber#">
+			<input type="text" name="PhoneNumber" id="PhoneNumber" maxlength="20"  size="20" value="#form.PhoneNumber#">
 			<span id="formatSign">(xxx) xxx-xxxx</span>
 		</td>
 	</tr>

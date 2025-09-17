@@ -61,7 +61,7 @@
 				<tr>
 					<td>&nbsp;</td>
 					<td colspan="2">
-						<iframe marginheight="0" marginwidth="0" style="margin-top: 10px;" src="http://<cfoutput>#server_name#</cfoutput>/admin/views/makeoffer/hideButtons.cfm" frameborder="0" width="200" height="40"></iframe>
+						<iframe marginheight="0" marginwidth="0" style="margin-top: 10px;" src="http://23.20.226.157/admin/views/makeoffer/hideButtons.cfm" frameborder="0" width="200" height="40"></iframe>
 					</td>
 				</tr>
 				<tr>
@@ -105,7 +105,7 @@
 						 Name:
 					</td>
 					<td>
-						<cfinput type="text" name="name" id="name"  bind="{data.combine_customer_name}" size="30">
+						<cfinput type="text" name="name" id="name"  bind="{data.customer_name}" size="30">
 					</td>
 				</tr>
 				<tr>
