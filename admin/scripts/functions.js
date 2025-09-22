@@ -503,11 +503,18 @@ function validateLeadForm() {
     return true; // valid
 }
 
+let leadSubmitting = false; 
 function checkPasswordLead() {
+
+	if (leadSubmitting) return false;
 
 	if (!validateLeadForm()) {
         return false; // Agar phone number valid nahi to submit stop
     }
+
+	leadSubmitting = true;
+    const submitBtn = document.querySelector('#leadForm input[type="button"]');
+    if (submitBtn) submitBtn.disabled = true;
 
 	// remove lname validation
 	/*if(document.leadForm.lname.value == ''){alert('Please enter a last name for the lead')}
@@ -517,6 +524,11 @@ function checkPasswordLead() {
 }
 
 function passwordResponseLead(s) {
+
+	leadSubmitting = false;
+    const submitBtn = document.querySelector('#leadForm input[type="button"]');
+    if (submitBtn) submitBtn.disabled = false;
+
 	if(trim(s)== "true") {
 		document.leadForm.submit();
 	} else {
@@ -570,6 +582,16 @@ function checkPasswordOrder() {
 	 if (!validateForm()) {
         return false; // Agar phone number valid nahi to submit stop
     }
+
+	 var qtyInputs = document.querySelectorAll("input[id^='quantity_']");
+		for (var i = 0; i < qtyInputs.length; i++) {
+			var qtyVal = qtyInputs[i].value.trim();
+			if (qtyVal === "" || isNaN(qtyVal)) {
+				alert("Please add the quantity for all items before submitting.");
+				qtyInputs[i].focus();
+				return false; // stop submit
+			}
+		}
 
 	if(document.orderForm.lname.value == ''){
 		alert('Please enter a last name on the order')

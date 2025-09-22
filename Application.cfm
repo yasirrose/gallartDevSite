@@ -1,6 +1,6 @@
 <!--- Global error handler --->
-<!--- <cferror type="exception" template="/errorHandler.cfm">
-<cferror type="request" template="/errorHandler.cfm"> --->
+<cferror type="exception" template="/errorHandler.cfm">
+<cferror type="request" template="/errorHandler.cfm">
 
 <cfapplication 
     name="galleryart"
@@ -57,7 +57,7 @@
 <cfset retailmkup = "3.25"> --->
 
 
-<cfset imgpath = "https://#server_name#/images">
+<cfset imgpath = "http://#server_name#/images">
 
 <!--- all emails will be sent to this email address. To add more, send to an alias and forward to additional accounts. If an address is put into cc, it will be sent as well --->
 <cfset emailsupport = "websitegallart@gallart.com">

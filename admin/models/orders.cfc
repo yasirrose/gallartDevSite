@@ -436,52 +436,52 @@
 			LEFT OUTER JOIN employees AS E ON O.fk_employees = E.pk_employees
 			LEFT OUTER JOIN employees AS A ON C.assignedTo = A.pk_employees
 			WHERE 0=0 and O.customerid IN (SELECT ID FROM Customers)
-			<cfif arguments.Lname neq ''>
+			<cfif arguments.Lname neq '' and arguments.Lname neq 'searchLname'>
 	      		AND C.lname like '#arguments.Lname#%'
 	      	</cfif>
-	      	<cfif arguments.Company neq ''>
+	      	<cfif arguments.Company neq '' and arguments.Company neq 'searchCompany'>
 	      		AND O.company like '#arguments.Company#%'
 	      	</cfif>
-	      	<cfif arguments.AmountSale neq ''>
+	      	<cfif arguments.AmountSale neq ''and arguments.AmountSale neq 'searchAmountSale'>
 	      		AND O.amountSale = '#arguments.AmountSale#'
 	      	</cfif>
-			<cfif arguments.Fname neq ''>
+			<cfif arguments.Fname neq '' and arguments.Fname neq 'searchFname'>
 				AND C.fname like '#arguments.Fname#%'
 			</cfif>
-			<cfif arguments.country neq ''>
+			<cfif arguments.country neq '' and arguments.country neq 'searchcountry'>
 				AND C.country like '#arguments.country#%'
 			</cfif>
-			<cfif arguments.Price neq ''>
+			<cfif arguments.Price neq '' and arguments.Price neq 'searchprice'>
 				AND P.price like '#arguments.Price#%'
 			</cfif>
-			<cfif arguments.Email neq ''>
+			<cfif arguments.Email neq '' and arguments.Email neq 'searchEmail'>
 	      		AND C.email like '#arguments.Email#%'
 	      	</cfif>
-			<cfif arguments.Employee neq ''>
+			<cfif arguments.Employee neq '' and arguments.Employee neq 'searchEmployeeId'>
 	      		AND O.fk_employees = '#arguments.Employee#'
 	      	</cfif>
-			<cfif arguments.Title neq ''>
+			<cfif arguments.Title neq '' and arguments.Title neq 'searchTitle'>
 	      		AND P.name like '%#arguments.Title#%'
 	      	</cfif>
-			<cfif arguments.Artist neq ''>
+			<cfif arguments.Artist neq '' and arguments.Artist neq 'searchArtist'>
 	      		AND (P.manufacturer like '%#arguments.Artist#%' OR I.artist like '%#arguments.Artist#%')
 	      	</cfif>
-			<cfif isDefined('arguments.Balancedue') AND arguments.Balancedue EQ 1>
+			<cfif isDefined('arguments.Balancedue') AND arguments.Balancedue EQ 1 and arguments.Balancedue neq 'searchBalancedue'>
 				AND balancedue > 0
 			</cfif>
-			<cfif arguments.Origin neq ''>
+			<cfif arguments.Origin neq '' and arguments.Origin neq 'searchOrigin'>
 				AND origin = '#arguments.Origin#'
 			</cfif>
-			<cfif arguments.fromDate neq ''>
+			<cfif arguments.fromDate neq '' and arguments.fromDate neq 'searchFromDate'>
 				AND cast(O.date as datetime) >= '#dateFormat(arguments.fromDate)#'
 			</cfif>
-			<cfif arguments.toDate neq ''>
+			<cfif arguments.toDate neq '' and arguments.toDate neq 'searchToDate'>
 				AND cast(O.date as datetime) <= '#dateFormat(arguments.toDate)#'
 			</cfif>
-            <cfif arguments.state neq 0>
+            <cfif arguments.state neq 0 and arguments.state neq 'searchStates'>
 				AND UPPER(C.state) = '#ucase(arguments.state)#'
 			</cfif>
-			<cfif arguments.lexy neq 0>
+			<cfif arguments.lexy neq 0 and arguments.lexy neq 'searchLexy'>
 				-- AND o.lexy = 1
 			</cfif>
 			<cfif listFindNoCase(session.userinfo.roles,'international')>
@@ -590,7 +590,7 @@
 				<td width="100" style="color: #FFFFFF;">Artist</td>
 				<td width="75" style="color: #FFFFFF;">Price</td>
 				<td width="75" style="color: #FFFFFF;">&nbsp;</td>
-				<!---<td width="25" style="color: #FFFFFF;">Quantity</td>--->
+				<!--- <td width="25" style="color: #FFFFFF;">Quantity</td> --->
 				<td width="75" style="color: #FFFFFF;">Status</td>
 				<td width="50" style="color: #FFFFFF;">&nbsp;</td>
 				<td width="25" style="color: #FFFFFF;">&nbsp;</td>
@@ -616,7 +616,7 @@
 				<td>#thisArtist#</td>
 				<td align="right">#dollarFormat(price)#</td>
 				<td align="center"><cfif itemFraming eq 1>FRAMING</cfif></td>
-				<!---<td align="center">#quantity#</td>--->
+				<!--- <td align="center">#quantity#</td> --->
 				<td>
 					<select name="cancelcodeOptionsId_#itemId#" onchange="updateSubtotal(this.value,'#thisCancelcode#','#price#','#itemId#')">
 						<cfloop query="getCancelcodeOptions">
@@ -1005,6 +1005,8 @@
       	<cfargument name="name" type="string">
 		<cfargument name="orderId" type="numeric">
 
+		
+
 		<cfset var success = true />
 
 		<cftry>
@@ -1054,9 +1056,14 @@
 			</cfscript>
 
 
-			<cfcatch type="Any"><cfset success = false /></cfcatch>
+			<cfcatch type="Any">
+				<cfdump var="#cfcatch#" abort="true">
+				<cfset success = false />
+			</cfcatch>
 
 		</cftry>
+
+		
 
 		<cfreturn success />
 
@@ -1177,6 +1184,7 @@
 	<cffunction name="updateTotals" access="remote" output="false" returntype="string">
 
 		<cfargument name="orderId" type="numeric">
+		
 
 		<cfset var success = true />
 
@@ -1188,13 +1196,16 @@
 			</cfquery>
 
 			<cfquery name="itemTotal" datasource="#application.dsource#">
-				SELECT sum(cast(unit_price as float)) as item_sum from items
+				SELECT sum(cast(unit_price as float) * cast(quantity as float)) as item_sum 
+				from items
 				WHERE orderuid = '#arguments.orderid#'
 			</cfquery>
 
 			<cfif qOrder.discount == "">
 				<cfset qOrder.discount = 0>
 			</cfif>
+
+			<!--- <cfdump var="#itemTotal#" > --->
 
 			<cfset total = itemTotal.item_sum + qOrder.tax + qOrder.shipcost />
 			<cfset balancedue = total - qOrder.discount + qOrder.amountpaid />
@@ -1207,7 +1218,11 @@
 				WHERE orderuid = '#arguments.orderid#'
 			</cfquery>
 
-			<cfcatch type="Any"><cfset success = false /></cfcatch>
+
+			<cfcatch type="Any">
+				<cfdump var="#cfcatch#" abort="true">
+				<cfset success = false />
+			</cfcatch>
 
 		</cftry>
 

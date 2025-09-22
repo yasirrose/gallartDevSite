@@ -11,22 +11,26 @@
 		<td valign="top" width="300">
 			<cfform name="gridForm">
 			<table cellspacing="0" cellpadding="1" border="0" width="100%">
-            	<tr>
+            	<!--- <tr>
 					<td align="right">
 						<strong>Artist:</strong>
 					</td>
-                </tr>
+                </tr> --->
                 <tr>
 					<td>
-						<cfinput name="searchArtist" size="30" />
+						<strong>Artist:</strong>
+						<cfinput name="searchArtist" size="30" /> &nbsp;&nbsp;
+						<input type="Reset"> &nbsp;
+						<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('bioGrid', false);" />
 					</td>
+					
 					<td>&nbsp;</td>
 				</tr>
-                <tr>
+                <!--- <tr>
 					<td>
 						<input type="Reset"><cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('bioGrid', false);" />
 					</td>
-				</tr>
+				</tr> --->
 				<tr>
 					<td>
 						<cfinput type="button" name="addbio" value="Add Bio" onclick="onAdd()" />

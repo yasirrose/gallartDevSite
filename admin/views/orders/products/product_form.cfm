@@ -583,7 +583,21 @@
 
 		<tr>
 			<td align="center" style="font-family: Arial; font-size: 11px;">
-				<input type="text" name="modelno" id="modelno" size="20" value="">&nbsp;&nbsp;<input type="Button" value="ADD" onclick="findArt(document.getElementById('modelno').value);" />
+				<input list="artIdList" name="modelno" id="modelno" size="20" value="">&nbsp;&nbsp;<input type="Button" value="ADD" onclick="findArt(document.getElementById('modelno').value);" />
+
+				<cfquery name="artIds" datasource="#application.dsource#">
+					SELECT modelno   /* or the column name for Art ID */
+					FROM products
+					WHERE active = 1
+					AND modelno <> ''
+				</cfquery>
+
+				<datalist id="artIdList">
+					<cfoutput query="artIds">
+						<option value="#artIds.modelno#">
+					</cfoutput>
+				</datalist>
+
 			</td>
 		</tr>
 		<tr>

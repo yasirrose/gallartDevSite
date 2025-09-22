@@ -220,7 +220,7 @@
 						Banner Type:
 					</td>
 					<td>
-						<cfinput type="text" name="bannerType" id="bannerType"  bind="{data.bannerType}" size="30" required="true" message="Please enter Banner Type.">
+						<cfinput type="text" name="bannerType" id="bannerType" maxlength="30"  bind="{data.bannerType}" size="30" required="true" message="Please enter Banner Type.">
 			
 					</td>
 				</tr>
@@ -229,7 +229,7 @@
 						Banner image URL:
 					</td>
 					<td>
-						<cfinput type="text"  name="bannerImagesUrl" id="bannerImagesUrl"  bind="{data.bannerImagesUrl}" size="30" >
+						<cfinput type="text"  name="bannerImagesUrl" id="bannerImagesUrl" maxlength="30"  bind="{data.bannerImagesUrl}" size="30" >
 			
 					</td>
 				</tr>
@@ -251,7 +251,7 @@
 						Banner Image:
 					</td>
 					<td>
-						<cfinput type="text" disabled name="bannerImages" id="bannerImages"  bind="{data.bannerImage}" size="30" >
+						<cfinput type="text" disabled name="bannerImages" id="bannerImages" maxlength="30"  bind="{data.bannerImage}" size="30" >
 			
 					</td>
 				</tr>
@@ -304,7 +304,7 @@
 						<cfinput type="hidden" value="#deleteChecck#" name="deleteCheck" id="deleteCheck" >
 						<cfinput type="submit" name="edit" id="Add" value="Add"  style="display:none;" />
 						<cfinput type="submit" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" style="#buttonStyle#" />
-						<cfinput type="submit" name="delete" id="delete" value="Delete" onclick="if (confirm('DELETE -- ARE YOU SURE?')){ doEdit('delete');}" style="#buttonStyle#" />
+						<cfinput type="submit" name="delete" id="delete" value="Delete" onclick="return confirmDelete();" style="#buttonStyle#" />
 					</td>			
 				</tr>
 			</table>
@@ -330,11 +330,15 @@ function doEdit(type) {
   var filterName = document.getElementById('bannerName').value.trim();
   var filterType = document.getElementById('bannerType').value.trim();
 
-  if (filterName === '' || filterType === '') {
+  
+ var edit = new admin.models.banners();
+
+ if (type == 'edit'){
+	 if (filterName === '' || filterType === '') {
       alert('Please fill out all fields.');
       return; 
   }
- var edit = new admin.models.banners();
+ }
 
  edit.setForm("editForm");
  if (type == 'edit'){
@@ -349,6 +353,15 @@ else if (type == 'delete'){
    }
 document.getElementById('edit').value = 'Edit';
  document.getElementById('delete').style.display = '';
+}
+
+function confirmDelete() {
+    if (confirm('DELETE -- ARE YOU SURE?')) {
+        doEdit('delete');
+        return true; // allow form submit or your custom logic
+    } else {
+        return false; // stop form submit if cancel pressed
+    }
 }
 
 function validateImage() {

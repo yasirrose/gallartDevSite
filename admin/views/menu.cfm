@@ -153,6 +153,9 @@
 								<li><a href="index.cfm?event=listings.remove_dups">Remove Duplicate Listings</a></li>
 								<li><a href="index.cfm?event=listings.remove_noimage">Remove Listings With No Image</a></li>
 								<li><a href="index.cfm?event=listings.image_sheets">Image Sheets By Artist</a></li>
+								<cfif listFindNoCase(session.userinfo.roles,'price tags') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=pricetags">Price Tags</a></li>
+								</cfif>
 							</ul>
 						</li>
 					</cfif>
@@ -162,6 +165,27 @@
 					</cfif>
 
 					<cfif NOT listFindNoCase(session.userinfo.roles,'special admin')>
+						<li style="border-right:1px white solid;">
+							<a href="#">Inquiries <img src="/images/submenu.png"></a>
+							<ul class="sub-nav">
+
+								<cfif listFindNoCase(session.userinfo.roles,'leads') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=leads.manageLeads">Leads</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'purchases_consignments') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=purchases_consignments">Purchases/ Consignments</a></li>
+								</cfif>
+
+								<cfif listFindNoCase(session.userinfo.roles,'make offer') OR session.userinfo.sa EQ 1>
+									<li><a href="index.cfm?event=makeoffer">Make Offer</a></li>
+								</cfif>								
+
+							</ul>
+						</li>
+					</cfif>
+
+					<!--- <cfif NOT listFindNoCase(session.userinfo.roles,'special admin')>
 						<li style="border-right:1px white solid;">
 							<a href="#">Modules <img src="/images/submenu.png"></a>
 							<ul class="sub-nav">
@@ -215,12 +239,12 @@
 
 								<!--- <li><a href="index.cfm?event=phoneformat">Format Phone Numbers</a></li> --->
 
-								<cfif session.userinfo.sa EQ 1>
+								<!--- <cfif session.userinfo.sa EQ 1>
 									<li><a href="index.cfm?event=email_imports"></a></li>
-								</cfif>
+								</cfif> --->
 							</ul>
 						</li>
-					</cfif>
+					</cfif> --->
 
 					<cfif listFindNoCase(session.userinfo.roles,'orders') OR session.userinfo.sa EQ 1>
 						<li style="border-right:1px white solid;"><a href="index.cfm?event=orders.manageProducts">Orders</a></li>
@@ -250,9 +274,9 @@
 								<li><a href="index.cfm?event=employees">Employees</a></li>
 							</cfif>
 
-							<cfif listFindNoCase(session.userinfo.roles,'leads') OR session.userinfo.sa EQ 1>
+							<!--- <cfif listFindNoCase(session.userinfo.roles,'leads') OR session.userinfo.sa EQ 1>
 								<li><a href="index.cfm?event=leads.manageLeads">Leads</a></li>
-							</cfif>
+							</cfif> --->
 
 							<cfif listFindNoCase(session.userinfo.roles,'sellers') OR session.userinfo.sa EQ 1>
 								<li><a href="index.cfm?event=sellers">Sellers</a></li>

@@ -41,6 +41,8 @@
 		<cfargument name="promotion" required="no" type="string" default="0">
 		<cfargument name="showResults" required="no" type="string" default="1">
 
+		<!--- <cfdump var="#arguments#" abort="true"> --->
+
 		<cfset var qListings='' />
 
 		<cfif isDefined('arguments.fromPrice') AND arguments.fromPrice neq ''>
@@ -102,7 +104,7 @@
 			<cfif isDefined('arguments.toLastedit') AND arguments.toLastedit neq '' AND isDate(arguments.toLastedit)>
 				AND lastedit <= '#dateFormat(arguments.toLastedit)#'
 			</cfif>
-			<cfif isDefined('arguments.sellerId') and len(trim(arguments.sellerId))>
+			<cfif isDefined('arguments.sellerId') and len(trim(arguments.sellerId)) and arguments.sellerId neq 'NaN059788604A8D97D11196FF2C28FF707E'>
 				<cfif arguments.sellerId eq 0>
 				 	AND fk_users is not null
 				<cfelseif arguments.sellerId gt 0>
@@ -254,7 +256,7 @@
 						RETAIL_PRICE,
 						GALLERY_PRICE
 						<cfif arguments.SPECIAL_PRICE LT arguments.RETAIL_PRICE and arguments.SPECIAL_PRICE LT arguments.GALLERY_PRICE>
-							SPECIAL_PRICE
+							,SPECIAL_PRICE
 						</cfif>,
 						
 						CLOSEOUT,
@@ -1149,7 +1151,7 @@
 				<cfloop from="1" to="#arrayLen(session.orderArray)#" index="idx">
 					<tr>
 						<td>
-							<input type="Text" id="quantity_#idx#" name="quantity_#idx#" size="4" value="#session.orderArray[idx][7]#" onkeyup="addQuantity('#idx#',this.value)" />
+							<input type="Text" id="quantity_#idx#" name="quantity_#idx#" size="4" value="#session.orderArray[idx][7]#" onkeyup="addQuantity('#idx#',this.value)" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
 						</td>
 						<td>
 							<input type="Hidden" name="title_#idx#" value="#session.orderArray[idx][2]#">

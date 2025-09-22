@@ -299,7 +299,7 @@
 						</cfgrid> --->
 					<cfgrid format="html" name="data" pagesize="10" stripeRows="true" stripeRowColor="##e0e0e0" 
 						bind="cfc:admin.models.art.getListings(
-							{cfgridpage}, {cfgridpagesize}, {cfgridsortcolumn}, {cfgridsortdirection}, 
+							{cfgridpage}, {cfgridpagesize}, {cfgridsortcolumn}, {cfgridsortdirection} 
 							
 							)">
 						<cfgridcolumn name="name" header="Title" width="150">

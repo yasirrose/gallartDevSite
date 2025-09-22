@@ -117,8 +117,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		// const BillPhone = document.getElementById('BillPhone').value.trim();
 		const phoneNumber = document.getElementById('phoneNumber').value.trim();
 		const phoneType = document.querySelector("[name='phoneType']").value;
-		const addressType = document.querySelector("[name='AddressType']").value;
-		const ShipaddressType = document.querySelector("[name='ShipAddressType']").value;
+		// const addressType = document.querySelector("[name='AddressType']").value;
+		// const ShipaddressType = document.querySelector("[name='ShipAddressType']").value;
 		// const businessphone = document.getElementById('businessphone').value.trim();
 		const cardInput = document.getElementById("cardnum");
 		const cardnum = cardInput.value.replace(/\s+/g, '').trim();
@@ -581,9 +581,9 @@ document.addEventListener("DOMContentLoaded", function () {
 																<div class="col-md-2">
 																	<label><span class="required">*</span><b>Phone Number, Phone Type</b></label>
 																</div>
-																<div class="col-md-5">
+																<div class="col-md-5 relative">
 																	<cfinput type="text" name="phoneNumber" id="phoneNumber" size="25" >
-																	<span id="formatSign">(xxx) xxx-xxxx</span>
+																	<span id="formatSign" class="absolute-field">(xxx) xxx-xxxx</span>
 																	<span class="error-message" id="phoneNumberError"></span>
 																</div>
 																<div class="col-md-5">
@@ -663,10 +663,20 @@ document.addEventListener("DOMContentLoaded", function () {
 															</div>
 														</div>
 													</div>
+
+													
+
 													<div class="top-heading m-0 mt-3">
 														<h4>SHIPPING INFORMATION</h4>
 														<p><i>(if different from Billing Info)</i></p>
 													</div>
+
+													<div class="top-heading-info m-0 mt-3">
+														<input type="checkbox" name="sameAddress" id="sameAddress">
+														
+														<p><i>(Same Above Info)</i></p>
+													</div>
+
 													<div class="input-form">
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
@@ -1036,10 +1046,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </script>
 
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const sameAddress = document.getElementById('sameAddress');
+
+    sameAddress.addEventListener('change', function () {
+        if (this.checked) {
+            // Copy values from billing fields to shipping fields
+            document.querySelector('[name="shipNamef"]').value = document.getElementById('billnamef').value;
+            document.querySelector('[name="shipName"]').value = document.getElementById('BillName').value;
+            document.querySelector('[name="shipcity"]').value = document.getElementById('billcity').value;
+            document.querySelector('[name="shipzip"]').value = document.getElementById('billzip').value;
+            
+            // Agar dropdown bhi copy karna ho
+            document.getElementById('ShipAddressType').value = document.getElementById('AddressType').value;
+        } else {
+            // Uncheck hone par shipping fields khali kar do
+            document.querySelector('[name="shipNamef"]').value = '';
+            document.querySelector('[name="shipName"]').value = '';
+            document.querySelector('[name="shipcity"]').value = '';
+            document.querySelector('[name="shipzip"]').value = '';
+            document.getElementById('ShipAddressType').value = 'USA'; // default select
+        }
+    });
+});
+</script>
+
 <style>
 
 	body{
 		overflow-x: hidden;
+	}
+
+	.relative {
+		position: relative;
+	}
+	.absolute-field {
+		position: absolute;
+		right: 12px;
+		bottom: 1px;
 	}
 
 	.select2-container--default .select2-selection--single {
