@@ -1151,7 +1151,7 @@
 				<cfloop from="1" to="#arrayLen(session.orderArray)#" index="idx">
 					<tr>
 						<td>
-							<input type="Text" id="quantity_#idx#" name="quantity_#idx#" size="4" value="#session.orderArray[idx][7]#" onkeyup="addQuantity('#idx#',this.value)" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+							<input type="Text" id="quantity_#idx#" name="quantity_#idx#" size="4" maxlength="4" value="#session.orderArray[idx][7]#" onkeyup="addQuantity('#idx#',this.value)" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
 						</td>
 						<td>
 							<input type="Hidden" name="title_#idx#" value="#session.orderArray[idx][2]#">

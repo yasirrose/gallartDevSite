@@ -120,11 +120,16 @@ document.addEventListener("DOMContentLoaded", function () {
 		// const addressType = document.querySelector("[name='AddressType']").value;
 		// const ShipaddressType = document.querySelector("[name='ShipAddressType']").value;
 		// const businessphone = document.getElementById('businessphone').value.trim();
-		const cardInput = document.getElementById("cardnum");
+		const cardInput = document.getElementById("cardnum");		
 		const cardnum = cardInput.value.replace(/\s+/g, '').trim();
 		const selectedCardType = document.querySelector("[name='cardtype']").value;
+
+		const CVCInput = document.getElementById("cardCVC");
+    	const cvcValue = CVCInput.value.trim();
 	
 		const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+		const submitButton = document.getElementById('submitBtn');
 	
 		if (!billnamef) {
 			document.getElementById('billnamefError').textContent = 'We require the billing first name to process the order.';
@@ -192,6 +197,14 @@ document.addEventListener("DOMContentLoaded", function () {
 			isValid = false;
 		}
 
+		 if (!cvcValue) {
+			document.getElementById('cardCVCError').textContent = 'You must enter a CVC number.';
+			isValid = false;
+		} else if (!/^\d{3,4}$/.test(cvcValue)) {
+			document.getElementById('cardCVCError').textContent = 'CVC must be 3 or 4 digits.';
+			isValid = false;
+		}
+
 		
 
 		if(!phoneNumber) {
@@ -212,6 +225,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (!isValid) {
 			return false;
 		}
+
+		
 
 		return isValid;
 	
@@ -462,11 +477,11 @@ document.addEventListener("DOMContentLoaded", function () {
 															<div class="row align-items-center">
 																<div class="col-md-2"><label><span class="required">*</span><b>Name</b> <i>(First Last)</i></label></div>
 																<div class="col-md-5">
-																	<cfinput type="text" name="billnamef" id="billnamef" size="15" >
+																	<cfinput type="text" name="billnamef" id="billnamef" size="15" maxlength="15">
 																	<span class="error-message" id="billnamefError"></span>
 																</div>
 																<div class="col-md-5">
-																	<cfinput type="text" name="BillName" id="BillName" size="25">
+																	<cfinput type="text" name="BillName" id="BillName" size="25" maxlength="15">
 																	<span class="error-message" id="BillNameError"></span>
 																</div>
 															</div>
@@ -475,9 +490,9 @@ document.addEventListener("DOMContentLoaded", function () {
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
-																	<label><span class="required">*</span><b>Address Type, City, Zip</b></label>
+																	<label><span class="required">*</span><b>Address Type</b></label>
 																</div>
-																<div class="col-md-4">
+																<div class="col-md-10">
 																	
 																	<select name="AddressType" id="AddressType" onchange="toggleAddressFields();">
 																		<option value="USA"  >USA Address</option>
@@ -485,25 +500,11 @@ document.addEventListener("DOMContentLoaded", function () {
 																	</select>
 
 																</div>
-																<div class="col-md-3">
-																	<!--- <select name="billstate" class="select2">
-																		<option value="">Please Select</option>
-																		<cfloop query="states">
-																			<option value="#stateAbb#">#state#</option>
-																		</cfloop>
-																	
-																	</select> --->
-
-																	<cfinput type="text" name="billcity" id="billcity" size="25" >
-																	<span class="error-message" id="billcityError"></span>
-
-																</div>
-																<div class="col-md-3">
-																	<cfinput type="text" name="billzip" size="13" id="billzip" >
-																	<span class="error-message" id="billzipError"></span>
-																</div>
+																
 															</div>
 														</div>
+
+
 
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
@@ -511,7 +512,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">*</span><b>Address 1</b></label>
 																</div>
 																<div class="col-md-10">
-																	<cfinput type="text" name="BillAddress1" id="BillAddress1" size="35" >
+																	<cfinput type="text" name="BillAddress1" id="BillAddress1" size="35" maxlength="35">
 																	<span class="error-message" id="BillAddress1Error"></span>
 																</div>
 															</div>
@@ -524,11 +525,43 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">&nbsp;</span><b>Address 2</b></label>
 																</div>
 																<div class="col-md-10">
-																	<input type="text" name="BillAddress2" size="35">
+																	<input type="text" name="BillAddress2" size="35" maxlength="35">
+																</div>
+															</div>
+														</div>														
+
+														<div class="input-field #this_row()#">
+															<div class="row align-items-center">
+																<div class="col-md-2">
+																	<label><span class="required">*</span><b> City, Zip</b></label>
+																</div>
+																<!--- <div class="col-md-4">
+
+																	<select name="AddressType" id="AddressType" onchange="toggleAddressFields();">
+																		<option value="USA"  >USA Address</option>
+																		<option value="Outside" >Outside USA</option>
+																	</select>
+
+																</div> --->
+																<div class="col-md-5">
+																	<!--- <select name="billstate">
+																		<option value="">Please Select</option>
+																		<cfloop query="states">
+																			<option value="#stateAbb#">#state#</option>
+																		</cfloop>
+
+																	</select> --->
+
+																	<cfinput type="text" name="billcity" id="billcity" size="25" >
+																	<span class="error-message" id="billcityError"></span>
+
+																</div>
+																<div class="col-md-5">
+																	<cfinput type="text" name="billzip" size="13" id="billzip" >
+																	<span class="error-message" id="billzipError"></span>
 																</div>
 															</div>
 														</div>
-
 
 														<div class="input-field #this_row()#" id="stateDropdownDiv" style="display:none;">
 															<div class="row align-items-center">
@@ -552,7 +585,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">&nbsp;</span><b>State/Province</b></label>
 																</div>
 																<div class="col-md-10">
-																	<cfinput type="text" name="billstateText" id="billstateText" size="25">
+																	<cfinput type="text" name="billstateText" id="billstateText" size="25" maxlength="15">
 																</div>
 															</div>
 														</div>
@@ -582,7 +615,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">*</span><b>Phone Number, Phone Type</b></label>
 																</div>
 																<div class="col-md-5 relative">
-																	<cfinput type="text" name="phoneNumber" id="phoneNumber" size="25" >
+																	<cfinput type="text" name="phoneNumber" id="phoneNumber" size="25" maxlength="20">
 																	<span id="formatSign" class="absolute-field">(xxx) xxx-xxxx</span>
 																	<span class="error-message" id="phoneNumberError"></span>
 																</div>
@@ -647,7 +680,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">*</span><b>Email</b></label>
 																</div>
 																<div class="col-md-10">
-																	<cfinput type="text" name="Email" id="Email" size="35"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" >
+																	<cfinput type="text" name="Email" id="Email" size="35" maxlength="20" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" >
 																	<span class="error-message" id="EmailError"></span>
 																</div>
 															</div>
@@ -658,7 +691,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">&nbsp;</span><b>Website</b></label>
 																</div>
 																<div class="col-md-10">
-																	<input type="text" name="website" size="35">
+																	<input type="text" name="website" size="35" maxlength="30">
 																</div>
 															</div>
 														</div>
@@ -671,10 +704,10 @@ document.addEventListener("DOMContentLoaded", function () {
 														<p><i>(if different from Billing Info)</i></p>
 													</div>
 
-													<div class="top-heading-info m-0 mt-3">
-														<input type="checkbox" name="sameAddress" id="sameAddress">
+													<div class="top-heading-info mb-2 mt-3" style="display: flex; align-items: center;">
+														<input type="checkbox" name="sameAddress" id="sameAddress" style="margin: 0 5px 0 0; height: auto;">
 														
-														<p><i>(Same Above Info)</i></p>
+														<label for="sameAddress">(Same Above Info)</label>
 													</div>
 
 													<div class="input-form">
@@ -684,10 +717,10 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">&nbsp;</span><b>Name</b> <i>(First Last)</i></label>
 																</div>
 																<div class="col-md-5">
-																	<input type="text" name="shipNamef" size="15">
+																	<input type="text" name="shipNamef" size="15" maxlength="15">
 																</div>
 																<div class="col-md-5">
-																	<input type="text" name="shipName" size="25">
+																	<input type="text" name="shipName" size="25" maxlength="15">
 																</div>
 															</div>
 														</div>
@@ -695,9 +728,9 @@ document.addEventListener("DOMContentLoaded", function () {
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
-																	<label><span class="required">&nbsp;</span><b>Address Type, City, Zip</b></label>
+																	<label><span class="required">&nbsp;</span><b>Address Type</b></label>
 																</div>
-																<div class="col-md-4">
+																<div class="col-md-10">
 
 																	<select name="ShipAddressType" id="ShipAddressType" onchange="ShiptoggleAddressFields();">
 																		<option value="USA"  >USA Address</option>
@@ -706,22 +739,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 																	
 																</div>
-																<div class="col-md-3">
-
-																	<input type="text" name="shipcity" size="25">
-
-
-																	<!--- <select name="shipstate" class="select2">
-																		<cfloop query="states">
-																			<option value="#stateAbb#">#state#</option>
-																		</cfloop>
-																	</select> --->
-																</div>
-																<div class="col-md-3">
-																	<input type="text" name="shipzip" size="13">
-																</div>
 															</div>
 														</div>
+
+														
 
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
@@ -733,13 +754,39 @@ document.addEventListener("DOMContentLoaded", function () {
 																</div>
 															</div>
 														</div>
+
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
 																	<label><span class="required">&nbsp;</span><b>Address 2</b></label>
 																</div>
 																<div class="col-md-10">
-																	<input type="text" name="shipAddress2" size="35">
+																	<input type="text" name="shipAddress2" size="35" maxlength="35">
+																</div>
+															</div>
+														</div>
+
+														<div class="input-field #this_row()#">
+															<div class="row align-items-center">
+																<div class="col-md-2">
+																	<label><span class="required">&nbsp;</span><b> City, Zip</b></label>
+																</div>
+																<!--- <div class="col-md-4">
+																	<select name="ShipAddressType" id="ShipAddressType" onchange="ShiptoggleAddressFields();">
+																		<option value="USA"  >USA Address</option>
+																		<option value="Outside" >Outside USA</option>
+																	</select>	
+																</div> --->
+																<div class="col-md-5">
+																	<input type="text" name="shipcity" size="25">
+																	<!--- <select name="shipstate" class="select2">
+																		<cfloop query="states">
+																			<option value="#stateAbb#">#state#</option>
+																		</cfloop>
+																	</select> --->
+																</div>
+																<div class="col-md-5">
+																	<input type="text" name="shipzip" size="13">
 																</div>
 															</div>
 														</div>
@@ -767,7 +814,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">&nbsp;</span><b>State/Province</b></label>
 																</div>
 																<div class="col-md-10">
-																	<cfinput type="text" name="ShipstateText" id="ShipstateText" size="25">
+																	<cfinput type="text" name="ShipstateText" id="ShipstateText" size="25" maxlength="20">
 																</div>
 															</div>
 														</div>
@@ -778,7 +825,8 @@ document.addEventListener("DOMContentLoaded", function () {
 																<div class="col-md-2">
 																	<label>
 																		<!--- <span class="required">*</span> --->
-																		<b>Country:</b></label>
+																		<b>Country:</b>
+																	</label>
 																</div>
 																<div class="col-md-10">
 																	<select name="shipcountry" id="shipcountry" class="select2">
@@ -814,11 +862,11 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">&nbsp;</span><b>Phone</b></label>
 																</div>
 																<div class="col-md-10">
-																	<input type="text" name="shipPhone" size="35">
+																	<input type="text" name="shipPhone" size="35" maxlength="20">
 																</div>
 															</div>
 														</div>
-														<div class="input-field #this_row()#">
+														<!--- <div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
 																	<label><span class="required">&nbsp;</span><b>Shipping Method</b></label>
@@ -832,7 +880,7 @@ document.addEventListener("DOMContentLoaded", function () {
 																	</select>
 																</div>
 															</div>
-														</div>
+														</div> --->
 													</div>
 													<cfquery name="coptions" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 														select * from cardtypes
@@ -859,14 +907,21 @@ document.addEventListener("DOMContentLoaded", function () {
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
-																	<label><span class="required">*</span><b>Card Number</b></label>
+																	<label><span class="required">*</span><b>Card Number, CVC</b></label>
 																</div>
-																<div class="col-md-10">
+																<div class="col-md-5">
 																	<cfinput type="Text" name="cardnum" id="cardnum"  placeholder="3712 345678 90123">
 																	<span class="error-message" id="cardnumError"></span>
 																</div>
+																<div class="col-md-5">
+																	<cfinput type="Text" name="cardCVC" id="cardCVC"  placeholder="123"  maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+																	<span class="error-message" id="cardCVCError"></span>
+																</div>
 															</div>
 														</div>
+
+													
+
 														<div class="input-field #this_row()#">
 															<div class="row align-items-center">
 																<div class="col-md-2">
@@ -902,13 +957,14 @@ document.addEventListener("DOMContentLoaded", function () {
 																	<label><span class="required">&nbsp;</span><b>Special Instructions:</b></label>
 																</div>
 																<div class="col-md-10">
-																	<textarea cols="52" rows="3" name="comments" wrap="soft"></textarea>
+																	<textarea cols="52" rows="3" name="comments" id="comments" wrap="soft" maxlength="500"></textarea>
+																	<div id="charCount" class="mb-3">0 / 500 characters</div>
 																</div>
 															</div>
 														</div>
 													</div>
 													<div class="text-center mt-3">
-														<input type="submit" value="Review Order" class="pinkSubmit">
+														<input type="submit" value="Review Order" id="submitBtn" class="pinkSubmit">
 														<input type="reset" value="Reset Form" class="pinkSubmit">
 													</div>
 													<input type="Hidden" name="fk_locations" value="1">
@@ -1008,6 +1064,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		const phoneType = document.getElementById("phoneType");
 		const formatSign = document.getElementById("formatSign");
 
+		 if (!phoneInput || !phoneType || !formatSign) {
+			// Elements not on this page → exit
+			return;
+		}
+
 		function toggleFormatSign() {
 			if (phoneType.value === "OutsideUS") {
 				formatSign.style.display = "none";
@@ -1044,6 +1105,28 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 
+</script>
+
+
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		const textarea = document.getElementById("comments");
+		const counter = document.getElementById("charCount");
+		const maxLength = 500;
+
+			if (textarea && counter) {
+			function updateCount() {
+					const currentLength = textarea.value.length;
+					counter.textContent = `${currentLength} / ${maxLength} characters`;
+			}
+
+			// Update counter initially
+			updateCount();
+
+			// Update on input
+			textarea.addEventListener("input", updateCount);
+		}
+	});
 </script>
 
 

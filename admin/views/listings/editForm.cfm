@@ -139,7 +139,7 @@ function popupWin(url) {
 }
 </script>
 
-<cfform method="POST" action="/admin/index.cfm?event=listings.procListing" name="editForm" id="editForm"  enctype="multipart/form-data" onsubmit="javascript:return validEntries(document.editForm);">
+<cfform method="POST" action="/admin/index.cfm?event=listings.procListing" name="editForm" id="editForm"  enctype="multipart/form-data" onsubmit="return validEntries(document.editForm) && disableButtons(document.getElementById('editForm'));">
 <cfinput type="hidden" name="uid" id="uid">
 <table border = "0" width = "700" cellpadding = "3" cellspacing = "0" class="editBox">
 
@@ -665,6 +665,36 @@ function popupWin(url) {
 <br>
 <div id="orderLink"></div>
 
+<script>
+	function disableButtons(formEl) {
+		// ensure real form
+		if (!(formEl instanceof HTMLFormElement)) {
+			formEl = document.getElementById('editForm');
+		}
+
+		// hidden input add karo agar missing hai
+		let hiddenEdit = formEl.querySelector('input[name="hiddenEdit"]');
+		if (!hiddenEdit) {
+			hiddenEdit = document.createElement('input');
+			hiddenEdit.type = 'hidden';
+			hiddenEdit.name = 'hiddenEdit';
+			formEl.appendChild(hiddenEdit);
+		}
+
+		// saare submit buttons disable karo aur value copy karo
+		var buttons = formEl.querySelectorAll('input[type="submit"]');
+		buttons.forEach(function(btn){
+			if (btn.disabled !== true) {
+				// jo click hua uski value hidden me daal do
+				if (document.activeElement === btn) {
+					hiddenEdit.value = btn.value; // e.g. Edit or Delete
+				}
+			}
+			btn.disabled = true;
+		});
+    return true;
+}
+</script>
 
 
 <script>

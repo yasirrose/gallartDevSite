@@ -61,6 +61,8 @@
 		<cfset session.qLeads.fromDate = arguments.fromDate />
 		<cfset session.qLeads.toDate = arguments.toDate />
 		<cfset session.qLeads.keywords = arguments.keywords />
+
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 		
 	   	<cfquery name="qLeads" datasource="#application.dsource#">
 	      	SELECT CONVERT(CHAR(9),L.datestamp,6) as leadDate,L.email as leadEmail,E.emp_lname + ', ' + E.emp_fname as emp_name,
@@ -69,16 +71,16 @@
 	      	FROM leads L
 			LEFT OUTER JOIN employees E ON L.fk_employees = E.pk_employees
 			WHERE 0=0 and isdeleted is null
-			<cfif arguments.Fname neq ''>
+			<cfif arguments.Fname neq '' and arguments.Fname neq 'searchFname'>
 	      		AND L.fname like '#arguments.Fname#%'
 	      	</cfif>
-			<cfif arguments.Lname neq ''>
+			<cfif arguments.Lname neq '' and arguments.Lname neq 'searchLname'>
 	      		AND L.lname like '#arguments.Lname#%'
 	      	</cfif>
-			<cfif arguments.Email neq ''>
+			<cfif arguments.Email neq '' and arguments.Email neq 'searchEmail'>
 	      		AND L.email like '%#arguments.Email#%'
 	      	</cfif>
-			<cfif arguments.Areacode neq ''>
+			<cfif arguments.Areacode neq '' and arguments.Areacode neq 'searchAreacode'>
 	      		AND (
 					L.phone like '#arguments.Areacode#%' OR
 					L.phone like '(#arguments.Areacode#%' OR
@@ -88,29 +90,29 @@
 					L.businessphone like '(#arguments.Areacode#%'
 					)
 	      	</cfif>
-			<cfif arguments.City neq ''>
+			<cfif arguments.City neq '' and arguments.City neq 'searchCity'>
 	      		AND L.city like '#arguments.City#%'
 	      	</cfif>
-			<cfif arguments.State neq ''>
+			<cfif arguments.State neq '' and arguments.State neq 'searchState' >
 	      		AND L.state like '#arguments.State#%'
 	      	</cfif>
-			<cfif arguments.EmployeeId neq ''>
+			<cfif arguments.EmployeeId neq '' and arguments.EmployeeId neq 'searchEmployeeId'>
 	      		AND L.fk_employees = '#arguments.EmployeeId#'
 	      	</cfif>
-			<cfif arguments.Comments neq ''>
+			<cfif arguments.Comments neq '' and arguments.Comments neq 'searchComments' >
 				<cfif arguments.Comments eq 1>
 					AND L.notes is not null
 				<cfelseif arguments.Comments eq 0>
 					AND L.notes is null
 				</cfif>
 			</cfif>
-			<cfif arguments.fromDate neq ''>
+			<cfif arguments.fromDate neq '' and arguments.fromDate neq 'searchFromDate'>
 				AND L.datestamp >= '#dateFormat(arguments.fromDate)#'
 			</cfif>
-			<cfif arguments.toDate neq ''>
+			<cfif arguments.toDate neq '' and arguments.toDate neq 'searchtoDate'>
 				AND L.datestamp <= '#dateFormat(arguments.toDate)#'
 			</cfif>
-			<cfif arguments.keywords neq ''>
+			<cfif arguments.keywords neq '' and arguments.keywords neq 'searchKeywords'>
 				<cfset keyArray = listtoarray(arguments.keywords,' ') />
 				AND (
 					(<cfloop from="1" to="#arraylen(keyArray)#" index="idx">
@@ -132,6 +134,8 @@
 				ORDER BY L.datestamp desc
 	      	</cfif>
 	   	</cfquery>
+
+		
 	   	
    		<cfreturn queryconvertforgrid(qLeads,page,pagesize)/>
 	

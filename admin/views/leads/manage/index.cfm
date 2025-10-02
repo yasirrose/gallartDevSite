@@ -172,14 +172,14 @@
 								<div class="col-md-4">
 									<div class="form-group">
 										<label><span> Name*:</span></label>
-										<cfinput type="text" name="name" id="name"  bind="{leadGrid.user_name}">
+										<cfinput type="text" name="name" id="name"  bind="{leadGrid.user_name}" maxlength="30">
 									</div>
 								</div>
 								<div class="col-md-4"></div>
 								<div class="col-md-8">
 									<div class="form-group">
 										<label>Email:</label>
-										<cfinput type="text" name="leadEmail" id="leadEmail"  bind="{leadGrid.leadEmail}">&nbsp;
+										<cfinput type="text" name="leadEmail" id="leadEmail" maxlength="30" bind="{leadGrid.leadEmail}">&nbsp;
 									</div>
 								</div>
 								<div class="col-md-4">
@@ -297,36 +297,31 @@
 									</div>
 								</div>
 
-								<div id="stateTextRow" style="display:none;">
-									<div class="col-md-4">
-										<div class="form-group">
-											<label>State:</label>
-											<cfinput type="text" name="State_Outside" id="State_Outside"  bind="{leadGrid.state}">
-										</div>
+								<div class="col-md-4" id="stateTextRow" style="display:none;">
+									<div class="form-group">
+										<label>State:</label>
+										<cfinput type="text" name="State_Outside" id="State_Outside" maxlength="30"  bind="{leadGrid.state}">
 									</div>
-									<div class="col-md-4">
-										<div class="form-group">
-											<label>Country:</label>
-											<cfinput type="text" name="country" id="country"  bind="{leadGrid.country}">
-										</div>
+								</div>
+								<div class="col-md-4" id="stateTextRow1" style="display:none;">
+									<div class="form-group">
+										<label>Country:</label>
+										<cfinput type="text" name="country" id="country" maxlength="30" bind="{leadGrid.country}">
 									</div>
 								</div>
 
-								<div id="stateDropdownRow" style="display:none;">
-									<div class="col-md-4">
-										<div class="form-group">
-											<label>State:</label>
-											<cfoutput>
-												<select name="state" id="state">
-													<option value="">Please Select</option>
-													<cfloop query="getStates">
-														<option value="#getStates.stateAbb#">#getStates.state#</option>
-													</cfloop>
-												</select>
-											</cfoutput>
-										</div>
+								<div class="col-md-4" id="stateDropdownRow" style="display:none;">
+									<div class="form-group">
+										<label>State:</label>
+										<cfoutput>
+											<select name="state" id="state">
+												<option value="">Please Select</option>
+												<cfloop query="getStates">
+													<option value="#getStates.stateAbb#">#getStates.state#</option>
+												</cfloop>
+											</select>
+										</cfoutput>
 									</div>
-									
 								</div>
 
 								
@@ -339,51 +334,54 @@
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>City:</label>
-										<cfinput type="text" name="city" id="city"  bind="{leadGrid.city}">
+										<cfinput type="text" name="city" id="city" maxlength="30" bind="{leadGrid.city}">
 									</div>
 								</div>
 
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Best Time To Call:</label>
-										<cfinput type="text" name="besttime" id="besttime"  bind="{leadGrid.besttime}">
+										<cfinput type="text" name="besttime" id="besttime" maxlength="30"  bind="{leadGrid.besttime}">
 									</div>
 								</div>
 								
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Zip Code:</label>
-										<cfinput type="text" name="zip" id="zip"  bind="{leadGrid.zip}">
+										<cfinput type="text" name="zip" id="zip" maxlength="30" bind="{leadGrid.zip}">
 									</div>
 								</div>
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Company:</label>
-										<cfinput type="text" name="company" id="company"  bind="{leadGrid.company}">
+										<cfinput type="text" name="company" id="company" maxlength="30" bind="{leadGrid.company}">
 									</div>
 								</div>
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Website:</label>
-										<cfinput type="text" name="website" id="website"  bind="{leadGrid.website}">
+										<cfinput type="text" name="website" id="website" maxlength="30" bind="{leadGrid.website}">
 									</div>
 								</div>
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Artists:</label>
-										<cftextarea name="theartists" id="artists" cols="40" rows="3"  bind="{leadGrid.artists}"></cftextarea>
+										<cftextarea name="theartists" id="artists" cols="40" rows="3" maxlength="30" bind="{leadGrid.artists}"></cftextarea>
+										<div id="artistsCount" class="mb-3">0 / 100 characters</div>
 									</div>
 								</div>
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Titles:</label>
-										<cftextarea name="titles" id="titles" cols="40" rows="3"  bind="{leadGrid.titles}"></cftextarea>
+										<cftextarea name="titles" id="titles" cols="40" rows="3" maxlength="30" bind="{leadGrid.titles}"></cftextarea>
+										<div id="titlesCount" class="mb-3">0 / 100 characters</div> 
 									</div>
 								</div>
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Notes:</label>
-										<cftextarea name="notes" id="notes" cols="40" rows="10" bind="{leadGrid.notes}"></cftextarea>
+										<cftextarea name="notes" id="notes" cols="40" rows="10" maxlength="30" bind="{leadGrid.notes}"></cftextarea>
+										<div id="notesCount" class="mb-3">0 / 500 characters</div> 
 									</div>
 								</div>
 								<div class="col-md-4">
@@ -493,26 +491,84 @@
 </cfwindow>
 </div>
 
+<style>
+	.toast-center {
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%) !important;
+		position: fixed !important;
+		z-index: 999999 !important;
+	}
+
+	#toast-container > .toast {
+		background-color: #ff4da6 !important;
+		color: white !important;
+	}
+</style>
+
 
 <script>
-function toggleStateField() {
-    var addressType = document.getElementById("Addresstype").value;
+	function toggleStateField() {
+		var addressType = document.getElementById("Addresstype").value;
 
-    if (addressType === "Outside") {
-        // Show text field, hide dropdown
-        document.getElementById("stateTextRow").style.display = "";
-        document.getElementById("stateDropdownRow").style.display = "none";
-    } else if (addressType === "USA") {
-        // Show dropdown, hide text field
-        document.getElementById("stateDropdownRow").style.display = "";
-        document.getElementById("stateTextRow").style.display = "none";
-    } else {
-        // Hide both if nothing selected
-        document.getElementById("stateTextRow").style.display = "none";
-        document.getElementById("stateDropdownRow").style.display = "none";
-    }
-}
+		if (addressType === "Outside") {
+			// Show text field, hide dropdown
+			document.getElementById("stateTextRow").style.display = "";
+			document.getElementById("stateTextRow1").style.display = "";
+			document.getElementById("stateDropdownRow").style.display = "none";
+		} else if (addressType === "USA") {
+			// Show dropdown, hide text field
+			document.getElementById("stateDropdownRow").style.display = "";
+			document.getElementById("stateTextRow").style.display = "none";
+			document.getElementById("stateTextRow1").style.display = "none";
+		} else {
+			// Hide both if nothing selected
+			document.getElementById("stateTextRow").style.display = "none";
+			document.getElementById("stateTextRow1").style.display = "none";
+			document.getElementById("stateDropdownRow").style.display = "none";
+		}
+	}
 </script> 
+
+<script>
+	function setupCharCounter(textareaId, counterId, maxLength) {
+		const textarea = document.getElementById(textareaId);
+		const counter = document.getElementById(counterId);
+
+		if (!textarea || !counter) return;
+
+		function updateCount() {
+			let currentLength = textarea.value.length;
+
+			// Agar limit cross ho gayi to cut kar do
+			if (currentLength > maxLength) {
+				textarea.value = textarea.value.substring(0, maxLength);
+				currentLength = maxLength;
+			}
+
+			counter.textContent = `${currentLength} / ${maxLength} characters`;
+		}
+
+		// Initial call
+		updateCount();
+
+		// Update on typing/paste
+		textarea.addEventListener("input", updateCount);
+
+		return updateCount;
+	}
+
+	// Initialize counters on page load
+	document.addEventListener("DOMContentLoaded", function() {
+		window.updateArtists = setupCharCounter("artists", "artistsCount", 100);
+		window.updateTitles  = setupCharCounter("titles", "titlesCount", 100);
+		window.updateNotes   = setupCharCounter("notes", "notesCount", 500);
+	});
+</script>
+
+
+
+
 
 <iframe id="leadExport" src="" frameborder="0"></iframe>
 <iframe id="createXls" src="" frameborder="0"></iframe>

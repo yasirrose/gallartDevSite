@@ -52,33 +52,48 @@
         <cfargument name="artist" type="string" required="true">
         <cfargument name="bio" type="string" required="true">
 
+		
+
         <cftry>
 			<cfif arguments.pk_bios EQ "0">
 
-                <cfquery datasource="#application.dsource#">
-                    INSERT INTO bios
-                    (
-                        artist,
-                        bio
-                    )
-                    VALUES
-                    (
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.artist#">,
-                        <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.bio#">
-                    )
-                </cfquery>
-                <cfreturn "Bio Added">
+				<cfif arguments.artist neq '' and arguments.bio neq ''>
+					<cfquery datasource="#application.dsource#">
+						INSERT INTO bios
+						(
+							artist,
+							bio
+						)
+						VALUES
+						(
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.artist#">,
+							<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.bio#">
+						)
+					</cfquery>
+					<cfreturn "Bio Added">
+				 <cfelse>
+					<cfreturn "nodata">
+				</cfif>	
+
+                
 
             <cfelse>
 
-                 <cfquery datasource="#application.dsource#">
-                    UPDATE bios SET
-                        artist =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.artist#">,
-                        bio = <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.bio#">
-                    WHERE pk_bios = <cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.pk_bios#" />
-                </cfquery>
+				<cfif arguments.bio neq ''>
+					<cfquery datasource="#application.dsource#">
+						UPDATE bios SET
+							artist =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.artist#">,
+							bio = <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.bio#">
+						WHERE pk_bios = <cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.pk_bios#" />
+					</cfquery>
 
-                <cfreturn "Bio Updated">
+					<cfreturn "Bio Updated">
+
+					<cfelse>
+						<cfreturn "nodata">
+				</cfif>
+
+                 
             </cfif>
 
             <cfcatch>

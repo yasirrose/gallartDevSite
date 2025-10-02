@@ -1,3 +1,6 @@
+<cfif NOT structKeyExists(session, 'sellerinfo') >
+	<cflocation addtoken="No" url="/login">
+</cfif>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
 <html>
@@ -13,10 +16,10 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -141,6 +144,23 @@ table tr td, table tr td * {
 table tr td img{
 	max-width: 100px;
 }
+.responsive-table {
+	overflow: auto;
+}
+.div-wrap {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 0.5rem;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+.div-wrap h5 {
+	margin-bottom: 0;
+}
+.div-wrap strong {
+	width: max-content;
+}
 @media (max-width: 991px) {
 	.billing-section .billing-listing ul li * {
 		min-width: 50%;
@@ -180,21 +200,27 @@ table tr td img{
 	<cfquery name="getSellerRecord" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			SELECT * FROM products where fk_users = #userID#
 	</cfquery>
-
+	<cfset seller_email = "">
+	<cfif structKeyExists(session, "sellerinfo") AND structKeyExists(session.sellerinfo, "email")>
+		<cfset seller_email = session.sellerinfo.email>
+	</cfif>
+	
 	<cfquery name="get_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 		  SELECT 
         items.product_code AS pid, 
         items.quantity AS qty, 
         orders.email AS email, 
-		orders.total as total_price,
+		orders.total AS total_price,
         * 
 		FROM items
 		LEFT JOIN products ON products.code = items.product_code
 		LEFT JOIN orders ON orders.orderUID = items.orderUID
-		WHERE  orders.email = '#session.sellerinfo.email#'
-				order by ID DESC
+		WHERE orders.email = <cfqueryparam value="#seller_email#" cfsqltype="cf_sql_varchar"> and Orders.email !=''
+				ORDER BY ID DESC
 	</cfquery>
     
+
+
 	<!--- <cfdump var="#get_items#" abort="true"> --->
    
 
@@ -227,139 +253,148 @@ table tr td img{
 
 											<div class="table-cart-detail">
 												<h5><strong>Review Your Wish List Record:</strong></h5>
-												<cfif wishlistData.recordcount GT 0>
-													<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
-														<tr>
-															<td width="30%" height="20"><b>Title</b></td>
-															<td width="30%" align="center"><b>Artist</b></td>
-															<td width="10%" align="center"><b>Thumbnail</b></td>
-															<td width="15%" align="center"><b>Price</b></td>
-															<td width="15%" align="center"><b>Action</b></td>
-														</tr>
-														<cfoutput query="wishlistData">
-															<cfif listlen(manufacturer) gt 1>
-																<cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
-																<cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
-															<cfelse>
-																<cfset artist_name = manufacturer />
-																<cfset artist_name_url = manufacturer />
-															</cfif>
-
+												<div class="responsive-table">
+													<cfif wishlistData.recordcount GT 0>
+														<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
 															<tr>
-																<td valign="center">
-																	<a HREF="javascript:goxss('item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
-																		#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
-																	</a>
-																	
-																</td>
-																<td align="center" valign="middle">
-																	# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
-																</td>
-																<td align="center" valign="middle">
-																	<cfif fileexists("http://23.20.226.157/img/thumbnails/#wishlistData.uid#.jpg")> 
-																		<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#wishlistData.uid#" align="Center" style="max-height: 100px;">
-																		<cfelse>
-																			<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
-																			<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
-																	</cfif>
-																</td>
-																<td align="center" valign="middle">
-																	<cfif special_price gt 0>
-																		<span style="color: ##ff0000;">
-																			#DollarFormat(special_price)# Sale
-																		 </span>
-																		<cfelseif gallery_price GT 0>
-																			#dollarformat(gallery_price)#
-																	<cfelse>
-																		<span>
-																			<b style="color:red;">Price On request</b>
-																		</span>
+																<td width="30%" height="20"><b>Title</b></td>
+																<td width="30%" align="center"><b>Artist</b></td>
+																<td width="10%" align="center"><b>Thumbnail</b></td>
+																<td width="15%" align="center"><b>Price</b></td>
+																<td width="15%" align="center"><b>Action</b></td>
+															</tr>
+															<cfoutput query="wishlistData">
+																<cfif listlen(manufacturer) gt 1>
+																	<cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
+																	<cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
+																<cfelse>
+																	<cfset artist_name = manufacturer />
+																	<cfset artist_name_url = manufacturer />
+																</cfif>
 
-																	</cfif>
-																	
-																	
-																</td>
-																<td align="center" valign="middle">
-																	<form action="overView.cfm?xss=#xss#" method="post">
-																		<input type="hidden" name="wishlist_pk_id" id="wishlist_pk_id" value="#wishlistData.PK_ID#">
-																		<input type="hidden" name="product_id" id="product_id" value="#wishlistData.uid#">
-																		<input type="submit" class="Seemore" value="Delete" onclick="deleteWishlist(event, this)">
-																	</form>
+																<tr>
+																	<td valign="center">
+
+																		<!--- <a HREF="javascript:goxss('/item.cfm?pid=#urlencodedformat(trim(uid))#&artist=#ucase(manufacturer)#&artistname=#urlencodedformat(trim(artist_name_url))#&gallery=GALLART&title=#urlencodedformat(trim(replace(name,"'",'')))#')">
+																				#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																			</a> --->
+
+																		<a HREF="javascript:goxss('/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#')">
+																			#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																		</a>
+																		
+																	</td>
+																	<td align="center" valign="middle">
+																		# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																	</td>
+																	<td align="center" valign="middle">
+																		<cfif fileexists("http://23.20.226.157/img/thumbnails/#wishlistData.uid#.jpg")> 
+																			<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#wishlistData.uid#" align="Center" style="max-height: 100px;">
+																			<cfelse>
+																				<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
+																				<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+																		</cfif>
+																	</td>
+																	<td align="center" valign="middle">
+																		<cfif special_price gt 0>
+																			<span style="color: ##ff0000;">
+																				#DollarFormat(special_price)# Sale
+																			</span>
+																			<cfelseif gallery_price GT 0>
+																				#dollarformat(gallery_price)#
+																		<cfelse>
+																			<span>
+																				<b style="color:red;">Price On request</b>
+																			</span>
+
+																		</cfif>
+																		
+																		
+																	</td>
+																	<td align="center" valign="middle">
+																		<form action="overView" method="post">
+																			<input type="hidden" name="wishlist_pk_id" id="wishlist_pk_id" value="#wishlistData.PK_ID#">
+																			<input type="hidden" name="product_id" id="product_id" value="#wishlistData.uid#">
+																			<input type="submit" class="Seemore" value="Delete" onclick="deleteWishlist(event, this)">
+																		</form>
+																	</td>
+																</tr>
+															</cfoutput>
+															
+														</table>
+													<cfelse>
+														<table cellspacing="0" cellpadding="0" border="0" width="100%">
+															<tr>
+																<td align="center" style="padding: 25px; font-weight: bold;">
+																	Sorry -- no results found.  Please try again.
 																</td>
 															</tr>
-														</cfoutput>
-														
-													</table>
-												<cfelse>
-													<table cellspacing="0" cellpadding="0" border="0" width="100%">
-														<tr>
-															<td align="center" style="padding: 25px; font-weight: bold;">
-																Sorry -- no results found.  Please try again.
-															</td>
-														</tr>
-													</table>
-												</cfif>
+														</table>
+													</cfif>
+												</div>
 											</div>
 
 
 											<div class="table-cart-detail mt-5">
-												<h5><strong>Sell Your Art On GALLART.COM!:</strong></h5>
-												
-													<button  type="button" class="btn btn-primary mb-2 btn-sm" style="background: #ec008c; float:right; border: 2px solid #ec008c" onClick="javascript:goxss('user_listing_detail.cfm?xss=<cfoutput>#xss#</cfoutput>')">Add New Listings</button>
+												<div class="div-wrap">
+													<h5><strong>Sell Your Art On GALLART.COM!:</strong></h5>	
+													<button  type="button" class="btn btn-primary mb-2 btn-sm" style="background: #ec008c; float:right; border: 2px solid #ec008c" onClick="javascript:goxss('user_listing_detail')">Add New Listings</button>
+												</div>
 													
-
-												<cfif getSellerRecord.recordCount GT 0>
-													<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
-														<tr>
-															<td width="30%" height="20"><b>Title</b></td>
-															<td width="30%" align="center"><b>Artist</b></td>
-															<td width="10%" align="center"><b>Thumbnail</b></td>
-															<td width="15%" align="center"><b>Price</b></td>
-															<td width="15%" align="center"><b>Action</b></td>
-														</tr>
-
-														<cfoutput query="getSellerRecord">
-															<cfif listlen(manufacturer) gt 1>
-																<cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
-																<cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
-															<cfelse>
-																<cfset artist_name = manufacturer />
-																<cfset artist_name_url = manufacturer />
-															</cfif>
-
+												<div class="responsive-table">
+													<cfif getSellerRecord.recordCount GT 0>
+														<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
 															<tr>
-																<td valign="center">
-																	#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
-																</td>
-																<td align="center" valign="middle">
-																	# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
-																</td>
-																<td align="center" valign="middle">
-																	<cfif fileexists("http://23.20.226.157/img/thumbnails/#getSellerRecord.uid#.jpg")> 
-																		<IMG SRC="./img/#uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#getSellerRecord.uid#" align="Center">
-																		<cfelse>
-																			<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
-																			<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
-																	</cfif>
-																</td>
-																<td align="center" valign="middle">#dollarformat(gallery_price)#</td>
-																<td align="center" valign="middle">
-																	<input type="submit" class="Seemore" value="Update" onClick="javascript:goxss('user_listing_detail.cfm?ID=#URLEncodedFormat(getSellerRecord.UID)#')">
-																</td>
-															</tr> 
-														</cfoutput>
-														
-													</table>
-												<cfelse>
-													<table cellspacing="0" cellpadding="0" border="0" width="100%">
-														<tr>
-															<td align="center" style="padding: 25px; font-weight: bold;">
-																Sorry -- no results found.  Please try again.
-															</td>
-														</tr>
-													</table>
+																<td width="30%" height="20"><b>Title</b></td>
+																<td width="30%" align="center"><b>Artist</b></td>
+																<td width="10%" align="center"><b>Thumbnail</b></td>
+																<td width="15%" align="center"><b>Price</b></td>
+																<td width="15%" align="center"><b>Action</b></td>
+															</tr>
 
-												</cfif>
+															<cfoutput query="getSellerRecord">
+																<cfif listlen(manufacturer) gt 1>
+																	<cfset artist_name = "#listlast(manufacturer)# #listfirst(manufacturer)#" />
+																	<cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
+																<cfelse>
+																	<cfset artist_name = manufacturer />
+																	<cfset artist_name_url = manufacturer />
+																</cfif>
+
+																<tr>
+																	<td valign="center">
+																		#REReplace(name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																	</td>
+																	<td align="center" valign="middle">
+																		# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#
+																	</td>
+																	<td align="center" valign="middle">
+																		<cfif fileexists("http://23.20.226.157/img/thumbnails/#getSellerRecord.uid#.jpg")> 
+																			<IMG SRC="./img/#uid#.jpg?x=#randrange(1,1000)#"   width="100" BORDER="0" ALT="#getSellerRecord.uid#" align="Center">
+																			<cfelse>
+																				<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
+																				<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+																		</cfif>
+																	</td>
+																	<td align="center" valign="middle">#dollarformat(gallery_price)#</td>
+																	<td align="center" valign="middle">
+																		<input type="submit" class="Seemore" value="Update" onClick="javascript:goxss('/user_listing_detail/#URLEncodedFormat(getSellerRecord.UID)#')">
+																	</td>
+																</tr> 
+															</cfoutput>
+															
+														</table>
+													<cfelse>
+														<table cellspacing="0" cellpadding="0" border="0" width="100%">
+															<tr>
+																<td align="center" style="padding: 25px; font-weight: bold;">
+																	Sorry -- no results found.  Please try again.
+																</td>
+															</tr>
+														</table>
+
+													</cfif>
+												</div>
 
 												
 											</div>
@@ -368,52 +403,53 @@ table tr td img{
 
 											<div class="table-cart-detail mt-5">
 												<h5><strong>Review Purchase Orders:</strong></h5>
-
-												<cfif get_items.recordCount GT 0 >
-													<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
-														<tr>
-															<td width="30%" height="20"><b>Title</b></td>
-															<td width="10%" align="center"><b>Model No.</b></td>
-															<td width="10%" align="center"><b>ID</b></td>
-															<td width="25%" ><b>Artist</b></td>
-															<td width="15%" align="center"><b>Total Price</b></td>
-															<td width="15%" align="center"><b>Email</b></td>
-															
-														</tr>
-
-														<cfoutput query="get_items">
-															<cfif listlen(artist) gt 1>
-																<cfset artist_name = "#listlast(artist)# #listfirst(artist)#" />
-																<cfset artist_name_url = "#listlast(artist)#_#listfirst(artist)#" />
-															<cfelse>
-																<cfset artist_name = artist />
-																<cfset artist_name_url = artist />
-															</cfif>
-
+												<div class="responsive-table">
+													<cfif get_items.recordCount GT 0 >
+														<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
 															<tr>
-																<td valign="center">
-																	#REReplace(get_items.title, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#  
-																</td>
-																<td align="center" valign="middle">#get_items.modelno#</td>
-																<td align="center" valign="middle">#get_items.ID#</td>
-																<td  >
-																	# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")# 
-																</td>
-																<td align="center" valign="middle">#dollarformat(get_items.total_price)#</td>
-																<td align="center" valign="middle">#get_items.email#</td>
-															</tr> 
-														</cfoutput>
+																<td width="30%" height="20"><b>Title</b></td>
+																<td width="10%" align="center"><b>Model No.</b></td>
+																<td width="10%" align="center"><b>ID</b></td>
+																<td width="25%" ><b>Artist</b></td>
+																<td width="15%" align="center"><b>Total Price</b></td>
+																<td width="15%" align="center"><b>Email</b></td>
+																
+															</tr>
 
-													</table> 
-												<cfelse>
-													<table cellspacing="0" cellpadding="0" border="0" width="100%">
-														<tr>
-															<td align="center" style="padding: 25px; font-weight: bold;">
-																Sorry -- no results found.  Please try again.
-															</td>
-														</tr>
-													</table>
-												</cfif>
+															<cfoutput query="get_items">
+																<cfif listlen(artist) gt 1>
+																	<cfset artist_name = "#listlast(artist)# #listfirst(artist)#" />
+																	<cfset artist_name_url = "#listlast(artist)#_#listfirst(artist)#" />
+																<cfelse>
+																	<cfset artist_name = artist />
+																	<cfset artist_name_url = artist />
+																</cfif>
+
+																<tr>
+																	<td valign="center">
+																		#REReplace(get_items.title, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")#  
+																	</td>
+																	<td align="center" valign="middle">#get_items.modelno#</td>
+																	<td align="center" valign="middle">#get_items.ID#</td>
+																	<td  >
+																		# REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")# 
+																	</td>
+																	<td align="center" valign="middle">#dollarformat(get_items.total_price)#</td>
+																	<td align="center" valign="middle">#get_items.email#</td>
+																</tr> 
+															</cfoutput>
+
+														</table> 
+													<cfelse>
+														<table cellspacing="0" cellpadding="0" border="0" width="100%">
+															<tr>
+																<td align="center" style="padding: 25px; font-weight: bold;">
+																	Sorry -- no results found.  Please try again.
+																</td>
+															</tr>
+														</table>
+													</cfif>
+												</div>
 
 												
 											</div>

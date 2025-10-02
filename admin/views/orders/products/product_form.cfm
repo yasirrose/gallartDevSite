@@ -117,7 +117,7 @@
 		</td>
 		<td>
 			<!--- <cfinput name="fname" id="fname" autosuggest="cfc:admin.models.leads.searchLeadsByFname({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" align="left" style="z-index:1000;" tabindex="0"  value="#form.fname#"> --->
-			<input type="text" name="fname" id="fname"  size="50"  value="#form.fname#">
+			<input type="text" name="fname" id="fname"  size="50" maxlength="40" value="#form.fname#">
 		</td>
 	</tr>
 	<tr>
@@ -125,9 +125,9 @@
 			Last Name:
 		</td>
 		<td>
-			<cfinput name="lname" id="lname" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromLname({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" align="left" style="z-index:1000;" tabindex="0" value="#form.lname#">
-&nbsp;
-<input type="Button" value="Fill" onclick="fillLname('orderform',document.getElementById('lname').value)">
+			<cfinput name="lname" id="lname" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromLname({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="40" size="50" align="left" style="z-index:1000;" tabindex="0" value="#form.lname#">
+			&nbsp;
+			<input type="Button" value="Fill" onclick="fillLname('orderform',document.getElementById('lname').value)">
 			<!--- <input type="text" name="lname" id="lname"  size="50"  value="#form.lname#"> --->
 		</td>
 	</tr>
@@ -136,7 +136,7 @@
 			Email Address:
 		</td>
 		<td>
-			<cfinput name="Email" id="Email" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromEmail({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" align="left" style="z-index:1000;" tabindex="0" value="#form.Email#">&nbsp;
+			<cfinput name="Email" id="Email" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromEmail({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="40" size="50" align="left" style="z-index:1000;" tabindex="0" value="#form.Email#">&nbsp;
 			<input type="Button" value="Fill" onclick="fillEmail('orderform',document.getElementById('Email').value)">
 			<!--- <input type="text" name="Email" id="Email" size="50" value="#form.Email#"> --->
 		</td>
@@ -264,7 +264,7 @@
 		</td>
 		<td>			
 			
-			<input type="text" name="Consultant" id="Consultant"  size="50"  value="#form.Consultant#">
+			<input type="text" name="Consultant" id="Consultant" maxlength="40" size="50"  value="#form.Consultant#">
 		</td>
 	</tr>
 	<tr>
@@ -272,7 +272,7 @@
 			Company Name:
 		</td>
 		<td>
-			<input type="text" name="Company" id="Company"  size="50"  value="#form.Company#">
+			<input type="text" name="Company" id="Company" maxlength="40" size="50"  value="#form.Company#">
 		</td>
 	</tr>
 	<!--- <tr>
@@ -339,11 +339,11 @@
 	<tbody id="USAAddress" style="display:none;">
 		<tr>
 			<td>Street Address:</td>
-			<td><input type="text" name="Address1" id="Address1" size="50" value="#form.Address1#"></td>
+			<td><input type="text" name="Address1" id="Address1" maxlength="40" size="50" value="#form.Address1#"></td>
 		</tr>
 		<tr>
 			<td>City:</td>
-			<td><input type="text" name="City" id="City" size="50" value="#form.City#"></td>
+			<td><input type="text" name="City" id="City" maxlength="40" size="50" value="#form.City#"></td>
 		</tr>
 		<tr>
 			<td>State:</td>
@@ -358,7 +358,7 @@
 		</tr>
 		<tr>
 			<td>Zip Code:</td>
-			<td><input type="text" name="Zip" id="Zip" size="50" value="#form.Zip#"></td>
+			<td><input type="text" name="Zip" id="Zip" maxlength="10" size="50" value="#form.Zip#"></td>
 		</tr>
 	</tbody>
 
@@ -366,23 +366,23 @@
 	<tbody id="OutsideAddress" style="display:none;">
 		<tr>
 			<td>Street Address:</td>
-			<td><input type="text" name="Address1_Outside" id="Address1_Outside" size="50" value="#form.Address1_Outside#"></td>
+			<td><input type="text" name="Address1_Outside" id="Address1_Outside" maxlength="40" size="50" value="#form.Address1_Outside#"></td>
 		</tr>
 		<tr>
 			<td>City:</td>
-			<td><input type="text" name="City_Outside" id="City_Outside" size="50" value="#form.City_Outside#"></td>
+			<td><input type="text" name="City_Outside" id="City_Outside" maxlength="40" size="50" value="#form.City_Outside#"></td>
 		</tr>
 		<tr>
 			<td>State/Province:</td>
-			<td><input type="text" name="State_Outside" id="State_Outside" size="50" value="#form.State_Outside#"></td>
+			<td><input type="text" name="State_Outside" id="State_Outside" maxlength="40" size="50" value="#form.State_Outside#"></td>
 		</tr>
 		<tr>
 			<td>Zip Code:</td>
-			<td><input type="text" name="Zip_Outside" id="Zip_Outside" size="50" value="#form.Zip_Outside#"></td>
+			<td><input type="text" name="Zip_Outside" id="Zip_Outside" maxlength="10" size="50" value="#form.Zip_Outside#"></td>
 		</tr>
 		<tr>
 			<td>Country:</td>
-			<td><input type="text" name="Country" id="Country" size="50" value="#form.Country#"></td>
+			<td><input type="text" name="Country" id="Country" maxlength="40" size="50" value="#form.Country#"></td>
 		</tr>
 	</tbody>
 
@@ -402,7 +402,7 @@
 			Website:
 		</td>
 		<td>
-			<input type="text" name="website" id="website" size="50" value="#form.website#">
+			<input type="text" name="website" id="website" maxlength="40" size="50" value="#form.website#">
 		</td>
 	</tr>
 	<tr>
@@ -425,7 +425,7 @@
 		</td>
 		<td>
 			
-			<input type="text" name="CardNumber" id="CardNumber" size="50" value="#form.CardNumber#">
+			<input type="text" name="CardNumber" id="CardNumber" maxlength="40" size="50" value="#form.CardNumber#">
 		</td>
 	</tr>
 	<tr>
@@ -458,7 +458,7 @@
 			Auth Code:
 		</td>
 		<td>
-			<input type="text" name="authcode" id="authcode" size="50" value="#form.authcode#">
+			<input type="text" name="authcode" id="authcode" maxlength="10" size="50" value="#form.authcode#">
 		</td>
 	</tr>
 	<tr>
@@ -466,7 +466,7 @@
 			Driver's License Number:
 		</td>
 		<td>
-			<input type="text" name="DriversLicense" id="DriversLicense" size="50" value="#form.DriversLicense#">
+			<input type="text" name="DriversLicense" id="DriversLicense" maxlength="20" size="50" value="#form.DriversLicense#">
 		</td>
 	</tr>
 	<tr>
@@ -500,11 +500,11 @@
 
 <script>
 	function openArtInfo() {
-		window.open('index.cfm?event=orders.artInfo', 'artInfo', 'width=500,height=250,left=0,top=0,resizable=yes,scrollbars=yes');
+		window.open('index.cfm?event=orders.artInfo', 'artInfo', 'width=500,height=250,left=500,top=200,resizable=yes,scrollbars=yes');
 	}
 
 	function openFramingInfo() {
-		window.open('index.cfm?event=orders.framingInfo', 'framingInfo', 'width=500,height=250,left=0,top=0,resizable=yes,scrollbars=yes');
+		window.open('index.cfm?event=orders.framingInfo', 'framingInfo', 'width=500,height=250,left=500,top=200,resizable=yes,scrollbars=yes');
 	}
 </script>
 
@@ -529,7 +529,8 @@
 	</tr>
 	<tr>
 		<td valign="top" colspan="2">
-			<textarea name="special_instructions" cols="50" rows="3">#form.special_instructions#</textarea>
+			<textarea name="special_instructions" id="special_instructions" cols="50" maxlength="500" rows="3">#form.special_instructions#</textarea>
+			<div id="special_instructionsCount" class="mb-3">0 / 500 characters</div>
 		</td>
 	</tr>
 	<tr>
@@ -561,7 +562,7 @@
 	<tr>
 		<td colspan="2">
 			<input type="Reset" value="Reset">
-			<input type="Button" value="Submit" onClick="checkPasswordOrder(); return false;" >
+			<input type="Button" value="Submit" id="orderBtn" onClick="checkPasswordOrder(); return false;" >
 		</td>
 	</tr>
 </table>
@@ -583,7 +584,10 @@
 
 		<tr>
 			<td align="center" style="font-family: Arial; font-size: 11px;">
-				<input list="artIdList" name="modelno" id="modelno" size="20" value="">&nbsp;&nbsp;<input type="Button" value="ADD" onclick="findArt(document.getElementById('modelno').value);" />
+				<input list="artIdList" name="modelno" id="modelno" size="20" maxlength="10" value="">
+				&nbsp;
+				<input type="Button" value="ADD" onclick="findArt(document.getElementById('modelno').value);" />
+				<input type="Button" value="Close" onclick="ColdFusion.Window.hide('artIdWindow');" style="font-size: 10px;">
 
 				<cfquery name="artIds" datasource="#application.dsource#">
 					SELECT modelno   /* or the column name for Art ID */
@@ -601,10 +605,15 @@
 			</td>
 		</tr>
 		<tr>
+			<!--- <td align="center" style="padding-top: 10px;">
+				<input type="Button" value="Close" onclick="ColdFusion.Window.hide('artIdWindow');" style="font-size: 10px;">
+			</td> --->
+		</tr>
+			<!-- <tr>
 			<td align="center" style="padding-top: 10px;">
 				<input type="Button" value="Close" onclick="ColdFusion.Window.hide('artIdWindow');" style="font-size: 10px;">
 			</td>
-		</tr>
+		</tr> -->
 	</table>
 </cfwindow>
 
@@ -612,7 +621,15 @@
 	div.autosuggestcontainer .yui-ac-content {
 		*left: -5;
 	}
-</style>
+		.x-window-default, .x-css-shadow {
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%);
+	}
+	.x-body {
+		position: relative;
+	}
+	</style>
 
 <cfwindow name="artTitleWindow" center="true" modal="true" resizable="false" closable="false" title="Enter Product Title" width="400" height="400" headerStyle="background-color:##dd3a7d;">
 	<table cellspacing="0" cellpadding="0" border="0" width="100%" bgcolor="#ffffff">
@@ -623,7 +640,10 @@
 		</tr>
 		<tr>
 			<td align="center">
-				<input list="artTitles" name="artTitle" id="artTitle" size="50" align="left" style="z-index:1000;" tabindex="0">
+				<input list="artTitles" name="artTitle" id="artTitle" size="50" maxlength="50" align="left" style="z-index:1000;" tabindex="0">
+				&nbsp;
+				<input type="Button" value="ADD" onclick="findArtTitle(document.getElementById('artTitle').value);" />
+				<input type="Button" value="Close" onclick="ColdFusion.Window.hide('artTitleWindow');" style="font-size: 10px;">
 
 				<cfquery name="data" datasource="#application.dsource#">
 					SELECT name FROM products
@@ -638,7 +658,7 @@
 				</datalist>
 			</td>
 		</tr>
-		<tr>
+		<!--- <tr>
 			<td align="center" style="font-family: Arial; font-size: 11px; padding-top: 15px;">
 				<input type="Button" value="ADD" onclick="findArtTitle(document.getElementById('artTitle').value);" />
 			</td>
@@ -647,7 +667,7 @@
 			<td align="center" style="padding-top: 10px;">
 				<input type="Button" value="Close" onclick="ColdFusion.Window.hide('artTitleWindow');" style="font-size: 10px;">
 			</td>
-		</tr>
+		</tr> --->
 	</table>
 </cfwindow>
 
@@ -867,13 +887,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		<tr>
 			<td>Last Name:</td>
 			<td>
-				<input type="text" name="allcontacts_lname" id="allcontacts_lname" size="40" value="">
+				<input type="text" name="allcontacts_lname" id="allcontacts_lname" maxlength="40" size="40" value="">
 			</td>
 		</tr>
 		<tr>
 			<td>Email:</td>
 			<td>
-				<input type="text" name="allcontacts_email" id="allcontacts_email" size="40" value="">
+				<input type="text" name="allcontacts_email" id="allcontacts_email" maxlength="40" size="40" value="">
 			</td>
 		</tr>
 		<tr>
@@ -977,5 +997,24 @@ document.addEventListener("DOMContentLoaded", function() {
         // run once at load to set initial state (in case form has a saved value)
         updateCardValidation();
     });
+</script>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		const textarea = document.getElementById("special_instructions");
+		const counter = document.getElementById("special_instructionsCount");
+		const maxLength = 500;
+
+		function updateCount() {
+		const currentLength = textarea.value.length;
+		counter.textContent = `${currentLength} / ${maxLength} characters`;
+		}
+
+		// Update counter initially
+		updateCount();
+
+		// Update on input
+		textarea.addEventListener("input", updateCount);
+	});
 </script>
 

@@ -129,11 +129,11 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
-	<script language="JavaScript" src="./js/utils.js"></script>
+	<script type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
+	<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -186,8 +186,8 @@
 
 										<div aria-label="breadcrumb">
 											<ol class="breadcrumb">
-											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-											  <li class="breadcrumb-item"><a href="user_login_page.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Seller Login</a></li>
+											  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item"><a href="/login" style="color:black;" >Seller Login</a></li>
 											  <li class="breadcrumb-item active" aria-current="page">Forget Password</li>
 											</ol>
 										</div>
@@ -196,56 +196,31 @@
 											<div class="user-registrations forgot-password">
 												<div class="top-heading text-center">
 													<h3>FORGOT PASSWORD</h3>
-												</div>
-												<!--- <cfoutput> --->
-													<!--- <cfif success eq "false">
-
-														
-													
-														<cfif len(msg)><strong>#msg#</strong></cfif> --->
-
-														<!--- <cfif FORM.captchaError>
-															<p style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</p>
-														 </cfif> --->
-
-
+												</div>												
 														<div id="responseMessage"></div>
 														<form id="forgetForm" onsubmit="return false;">
-															<!--- <input	type="hidden" name="captcha_check"	
-															value="<cfoutput>#FORM.captcha_check#</cfoutput>" /> --->
+														
 															<div class="user-content text-center">
 																<p>Enter your email address below, and we will email your password to you:</p>
 																<div class="input-form">
 																	<div class="input-field">
-																		<input type="text" name="email" id="email" size="40"><span class="star"> * </span>
+																		<input type="text" name="email" id="email" maxlength="30" size="40"><span class="star"> * </span>
 																		<span class="error-message" id="email_loginError"></span>
 																	</div>
-
-																	<!--- <div class="input-field">
-																		<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier" fontsize="28"/>
-																		<label><FONT color="000000"><b>Please enter the characters in the image above: <span style="color:##ff0000;">*</span></b></FONT></label>
-																		<input type="text" name="captcha" >
-																		<span class="error-message" id="captchaError"></span>
-																	 </div> --->
-
+																	
 																	 <div class="input-field pt-3">
 																		<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
 																		<span class="error-message" id="recaptchaError"></span>
 																	</div>
 																	
-																	<div class="input-button">
-																		<button type="button" onclick="submitForgetForm()" class="SeeMore">Send My Password</button>
+																	<div class="input-button mt-3 register-btn">
+																		<button type="button" id="sendPasswordBtn" onclick="submitForgetForm()" class="SeeMore">Send My Password</button>
 																	</div>
 																</div>
 															</div>
 														</form>
 														
-													<!--- <cfelse>
 													
-														<cfif len(msg)><strong>#msg#</strong></cfif>
-													
-													</cfif> --->
-												<!--- </cfoutput> --->
 											</div>
 										</div>
 									</div>
@@ -312,15 +287,19 @@
     }
 
     function submitForgetForm() {
+
+		 const sendBtn = document.getElementById('sendPasswordBtn');
+
         if (!validateForgetForm()) {
             return; // Stop submission if validation fails
         }
 	
-			
+		sendBtn.disabled = true;
+    	sendBtn.textContent = 'Sending...';
 
 			
         const formData = new FormData();
-		formData.append('g-recaptcha-response', recaptchaResponse);
+		formData.append('g-recaptcha-response', grecaptcha.getResponse());
         formData.append('email', document.getElementById('email').value);
         formData.append('proc_pw', true); // Pass this to detect the form submission on the backend
 
@@ -330,15 +309,25 @@
         })
             .then((response) => response.text())
             .then((data) => {
-				if (data.toLowerCase().includes('success')) {
-                toastr.success('Your password has been emailed to you.');
+				if (data.includes('Your password has been emailed to you.')) {
+					toastr.success('Your password has been emailed to you.');
+					grecaptcha.reset();
+					$('#forgetForm')[0].reset();
+					
+					sendBtn.disabled = false;
+                	sendBtn.textContent = 'Send My Password';
             } else {
+				grecaptcha.reset();
                 toastr.error('That email address is not in our system. Please try again.');
             }
             })
             .catch((error) => {
                 console.error('Error:', error);
                 document.getElementById('responseMessage').innerHTML = `<strong style="color:red;">An error occurred. Please try again later.</strong>`;
+
+				sendBtn.disabled = false;
+            	sendBtn.textContent = 'Send My Password';
+
             });
     }
 </script>
@@ -367,5 +356,5 @@
 </html>
 
 <cfelse>
-	<cflocation addtoken="No" url="user_listing_detail.cfm?xss=#xss#">
+	<cflocation addtoken="No" url="/user_listing_detail">
 </cfif>

@@ -8,7 +8,7 @@
 <cfif structKeyExists(session,'sellerinfo') AND session.sellerinfo.login NEQ 0>
 	<cfoutput>
 		<div class="welcome-logout">
-			<cfform action="#script_name#?#query_string#" method="post">
+			<cfform action="/logout" method="post">
 				<input type="Hidden" name="logout">
 					<div class="logout-form">
 						<div class="main-heading">

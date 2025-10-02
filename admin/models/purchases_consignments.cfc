@@ -26,13 +26,13 @@
 			ELSE name END AS user_name, *
 	      	FROM purchases_consignments
 			WHERE 0=0 and isdeleted is null
-			<cfif arguments.name neq ''>
+			<cfif arguments.name neq '' and arguments.name neq 'searchName'>
 	      		AND name like '%#arguments.name#%'
 	      	</cfif>
-			<cfif arguments.fromDate neq ''>
+			<cfif arguments.fromDate neq '' and arguments.fromDate neq 'searchfromDate'>
 				AND datestamp >= '#dateFormat(arguments.fromDate)#'
 			</cfif>
-			<cfif arguments.toDate neq ''>
+			<cfif arguments.toDate neq '' and arguments.toDate neq 'searchtoDate'>
 				AND datestamp <= '#dateFormat(arguments.toDate)#'
 			</cfif>
 	      	<cfif gridsortcolumn neq ''>

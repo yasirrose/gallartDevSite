@@ -36,6 +36,22 @@ function validEntries(frm) {
 		margin: 6px;
 		gap: 6px;
 	}
+	.date-field div {
+		float: none !important;
+		width: max-content;
+		display: inline-block;
+	}
+	.date-field input.datefieldinput {
+		padding-right: 18px;
+		max-width: 178px;
+	}
+
+	.date-field div#searchFromDategridForm_cf_buttondiv, .date-field div#searchToDategridForm_cf_buttondiv {
+		position: absolute;
+		top: 2px;
+		right: 2px;
+		padding: 0 !important;
+	}
 </style>
 
 <table border = "0" width = "100%" cellpadding = "5" cellspacing = "0">
@@ -49,13 +65,21 @@ function validEntries(frm) {
 				<tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>Name:</strong>
+						<cfinput name="searchName" maxlength="30" size="30" />
 					</td>
-					<td>
-						<cfinput name="searchName" size="30" />
+					<!--- <td>
+						
+					</td> --->
+					<td align="right" style="font-size: 10px;">
+						<strong>Email:</strong>
+						<cfinput name="searchEmail" maxlength="30" size="30" />
 					</td>
+					<!--- <td>
+						
+					</td> --->
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
+				<!--- <tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>Email:</strong>
 					</td>
@@ -63,30 +87,29 @@ function validEntries(frm) {
 						<cfinput name="searchEmail" size="30" />
 					</td>
 					<td>&nbsp;</td>
-				</tr>
+				</tr> --->
 				<tr>
-					<td align="right" style="font-size: 10px;">
+					<td align="right" class="date-field" style="font-size: 10px;">
 						<strong>Date from:</strong>
+						<cfinput name="searchFromDate" type="datefield" validate="date" maxlength="30" size="30" />
 					</td>
-					<td nowrap>
-						<cfinput name="searchFromDate" type="datefield" validate="date" size="10" />
+
+					<td align="right" class="date-field" style="font-size: 10px;">
+						<strong>Date to:</strong>
+						<cfinput name="searchToDate" type="datefield" validate="date" maxlength="30" size="30" />
 					</td>
+
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
-					<td align="right" style="font-size: 10px;">
-						<strong>Date to:</strong>
-					</td>
-					<td nowrap>
-						<cfinput name="searchToDate" type="datefield" validate="date" size="10" />
-					</td>
-					<td>
-						<input type="Reset"><cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
+				<tr>					
+					<td align="right" colspan="2">
+						<input type="Reset">
+						<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">
-						<cfgrid format="html" name="data" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.purchases_consignments.getPurchasesConsignments({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchName},{searchEmail},{searchFromDate},{searchToDate})">
+						<cfgrid format="html" name="data" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.purchases_consignments.getPurchasesConsignments({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchName},{searchEmail})">
 						    <!--- <cfgridcolumn name="name" header="Name" width="80"> --->
 						    <cfgridcolumn name="user_name" header="Name" width="200">
 							<cfgridcolumn name="email" header="Email" width="175">
@@ -100,137 +123,153 @@ function validEntries(frm) {
 		<td valign="top">
 			<!--- <input type="button" value="New" onclick="showNew()"> --->
 			<cfform name="editForm" enctype="multipart/form-data" onsubmit="return CheckEntries()">
-			<cfinput type="hidden" name="pk_purchases_consignments" id="pk_purchases_consignments" bind="{data.pk_purchases_consignments}">
-			<table border = "0" width = "500" cellpadding = "1" cellspacing = "0" class="editBox">
-				<tr>
-					<td>
-						<table border = "0" width = "100%" cellpadding = "1" cellspacing = "0">
-							<tr>
-								<td width="100" style="font-size: 10px;">
-									First Name:
-								</td>
-								<td>
-									<cfinput type="text" name="fname" id="fname"  bind="{data.fname}" size="25">
-								</td>
-							</tr>
-							<tr>
-								<td width="100" style="font-size: 10px;">
-									Last Name:
-								</td>
-								<td>
-									<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" size="25">
-								</td>
-							</tr>
-							<tr>
-								<td width="100" style="font-size: 10px;">
-									Name:
-								</td>
-								<td>
-									<cfinput type="text" name="name" id="name"  bind="{data.user_name}" size="25">
-								</td>
-							</tr>
+				<cfinput type="hidden" name="pk_purchases_consignments" id="pk_purchases_consignments" bind="{data.pk_purchases_consignments}">
+				<table border = "0" width = "500" cellpadding = "1" cellspacing = "0" class="editBox">
+					<tr>
+						<td>
+							<table border = "0" width = "100%" cellpadding = "1" cellspacing = "0">
+								<tr>
+									<td width="100" style="font-size: 10px;">
+										First Name:
+									</td>
+									<td>
+										<cfinput type="text" name="fname" id="fname"  bind="{data.fname}" maxlength="25" size="25">
+									</td>
+								</tr>
+								<tr>
+									<td width="100" style="font-size: 10px;">
+										Last Name:
+									</td>
+									<td>
+										<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" maxlength="25" size="25">
+									</td>
+								</tr>
+								<tr>
+									<td width="100" style="font-size: 10px;">
+										Name:
+									</td>
+									<td>
+										<cfinput type="text" name="name" id="name"  bind="{data.user_name}" maxlength="25" size="25">
+									</td>
+								</tr>
 
-							<tr>
-								<td style="font-size: 10px;">
-									Phone Type:
-								</td>
-								<td>
-									<select name="PhoneType"  id="PhoneType" style="font-size: 8pt;">
-										<option value="Cell Phone" >Mobile</option>
-										<option value="Home Phone" >Home</option>
-										<option value="Business Phone" >Business</option>
-										<option value="OutsideUS" >Outside US</option>
-									</select>
-								</td>
-							</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										Phone Type:
+									</td>
+									<td>
+										<select name="PhoneType"  id="PhoneType" style="font-size: 8pt;">
+											<option value="Cell Phone" >Mobile</option>
+											<option value="Home Phone" >Home</option>
+											<option value="Business Phone" >Business</option>
+											<option value="OutsideUS" >Outside US</option>
+										</select>
+									</td>
+								</tr>
 
-							<tr>
-								<td style="font-size: 10px;">
-									Phone:
-								</td>
-								<td>
-									<cfinput type="text" name="phone" id="phone"  bind="{data.phone}" size="25">
-									<span id="formatSign">(xxx) xxx-xxxx</span>
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									Email:
-								</td>
-								<td>
-									<cfinput type="text" name="customer_email" id="customer_email"  bind="{data.customer_email}" size="25">
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									Artist:
-								</td>
-								<td>
-									<cfinput type="text" name="artist" id="artist"  bind="{data.artist}" size="25">
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									Title:
-								</td>
-								<td>
-									<cfinput type="text" name="title" id="title"  bind="{data.title}" size="25">
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									Medium:
-								</td>
-								<td>
-									<select name="medium" style="font-size: 8pt;">
-										<option value="">Please Select
-										<cfoutput query="getAllMedium">
-											<option value="#path#">#path#
-										</cfoutput>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									Price:
-								</td>
-								<td>
-									<cfinput type="text" name="size" id="size"  bind="{data.size}" size="30">
-								</td>
-							</tr>
-							<tr>
-								<td valign="top" style="font-size: 10px; white-space: nowrap;">
-									Additional Details
-								</td>
-								<td>
-									<cftextarea name="additional_details" cols="40" rows="2" bind="{data.additional_details}" style="height: 40px;"></cftextarea>
-								</td>
-							</tr>
-							<tr>
-								<td  height="150" colspan="2">
-									<div id="imageDisplay">
-										<div class="img-box">
+								<tr>
+									<td style="font-size: 10px;">
+										Phone:
+									</td>
+									<td>
+										<cfinput type="text" name="phone" id="phone"  bind="{data.phone}" maxlength="25" size="25">
+										<span id="formatSign">(xxx) xxx-xxxx</span>
+									</td>
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										Email:
+									</td>
+									<td>
+										<cfinput type="text" name="customer_email" id="customer_email"  bind="{data.customer_email}" maxlength="25" size="25">
+									</td>
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										Artist:
+									</td>
+									<td>
+										<cfinput type="text" name="artist" id="artist"  bind="{data.artist}" maxlength="25" size="25">
+									</td>
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										Title:
+									</td>
+									<td>
+										<cfinput type="text" name="title" id="title"  bind="{data.title}" maxlength="25" size="25">
+									</td>
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										Medium:
+									</td>
+									<td>
+										<select name="medium" style="font-size: 8pt;">
+											<option value="">Please Select
+											<cfoutput query="getAllMedium">
+												<option value="#path#">#path#
+											</cfoutput>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										Price:
+									</td>
+									<td>
+										<cfinput type="text" name="size" id="size"  bind="{data.size}" maxlength="25" size="30">
+									</td>
+								</tr>
+								<tr>
+									<td valign="top" style="font-size: 10px; white-space: nowrap;">
+										Additional Details
+									</td>
+									<td>
+										<cftextarea name="additional_details" id="additional_details" cols="40" rows="5" bind="{data.additional_details}" maxlength="500"></cftextarea>
+										<div id="additional_detailsCount" class="mb-3">0 / 500 characters</div>
+									</td>
+								</tr>
+								<tr>
+									<td  height="150" colspan="2">
+										<div id="imageDisplay">
+											<div class="img-box">
 
-											<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
-											<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge
+												<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
+												<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge
+											</div>
 										</div>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
-									<cfinput type="button" name="delete" id="delete" value="Delete" onclick="if (confirm('DELETE -- ARE YOU SURE?')){ doEdit('delete');}" />
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
+										<cfinput type="button" name="delete" id="delete" value="Delete" onclick="if (confirm('DELETE -- ARE YOU SURE?')){ doEdit('delete');}" />
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
 			</cfform>
 		</td>
 	</tr>
 </table>
+
+<style>
+	.toast-center {
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%) !important;
+		position: fixed !important;
+		z-index: 999999 !important;
+	}
+
+	#toast-container > .toast {
+		background-color: #ff4da6 !important;
+		color: white !important;
+	}
+</style>
 
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
@@ -275,3 +314,34 @@ function validEntries(frm) {
 	});
 </script>
 
+<script>
+	/* ---------- global counter function ---------- */
+	function updateAdditionalDetailsCounter() {
+		var textarea = document.getElementById('additional_details');
+		var counter = document.getElementById('additional_detailsCount');
+		var maxLength = 500;
+		if (!textarea || !counter) return;
+		var len = textarea.value ? textarea.value.length : 0;
+		counter.textContent = len + ' / ' + maxLength + ' characters';
+
+		// optional red warning
+		if (len > maxLength) {
+			counter.style.color = 'red';
+		} else {
+			counter.style.color = '';
+		}
+	}
+
+	/* ---------- run on page load and attach input handler ---------- */
+	document.addEventListener("DOMContentLoaded", function() {
+		const textarea = document.getElementById("additional_details");
+		const maxLength = 500;
+
+		textarea.addEventListener("input", function() {
+			if (this.value.length > maxLength) {
+				this.value = this.value.substring(0, maxLength); // trim extra text
+			}
+			updateAdditionalDetailsCounter();
+		});
+	});
+</script>

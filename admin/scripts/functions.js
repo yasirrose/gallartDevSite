@@ -503,7 +503,7 @@ function validateLeadForm() {
     return true; // valid
 }
 
-let leadSubmitting = false; 
+let leadSubmitting = false;
 function checkPasswordLead() {
 
 	if (leadSubmitting) return false;
@@ -512,9 +512,9 @@ function checkPasswordLead() {
         return false; // Agar phone number valid nahi to submit stop
     }
 
-	leadSubmitting = true;
-    const submitBtn = document.querySelector('#leadForm input[type="button"]');
-    if (submitBtn) submitBtn.disabled = true;
+	document.getElementById("submitBtn").disabled = true;
+    leadSubmitting = true;
+	
 
 	// remove lname validation
 	/*if(document.leadForm.lname.value == ''){alert('Please enter a last name for the lead')}
@@ -525,9 +525,6 @@ function checkPasswordLead() {
 
 function passwordResponseLead(s) {
 
-	leadSubmitting = false;
-    const submitBtn = document.querySelector('#leadForm input[type="button"]');
-    if (submitBtn) submitBtn.disabled = false;
 
 	if(trim(s)== "true") {
 		document.leadForm.submit();
@@ -535,6 +532,11 @@ function passwordResponseLead(s) {
 		alert('That\'s not a valid password. Please try again.');
 		return false;
 	}
+
+	// document.getElementById("submitBtn").disabled = false;
+    // leadSubmitting = false;
+    // return false;
+
 }
 
 
@@ -576,12 +578,17 @@ function validateForm() {
 }
 
 ////////////   CHECK PASSWORD ON ORDER PAGE ////////////////
-
+let OrderSubmitting = false;
 function checkPasswordOrder() {
+
+	if (OrderSubmitting) return false;
 
 	 if (!validateForm()) {
         return false; // Agar phone number valid nahi to submit stop
     }
+
+	document.getElementById("orderBtny").disabled = true;
+    leadSubmitting = true;
 
 	 var qtyInputs = document.querySelectorAll("input[id^='quantity_']");
 		for (var i = 0; i < qtyInputs.length; i++) {

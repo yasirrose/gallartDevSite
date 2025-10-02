@@ -100,10 +100,13 @@
 		<tr>
 			<td>Price:</td>
 			<td>
-				$<input type="number" min="0" step="0.01" name="priceInput" maxlength="10" id="priceInput" size="10" value="" onkeyup="formatPrice( this );">
+				$<input type="number" min="0" step="0.01" name="priceInput"  id="priceInput" size="10" value="" onkeyup="formatPrice( this ); limitLength(this,10);">
+				<input type="Submit" id="addBtn" value="ADD" style="font-family: Arial; font-size: 11px;" />
+				<input type="Button" value="Close" onclick="window.close();" style="font-family: Arial; font-size: 11px;">
 			</td>
+			
 		</tr>
-		<tr>
+		<!--- <tr>
 			<td align="center" colspan="2" style="font-family: Arial; font-size: 11px;">
 				<input type="Submit" id="addBtn" value="ADD" />
 			</td>
@@ -112,6 +115,14 @@
 			<td align="center" colspan="2" style="padding-top: 10px;">
 				<input type="Button" value="Close" onclick="window.close();" style="font-size: 10px;">
 			</td>
-		</tr>
+		</tr> --->
 	</cfform>
 </table>
+
+<script>
+	function limitLength(el, max) {
+		if (el.value.length > max) {
+			el.value = el.value.slice(0, max);
+		}
+	}
+</script>

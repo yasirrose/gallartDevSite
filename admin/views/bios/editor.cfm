@@ -8,18 +8,23 @@
 	}
 
 	if( form.keyExists( 'fieldnames' ) ) {
-		record.saveBio(
+		result =record.saveBio(
 			pk_bios=form.id
 			,artist=form.txtArtist
 			,bio=form.txtBio
 		);
 
-		writeOutput( '
-			<script>
-				window.opener.location.reload();
-				window.close();
-			</script>
-		' );
+		if (result EQ "exists") {
+            writeOutput("<script>alert('Artist already exists!');</script>");
+        } else if (result EQ "nodata") {
+			writeOutput("<script>alert('Please select the artist or add Bio');</script>");
+		} else if (result EQ "Bio Added") {
+            writeOutput("<script>alert('Bio added successfully'); window.opener.location.reload(); window.close();</script>");
+        } else if (result EQ "Bio Updated") {
+            writeOutput("<script>alert('Bio updated successfully'); window.opener.location.reload(); window.close();</script>");
+        } else {
+            writeOutput("<script>alert('Error: #result#');</script>");
+        }
 	}
 </cfscript>
 

@@ -15,6 +15,13 @@
 	<cfdefaultcase>
 	
 		<cfscript>
+
+			// selectedLetter = "";
+
+			// if ( structKeyExists(url, "letter") AND len(url.letter) ) {
+			// 	selectedLetter = trim(url.letter);
+			// }
+
 			getAllArtists			= application.objectFactoryAdmin.getInstance('artists').getAllArtists();
 			getHighlightedArtists	= application.objectFactoryAdmin.getInstance('artists').getHighlightedArtists();
 		</cfscript>

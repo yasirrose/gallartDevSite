@@ -75,7 +75,7 @@
          <!--- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- Ensure jQuery is loaded first --> --->
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
          <script language="JavaScript" src="/js/slimbox2.js"></script>
-         <link href="./css/slimbox2.css" rel="stylesheet" type="text/css">
+         <link href="/css/slimbox2.css" rel="stylesheet" type="text/css">
          <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
          <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
          <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -220,7 +220,6 @@
       <cfelse>
          <cflocation url="/404" addtoken="No">
       </cfif>
-      <!--- <cfdump var="#productinfo#" abort="true"> --->
       <cfquery name="bio_info" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
          SELECT * from bios
          WHERE artist = '#productinfo.manufacturer#'
@@ -408,13 +407,13 @@
                                                          <div>
                                                             <div class="img-sec">
                                                               
-                                                                  <cfif fileexists("http://23.20.226.157/img/#productinfo.uid#.jpg")>
+                                                                  <cfif fileexists("http://#server_name#/img/#productinfo.uid#.jpg")>
                                                                      <a data-fancybox="slider-gallery" data-src="/img/#productinfo.uid#.jpg?x=randrange(1,99)" data-caption="Main Image">
                                                                         <img src="/img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="slider-gallery-img">
                                                                     </a>
                                                                   <cfelse>
-                                                                     <a data-fancybox="slider-gallery" data-src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg" data-caption="Main Image">
-                                                                     <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+                                                                     <a data-fancybox="slider-gallery" data-src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg" data-caption="Main Image">
+                                                                     <img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
                                                                      </a>
                                                                   </cfif>
                                           
@@ -428,7 +427,7 @@
 
 
 
-                                                                        <cfif fileexists("http://23.20.226.157/img/#additionalImage#")>
+                                                                        <cfif fileexists("http://#server_name#/img/#additionalImage#")>
 
                                                                            
                                                                            <a data-fancybox="slider-gallery" data-src="/img/#additionalImage#?x=randrange(1,99)" data-caption="Main Image">
@@ -437,8 +436,8 @@
                                                                            
                                                                            
                                                                         <cfelse>
-                                                                           <a data-fancybox="slider-gallery" data-src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg" data-caption="Main Image">
-                                                                              <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+                                                                           <a data-fancybox="slider-gallery" data-src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg" data-caption="Main Image">
+                                                                              <img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
                                                                               </a>
                                                                         </cfif>
 
@@ -475,10 +474,10 @@
                                                             <div class="nav-slide-item">
                                                                <div class="img-sec">
                                                                   
-                                                                     <cfif fileexists("http://23.20.226.157/img/#productinfo.uid#.jpg") >
+                                                                     <cfif fileexists("http://#server_name#/img/#productinfo.uid#.jpg") >
                                                                         <img src="/img/#productinfo.uid#.jpg?x=randrange(1,99)" alt="gallery-img">
                                                                      <cfelse>
-                                                                        <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+                                                                        <img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
                                                                      </cfif>
                                                                </div>
                                                             </div>
@@ -490,10 +489,10 @@
                                                                <div>
                                                                   <div class="nav-slide-item">
                                                                      <div class="img-sec">
-                                                                        <cfif fileexists("http://23.20.226.157/img/#additionalImage#")>
+                                                                        <cfif fileexists("http://#server_name#/img/#additionalImage#")>
                                                                            <img src="/img/#additionalImage#?x=randrange(1,99)" alt="gallery-img">
                                                                         <cfelse>
-                                                                           <img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+                                                                           <img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
                                                                         </cfif>
                                                                      </div>
                                                                   </div>
@@ -541,13 +540,14 @@
                                                          <cfset updatedName = "">
 
                                                          <cfloop index="word" array="#words#">
-                                                            <!--- Check if the word (before any punctuation) is a Roman numeral --->
-                                                            <cfif ListFindNoCase(romanNumerals, REReplace(word, "[^a-zA-Z]", "", "ALL"))>
-                                                               <!--- Preserve the Roman numeral as is --->
+                                                            <cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+                                                
+                                                            <cfif cleanWord EQ "FS">
+                                                               <!--- Preserve "FS" in uppercase --->
                                                                <cfset updatedName = updatedName & " " & UCase(word)>
                                                             <cfelse>
-                                                               <!--- Capitalize the word (convert to Title Case) --->
-                                                               <cfset updatedName = updatedName & " " & REReplace(word, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+                                                               <!--- Keep the original case of other words --->
+                                                               <cfset updatedName = updatedName & " " & word>
                                                             </cfif>
                                                          </cfloop>
 
@@ -559,35 +559,13 @@
                                                    </div>
                                                   
 
-                                                   <!--- <cfif productinfo.retail_price gt 0 >
-
-                                                      <p style="font-size: 20px;">
-                                                      <cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
-
-                                                         <cfif application.showSalePrice EQ 1>
-
-                                                            <del>#DollarFormat(productinfo.retail_price)# </del> &nbsp;
-                                                             <b>
-                                                               <span style="color: ##ff0000;">
-                                                                  #DollarFormat(productinfo.special_price)# Sale
-                                                               </span>
-                                                            </b>
-                                                         </cfif>
-
-                                                      <cfelseif productinfo.gallery_price gt 0>
-                                                         
-                                                         <del>#DollarFormat(productinfo.retail_price)# </del> &nbsp;
-                                                        <b> #DollarFormat(productinfo.gallery_price)# </b>
-                                                      </cfif>
-
-                                                   </p>
-                                                   </cfif> --->
+                                                  
 
 
                                                    <p style="font-size: 20px">
                                                       <cfif retail_price gt 0 and retail_price gt gallery_price>
                                              
-                                                         <cfif gallery_price gt 0 and  gallery_price gt special_price>
+                                                         <cfif gallery_price gt 0 and  gallery_price gte special_price>
                                                 
                                                             <cfif closeout eq 1 and special_price gt 0 >
                                                                <del>#DollarFormat(gallery_price)#</del>
@@ -608,6 +586,11 @@
                                                             <!--- <span style="color: red;">
                                                                   Price On Request
                                                             </span> --->
+                                                            <cfif gallery_price neq 0 and gallery_price LT special_price>
+                                                               <del>#DollarFormat(retail_price)# </del>
+                                                               &nbsp; 
+                                                               <b> #DollarFormat(gallery_price)# </b>
+                                                            <cfelse>
                                                             <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
                                                                <del>#DollarFormat(retail_price)# </del>
                                                                &nbsp; 
@@ -619,6 +602,7 @@
                                                 
                                                                   <cfelse>
                                                                      <b> #DollarFormat(retail_price)# </b>
+                                                               </cfif>
                                                             </cfif>
                                                 
                                                          </cfif>
@@ -630,7 +614,19 @@
                                                           
                                                             <cfif retail_price neq 0 and retail_price LT gallery_price >
                                                                
-                                                               <b>#DollarFormat(retail_price)#</b>
+                                                               <cfif closeout eq 1 and special_price gt 0 and special_price LT retail_price>
+                                                                  <del>#DollarFormat(retail_price)# </del>
+                                                                  &nbsp; 
+                                                                     <b>
+                                                                        <span style="color: ##ff0000;">
+                                                                        #DollarFormat(special_price)# 
+                                                                        </span>
+                                                                     </b>
+                                                                  <cfelse>
+                                                                     <b>#DollarFormat(retail_price)#</b>
+                                                                  </cfif>
+
+                                                                  <!--- <b>#DollarFormat(retail_price)#</b> --->
                                                              <cfelse>
                                                                <cfif closeout eq 1 and special_price gt 0 and special_price LT gallery_price>
                                                                   
@@ -655,8 +651,7 @@
 
 
                                                    <div class="product-description-sec">
-                                                      <!--- <cfset medium = replace(RemoveChars(path,len(path), 1),":","/","all")>
-                                                      <cfdump var="#medium#"> --->
+                                                    
                                                       <cfif path gt 0>
                                                          <cfset c_medium = REReplace(path, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
                                                          <p> <b>Medium</b>: <span>#path#</span></p>
@@ -664,12 +659,12 @@
                                                       <cfif isNumeric(productinfo.year) AND productinfo.year GT 0>
                                                          <p> <b>Date</b>: <span>#productinfo.year#</span></p>
                                                          <cfelseif len(trim(productinfo.year))>
-                                                            <!-- Handle cases like "1980/81" or invalid year strings -->
+                                                            
                                                             <p> <b>Date</b>: <span>#htmlEditFormat(productinfo.year)#</span></p>
                                                          </cfif>
                                                       
                                                       <cfif edition gt 0>
-                                                         <!--- <cfset C_edition = REReplace(edition, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+                                                       
                                                          <cfset updatedEdition = REReplace(edition, "\bOF\b", "Of", "ALL")>
                                                          <p> <b>Edition</b>: <span>#updatedEdition#</span></p>
                                                       </cfif>
@@ -677,8 +672,7 @@
                                                          <p> <b>Size</b>: <span>#Replace(productinfo.size, "X", "x", "all")# inches</span></p>
                                                       </cfif>
                                                       <cfif len(trim(caption)) gt 0>
-                                                         <!--- <cfset c_caption = REReplace(caption, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
-                                                         <!-- Replace periods followed by spaces with a period and a line break -->
+                                                         
                                                          
                                                          <p>
                                                             <b>Additional Details</b>: <span>#trim(caption)#</span>
@@ -732,12 +726,7 @@
                                                                      </button>
 
                                                                     </cfif>
-                                                                     <!--- <button type="button" class="flex-btn" id="addWishButton" onclick="addWishListRecord()">
-                                                                        <i class="fa fa-heart" id="hearticon"  ></i>
-                                                                        <span>
-                                                                           Add to wishlist
-                                                                        </span>
-                                                                     </button> --->
+                                                                     
                                                                   </cfform>
 
                                                                   
@@ -759,62 +748,6 @@
                                                                })
                                                             });
                                                          </script>
-
-
-
-
-                                                        
-                                                         <!--- <script>
-                                                            document.addEventListener("DOMContentLoaded", function() {
-                                                                // Retrieve `pid` from the URL dynamically using ColdFusion
-                                                                const pid = "<cfoutput>#url.pid#</cfoutput>"; 
-                                                        
-                                                                // Check if the user is logged in
-                                                                const isLoggedIn = "<cfoutput>#structKeyExists(session, 'sellerinfo')#</cfoutput>" === "YES";
-                                                        
-                                                                // If logged in, get `pk_user`
-                                                                let pk_user = null;
-                                                                <cfif structKeyExists(session, 'sellerinfo')>
-                                                                    pk_user = "<cfoutput>#session.sellerinfo.pk_users#</cfoutput>";
-                                                                </cfif>
-                                                        
-                                                                // Function to get wishlist from cookies
-                                                                function getWishlist() {
-                                                                    const existingCookie = document.cookie.split('; ').find(row => row.startsWith('AddWishListlistItem='))?.split('=')[1];
-                                                                    return existingCookie ? JSON.parse(decodeURIComponent(existingCookie)) : [];
-                                                                }
-                                                        
-                                                                // Function to save wishlist to cookies
-                                                                function saveWishlist(wishlist) {
-                                                                    document.cookie = `AddWishListlistItem=${encodeURIComponent(JSON.stringify(wishlist))}; path=/; max-age=${7 * 24 * 60 * 60};`;
-                                                                }
-                                                        
-                                                                // Click event when user is logged in
-                                                                if (isLoggedIn) {
-                                                                    document.getElementById("addWishButton").addEventListener("click", function() {
-                                                                        let wishlist = getWishlist();
-                                                        
-                                                                        // Check if an entry with both `pid` and `pk_user` exists
-                                                                        const entryExists = wishlist.some(item => item.pid === pid && item.pk_user === pk_user);
-                                                        
-                                                                        if (entryExists) {
-                                                                            alert("Already in wishlist!");
-                                                                        } else {
-                                                                            wishlist.push({ pid: pid, pk_user: pk_user }); // Add `pid` & `pk_user`
-                                                                            saveWishlist(wishlist);
-                                                                            alert("Added to wishlist!");
-                                                                        }
-                                                                    });
-                                                                } else {
-                                                                    // If user is not logged in, show an alert
-                                                                    document.getElementById("addWishButtonNotLoggedIn").addEventListener("click", function() {
-                                                                        alert("Please first login");
-                                                                    });
-                                                                }
-                                                            });
-                                                        </script> --->
-                                                        
-                                                       
                                                         
                                                          
                                                          <div class="modal fade share-modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -1087,11 +1020,11 @@
                                                                   </cfif>
                                                                   <cfelse>
                                                                   <cfoutput>
-                                                                     <CFFORM ACTION="#fullURL#" METHOD="POST" name="guestFrm" onsubmit="return validateForm()">
+                                                                     <CFFORM ACTION="#fullURL#" METHOD="POST" name="guestFrm" onsubmit="return validateForm(event)">
                                                                         <input type="hidden" name="submitted" value="1" />
                                                                         <input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
                                                                         <div class="top-heading">
-                                                                           <!--- <h3>CONTACT US</h3> --->
+                                                                          
                                                                         </div>
                                                                         <cfif FORM.captchaError>
                                                                            <p style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</p>
@@ -1105,35 +1038,20 @@
                                                                            <span style="color: ##ff0000;">* Required</span></p>
                                                                        
                                                                         <div class="input-form">
-                                                                           <!--- <div class="input-field">
-                                                                              <!--- <label><FONT color="000000"><b>FIRST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
-                                                                              <cfinput type="text" id="fname" name="fname" placeholder="Enter your First Name*" value="#form.fname#" >
-                                                                              <!--- <span class="star">*</span> --->
-                                                                              <span class="error-message" id="fnameError"></span>
-                                                                           </div>
-                                                                           <div class="input-field">
-                                                                              <!--- <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
-                                                                              <cfinput type="text" name="lname" value="#form.lname#" placeholder="Enter your Last Name*" id="lname">
-                                                                              <!--- <span class="star">*</span> --->
-                                                                              <span class="error-message" id="lnameError"></span>
-                                                                           </div> --->
+                                                                           
 
                                                                            <div class="input-field">
-                                                                              <!--- <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
-                                                                              <cfinput type="text" name="name" value="#form.name#" placeholder="Enter your Name*" id="name">
-                                                                              <!--- <span class="star">*</span> --->
+                                                                             <cfinput type="text" name="name" maxLength="30" value="#form.name#" placeholder="Enter your Name*" id="name">
                                                                               <span class="error-message" id="nameError"></span>
                                                                            </div>
 
                                                                            <div class="input-field">
-                                                                              <!--- <label><FONT color="000000"><b>E-MAIL ADDRESS &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
-                                                                              <cfinput type="text" name="email" value="#form.email#" placeholder="Enter your Email Address*" id="email">
-                                                                              <!--- <span class="star">*</span> --->
+                                                                             <cfinput type="text" name="email" maxLength="30" value="#form.email#" placeholder="Enter your Email Address*" id="email">
+                                                                              
                                                                               <span class="error-message" id="emailError"></span>
                                                                            </div>
 
                                                                            <div class="input-field">
-                                                                               <!--- <label><b>Phone Type:<span style="color: ##ff0000;">*</span></b></label> --->
                                                                                  <select name="phoneType" id="phoneType" >
                                                                                     <option value="Cell Phone">Cell Phone</option>
                                                                                     <option value="Home Phone">Home Phone</option>
@@ -1144,28 +1062,18 @@
                                                                            </div>
 
                                                                            <div class="input-field">
-                                                                              <!--- <label><FONT color="000000"><b>PHONE (xxx) xxx-xxxx</b></FONT></label> --->
-                                                                              <cfinput type="text" name="phone" value="#form.phone#" required="No" placeholder="Enter your Phone Number" id="phone">
+                                                                             <cfinput type="text" name="phone" maxLength="20" value="#form.phone#" required="No" placeholder="Enter your Phone Number" id="phone">
                                                                               <span id="formatSign">(xxx) xxx-xxxx</span>
                                                                               <span class="error-message" id="phoneError"></span>
                                                                            </div>
-
-                                                                           <!--- <div class="input-field">
-                                                                              <!--- <label><FONT color="000000"><b>PHONE OUTSIDE THE US</b></FONT></label> --->
-                                                                              <cfinput type="text" name="otherphone" value="#form.otherphone#" placeholder="Enter your Outside Phone Number" required="No" >
-                                                                           </div> --->
-
+                                                                     
                                                                            <div class="input-field">
-                                                                              <!--- <label><FONT color="000000"><b>COMMENTS</b></FONT></label> --->
-                                                                              <TEXTAREA NAME="comments" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
+                                                                             
+                                                                              <TEXTAREA NAME="comments" id="comments" maxLength="500" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
+                                                                              <div id="charCount" class="mb-3">0 / 500 characters</div>
                                                                            </div>
 
-                                                                           <!--- <div class="input-field">
-                                                                              <cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier" fontsize="28"/>
-                                                                              <label><FONT color="000000"><b>Please enter the characters in the image above: <span style="color:##ff0000;">*</span></b></FONT></label>
-                                                                              <cfinput type="text" name="captcha" id="captcha">
-                                                                              <span class="error-message" id="captchaError"></span>
-                                                                           </div> --->
+                                                                          
 
                                                                            <div class="input-field pt-3">
                                                                               <div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
@@ -1173,7 +1081,7 @@
                                                                            </div>
 
                                                                            <div class="input-button">
-                                                                              <button type="submit" class="SeeMore">Send</button>
+                                                                              <button type="submit" class="SeeMore" id="submitBtn">Send</button>
                                                                               <button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
                                                                            </div>
                                                                         </div>
@@ -1312,8 +1220,7 @@
            var wishlist_pk_id = id;
            var userID = $("#User_ID").val();
 
-           // console.log('product_id: ' + productID)
-           // console.log('User_ID: ' + userID)
+           
            console.log('wishlist_pk_idddddd: ' + wishlist_pk_id)
 
            $.ajax({
@@ -1364,34 +1271,23 @@
          }
 
 
-         function validateForm() {
+         function validateForm(e) {
             let isValid = true;
             
             // Clear previous error messages
             document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
             
-            // Get form field values
-            // const fname = document.getElementById('fname').value.trim();
-            // const lname = document.getElementById('lname').value.trim();
+            
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
-            // const captcha = document.getElementById('captcha').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const phoneType = document.querySelector("[name='phoneType']").value;
 
             const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+            const submitButton = document.getElementById('submitBtn');
             
-            // Validate FIRST NAME
-            // if (!fname) {
-            //    document.getElementById('fnameError').textContent = 'Please fill in your first name.';
-            //    isValid = false;
-            // }
             
-            // // Validate LAST NAME
-            // if (!lname) {
-            //    document.getElementById('lnameError').textContent = 'Please fill in your last name.';
-            //    isValid = false;
-            // }
             var recaptcha = grecaptcha.getResponse();
             console.log(recaptcha.length);
             
@@ -1415,10 +1311,7 @@
                isValid = false;
             }
 
-            // if (phone && !phoneRegex.test(phone)) {
-            //    document.getElementById('phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
-            //    isValid = false;
-            // }
+            
 
             if (!phoneType) {
                document.getElementById('phoneTypeError').textContent = 'Please Select phone type';
@@ -1435,11 +1328,23 @@
                }
             }
 
-            // Validate CAPTCHA
-            // if (!captcha) {
-            //    document.getElementById('captchaError').textContent = 'Please enter the characters in the image.';
-            //    isValid = false;
-            // }
+            if (!isValid) {		
+               return false;
+            } else {
+               
+               submitButton.disabled = true;
+               submitButton.innerText = "Submitting…";
+
+               // prevent default submit first
+               e.preventDefault();
+
+               // Now submit form manually after disabling button
+               setTimeout(() => {
+                  document.forms['guestFrm'].submit();
+               }, 10);
+
+               return false; // stop default submit
+            }
             
             return isValid;
          }
@@ -1452,6 +1357,11 @@
 				const phoneInput = document.getElementById("phone");
 				const phoneType = document.getElementById("phoneType");
 				const formatSign = document.getElementById("formatSign");
+
+            if (!phoneInput || !phoneType || !formatSign) {
+					// Elements not on this page → exit
+					return;
+				}
 
 				function toggleFormatSign() {
 					if (phoneType.value === "OutsideUS") {
@@ -1489,6 +1399,27 @@
 				});
 			});
 
+		</script>
+
+      <script>
+			document.addEventListener("DOMContentLoaded", function() {
+				const textarea = document.getElementById("comments");
+				const counter = document.getElementById("charCount");
+				const maxLength = 500;
+
+				if (textarea && counter) {
+               function updateCount() {
+                     const currentLength = textarea.value.length;
+                     counter.textContent = `${currentLength} / ${maxLength} characters`;
+               }
+
+               // Update counter initially
+               updateCount();
+
+               // Update on input
+               textarea.addEventListener("input", updateCount);
+            }
+			});
 		</script>
 
 
@@ -1537,15 +1468,22 @@
       </style>
 
       <script>
-         document.getElementById("resetBtn-captcha").addEventListener("click", function() {
-            if (grecaptcha) {
-                  grecaptcha.reset(); // Reset the reCAPTCHA
-            }
-            // Also clear error messages if needed
-            document.querySelectorAll('.error-message').forEach(function(el){
-                  el.innerText = '';
-            });
-         });
+         document.addEventListener("DOMContentLoaded", function() {
+				const resetBtn = document.getElementById("resetBtn-captcha");
+
+				if (resetBtn) {
+					resetBtn.addEventListener("click", function() {
+						if (typeof grecaptcha !== "undefined") {
+							grecaptcha.reset(); // Reset the reCAPTCHA
+						}
+
+						// Also clear error messages if needed
+						document.querySelectorAll('.error-message').forEach(function(el) {
+							el.innerText = '';
+						});
+					});
+				}
+			});
       </script>
    </body>
 </html>

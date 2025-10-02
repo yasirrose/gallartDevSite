@@ -231,9 +231,50 @@
 
 												<cftry>
 
+													<!--- <script>
+																$(document).ready(function () {
+																	toastr.options = {
+																		closeButton: true,
+																		debug: false,
+																		newestOnTop: false,
+																		progressBar: true,
+																		positionClass: 'toast-center-center', // custom class
+																		preventDuplicates: false,
+																		showDuration: '1000',
+																		hideDuration: '1000',
+																		timeOut: '5000',
+																		extendedTimeOut: '1000',
+																		showEasing: 'swing',
+																		hideEasing: 'linear',
+																		showMethod: 'fadeIn',
+																		hideMethod: 'fadeOut'
+																	};
+
+																	toastr.success('Your Record is added successfully.');
+																});
+
+																
+															</script>
+
+															<style>
+																/* Force center positioning */
+																#toast-container.toast-center-center {
+																	top: 50% !important;
+																	left: 50% !important;
+																	transform: translate(-50%, -50%) !important;
+																	position: fixed !important;
+																	margin: 0 auto;
+																}
+
+																/* Custom pink + white */
+																#toast-container > .toast-success {
+																	background-color: #ff4da6 !important;
+																	color: #fff !important;
+																	font-weight: bold;
+																}
+															</style>
 													
-													
-													<!--- <cfdump var="#form#" abort="true"> --->
+													<cfdump var="test 1" abort="true"> --->
 
 													<cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
 														<cfset phone = form.phone>
@@ -275,7 +316,7 @@
 																		'debug': false,
 																		'newestOnTop': false,
 																		'progressBar': true,
-																		'positionClass': 'toast-top-right',
+																		'positionClass': 'toast-center-center',
 																		'preventDuplicates': false,
 																		'showDuration': '1000',
 																		'hideDuration': '1000',
@@ -286,10 +327,29 @@
 																		'showMethod': 'fadeIn',
 																		'hideMethod': 'fadeOut',
 																	}
+																	toastr.success('Your Record is added successfully.');
 																});
 
-																toastr.success('Your Record is added successfully.');
+																
 															</script>
+
+															<style>
+																/* Force center positioning */
+																#toast-container.toast-center-center {
+																	top: 40% !important;
+																	left: 50% !important;
+																	transform: translate(-50%, -50%) !important;
+																	position: fixed !important;
+																	margin: 0 auto;
+																}
+
+																/* Custom pink + white */
+																#toast-container > .toast-success {
+																	background-color: #ff4da6 !important;
+																	color: #fff !important;
+																	font-weight: bold;
+																}
+															</style>
 
 													
 											  
@@ -337,7 +397,7 @@
 										   </cfif>
 										 <cfelse>
 											<cfoutput>
-												<CFFORM ACTION="/contact-us" METHOD="POST" name="guestFrm" onsubmit="return validateForm()">
+												<CFFORM ACTION="/contact-us" METHOD="POST" name="guestFrm" onsubmit="return validateForm(event)">
 													<input type="hidden" name="submitted" value="1" />
 													<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
 													<div class="top-heading">
@@ -378,7 +438,7 @@
 															<div class="col-md-6">
 																<div class="input-field">
 																<!--- <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
-																<cfinput type="text" size=40 maxsize=50 name="name" id="name" placeholder="Enter your Name*" value="#form.name#" >
+																<cfinput type="text" size=40 maxsize=50 maxLength="30" name="name" id="name" placeholder="Enter your Name*" value="#form.name#" >
 																<!--- <span class="star">*</span> --->
 																<span class="error-message" id="nameError"></span>
 																</div>
@@ -387,7 +447,7 @@
 															<div class="col-md-6">
 																<div class="input-field">
 																
-																<cfinput type="text" size=40 maxsize=50 name="email" placeholder="Enter your Email Address*" value="#form.email#" >
+																<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" value="#form.email#" >
 																
 																<span class="error-message" id="emailError"></span>
 																</div>
@@ -407,7 +467,7 @@
 															<div class="col-md-6">
 																<div class="input-field">
 																
-																<cfinput type="text" size=40 maxsize=50 name="phone" placeholder="Enter your Phone Number" value="#form.phone#" >
+																<cfinput type="text" size=40 maxsize=50 maxLength="20" name="phone" placeholder="Enter your Phone Number" value="#form.phone#" >
 																<span id="formatSign">(xxx) xxx-xxxx</span>
 																<span class="error-message" id="phoneError"></span>
 																</div>
@@ -416,7 +476,8 @@
 														</div>
 														<div class="input-field">
 														<!--- <label><FONT color="000000"><b>COMMENTS</b></FONT></label> --->
-														<TEXTAREA NAME="comments" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
+														<TEXTAREA NAME="comments" id="comments" maxlength="500" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
+														 <div id="charCount" class="mb-3">0 / 500 characters</div>
 														</div>
 
 														<!--- <div class="input-field">
@@ -432,7 +493,7 @@
 														</div>
 
 														<div class="input-button">
-														<button type="submit" class="SeeMore">Send</button>
+														<button type="submit" id="submitBtn" class="SeeMore">Send</button>
 														<button type="reset" class="SeeMore">Reset</button>
 														</div>
 													</div>
@@ -460,7 +521,7 @@
 	   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 	   <script>
-		 function validateForm() {
+		 function validateForm(e) {
 			let isValid = true;
 			
 			// Clear previous error messages
@@ -476,6 +537,8 @@
 			// const captcha = document.getElementById('captcha').value.trim();
 
 			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+			const submitButton = document.getElementById('submitBtn');
 
 			var recaptcha = grecaptcha.getResponse();
 			console.log(recaptcha.length);
@@ -527,6 +590,26 @@
 					}
 				}
 			}
+
+			if (!isValid) {		
+				return false;
+			} else {
+				
+				submitButton.disabled = true;
+				submitButton.innerText = "Submitting…";
+
+				// prevent default submit first
+				e.preventDefault();
+
+				// Now submit form manually after disabling button
+				setTimeout(() => {
+					document.forms['guestFrm'].submit();
+				}, 10);
+
+				return false; // stop default submit
+			}
+			
+			
 			
 			// Validate CAPTCHA
 			// if (!captcha) {
@@ -582,6 +665,26 @@
 
 		</script>
 
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				const textarea = document.getElementById("comments");
+				const counter = document.getElementById("charCount");
+				const maxLength = 500;
+
+				function updateCount() {
+				const currentLength = textarea.value.length;
+				counter.textContent = `${currentLength} / ${maxLength} characters`;
+				}
+
+				// Update counter initially
+				updateCount();
+
+				// Update on input
+				textarea.addEventListener("input", updateCount);
+			});
+		</script>
+
 		<style>
 			.error-message {
 				color: #ff0000;
@@ -600,6 +703,8 @@
 				right: 0
 			}
 		</style>
+
+	
 
 	</body>
  </html>

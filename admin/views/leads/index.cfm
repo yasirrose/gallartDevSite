@@ -36,7 +36,7 @@
 			First Name:
 		</td>
 		<td>
-			<cfinput name="fname" id="fname" autosuggest="cfc:admin.models.leads.searchLeadsByFname({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" align="left" style="z-index:1000;" tabindex="0">
+			<cfinput name="fname" id="fname" autosuggest="cfc:admin.models.leads.searchLeadsByFname({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="30" size="50" align="left" style="z-index:1000;" tabindex="0">
 			<!--- <cfinput type="text" name="fname" id="fname"  size="30"> --->
 		</td>
 	</tr>
@@ -45,7 +45,7 @@
 			<!---<span style="color: #ff0000;">*</span>&nbsp;--->Last Name<!--- (required):--->
 		</td>
 		<td>
-			<cfinput name="lname" id="lname" autosuggest="cfc:admin.models.leads.searchLeadsByLname({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" align="left" style="z-index:1000;" tabindex="0">
+			<cfinput name="lname" id="lname" autosuggest="cfc:admin.models.leads.searchLeadsByLname({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" maxlength="30" align="left" style="z-index:1000;" tabindex="0">
 			<!--- cfinput type="text" name="lname" id="lname"  size="30"> --->
 		</td>
 	</tr>
@@ -54,7 +54,7 @@
 			Email:
 		</td>
 		<td>
-			<cfinput name="leadEmail" id="leadEmail" autosuggest="cfc:admin.models.leads.searchLeadsByEmail({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" align="left" style="z-index:1000;" tabindex="0">
+			<cfinput name="leadEmail" id="leadEmail" autosuggest="cfc:admin.models.leads.searchLeadsByEmail({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="30" size="50" align="left" style="z-index:1000;" tabindex="0">
 			<!--- <cfinput type="text" name="leadEmail" id="leadEmail"  size="30"> --->
 		</td>
 	</tr>
@@ -115,7 +115,7 @@
 		</td>
 		<td>
 
-			<input type="text" name="PhoneNumber" id="PhoneNumber"  size="50" >
+			<input type="text" name="PhoneNumber" id="PhoneNumber" maxlength="20" size="50" >
 			<span id="formatSign">(xxx) xxx-xxxx</span>
 		</td>
 	</tr>
@@ -172,7 +172,7 @@
 			Best Time To Call:
 		</td>
 		<td>
-			<cfinput type="text" name="besttime" id="besttime" size="30">
+			<cfinput type="text" name="besttime" id="besttime" maxlength="30" size="30">
 		</td>
 	</tr>
 
@@ -229,7 +229,7 @@
 			Address:
 		</td>
 		<td>
-			<cfinput type="text" name="address" id="address" size="30">
+			<cfinput type="text" name="address" id="address" maxlength="30" size="30">
 		</td>
 	</tr>
 	<tr>
@@ -237,7 +237,7 @@
 			City:
 		</td>
 		<td>
-			<cfinput type="text" name="city" id="city" size="30">
+			<cfinput type="text" name="city" id="city" maxlength="30" size="30">
 		</td>
 	</tr>
 
@@ -257,7 +257,7 @@
 
 	<tr id="outSideState" style="display:none;">
 		<td>State/Province:</td>
-		<td><input type="text" name="State_Outside" id="State_Outside" size="50"></td>
+		<td><input type="text" name="State_Outside" id="State_Outside" maxlength="30" size="50"></td>
 	</tr>
 
 
@@ -289,14 +289,14 @@
 			Zip Code:
 		</td>
 		<td>
-			<cfinput type="text" name="zip" id="zip" size="30" value="">
+			<cfinput type="text" name="zip" id="zip" size="30" maxlength="10" value="">
 		</td>
 	</tr>
 
 
 	<tr id="outSideCountry" style="display:none;">
 		<td>Country:</td>
-		<td><input type="text" name="Country" id="Country" size="50" ></td>
+		<td><input type="text" name="Country" id="Country" size="50" maxlength="30" ></td>
 	</tr>
 
 
@@ -305,7 +305,7 @@
 			Company:
 		</td>
 		<td>
-			<cfinput type="text" name="company" id="company" size="30" value="">
+			<cfinput type="text" name="company" id="company" size="30" maxlength="30" value="">
 		</td>
 	</tr>
 	<tr>
@@ -313,7 +313,7 @@
 			Website:
 		</td>
 		<td>
-			<cfinput type="text" name="website" id="website" size="30" value="">
+			<cfinput type="text" name="website" id="website" size="30" maxlength="30" value="">
 		</td>
 	</tr>
 	<tr>
@@ -321,7 +321,8 @@
 			Artists:
 		</td>
 		<td>
-			<cftextarea name="artists" cols="40" rows="3"></cftextarea> 
+			<cftextarea name="artists" id="artists" maxlength="100" cols="40" rows="3"></cftextarea>
+			<div id="artistsCount" class="mb-3">0 / 100 characters</div> 
 		</td>
 	</tr>
 	<tr>
@@ -329,7 +330,8 @@
 			Titles:
 		</td>
 		<td>
-			<cftextarea name="titles" cols="40" rows="3"></cftextarea> 
+			<cftextarea name="titles" id="titles" maxlength="100" cols="40" rows="3"></cftextarea>
+			<div id="titlesCount" class="mb-3">0 / 100 characters</div> 
 		</td>
 	</tr>
 	<tr>
@@ -337,7 +339,8 @@
 			Comments:
 		</td>
 		<td>
-			<cftextarea name="notes" cols="40" rows="3"></cftextarea> 
+			<cftextarea name="notes" id="notes" maxlength="500" cols="40" rows="3"></cftextarea>
+			<div id="notesCount" class="mb-3">0 / 500 characters</div> 
 		</td>
 	</tr>
 	<tr>
@@ -371,7 +374,7 @@
 	<tr>
 		<td colspan="2">
 			<input type="Reset" value="Reset">
-			<input type="Button" value="Submit" onClick="checkPasswordLead(); return false;" >
+			<input type="Button" value="Submit" id="submitBtn" onClick="checkPasswordLead(); return false;" >
 		</td>
 	</tr>
 	
@@ -404,6 +407,28 @@
 
 		// Run on page load if form already has a value
 		window.onload = toggleAddressFields;
+	</script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			function setupCounter(textareaId, counterId, maxLength) {
+				const textarea = document.getElementById(textareaId);
+				const counter = document.getElementById(counterId);
+
+				function updateCount() {
+					const length = textarea.value.length;
+					counter.textContent = `${length} / ${maxLength} characters`;
+				}
+
+				textarea.addEventListener("input", updateCount);
+				updateCount(); // initialize
+			}
+
+			// Apply counters
+			setupCounter("artists", "artistsCount", 100);
+			setupCounter("titles", "titlesCount", 100);
+			setupCounter("notes", "notesCount", 500);
+		});
 	</script>
 
 

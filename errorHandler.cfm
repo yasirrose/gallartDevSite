@@ -7,11 +7,11 @@
     password="ylzwtvepstcsammm"
     port="587"
     useTLS="true">
-Event: #error.diagnostics#
-Message: #error.message#
-Detail: #error.detail#
-Template: #error.template#
-Browser: #cgi.http_user_agent#
+Event: #error.diagnostics# <br>
+Message: #error.message# <br>
+Detail: #error.detail# <br>
+Template: #error.template# <br>
+Browser: #cgi.http_user_agent# <br>
 IP: #cgi.remote_addr#
 </cfmail>
 

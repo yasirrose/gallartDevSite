@@ -1,5 +1,20 @@
 <cfoutput>
-	<form method="POST" action="index.cfm?event=artists.processHighlightArtists">
+
+	<!--- <form method="GET" action="index.cfm">
+		<input type="hidden" name="event" value="artists">
+
+		<label for="artistLetter">Filter by Alphabet:</label>
+		<select name="letter" id="artistLetter" onchange="this.form.submit()">
+			<option value="">-- All --</option>
+			<cfloop from="65" to="90" index="i"> <!--- ASCII A–Z --->
+				<cfset currentLetter = chr(i)>
+				<option value="#currentLetter#" <cfif isDefined('url.letter') and url.letter eq currentLetter>selected</cfif>>#currentLetter#</option>
+			</cfloop>
+		</select>
+	</form> --->
+
+	<form method="POST" action="index.cfm?event=artists.processHighlightArtists" onsubmit="disableSubmitBtn(this);">
+
 		<table cellspacing="0" cellpadding="3" border="0" width="90%" bgcolor="##eeeeee" height="10">
 			<tr>
 				<td style="font-weight: bold;" valign="middle">
@@ -47,4 +62,19 @@
 			</tr>
 		</table>
 	</form>
+
+	<script>
+		function disableSubmitBtn(frm) {
+			const btn = frm.querySelector('input[type="submit"]');
+			if (btn) {
+				btn.disabled = true;           // disable button
+				btn.value = 'Submitting...';   // show user feedback
+			}
+			return true; // allow form to submit
+		}
+
+		
+
+	</script>
+
 </cfoutput>

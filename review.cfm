@@ -234,11 +234,11 @@ table tr td, table tr td * {
 								<cfset tax = 0 />
 							</cfif>
 							<Cfset total = tax + insurance + subtotal />
-							<!-- <tr>
+							<!--- <tr>
 								<td colspan="4">
 									<hr>
 								</td>
-							</tr> -->
+							</tr> --->
 							<cfoutput>
 							<tr>
 								<td colspan="2">&nbsp;
@@ -313,8 +313,13 @@ table tr td, table tr td * {
 								<li>
 									<b>Address 2</b> #form.BillAddress2#
 								</li>
+
 								<li>
-									<b>Address Type, City, Zip</b>  #form.Addresstype#,#form.billcity#, #form.billzip#
+									<b>Address Type,</b> #form.Addresstype#
+								</li>
+
+								<li>
+									<b> City, Zip</b>  #form.billcity#, #form.billzip#
 								</li>
 								<li>
 									<cfif form.addressType EQ 'Outside'>
@@ -375,9 +380,14 @@ table tr td, table tr td * {
 							<li>
 								<b>Address 2</b> #shipAddress2#
 							</li>
+
 							<li>
-							   <b>Address Type,City, Zip</b>  
-								#form.ShipAddressType# , #shipcity#,  #shipzip# 
+								<b>Address Type</b> #form.ShipAddressType#
+							</li>
+
+							<li>
+							   <b>City, Zip</b>  
+								#shipcity#,  #shipzip# 
 							</li>
 							<li>
 								 <!--- <b>Country:</b> 
@@ -424,6 +434,10 @@ table tr td, table tr td * {
 									xxxx-xxxx-xxxx-#Right(form.cardnum,4)# 
 							</li>
 							<li>
+								 <b>CVC</b>  
+									#form.cardCVC# 
+							</li>
+							<li>
 								 <b>Expiration Date</b>  
 									#form.cardexpm#/#form.cardexpy# 
 							</li>
@@ -438,7 +452,7 @@ table tr td, table tr td * {
 							</li>
 							
 						</ul>
-						<form method="post" action="/purchase">
+						<form method="post" name="purcahseForm" action="/purchase" onsubmit="disableSubmitBtn()">
 							<input type="Hidden" name="shipMethod" value="#shipMethod#">
 							<input type="Hidden" name="origin" value="WEBSITE">
 							<cfloop collection="#form#" item="idx">
@@ -455,7 +469,7 @@ table tr td, table tr td * {
 								<div>
 									<div class="d-flex gap-3">
 										<input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="Seemore">
-										<input type="submit" value="Purchase!" class="Seemore">
+										<input type="submit" value="Purchase!" id="submitBtn" class="Seemore">
 									</div> 
 								<font face="verdana, arial" size="1">
 									<b>
@@ -493,5 +507,16 @@ table tr td, table tr td * {
 
 <cfinclude template="frmxss.cfm">
 
+<script>
+	function disableSubmitBtn() {
+		console.log('test 1: ')
+		const btn = document.getElementById('submitBtn');
+		btn.disabled = true;          // disable button immediately
+		btn.value = 'Processing…';    // optional: change text
+		return true;                  // allow form to continue submitting
+	}
+</script>
+
 </body>
 </html>
+

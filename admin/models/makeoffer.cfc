@@ -18,6 +18,8 @@
 		<cfargument name="Title" required="no" type="string" default="">
 		<cfargument name="fromDate" required="no" type="string" default="">
 		<cfargument name="toDate" required="no" type="string" default="">
+		
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 	
 	
 		<cfset var qMakeoffer='' />
@@ -32,19 +34,19 @@
 			INNER JOIN products p on mo.fk_products = p.uid
 			LEFT OUTER JOIN users u on p.fk_users = u.pk_users
 			WHERE 0=0 and isdeleted is null
-			<cfif arguments.Lname neq ''>
+			<cfif arguments.Lname neq '' and arguments.Lname neq 'searchLname'>
 	      		AND c.lname like '#arguments.Lname#%'
 	      	</cfif>
-			<cfif arguments.Email neq ''>
+			<cfif arguments.Email neq '' and arguments.Email neq 'searchEmail'>
 	      		AND c.email like '#arguments.Email#%'
 	      	</cfif>
-			<cfif arguments.Title neq ''>
+			<cfif arguments.Title neq '' and arguments.Title neq 'searchTitle'>
 	      		AND p.name like '#arguments.Title#%'
 	      	</cfif>
-			<cfif arguments.fromDate neq ''>
+			<cfif arguments.fromDate neq '' and arguments.fromDate neq 'searchFromDate'>
 				AND mo.datestamp >= #arguments.fromDate#
 			</cfif>
-			<cfif arguments.toDate neq ''>
+			<cfif arguments.toDate neq '' and arguments.toDate neq 'searchToDate'>
 				AND mo.datestamp <= #arguments.toDate#
 			</cfif>
 	      	<cfif gridsortcolumn neq ''>

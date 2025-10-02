@@ -283,6 +283,7 @@
                                                  <cfset session.sellerinfo.pk_users = lastUID.uid>
                                                  <cfset session.sellerinfo.fname = form.fname>
                                                  <cfset session.sellerinfo.lname = form.lname>
+                                                 <cfset session.sellerinfo.email = form.email>
                                                  <cfset session.sellerinfo.login = 1 />
                                               </cflock>
                                               <cfmail 
@@ -372,21 +373,21 @@
                                                           <div class="col-md-6">
                                                              <div class="input-field">
                                                                 <label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
-                                                                <cfinput type="text" name="fname" id="S_fname" value="#form.fname#" size="30" >
+                                                                <cfinput type="text" name="fname" maxlength="15" id="S_fname" value="#form.fname#" size="30" >
                                                                 <span class="error-message" id="S_fnameError"></span>
                                                              </div>
                                                           </div>
                                                           <div class="col-md-6">
                                                              <div class="input-field">
                                                                 <label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
-                                                                <cfinput type="text" name="lname" id="S_lname" value="#form.lname#" size="30">
+                                                                <cfinput type="text" name="lname" maxlength="15" id="S_lname" value="#form.lname#" size="30">
                                                                 <span class="error-message" id="S_lnameError"></span>
                                                              </div>
                                                           </div>
                                                           <div class="col-md-4">
                                                              <div class="input-field">
                                                                 <label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
-                                                                <cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
+                                                                <cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30" maxlength="20" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
                                                                 <span class="error-message" id="S_EmailError"></span>
                                                              </div>
                                                           </div>
@@ -407,7 +408,7 @@
                                                           <div class="col-md-4">
                                                              <div class="input-field">
                                                                 <label><b>Phone Number:<span style="color: ##ff0000;">*</span></b></label>
-                                                                <cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#"   size="30">
+                                                                <cfinput type="text" name="cellphone" id="S_cellphone" maxlength="20" value="#form.cellphone#"   size="30">
                                                                 <span id="formatSign">(xxx) xxx-xxxx</span>
                                                                 <span class="error-message" id="S_cellphoneError"></span>
                                                              </div>
@@ -415,26 +416,26 @@
                                                           <div class="col-md-6">
                                                              <div class="input-field">
                                                                 <label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
-                                                                <cfinput type="password" name="password" id="S_password" size="30" >
+                                                                <cfinput type="password" name="password" maxlength="15" id="S_password" size="30" >
                                                                 <span class="error-message" id="S_passwordError"></span>
                                                              </div>
                                                           </div>
                                                           <div class="col-md-6">
                                                              <div class="input-field">
                                                                 <label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
-                                                                <cfinput type="password" name="password2" id="S_password2" size="30" >
+                                                                <cfinput type="password" name="password2" maxlength="15" id="S_password2" size="30" >
                                                                 <span class="error-message" id="S_password2Error"></span>
                                                              </div>
                                                           </div>
                                                        </div>
                                                        <div class="input-field pt-3">
                                                          <div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
-                                                         <span class="error-message" id="recaptchaError"></span>
+                                                         <span class="error-message" id="S_recaptchaError"></span>
                                                       </div>
                                                        <div class="input-button mt-3 register-btn">
                                                           <input type="Hidden" name="proc_reg">
                                                           <cfif NOT structKeyExists(session, 'sellerinfo') >
-                                                          <button type="button" class="SeeMore" onclick="validateSellerForm()">Create an account</button>
+                                                          <button type="button" class="SeeMore" id="S_submitbtn" onclick="validateSellerForm()">Create an account</button>
                                                           <cfelse>
                                                           <p>
                                                              You are already logged in. If you want to add listings, please <b><a href="/user_listing_detail">click here</a></b>.
@@ -488,6 +489,19 @@
             //  const S_captcha = document.getElementById('S_captcha').value.trim();
             
             const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+            const S_submitBtn = document.getElementById('S_submitbtn');
+
+            S_submitBtn.disabled = true;
+    			S_submitBtn.textContent = "Processing..."; 
+
+            var recaptcha = grecaptcha.getResponse();
+            console.log(recaptcha.length);
+				
+				if (recaptcha.length == 0) {
+					document.getElementById("S_recaptchaError").innerText = "Please confirm you are not a robot.";
+					isValid = false;
+				}
             
             if (!S_fname) {
                document.getElementById('S_fnameError').textContent = 'Please fill in your first name.';
@@ -563,7 +577,11 @@
             if (isValid) {
             // Submit the form
                document.getElementById('submitSellerForm').submit();
-            }
+            } else {
+					// Re-enable button if validation fails
+					S_submitBtn.disabled = false;
+					S_submitBtn.textContent = "Create an account";
+				}
             
             return isValid;
           }
@@ -572,7 +590,7 @@
 
        <script>
             document.addEventListener("DOMContentLoaded", function() {
-               const phoneInput = document.getElementById("phone");
+               const phoneInput = document.getElementById("S_cellphone");
                const phoneType = document.getElementById("phoneType");
                const formatSign = document.getElementById("formatSign");
 

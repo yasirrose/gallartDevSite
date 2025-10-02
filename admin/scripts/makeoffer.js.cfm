@@ -47,6 +47,27 @@ function doEdit(type) {
     	
     	if ( edit.deleteMakeoffer()) {
           ColdFusion.Grid.refresh('data',true);
+
+		  toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"newestOnTop": true,
+			"progressBar": true,
+			"positionClass": "toast-center",
+			"preventDuplicates": false,
+			"onclick": null,
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "3000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		};
+
+		toastr.success('Record is Deleted Successfully');
+
       } 
       else { alert( 'There was a problem in the processing.')}
 

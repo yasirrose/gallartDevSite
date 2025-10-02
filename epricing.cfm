@@ -174,10 +174,6 @@
 													
 													<cfif FORM.submitted>
 
-														<!--- <cfdump var="#application.mailserver#"><br>
-														<cfdump var="#application.mailserver_un#"><br>
-														<cfdump var="#application.mailserver_pw#" abort="true"> --->
-
 														<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
 
 														<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
@@ -227,7 +223,7 @@
 															 </script>
 														  </cfoutput>
 														  <cfelse>
-															<!--- <cfdump var="#form#" abort="true"> --->
+															
 
 															<cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
 																<cfset phone = form.phone>
@@ -253,7 +249,7 @@
 																<cfset otherphone = "">
 															</cfif>
 
-														  <cfif form.name neq ''  and form.Offer neq '' and (form.email NEQ '' OR form.phone NEQ '')>
+														  <cfif form.name neq ''  and form.Offer neq '' >
 														  <cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 															 SELECT * from customers where (email = '#trim(email)#')
 														  </cfquery>
@@ -360,7 +356,9 @@
 																	Name: #form.NAME#<br>
 																	Email Address: #form.Email#<br>
 																	Phone: #form.phone#<br>
-																	Best time to call: #form.best_time#<br>
+																	<cfif form.best_time NEQ "">
+																		Best time to call: #form.best_time#<br>
+																	</cfif>
 																	Offer: $#form.Offer#<br>
 																	Artist: #ucase(productinfo.manufacturer)#<br>
 																	Title: #productinfo.name#<br>
@@ -404,11 +402,11 @@
 																<div class="img-sec">
 																	<!--- <img src="images/Gallery-Art-Map-V2.jpg" alt="image"> --->
 
-																	<cfif fileexists("http://23.20.226.157/img/thumbnails/#productInfo.uid#.jpg")> 
+																	<cfif fileexists("http://#server_name#/img/thumbnails/#productInfo.uid#.jpg")> 
 																		<IMG SRC="/img/#productInfo.uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(productInfo.modelno)#" align="Center">
 																		<cfelse>
-																			<!--- <img src="https://dummyimage.com/150x100/050005/ededf2.png&text=No+Image+Available+"> --->
-																			<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+																			
+																			<img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
 																	</cfif>
 
 																</div>
@@ -437,8 +435,7 @@
 																	</cfif>
 																	
 																	<h2 class="title">
-																		<!--- <cfset capitalize = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-																		<cfset capitalizeTitle = REReplace(productinfo.name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
+																		
 
 																		<cfset words = ListToArray(productinfo.name, " ")>
 																		<cfset updatedName = "">
@@ -466,9 +463,13 @@
 																				   <cfif application.showSalePrice EQ 1>
 																					  <!--- #DollarFormat(productinfo.special_price)#  &nbsp; --->
 																					   <!--- <b> --->
-																						 <span style="color: ##ff0000;">
-																							#DollarFormat(productinfo.special_price)# 
-																						 </span>
+																						<cfif productinfo.gallery_price gt 0 and productinfo.gallery_price LTE productinfo.special_price >
+																							#DollarFormat(productinfo.gallery_price)#  &nbsp;
+																						<cfelse>
+																							<span style="color: ##ff0000;">
+																								#DollarFormat(productinfo.special_price)# 
+																							</span>
+																						</cfif>	
 																					  <!--- </b> --->
 																				   </cfif>
 																				<cfelseif productinfo.gallery_price gt 0>
@@ -489,126 +490,43 @@
 																			 
 																			 <!--- </cfif> --->
 
-																			 <!--- <cfif productinfo.retail_price gt 0 and productinfo.retail_price gt productinfo.gallery_price>
-												
-																				<cfif productinfo.gallery_price gt 0 and  productinfo.gallery_price gt productinfo.special_price>
-																	
-																					<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 >
-																						<!--- <del>#DollarFormat(gallery_price)#</del> --->
-																						&nbsp; 
-																						 <b>
-																							<span style="color: ##ff0000;">
-																								#DollarFormat(productinfo.special_price)# 
-																							</span>
-																						</b>
-																					 <cfelse>
-																						<!--- <del>#DollarFormat(retail_price)#</del> --->
-																						&nbsp; 
-																						
-																						<b> #DollarFormat(productinfo.gallery_price)# </b>
-																					</cfif>
-																	
-																				 <cfelse>
-																					<!--- <span style="color: red;">
-																							Price On Request
-																					</span> --->
-																					<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and productinfo.special_price LT productinfo.retail_price>
-																						<!--- <del>#DollarFormat(retail_price)# </del> --->
-																						&nbsp; 
-																							<b>
-																								<span style="color: ##ff0000;">
-																								#DollarFormat(productinfo.special_price)# 
-																								</span>
-																							</b>
-																	
-																							<cfelse>
-																								<b> #DollarFormat(productinfo.retail_price)# </b>
-																					</cfif>
-																	
-																				</cfif>
-																			 <cfelse>
-																				
-																				<cfif productinfo.gallery_price NEQ 0 and productinfo.gallery_price NEQ ''>
-																					
-																					
-																				 
-																					<cfif productinfo.retail_price neq 0 and productinfo.retail_price LT gallery_price >
-																						
-																						<b>#DollarFormat(productinfo.retail_price)#</b>
-																					 <cfelse>
-																						<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and productinfo.special_price LT productinfo.gallery_price>
-																							
-																							<!--- <del>#DollarFormat(gallery_price)# </del> --->
-																							&nbsp; 
-																								<b>
-																									<span style="color: ##ff0000;">
-																									#DollarFormat(productinfo.special_price)# 
-																									</span>
-																								</b>
-																		
-																								<cfelse>
-																									<b>#DollarFormat(productinfo.gallery_price)#</b>
-																						</cfif>
-																					</cfif>
-																				</cfif>
-																	
-																			</cfif> --->
-
 
 																		</span> 
 																	</h2>
 																	<div class="row">
-																		<!--- <div class="col-md-12">
-																			<div class="input-field">
-																				<cfinput type="text" size=40 maxsize=50 placeholder="First Name" name="fname" id="fname" value="#form.fname#" >
-																				<span class="star">*</span>
-																					<span class="error-message" id="fnameError"></span>
-																			</div>
-																		</div>
-																		<div class="col-md-12">
-																			<div class="input-field">
-																				<cfinput type="text" size=40 maxsize=50 placeholder="Last Name" name="lname" id="lname" value="#form.lname#" >
-																				<span class="star">*</span>
-																					<span class="error-message" id="lnameError"></span>
-																			</div>
-																		</div> --->
+																	
 
 																		<span style="color: ##ff0000;">* Required</span> <br><br>
 
 																		<div class="col-md-12">
 																			<div class="input-field">
-																				<cfinput type="text" size=40 maxsize=50 placeholder="Enter your Name*" name="name" id="name" value="#form.name#" >
-																				<!--- <span class="star">*</span> --->
-																					<span class="error-message" id="nameError"></span>
+																				<cfinput type="text" size=40 maxsize=50 maxlength="30" placeholder="Enter your Name*" name="name" id="name" value="#form.name#" >
+																				<span class="error-message" id="nameError"></span>
 																			</div>
 																		</div>
 
 																		<div class="col-md-12">
 																			<div class="input-field">
-																				<cfinput type="text" size=40 maxsize=50 name="email" placeholder="Enter your Email Address*" id="email" value="#form.email#"  >
-																				<!--- <span class="star">*</span> --->
-																					<span class="error-message" id="emailError"></span>
+																				<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" id="email" value="#form.email#"  >
+																				<span class="error-message" id="emailError"></span>
 																			</div>
 																		</div>
-																		<!--- <label><b>OR</b></label> --->
+																		
 
 																		<div class="col-md-12">
 																			<div class="input-field">
-																				<select name="phoneType" id="phoneType"  style="width:100% !important;">
+																				<select name="phoneType" id="phoneType" class="form-control" style="width:100% !important;">
 																					<option value="Cell Phone">Cell Phone</option>
 																					<option value="Home Phone">Home Phone</option>
 																					<option value="Business Phone">Business Phone</option>
 																					<option value="OutsideUS">Outside US Phone</option>
 																				</select>
-																			
 																			</div>
 																		</div>
 
 																		<div class="col-md-12">
 																			<div class="input-field">
-																				
-																				<cfinput type="text" size=40 maxsize=50 name="phone" placeholder="Enter your Phone Number" id="phone" value="#form.phone#" required="No">
-																				<!--- <span class="star">*</span> --->
+																				<cfinput type="text" size=40 maxlength="20" name="phone" placeholder="Enter your Phone Number" id="phone" value="#form.phone#" required="No">
 																				<span id="formatSign">(xxx) xxx-xxxx</span>
 																				<span class="error-message" id="phoneError"></span>
 																			</div>
@@ -616,49 +534,14 @@
 
 																		
 
-																		<!--- <div class="col-md-12">
-																			<div class="input-field">
-																				<cfinput type="text" size=40 maxsize=50 placeholder="Best Time To Call" name="best_time" id="best_time" value="#form.best_time#" required="No">
-																				<!--- <span class="star">*</span> --->
-																				<span class="error-message" id="best_timeError"></span>
-																			</div>
-																		</div> --->
-
-																		<!--- <div class="col-md-12">
-																			<div class="input-field flex-form-group checkbox-form-group">
-																				<div class="checkbox">
-																						<div class="checkbox-field">
-																							<input
-																								type="checkbox" name="email_only" value="1" 
-																								<cfif form.email_only EQ 1>checked
-																								</cfif>
-																							/>
-																						</div>
-																				</div>
-																				<label><FONT face="">Or Email Only</FONT></label>
-																			</div>
-																			<span class="error-message" ></span>
-																		</div> --->
+																		
 																		<div class="col-md-12">
 																			<div class="input-field">
-																				<!--- <TEXTAREA NAME="comments" placeholder="Comments" ROWS=10 COLS=35>#form.comments#</TEXTAREA> --->
-																				<cfinput type="text" name="Offer" size="10" id="Offer" message="Enter a Dollar amount, no $ or decimal." placeholder="Enter a Dollar amount, no $ or decimal.*" validate="integer" >
-																				<!--- <span class="star">*</span> --->
+																				<cfinput type="text" name="Offer" size="5" maxlength="6" id="Offer" message="Enter a Dollar amount, no $ or decimal." placeholder="Enter a Dollar amount, no $ or decimal.*" validate="integer" >
 																				<span class="error-message" id="OfferError"></span>
 																			</div>
 																		</div>
-																		<!--- <div class="col-md-12">
-																			<div class="input-field">
-																				<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier,tahoma"
-																				   fontsize="28" />
-																			</div>
-																		</div>
-																		<div class="col-md-12">
-																			<div class="input-field" style="margin-top: 10px;">
-																				<cfinput type="text" placeholder="Please enter the characters in the image" name="captcha" id="captcha" >
-																				<span class="error-message" id="captchaError"></span>
-																			</div>
-																		</div> --->
+																	
 
 																		<div class="input-field pt-3">
 																			<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
@@ -667,7 +550,7 @@
 
 																		<div class="col-md-12 mt-3">
 																			<div class="input-button">
-																				<button type="submit" class="SeeMore">Submit</button>
+																				<button type="submit" class="SeeMore" id="submitBtn">Submit</button>
 																				<button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
 																			 </div>
 																		</div>
@@ -675,32 +558,7 @@
 																</div>
 															</div>
 														</div>
-														<!--- <div class="bottom-row">
-															<div class="content-sec">
-																<p>
-																	<b>How does it work?</b>
-																	It's simple! Tell us the price you are willing to pay and we will accept, reject, or counter
-																	the offer using the email address provided. There are no obligations to purchase, 
-																</p>
-																<div class="input-button">
-																	<button type="button" class="SeeMore">Send Offer</button>
-																</div>
-															</div>
-															<div class="privacy-field">
-																<div class="input-field flex-form-group">
-																	<div class="checkbox">
-																			<div class="checkbox-field">
-																				<input
-																					type="checkbox" name="email_only" value="1" 
-																					<cfif form.email_only EQ 1>checked
-																					</cfif>
-																				/>
-																			</div>
-																	</div>
-																	<label>I agree to <a href="##">Privacy Policy</a></label>
-																</div>
-															</div>
-														</div> --->
+														
 													   </cfform>
 													</div>
 											  </cfif>
@@ -730,146 +588,108 @@
 
 	   <script>
 
-		function setFormActionAndValidate() {
-			var pid = document.getElementById('pid').value.trim();
+			function setFormActionAndValidate() {
+				var pid = document.getElementById('pid').value.trim();
 
-			console.log('test pid: '+ pid);
+				console.log('test pid: '+ pid);
+				document.getElementById('frm1').action = '/epricing/' + pid;
+				return validateEpricingForm();
+			}
 
-			// return false;
+			function validateEpricingForm(e) {
+				let isValid = true;
 			
-			// Set the form's action to the pretty URL
-			document.getElementById('frm1').action = '/epricing/' + pid;
+				// Clear previous error messages
+				document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+				
+				
+				const name = document.getElementById('name').value.trim();
+				const email = document.getElementById('email').value.trim();			
+				const phone = document.getElementById('phone').value.trim();
+				const phoneType = document.querySelector("[name='phoneType']").value;
+				const Offer = document.getElementById('Offer').value.trim();
+				const actualPrice = document.getElementById('actualPrice').value.trim();
+				const submitButton = document.getElementById('submitBtn');
+			
 
-			// Call your existing validation function
-			return validateEpricingForm();
-		}
+				const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+				const integerRegex = /^[0-9]+$/; 
+				const emailRegex = /\S+@\S+\.\S+/;
 
-		function validateEpricingForm() {
-         let isValid = true;
-         
-         // Clear previous error messages
-         document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
-         
-    	//  Get form field values
-        //  const fname = document.getElementById('fname').value.trim();
-        //  const lname = document.getElementById('lname').value.trim();
-         const name = document.getElementById('name').value.trim();
-         const email = document.getElementById('email').value.trim();
-        //  const captcha = document.getElementById('captcha').value.trim();
-         const phone = document.getElementById('phone').value.trim();
-		 const phoneType = document.querySelector("[name='phoneType']").value;
-        //  const best_time = document.getElementById('best_time').value.trim();
-         const Offer = document.getElementById('Offer').value.trim();
-         const actualPrice = document.getElementById('actualPrice').value.trim();
+				var recaptcha = grecaptcha.getResponse();
+				console.log(recaptcha.length);
 
 
-		 
-
-		 const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
-		 const integerRegex = /^[0-9]+$/; 
-		 const emailRegex = /\S+@\S+\.\S+/;
-
-		 var recaptcha = grecaptcha.getResponse();
-		 console.log(recaptcha.length);
-
-
-		 if (recaptcha.length == 0) {
-			document.getElementById("m_recaptchaError").innerText = "Please confirm you are not a robot.";
-			isValid = false;
-		}
-		 
-         
-         // Validate FIRST NAME
-        //  if (!fname) {
-        //     document.getElementById('fnameError').textContent = 'Please fill in your first name.';
-        //     isValid = false;
-        //  }
-         
-        //  // Validate LAST NAME
-        //  if (!lname) {
-        //     document.getElementById('lnameError').textContent = 'Please fill in your last name.';
-        //     isValid = false;
-        //  }
-
-		
-
-		 if (!name) {
-            document.getElementById('nameError').textContent = 'Please enter your name.';
-            isValid = false;
-         }
-         
-         // Validate EMAIL
-		 if (!email ) {
-			document.getElementById('emailError').textContent = 'Please enter an email address.';
-			// document.getElementById('phoneError').textContent = 'Please enter a phone number or email address.';
-			isValid = false;
-		}
-
-		// If email is entered, validate format
-		if (email && !emailRegex.test(email)) {
-			document.getElementById('emailError').textContent = 'Please enter a valid email address.';
-			isValid = false;
-		}
-
-		if(phoneType){
-			if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
-				if (!phoneRegex.test(phone)) {
-					document.getElementById('phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
-					document.getElementById('phone').focus();
+				if (recaptcha.length == 0) {
+					document.getElementById("m_recaptchaError").innerText = "Please confirm you are not a robot.";
 					isValid = false;
 				}
+								
+
+				if (!name) {
+					document.getElementById('nameError').textContent = 'Please enter your name.';
+					isValid = false;
+				}
+				
+				// Validate EMAIL
+				if (!email ) {
+					document.getElementById('emailError').textContent = 'Please enter an email address.';
+					isValid = false;
+				}
+
+				// If email is entered, validate format
+				if (email && !emailRegex.test(email)) {
+					document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+					isValid = false;
+				}
+
+				if(phoneType){
+					if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
+						if (!phoneRegex.test(phone)) {
+							document.getElementById('phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+							document.getElementById('phone').focus();
+							isValid = false;
+						}
+					}
+				}
+
+				if (!Offer) {
+					document.getElementById('OfferError').textContent = 'Please make an offer - enter a dollar amount, no $ or decimal.';
+					isValid = false;
+				} else if (!integerRegex.test(Offer)) {
+					document.getElementById('OfferError').textContent = 'Please enter a dollar amount number (no decimals or special characters).';
+					isValid = false;
+				}  else if (parseInt(Offer, 10) === 0) {
+					document.getElementById('OfferError').textContent = 'Please enter an offer price greater than 0.';
+					isValid = false;
+				} else if (parseInt(Offer, 10) >= actualPrice) {
+					document.getElementById('OfferError').textContent = 'Offer price must be less than the sale or gallery price.';
+					isValid = false;
+				}
+			
+			
+
+
+				if (!isValid) {		
+					return false;
+				} else {
+					
+					submitButton.disabled = true;
+					submitButton.innerText = "Submitting…";
+
+					// prevent default submit first
+					e.preventDefault();
+
+					// Now submit form manually after disabling button
+					setTimeout(() => {
+						document.forms['frm1'].submit();
+					}, 10);
+
+					return false; // stop default submit
+				}
+			
+				return isValid;
 			}
-		}
-
-		// If phone is entered, validate minimum length
-		// if (phone) {
-		// 	if (phone.length < 5) {
-		// 		document.getElementById('phoneError').textContent = 'Please enter a complete phone number.';
-		// 		isValid = false;
-		// 	}
-
-		// 	// If phone is entered, best_time is required
-		// 	if (!best_time) {
-		// 		document.getElementById('best_timeError').textContent = 'Please provide the best time to call.';
-		// 		isValid = false;
-		// 	}
-		// }
-		//  if(!phone){
-		// 	document.getElementById('phoneError').textContent = 'Please enter your phone number';
-		// 	isValid = false;
-		//  } 
-		//  else if (phone && !phoneRegex.test(phone)) {
-		// 	document.getElementById('phoneError').textContent = 'Please enter your home phone number in the format (xxx) xxx-xxxx';
-		// 	isValid = false;
-		// }
-
-		// if (!best_time) {
-        //     document.getElementById('best_timeError').textContent = 'Best time to call is required.';
-        //     isValid = false;
-        //  }
-
-		 if (!Offer) {
-            document.getElementById('OfferError').textContent = 'Please make an offer - enter a dollar amount, no $ or decimal.';
-            isValid = false;
-         } else if (!integerRegex.test(Offer)) {
-			document.getElementById('OfferError').textContent = 'Please enter a dollar amount number (no decimals or special characters).';
-			isValid = false;
-		 }  else if (parseInt(Offer, 10) === 0) {
-			document.getElementById('OfferError').textContent = 'Please enter an offer price greater than 0.';
-			isValid = false;
-		 } else if (parseInt(Offer, 10) >= actualPrice) {
-			document.getElementById('OfferError').textContent = 'Offer price must be less than the sale or gallery price.';
-			isValid = false;
-		}
-         
-         // Validate CAPTCHA
-        //  if (!captcha) {
-        //     document.getElementById('captchaError').textContent = 'Please enter the characters in the image.';
-        //     isValid = false;
-        //  }
-         
-         return isValid;
-         }
 	   </script>
 
 
@@ -878,6 +698,11 @@
 				const phoneInput = document.getElementById("phone");
 				const phoneType = document.getElementById("phoneType");
 				const formatSign = document.getElementById("formatSign");
+
+				 if (!phoneInput || !phoneType || !formatSign) {
+					// Elements not on this page → exit
+					return;
+				}
 
 				function toggleFormatSign() {
 					if (phoneType.value === "OutsideUS") {
@@ -1060,14 +885,21 @@
 			}
 		 </style>
 		<script>
-			document.getElementById("resetBtn-captcha").addEventListener("click", function() {
-				if (grecaptcha) {
-					grecaptcha.reset(); // Reset the reCAPTCHA
+			document.addEventListener("DOMContentLoaded", function() {
+				const resetBtn = document.getElementById("resetBtn-captcha");
+
+				if (resetBtn) {
+					resetBtn.addEventListener("click", function() {
+						if (typeof grecaptcha !== "undefined") {
+							grecaptcha.reset(); // Reset the reCAPTCHA
+						}
+
+						// Also clear error messages if needed
+						document.querySelectorAll('.error-message').forEach(function(el) {
+							el.innerText = '';
+						});
+					});
 				}
-				// Also clear error messages if needed
-				document.querySelectorAll('.error-message').forEach(function(el){
-					el.innerText = '';
-				});
 			});
 		</script>
 	</body>

@@ -394,7 +394,7 @@
 				
 			<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
 			
-			<!--- <cfdump var="#captchaResponse.success#" abort="true"> --->
+			
 
 			<cfquery name="getPreviousEntries" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 				SELECT * FROM purchases_consignments
@@ -506,7 +506,7 @@
 									</cfif>
 								</cfloop>
 
-								<!--- <cfdump var="#fileCheck#" abort="true"> --->
+								
 	
 								<cfif NOT fileTooLarge>
 									<cftry>
@@ -1036,7 +1036,7 @@
 																					<br /><br />
 																				</cfif>
 																				<cfoutput>
-																				<cfform name="frm1" action="/sell-your-art" method="post" enctype="multipart/form-data" id="generalForm" onsubmit="return validateGeneralForm()">
+																				<cfform name="frm1" action="/sell-your-art" method="post" enctype="multipart/form-data" id="generalForm" onsubmit="return validateGeneralForm(event)">
 																				<input	type="hidden" name="captcha_check2"	value="#FORM.captcha_check2#" />
 																				<div class="input-form">
 																					<div class="row">
@@ -1048,21 +1048,21 @@
 																						<div class="col-md-6">
 																							<div class="input-field"> 
 																								<label><b> First Name<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" >
+																								<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" maxlength="15" >
 																								<span class="error-message" id="G_fnameError"></span>
 																							</div>
 																						</div>
 																						<div class="col-md-6">
 																							<div class="input-field"> 
 																								<label><b>Last Name<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="lname" id="lname" value="#form.lname#" size="30"  >
+																								<cfinput type="text" name="lname" id="lname" value="#form.lname#" size="30" maxlength="15" >
 																								<span class="error-message" id="G_lnameError"></span>
 																							</div>
 																						</div>
 																						<div class="col-md-4 pt-4">
 																							<div class="input-field">
 																								<label><b>Email<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="email_purchase" id="email_purchase" value="#form.email_purchase#" size="30"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$"  >
+																								<cfinput type="text" name="email_purchase" id="email_purchase" value="#form.email_purchase#" size="30" maxlength="20"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$"  >
 																								<span class="error-message" id="G_email_purchaseError"></span>
 																							</div>
 																						</div>
@@ -1083,7 +1083,7 @@
 																						<div class="col-md-4 pt-4">
 																							<div class="input-field">
 																								<label><b>Phone Number <span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="phone" id="phone" value="#form.phone#" size="30"  >
+																								<cfinput type="text" name="phone" id="phone" value="#form.phone#" size="30" maxlength="20" >
 																								<span id="formatSign">(xxx) xxx-xxxx</span>
 																								<span class="error-message" id="G_phoneError"></span>
 																							</div>
@@ -1091,14 +1091,15 @@
 																						<div class="col-md-12">
 																							<div class="input-field">
 																								<label><b>Tell us About the Artwork<span style="color: ##ff0000;">*</span></b></label>
-																								<textarea name="additional_details" id="additional_details" cols="50" rows="4" placeholder="Artist Name, Artwork Title, Medium, Edition, Year, Size, Artwork Location ">#form.additional_details#</textarea>
+																								<textarea name="additional_details" id="additional_details" maxlength="500" cols="50" rows="4" placeholder="Artist Name, Artwork Title, Medium, Edition, Year, Size, Artwork Location ">#form.additional_details#</textarea>
 																								<span class="error-message" id="G_additional_details"></span>
+																								<div id="charCount" class="mb-3">0 / 500 characters</div>
 																							</div>
 																						</div>
 																						<div class="col-md-12">
 																							<div class="input-field pb-3">
 																								<label><b>Price Desired<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="size" value="#form.size#" size="30" id="size" placeholder="e.g $2000">
+																								<cfinput type="text" name="size" value="#form.size#" maxlength="6" size="30" id="size" placeholder="e.g $2000">
 																								<span class="error-message" id="G_sizeError"></span>
 																							</div>
 																						</div>
@@ -1158,7 +1159,7 @@
 																					</div>
 																					<div class="input-button">
 																						<input type="Hidden" name="process_purchase_consignment">
-																						<button type="submit" class="SeeMore" >Send</button> 
+																						<button type="submit" class="SeeMore"  id="G_submitbtn">Send</button> 
 																					</div>
 																					<!-- <div class="any-question">
 																						<p><b>*If you any questions please email <a href="mailto: sales@gallart.com">sales@gallart.com</a> or call 305-932-6166 for further assistance. </b></p>
@@ -1200,21 +1201,21 @@
 																								<div class="col-md-6">
 																									<div class="input-field">
 																										<label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="text" name="fname" id="S_fname" value="#form.fname#" size="30" >
+																										<cfinput type="text" name="fname" id="S_fname" value="#form.fname#" size="30" maxlength="15" >
 																										<span class="error-message" id="S_fnameError"></span>
 																									</div>
 																								</div>
 																								<div class="col-md-6">
 																									<div class="input-field">
 																										<label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="text" name="lname" id="S_lname" value="#form.lname#" size="30">
+																										<cfinput type="text" name="lname" id="S_lname" value="#form.lname#" size="30" maxlength="15">
 																										<span class="error-message" id="S_lnameError"></span>
 																									</div>
 																								</div>
 																								<div class="col-md-4">
 																									<div class="input-field">
 																										<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
+																										<cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30" maxlength="20" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
 																										<span class="error-message" id="S_EmailError"></span>
 																									</div>
 																								</div>
@@ -1235,7 +1236,7 @@
 																								<div class="col-md-4">
 																									<div class="input-field">
 																										<label><b>Phone Number:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#"   size="30">
+																										<cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#" maxlength="20"  size="30">
 																										<span id="S_formatSign">(xxx) xxx-xxxx</span>
 																										<span class="error-message" id="S_cellphoneError"></span>
 																									</div>
@@ -1244,14 +1245,14 @@
 																								<div class="col-md-6">
 																									<div class="input-field">
 																										<label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="password" name="password" id="S_password" size="30" >
+																										<cfinput type="password" name="password" id="S_password" size="30" maxlength="15" >
 																										<span class="error-message" id="S_passwordError"></span>
 																									</div>
 																								</div>
 																								<div class="col-md-6">
 																									<div class="input-field">
 																										<label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="password" name="password2" id="S_password2" size="30" >
+																										<cfinput type="password" name="password2" id="S_password2" size="30" maxlength="15" >
 																										<span class="error-message" id="S_password2Error"></span>
 																									</div>
 																								</div>
@@ -1271,9 +1272,10 @@
 																							</div>
 
 																							<div class="input-button mt-3">
-																								<input type="Hidden" name="proc_reg">
-																								<cfif NOT structKeyExists(session, 'sellerinfo') >																								
-																									<button type="button" class="SeeMore" onclick="validateSellerForm()">Create an account</button>
+																								
+																								<cfif NOT structKeyExists(session, 'sellerinfo') >
+																									<input type="Hidden" name="proc_reg">																								
+																									<button type="button" class="SeeMore" id="S_submitbtn" onclick="validateSellerForm()">Create an account</button>
 																								<cfelse>
 																									<p>
 																										You are already logged in. If you want to add listings, please <b><a href="user_listing_detail">click here</a></b>.
@@ -1321,321 +1323,374 @@
 	<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 	
 
-<script>
+	<script>
 
-	 <cfif structKeyExists(session, "limitReached") and session.limitReached>
-         toastr.success('Sent');
-         <cfset structDelete(session, "limitReached")>
-      </cfif>
+		<cfif structKeyExists(session, "limitReached") and session.limitReached>
+			toastr.success('Sent');
+			<cfset structDelete(session, "limitReached")>
+		</cfif>
 
-		var addImageIndex = 1;
-		$("#addImageButton").click(function () {
-			if ($(".additionalImage").length < 4) {
-				$("#addImageContainer").append(
-					"<div class='additionalImage'><div class='file-upload-wrapper sm-file-upload-wrapper'>" +
-					"<label for='file-upload' class='file-upload-label'>" +
-					"<div class='file-upload-icon'><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>" +
-					"<path d='M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z' />" +
-					"</svg></div><div class='file-upload-text'><strong>Browse Files</strong></div></label>" +
-					"<input type='File' name='addImage_" + addImageIndex + "' id='addImage_" + addImageIndex + "' />" +
-					"</div></div>"
-				);
-				addImageIndex++;
-			} else {
-				if ($("#maxImageMessage").length === 0) {
-					$("#addImageContainer").after("<p id='maxImageMessage' style='color: red;'>You can upload a maximum of 4 images.</p>");
-				}
-			}
-		});
-
-
-		function setActiveTab(tabName) {
-			console.log(`Active tab: ${tabName}`);
-
-			// Store active tab in localStorage
-			localStorage.setItem("activeTab", tabName);
-
-			// Show/hide the correct tab content
-			setTabVisibility(tabName);
-		}
-
-		function setTabVisibility(tabName) {
-			const generalForm = document.getElementById("content-general");
-			const sellerForm = document.getElementById("content-seller");
-
-			if (tabName === "general") {
-				generalForm.style.display = "block";
-				sellerForm.style.display = "none";
-			} else if (tabName === "seller") {
-				generalForm.style.display = "none";
-				sellerForm.style.display = "block";
-			}
-		}
-
-		// Load the saved tab from localStorage on page load
-		document.addEventListener("DOMContentLoaded", function () {
-			const savedTab = localStorage.getItem("activeTab") || "general";
-			document.getElementById("tabSelector").value = savedTab;
-			setTabVisibility(savedTab);
-		});
-
-		var generalWidgetId, sellerWidgetId;
-
-		var onloadCallback = function() {
-			generalWidgetId = grecaptcha.render('gRecaptchaGeneral', {
-				'sitekey': '6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne'
-			});
-
-			sellerWidgetId = grecaptcha.render('gRecaptchaSeller', {
-				'sitekey': '6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne'
-			});
-
-			// console.log(sellerWidgetId);
-		};
-
-		function validateGeneralForm(){
-			let isValid = true;
-
-			let inputs = document.querySelectorAll("#addImageContainer input[type='file']");
-
-			inputs.forEach(function (input) {
-				if (input.files.length === 0) {
-					input.parentNode.remove(); // Remove the file input if it's empty
+			var addImageIndex = 1;
+			$("#addImageButton").click(function () {
+				if ($(".additionalImage").length < 4) {
+					$("#addImageContainer").append(
+						"<div class='additionalImage'><div class='file-upload-wrapper sm-file-upload-wrapper'>" +
+						"<label for='file-upload' class='file-upload-label'>" +
+						"<div class='file-upload-icon'><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>" +
+						"<path d='M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z' />" +
+						"</svg></div><div class='file-upload-text'><strong>Browse Files</strong></div></label>" +
+						"<input type='File' name='addImage_" + addImageIndex + "' id='addImage_" + addImageIndex + "' />" +
+						"</div></div>"
+					);
+					addImageIndex++;
+				} else {
+					if ($("#maxImageMessage").length === 0) {
+						$("#addImageContainer").after("<p id='maxImageMessage' style='color: red;'>You can upload a maximum of 4 images.</p>");
+					}
 				}
 			});
 
-			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
 
-			const fname = document.getElementById('fname').value.trim();
-			const lname = document.getElementById('lname').value.trim();
-			const email_purchase = document.getElementById('email_purchase').value.trim();
-			const phone = document.getElementById('phone').value.trim();
-			const phoneType = document.querySelector("[name='phoneType']").value;
-			// const title = document.getElementById('title').value.trim();
-			const size = document.getElementById('size').value.trim();
-			// const additional_details = document.getElementById('additional_details').value.trim();
-			// const captcha2 = document.getElementById('captcha2').value.trim();
+			function setActiveTab(tabName) {
+				console.log(`Active tab: ${tabName}`);
 
-			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
-			const integerRegex = /^[0-9]+$/;
-			
-			// var recaptcha = grecaptcha.getResponse();
+				// Store active tab in localStorage
+				localStorage.setItem("activeTab", tabName);
 
-			let recaptcha = grecaptcha.getResponse(generalWidgetId);
-
-			console.log(recaptcha.length);
-
-			if (recaptcha.length == 0) {
-				document.getElementById("G_recaptchaError").innerText = "Please confirm you are not a robot.";
-				isValid = false;
+				// Show/hide the correct tab content
+				setTabVisibility(tabName);
 			}
 
-			if (!fname) {
-				document.getElementById('G_fnameError').textContent = 'Please fill in your first name.';
-				isValid = false;
+			function setTabVisibility(tabName) {
+				const generalForm = document.getElementById("content-general");
+				const sellerForm = document.getElementById("content-seller");
+
+				if (tabName === "general") {
+					generalForm.style.display = "block";
+					sellerForm.style.display = "none";
+				} else if (tabName === "seller") {
+					generalForm.style.display = "none";
+					sellerForm.style.display = "block";
+				}
 			}
 
-			// Validate LAST NAME
-			if (!lname) {
-				document.getElementById('G_lnameError').textContent = 'Please fill in your last name.';
-				isValid = false;
-			}
+			// Load the saved tab from localStorage on page load
+			document.addEventListener("DOMContentLoaded", function () {
+				const savedTab = localStorage.getItem("activeTab") || "general";
+				document.getElementById("tabSelector").value = savedTab;
+				setTabVisibility(savedTab);
+			});
 
-			// Validate EMAIL
-			if (!email_purchase) {
-				document.getElementById('G_email_purchaseError').textContent = 'Please fill in your email address.';
-				isValid = false;
-			} else if (!/\S+@\S+\.\S+/.test(email_purchase)) {
-				document.getElementById('G_email_purchaseError').textContent = 'Please enter a valid email address.';
-				isValid = false;
-			}
+			var generalWidgetId, sellerWidgetId;
 
-			// Validate CAPTCHA
-			// if (!phone) {
-			// 	document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
-			// 	isValid = false;
-			// }else if (phone.length < 5) {
-			// 	document.getElementById('G_phoneError').textContent = 'Please enter a complete phone number digits.';
-			// 	isValid = false;
-			// }
+			var onloadCallback = function() {
+				generalWidgetId = grecaptcha.render('gRecaptchaGeneral', {
+					'sitekey': '6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne'
+				});
 
-			if (!phone) {
-				document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
-				isValid = false;
-			}
+				sellerWidgetId = grecaptcha.render('gRecaptchaSeller', {
+					'sitekey': '6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne'
+				});
 
-			if (!phoneType) {
-               document.getElementById('phoneTypeError').textContent = 'Please select phone type';
-               isValid = false;
-            }
+				// console.log(sellerWidgetId);
+			};
 
-			if(phoneType){
-               if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
-                  if (phone && !phoneRegex.test(phone)) {
-                     document.getElementById('G_phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
-                     document.getElementById('phone').focus();
-                     isValid = false;
-                  }
-               }
-            }
+			function validateGeneralForm(e){
+				let isValid = true;
 
-			// if (phone && !phoneRegex.test(phone)) {
-			// 	document.getElementById('G_phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
-			// 	isValid = false;
-			// }
+				let inputs = document.querySelectorAll("#addImageContainer input[type='file']");
 
-			// if (!title) {
-			// 	document.getElementById('G_titleError').textContent = 'Please enter the title.';
-			// 	isValid = false;
-			// }
+				inputs.forEach(function (input) {
+					if (input.files.length === 0) {
+						input.parentNode.remove(); // Remove the file input if it's empty
+					}
+				});
 
-			if (!size) {
-				document.getElementById('G_sizeError').textContent = 'Please enter the Price.';
-				isValid = false;
-			} else if (!integerRegex.test(size)) {
-				document.getElementById('G_sizeError').textContent = 'Please enter a dollar amount number (no decimals or special characters).';
-				isValid = false;
-			} else if (parseInt(size, 10) === 0) {
-				document.getElementById('G_sizeError').textContent = 'Please enter an offer price greater than 0.';
-				isValid = false;
-			}
+				document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
 
-			// if (!additional_details) {
-			// 	document.getElementById('G_additional_details').textContent = 'Please enter the description.';
-			// 	isValid = false;
-			// }
+				const fname = document.getElementById('fname').value.trim();
+				const lname = document.getElementById('lname').value.trim();
+				const email_purchase = document.getElementById('email_purchase').value.trim();
+				const phone = document.getElementById('phone').value.trim();
+				const phoneType = document.querySelector("[name='phoneType']").value;
+				// const title = document.getElementById('title').value.trim();
+				const size = document.getElementById('size').value.trim();
+				// const additional_details = document.getElementById('additional_details').value.trim();
+				// const captcha2 = document.getElementById('captcha2').value.trim();
 
-			// if (!captcha2) {
-			// 	document.getElementById('G_captcha2Error').textContent = 'Please enter the characters in the image.';
-			// 	isValid = false;
-			// }
+				const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+				const integerRegex = /^[0-9]+$/;
+				
+				// var recaptcha = grecaptcha.getResponse();
 
-			// if (isValid) {
-			// 	// Submit the form
-			// 	document.getElementById('generalForm').submit();
-			// }
+				let recaptcha = grecaptcha.getResponse(generalWidgetId);
 
+				const submitButton = document.getElementById('G_submitbtn');
 
-			return isValid;
-		}
+				console.log(recaptcha.length);
 
-
-		function validateSellerForm(){
-		// alert('test');
-			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
-
-			let isValid = true;
-
-			const S_fname = document.getElementById('S_fname').value.trim();
-			const S_lname = document.getElementById('S_lname').value.trim();
-			const S_email = document.getElementById('S_Email').value.trim();
-			const S_phone = document.getElementById('S_cellphone').value.trim();
-			const S_phoneType = document.querySelector("[name='S_phoneType']").value;
-			const S_password = document.getElementById('S_password').value.trim();
-			const S_password2 = document.getElementById('S_password2').value.trim();
-			// const S_captcha = document.getElementById('S_captcha').value.trim();
-
-			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
-
-			// var recaptcha = grecaptcha.getResponse();
-
-			let recaptcha = grecaptcha.getResponse(sellerWidgetId);
-
-			console.log(recaptcha.length);
-			
-			if (recaptcha.length == 0) {
-				document.getElementById("S_recaptchaError").innerText = "Please confirm you are not a robot.";
-				isValid = false;
-			}
-
-			if (!S_fname) {
-				document.getElementById('S_fnameError').textContent = 'Please fill in your first name.';
-				isValid = false;
-			}
-
-			// Validate LAST NAME
-			if (!S_lname) {
-				document.getElementById('S_lnameError').textContent = 'Please fill in your last name.';
-				isValid = false;
-			}
-
-			// Validate EMAIL
-			if (!S_email) {
-				document.getElementById('S_EmailError').textContent = 'Please fill in your email address.';
-				isValid = false;
-			} else if (!/\S+@\S+\.\S+/.test(S_email)) {
-				document.getElementById('S_EmailError').textContent = 'Please enter a valid email address.';
-				isValid = false;
-			}
-
-			// Validate CAPTCHA
-			if (!S_phone) {
-				document.getElementById('S_cellphoneError').textContent = 'Please enter a phone number.';
-				isValid = false;
-			} 
-
-			if (!S_phoneType) {
-               document.getElementById('S_phoneTypeError').textContent = 'Please select phone type';
-               isValid = false;
-            }
-
-			if(S_phoneType){
-               if(S_phoneType === "Home Phone" || S_phoneType === "Cell Phone" || S_phoneType === "Business Phone"){
-                  if (S_phone && !phoneRegex.test(S_phone)) {
-                     document.getElementById('S_cellphoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
-                     document.getElementById('S_cellphone').focus();
-                     isValid = false;
-                  }
-               }
-            }
-
-			// else if (!phoneRegex.test(S_phone)) {
-			// 	document.getElementById('S_cellphoneError').textContent = 'Please enter your phone number in the format (xxx) xxx-xxxx';
-			// 	isValid false; // Prevent form submission
-			// }
-
-			// if (S_phone && !phoneRegex.test(S_phone)) {
-			// 	document.getElementById('S_cellphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
-			// 	isValid = false;
-			// }
-
-			if (!S_password) {
-				document.getElementById('S_passwordError').textContent = 'Please enter your password.';
-				isValid = false;
-			} else{
-				 const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
-
-				if (!strongPasswordPattern.test(S_password)) {
-					document.getElementById('S_passwordError').textContent =
-						'Password must be at least 8 characters long, contain uppercase, lowercase, a number, and a special character.';
+				if (recaptcha.length == 0) {
+					document.getElementById("G_recaptchaError").innerText = "Please confirm you are not a robot.";
 					isValid = false;
 				}
-			}
 
-			if (!S_password2) {
-				document.getElementById('S_password2Error').textContent = 'Please re-enter your password.';
+				if (!fname) {
+					document.getElementById('G_fnameError').textContent = 'Please fill in your first name.';
+					isValid = false;
+				}
+
+				// Validate LAST NAME
+				if (!lname) {
+					document.getElementById('G_lnameError').textContent = 'Please fill in your last name.';
+					isValid = false;
+				}
+
+				// Validate EMAIL
+				if (!email_purchase) {
+					document.getElementById('G_email_purchaseError').textContent = 'Please fill in your email address.';
+					isValid = false;
+				} else if (!/\S+@\S+\.\S+/.test(email_purchase)) {
+					document.getElementById('G_email_purchaseError').textContent = 'Please enter a valid email address.';
+					isValid = false;
+				}
+
+				// Validate CAPTCHA
+				// if (!phone) {
+				// 	document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
+				// 	isValid = false;
+				// }else if (phone.length < 5) {
+				// 	document.getElementById('G_phoneError').textContent = 'Please enter a complete phone number digits.';
+				// 	isValid = false;
+				// }
+
+				if (!phone) {
+					document.getElementById('G_phoneError').textContent = 'Please enter a phone number.';
+					isValid = false;
+				}
+
+				if (!phoneType) {
+				document.getElementById('phoneTypeError').textContent = 'Please select phone type';
 				isValid = false;
+				}
+
+				if(phoneType){
+				if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
+					if (phone && !phoneRegex.test(phone)) {
+						document.getElementById('G_phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+						document.getElementById('phone').focus();
+						isValid = false;
+					}
+				}
+				}
+
+				// if (phone && !phoneRegex.test(phone)) {
+				// 	document.getElementById('G_phoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+				// 	isValid = false;
+				// }
+
+				// if (!title) {
+				// 	document.getElementById('G_titleError').textContent = 'Please enter the title.';
+				// 	isValid = false;
+				// }
+
+				if (!size) {
+					document.getElementById('G_sizeError').textContent = 'Please enter the Price.';
+					isValid = false;
+				} else if (!integerRegex.test(size)) {
+					document.getElementById('G_sizeError').textContent = 'Please enter a dollar amount number (no decimals or special characters).';
+					isValid = false;
+				} else if (parseInt(size, 10) === 0) {
+					document.getElementById('G_sizeError').textContent = 'Please enter an offer price greater than 0.';
+					isValid = false;
+				}
+
+				// if (!additional_details) {
+				// 	document.getElementById('G_additional_details').textContent = 'Please enter the description.';
+				// 	isValid = false;
+				// }
+
+				// if (!captcha2) {
+				// 	document.getElementById('G_captcha2Error').textContent = 'Please enter the characters in the image.';
+				// 	isValid = false;
+				// }
+
+				// if (isValid) {
+				// 	// Submit the form
+				// 	document.getElementById('generalForm').submit();
+				// }
+
+				if (!isValid) {		
+					return false;
+				} else {
+					
+					submitButton.disabled = true;
+					submitButton.innerText = "Sending...";
+
+					// prevent default submit first
+					e.preventDefault();
+
+					// Now submit form manually after disabling button
+					setTimeout(() => {
+						document.forms['frm1'].submit();
+					}, 10);
+
+					return false; // stop default submit
+				}
+
+
+				return isValid;
 			}
 
-			if (S_password && S_password2 && S_password !== S_password2) {
-				document.getElementById('S_password2Error').textContent = 'Passwords do not match.';
-				isValid = false;
+
+			
+
+			function validateSellerForm(){
+			// alert('test');
+				document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+
+				let isValid = true;
+
+				const S_fname = document.getElementById('S_fname').value.trim();
+				const S_lname = document.getElementById('S_lname').value.trim();
+				const S_email = document.getElementById('S_Email').value.trim();
+				const S_phone = document.getElementById('S_cellphone').value.trim();
+				const S_phoneType = document.querySelector("[name='S_phoneType']").value;
+				const S_password = document.getElementById('S_password').value.trim();
+				const S_password2 = document.getElementById('S_password2').value.trim();
+				// const S_captcha = document.getElementById('S_captcha').value.trim();
+
+				const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+				// var recaptcha = grecaptcha.getResponse();
+
+				let recaptcha = grecaptcha.getResponse(sellerWidgetId);
+
+				const S_submitBtn = document.getElementById('S_submitbtn');
+
+				 S_submitBtn.disabled = true;
+    			 S_submitBtn.textContent = "Processing..."; 
+
+				console.log(recaptcha.length);
+				
+				if (recaptcha.length == 0) {
+					document.getElementById("S_recaptchaError").innerText = "Please confirm you are not a robot.";
+					isValid = false;
+				}
+
+				if (!S_fname) {
+					document.getElementById('S_fnameError').textContent = 'Please fill in your first name.';
+					isValid = false;
+				}
+
+				// Validate LAST NAME
+				if (!S_lname) {
+					document.getElementById('S_lnameError').textContent = 'Please fill in your last name.';
+					isValid = false;
+				}
+
+				// Validate EMAIL
+				if (!S_email) {
+					document.getElementById('S_EmailError').textContent = 'Please fill in your email address.';
+					isValid = false;
+				} else if (!/\S+@\S+\.\S+/.test(S_email)) {
+					document.getElementById('S_EmailError').textContent = 'Please enter a valid email address.';
+					isValid = false;
+				}
+
+				// Validate CAPTCHA
+				if (!S_phone) {
+					document.getElementById('S_cellphoneError').textContent = 'Please enter a phone number.';
+					isValid = false;
+				} 
+
+				if (!S_phoneType) {
+					document.getElementById('S_phoneTypeError').textContent = 'Please select phone type';
+					isValid = false;
+				}
+
+				if(S_phoneType){
+					if(S_phoneType === "Home Phone" || S_phoneType === "Cell Phone" || S_phoneType === "Business Phone"){
+						if (S_phone && !phoneRegex.test(S_phone)) {
+							document.getElementById('S_cellphoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+							document.getElementById('S_cellphone').focus();
+							isValid = false;
+						}
+					}
+				}
+
+				// else if (!phoneRegex.test(S_phone)) {
+				// 	document.getElementById('S_cellphoneError').textContent = 'Please enter your phone number in the format (xxx) xxx-xxxx';
+				// 	isValid false; // Prevent form submission
+				// }
+
+				// if (S_phone && !phoneRegex.test(S_phone)) {
+				// 	document.getElementById('S_cellphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
+				// 	isValid = false;
+				// }
+
+				if (!S_password) {
+					document.getElementById('S_passwordError').textContent = 'Please enter your password.';
+					isValid = false;
+				} else{
+					const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+
+					if (!strongPasswordPattern.test(S_password)) {
+						document.getElementById('S_passwordError').textContent =
+							'Password must be at least 8 characters long, contain uppercase, lowercase, a number, and a special character.';
+						isValid = false;
+					}
+				}
+
+				if (!S_password2) {
+					document.getElementById('S_password2Error').textContent = 'Please re-enter your password.';
+					isValid = false;
+				}
+
+				if (S_password && S_password2 && S_password !== S_password2) {
+					document.getElementById('S_password2Error').textContent = 'Passwords do not match.';
+					isValid = false;
+				}
+
+				// if (!S_captcha) {
+				// 	document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
+				// 	isValid = false;
+				// }
+
+				if (isValid) {
+					// Submit the form
+					document.getElementById('submitSellerForm').submit();
+				} else {
+					// Re-enable button if validation fails
+					S_submitBtn.disabled = false;
+					S_submitBtn.textContent = "Create an account";
+				}
+
+				return isValid;
 			}
 
-			// if (!S_captcha) {
-			// 	document.getElementById('S_captchaError').textContent = 'Please enter the characters in the image.';
-			// 	isValid = false;
-			// }
+	</script>
 
-			if (isValid) {
-				// Submit the form
-				document.getElementById('submitSellerForm').submit();
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const textarea = document.getElementById("additional_details");
+			const counter = document.getElementById("charCount");
+			const maxLength = 500;
+
+			if (textarea && counter) {
+			function updateCount() {
+					const currentLength = textarea.value.length;
+					counter.textContent = `${currentLength} / ${maxLength} characters`;
 			}
 
-			return isValid;
+			// Update counter initially
+			updateCount();
+
+			// Update on input
+			textarea.addEventListener("input", updateCount);
 		}
-
-</script>
+		});
+	</script>
 
 
 <script>

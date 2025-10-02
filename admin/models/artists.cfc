@@ -8,6 +8,8 @@
 	
 
 	<cffunction name="getAllArtists" access="remote" returntype="query">
+
+		<!--- <cfargument name="letter" type="string" required="false" default="" /> --->
 		
 		<cfset var success = true />
 		<cfset var qArtists = '' />
@@ -16,6 +18,7 @@
 	
 		<cfquery name="qArtists" datasource="#application.dsource#"> 
            	SELECT distinct manufacturer FROM products
+			
 			ORDER BY manufacturer
         </cfquery>
 		

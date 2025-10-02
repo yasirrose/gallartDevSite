@@ -1,6 +1,31 @@
 <cfajaxproxy cfc="admin.models.makeoffer" />
 <cfajaxproxy bind="javascript:gridChange({data.uid},{data.customer_email},{data.seller_email})">
-<cfhtmlhead text='<script type="text/javascript" src="/admin/scripts/makeoffer.js.cfm" language="JavaScript"></script>'>
+<cfhtmlhead text='
+	<script type="text/javascript" src="/admin/scripts/makeoffer.js.cfm" language="JavaScript"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+'>
+
+	<style>
+
+	.date-field div {
+		float: none !important;
+		width: max-content;
+		display: inline-block;
+	}
+	.date-field input.datefieldinput {
+		padding-right: 18px;
+		max-width: 178px;
+	}
+
+	.date-field div#searchFromDategridForm_cf_buttondiv, .date-field div#searchToDategridForm_cf_buttondiv {
+		position: absolute;
+		top: 2px;
+		right: 2px;
+		padding: 0 !important;
+	}
+</style>
 
 <table border = "0" width = "100%" cellpadding = "5" cellspacing = "0">
 	<tr>
@@ -13,50 +38,34 @@
 				<tr>
 					<td align="right">
 						<strong>Last Name:</strong>
-					</td>
-					<td>
 						<cfinput name="searchLname" size="30" />
+					</td>
+					<td align="right">
+						<strong>Email:</strong>
+						<cfinput name="searchEmail" size="30" />
 					</td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
-					<td align="right">
-						<strong>Email:</strong>
+					<td align="right" class="date-field">
+						<strong>Date from:</strong>
+						<cfinput name="searchFromDate" type="datefield" validate="date" size="30" />
 					</td>
-					<td>
-						<cfinput name="searchEmail" size="30" />
-
+					<td align="right" class="date-field">
+						<strong>Date to:</strong>
+						<cfinput name="searchToDate" type="datefield" validate="date" size="30" />
 					</td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td align="right">
 						<strong>Title:</strong>
-					</td>
-					<td>
 						<cfinput name="searchTitle" size="30" />
 					</td>
-					<td>&nbsp;</td>
-				</tr>
-				<tr>
 					<td align="right">
-						<strong>Date from:</strong>
-					</td>
-					<td nowrap>
-						<cfinput name="searchFromDate" type="datefield" validate="date" size="10" />
-					</td>
-					<td>&nbsp;</td>
-				</tr>
-				<tr>
-					<td align="right">
-						<strong>Date to:</strong>
-					</td>
-					<td nowrap>
-						<cfinput name="searchToDate" type="datefield" validate="date" size="10" />
-					</td>
-					<td>
 						<input type="Reset"><cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
 					</td>
+					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -240,6 +249,21 @@
 		</td>
 	</tr>
 </table>
+
+<style>
+	.toast-center {
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%) !important;
+		position: fixed !important;
+		z-index: 999999 !important;
+	}
+
+	#toast-container > .toast {
+		background-color: #ff4da6 !important;
+		color: white !important;
+	}
+</style>
 
 <iframe id="viewMailLog" src="" style="display: none; position: absolute; top: 165px; left: 10px; z-index: 1000; background-color: #fff;" height="575" width="615" frameborder="1"></iframe>
 

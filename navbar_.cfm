@@ -2,32 +2,32 @@
 
 	//   <!-- Start Sidebar Toddle -->
 
-	document.addEventListener("DOMContentLoaded", function() {
-    // Select the elements
-	var modal = document.querySelector(".navbar-collapse");
-    var trigger = document.querySelector(".navbar-toggler");
+	// document.addEventListener("DOMContentLoaded", function() {
+    // // Select the elements
+	// var modal = document.querySelector(".navbar-collapse");
+    // var trigger = document.querySelector(".navbar-toggler");
 
-    // Check if all elements are found
-    if (modal && trigger) {
-        // Define toggleModal function
-        function toggleModal() {
-            modal.classList.toggle("show");
-        }
+    // // Check if all elements are found
+    // if (modal && trigger) {
+    //     // Define toggleModal function
+    //     function toggleModal() {
+    //         modal.classList.toggle("show");
+    //     }
 
-        // Define windowOnClick function
-        function windowOnClick(event) {
-            if (event.target === modal) {
-                toggleModal();
-            }
-        }
+    //     // Define windowOnClick function
+    //     function windowOnClick(event) {
+    //         if (event.target === modal) {
+    //             toggleModal();
+    //         }
+    //     }
 
-        // Attach event listeners
-        trigger.addEventListener("click", toggleModal);
-        window.addEventListener("click", windowOnClick);
-    } else {
-        console.error("One or more elements not found!");
-    }
-	});
+    //     // Attach event listeners
+    //     trigger.addEventListener("click", toggleModal);
+    //     window.addEventListener("click", windowOnClick);
+    // } else {
+    //     console.error("One or more elements not found!");
+    // }
+	// });
 
 //   <!-- End Sidebar Toddle -->
 </script>
@@ -36,28 +36,28 @@
 <!--- <div class="navContainer">
 	<ul>
 		<li>
-			<a href="index.cfm?xss=#xss#" class="navElement">Home</a>
+			<a href="index.cfm" class="navElement">Home</a>
 		</li>
 		<li>
-			<a href="user_registration.cfm?xss=#xss#" class="navElement">Sell Your Art</a>
+			<a href="user_registration.cfm" class="navElement">Sell Your Art</a>
 		</li>
 		<li>
-			<a href="alerts.cfm?xss=#xss#" class="navElement">Alerts</a>
+			<a href="alerts.cfm" class="navElement">Alerts</a>
 		</li>
 		<li>
-			<a href="new_listings.cfm?xss=#xss#" class="navElement">Recent Acquisitions</a>
+			<a href="recent-acquisitions" class="navElement">Recent Acquisitions</a>
 		</li>
 		<li>
-			<a href="classifieds.cfm?xss=#xss#" class="navElement">Classifieds</a>
+			<a href="classifieds.cfm" class="navElement">Classifieds</a>
 		</li>
 		<li>
-			<a href="featured_events.cfm?xss=#xss#" class="navElement">Events</a>
+			<a href="featured_events.cfm" class="navElement">Events</a>
 		</li>
 		<li>
-			<a href="sales.cfm?xss=#xss#" class="navElement">Sales</a>
+			<a href="sales.cfm" class="navElement">Sales</a>
 		</li>
 		<li>
-			<a href="guests.cfm?xss=#xss#" class="navElement">Guest Book</a>
+			<a href="guests.cfm" class="navElement">Guest Book</a>
 		</li>
 		<li>
 			<a href="http://blog.gallart.com/" class="navElement">Blog</a>
@@ -72,34 +72,34 @@
 	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav me-auto ms-auto">
 			<li class="nav-item">
-				<a href="/index.cfm?xss=#xss#" class="nav-link">Home</a>
+				<a href="/" class="nav-link">Home</a>
 			</li>
 			<li class="nav-item">
-				<a href="new_listings.cfm?xss=#xss#" class="nav-link">Recent Acquisitions</a>
+				<a href="/recent-acquisitions" class="nav-link">Recent Acquisitions</a>
 			</li>
 			<li class="nav-item">
-				<a href="sales.cfm?xss=#xss#" class="nav-link">Sales</a>
+				<a href="/sale-items" class="nav-link">Sales</a>
 			</li>
 			<li class="nav-item">
-				<a href="classifieds.cfm?xss=#xss#" class="nav-link">Classifieds</a>
+				<a href="/classifieds" class="nav-link">Classifieds</a>
 			</li>
 			<li class="nav-item">
-				<a href="featured_events.cfm?xss=#xss#" class="nav-link">Events</a>
+				<a href="/events" class="nav-link">Events</a>
 			</li>
 			<li class="nav-item">
-				<a href="new_user_registration.cfm?xss=#xss#" class="nav-link" onclick="clearActiveTab()">Sell Your Art</a>
+				<a href="/sell-your-art" class="nav-link" onclick="clearActiveTab()">Sell Your Art</a>
 			</li>
 			<li class="nav-item">
-				<a href="about.cfm?xss=#xss#" class="nav-link">About</a>
+				<a href="/about-us" class="nav-link">About</a>
 			</li>
 			<li class="nav-item">
-				<a href="contact.cfm?xss=#xss#" class="nav-link">Contact Us</a>
+				<a href="/contact-us" class="nav-link">Contact Us</a>
 			</li>
 			<!--- <li class="nav-item">
-				<a href="alerts.cfm?xss=#xss#" class="nav-link">Alerts</a>
+				<a href="alerts" class="nav-link">Alerts</a>
 			</li> --->
 			<!--- <li class="nav-item">
-				<a href="guests.cfm?xss=#xss#" class="nav-link">Guest Book</a>
+				<a href="guests.cfm" class="nav-link">Guest Book</a>
 			</li> --->
 			<!--- <li class="nav-item">
 				<a href="http://blog.gallart.com/" class="nav-link">Blog</a>
@@ -116,12 +116,12 @@
 				  More
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					<a href="requests.cfm?xss=#xss#" class="dropdown-item">Requests.cfm</a>
-					<a href="quotes.cfm?xss=#xss#" class="dropdown-item">Quotes</a>
-					<a href="mailing_list.cfm?xss=#xss#" class="dropdown-item">Mailing List</a>
-					<a href="buyer_info.cfm?xss=#xss#" class="dropdown-item">Buyer Info</a>
-					<a href="seller_info.cfm?xss=#xss#" class="dropdown-item">Seller Info</a>
-					<a href="searchpage.cfm?xss=#xss#" class="dropdown-item">Search</a>
+					<a href="requests.cfm" class="dropdown-item">Requests.cfm</a>
+					<a href="quotes.cfm" class="dropdown-item">Quotes</a>
+					<a href="mailing_list.cfm" class="dropdown-item">Mailing List</a>
+					<a href="buyer_info.cfm" class="dropdown-item">Buyer Info</a>
+					<a href="seller_info.cfm" class="dropdown-item">Seller Info</a>
+					<a href="searchpage.cfm" class="dropdown-item">Search</a>
 				</div>
 			  </li> --->
 		</ul>
@@ -180,7 +180,14 @@ ul.sub-menu {
 } */
 
 </style>
-
+<!--- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".navbar-toggler").on("click", function () {
+      $(this).toggleClass("active");
+    });
+  });
+</script> --->
 <script>
     function clearActiveTab() {
         // Clear the 'activeTab' key from localStorage

@@ -29,13 +29,8 @@
             <cfset session.sellerinfo.fname = ValidUser.fname>
             <cfset session.sellerinfo.lname = ValidUser.lname>
             <cfset session.sellerinfo.email = ValidUser.email>
-            <cfset session.sellerinfo.login = 1>
-    
-            <cfif isDefined('xss')>
-                <cfset url_string = "overView.cfm?xss="&xss />
-                <cfelse>
-                <cfset url_string = "overView.cfm" />
-            </cfif>
+            <cfset session.sellerinfo.login = 1>   
+            <cfset url_string = "overView" />
     
             <cfset result = {
                 "success": true,
@@ -74,12 +69,12 @@
 				<div class="input-form">
 					<div class="input-field">
 						<label><strong>Email Address: <span style="color: #ff0000;">* </span></strong></label>
-						<input type="text" id="email" name="email">
+						<input type="text" id="email" name="email" maxlength="25">
 						<span class="error-message" id="email_loginError"></span>
 					</div>
 					<div class="input-field text-left">
 						<label><strong>Password: <span style="color: #ff0000;">* </span></strong></label>
-						<input type="password" id="password" name="password">
+						<input type="password" id="password" name="password" maxlength="25">
 						<span class="error-message" id="passwordError"></span>
 					</div>
 
@@ -89,17 +84,21 @@
                     </div>
 
 					<div class="input-button">
-						<button type="submit" style="margin: auto;" class="SeeMore">Sign In</button>
+						<button type="submit" id="loginBtn" style="margin: auto;" class="SeeMore">Sign In</button>
+                        
 					</div>
+
+                    <span class="error-message" id="errorMessage"></span>
+
 					<div class="forget-message text-center">
-						<a href="forgot_password.cfm?xss=<cfoutput>#xss#</cfoutput>">Forget your password?</a>
+						<a href="forgot_password">Forget your password?</a>
 					</div>
 				</div>
 			</form>
 			<div>
 				<p style="line-height: 1.4;" class="text-center">Create an account with Gallery Art to track your purchases, create wish lists and sell your artwork</p>
 				<div align="center">
-					<a href="register.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color: #d9387c; font-size: 14px; font-weight: bold;">Create an Account</a>
+					<a href="register" style="color: #d9387c; font-size: 14px; font-weight: bold;">Create an Account</a>
 				</div>
 			</div>
 		</div>
@@ -139,15 +138,19 @@
             document.getElementById('passwordError').textContent = '';
             document.getElementById('errorMessage').textContent = '';
 
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.disabled = true;           // disable button immediately
+            loginBtn.textContent = 'Signing In...';
+
             let isValid = true;
             const email_login = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
             const recaptchaResponse = grecaptcha.getResponse();
 
-            if (!recaptchaResponse) {
-                document.getElementById('recaptchaError').textContent = 'Please verify reCAPTCHA.';
-                isValid = false;
-            }
+            // if (!recaptchaResponse) {
+            //     document.getElementById('recaptchaError').textContent = 'Please verify reCAPTCHA.';
+            //     isValid = false;
+            // }
 
             if (!email_login) {
                 document.getElementById('email_loginError').textContent = 'Please enter your email address';
@@ -162,7 +165,13 @@
                 isValid = false;
             }
 
-            if (!isValid) return;
+            
+             if (!isValid) {
+                // Re-enable button if validation fails
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+                return;
+            }
 
             // Create a FormData object for AJAX
             const formData = new FormData();
@@ -187,19 +196,23 @@
                 window.location.href = data.redirectURL; // Redirect on successful login
             } else {
                 toastr.error(data.errorMessage ); // Display error message
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
             }
         })
         .catch(error => {
             document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
             console.error('Error:', error);
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Sign In';
         });
     });
 </script>
  <style>
 	.error-message {
-	color: #ff0000;
-	font-size: 0.9em;
-	margin-top: 5px;
-	display: block;
+        color: #ff0000;
+        font-size: 0.9em;
+        margin-top: 5px;
+        display: block;
 	}
  </style>

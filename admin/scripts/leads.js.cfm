@@ -50,59 +50,23 @@ getKeywords = function(){
 	   return s;
 	}
 
+
+	let isProcessing = false;
+
    function doEdit(type) {
 
-	var fname = document.getElementById('fname').value.trim();
-	var lname = document.getElementById('lname').value.trim();
-	var name = document.getElementById('name').value.trim();
-	var email = document.getElementById('leadEmail').value.trim();
-
-	var phone = document.getElementById('phoneNumber').value.trim();
-    var phoneType = document.getElementById('PhoneType').value;
 	
+		console.log('test type: ' + type)
 
-	  <!--- if (fname === '') {
-		  toastr.error('First Name is required.');
-		  document.getElementById('fname').focus();
-		  return false;
-	  }
-
-	  if (lname === '') {
-		  toastr.error('Last Name is required.');
-		  document.getElementById('lname').focus();
-		  return false;
-	  } --->
-
-		if (name === '') {
-			toastr.error('Name is required.');
-			document.getElementById('name').focus();
-			return false;
-		}
-
-		if (email === '') {
-			<!---toastr.error('Email is required.');
-			document.getElementById('leadEmail').focus();
-			return false;--->
-		} else {
-			// Simple email format check using regex
-			var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailPattern.test(email)) {
-				toastr.error('Please enter a valid email address.');
-				document.getElementById('seller_email').focus();
+		 if (isProcessing) {
+				console.log("Request already in process…");
 				return false;
 			}
-	  }
+    	isProcessing = true;
 
-	   if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
-			// Format: (123) 456-7890
-			var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
-			if (!phonePattern.test(phone)) {
-				alert("Please enter phone number in format: (123) 456-7890");
-				document.getElementById('phoneNumber').focus();
-				return false;
-			}
-		}
-
+		 document.getElementById('edit').disabled = true;
+		const deleteBtn = document.getElementById('delete');
+		if (deleteBtn) deleteBtn.disabled = true;
 	  
 
        var edit = new admin.models.leads();
@@ -111,22 +75,131 @@ getKeywords = function(){
 
        if (type == 'edit'){
 
-        if ( edit.editLeadFromForm()) {
-			document.getElementById('emailButton').style.display = 'block';
-            ColdFusion.Grid.refresh('leadGrid',true);
-        }
-        else { alert( 'There was a problem in the processing.')}
-	        }
+			var fname = document.getElementById('fname').value.trim();
+			var lname = document.getElementById('lname').value.trim();
+			var name = document.getElementById('name').value.trim();
+			var email = document.getElementById('leadEmail').value.trim();
+
+			var phone = document.getElementById('phoneNumber').value.trim();
+			var phoneType = document.getElementById('PhoneType').value;
+		
+
+			<!--- if (fname === '') {
+				toastr.error('First Name is required.');
+				document.getElementById('fname').focus();
+				return false;
+			}
+
+			if (lname === '') {
+				toastr.error('Last Name is required.');
+				document.getElementById('lname').focus();
+				return false;
+			} --->
+
+			if (name === '') {
+				toastr.error('Name is required.');
+				document.getElementById('name').focus();
+				return false;
+			}
+
+			if (email === '') {
+				<!---toastr.error('Email is required.');
+				document.getElementById('leadEmail').focus();
+				return false;--->
+			} else {
+				// Simple email format check using regex
+				var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+				if (!emailPattern.test(email)) {
+					toastr.error('Please enter a valid email address.');
+					document.getElementById('seller_email').focus();
+					return false;
+				}
+			}
+
+			if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
+					// Format: (123) 456-7890
+					var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+					if (!phonePattern.test(phone)) {
+						alert("Please enter phone number in format: (123) 456-7890");
+						document.getElementById('phoneNumber').focus();
+						return false;
+					}
+				}
+
+
+
+			if ( edit.editLeadFromForm()) {
+				document.getElementById('emailButton').style.display = 'block';
+				
+				ColdFusion.Grid.refresh('leadGrid',true);
+				
+				toastr.options = {
+					"closeButton": true,
+					"debug": false,
+					"newestOnTop": true,
+					"progressBar": true,
+					"positionClass": "toast-center",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "3000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				};
+
+				toastr.success('Record is updated Successfully'); 
+			}
+			else { 
+				alert( 'There was a problem in the processing.')
+			}
+	    }
 	     else if (type == 'delete'){
-		document.getElementById('notes').value = '';
+			document.getElementById('notes').value = '';
 	     	if ( edit.deleteLead()) {
-            ColdFusion.Grid.refresh('leadGrid',true);
-        }
-        else { alert( 'There was a problem in the processing.')}
-	        }
+				
+           		ColdFusion.Grid.refresh('leadGrid',true);
+
+				toastr.options = {
+					"closeButton": true,
+					"debug": false,
+					"newestOnTop": true,
+					"progressBar": true,
+					"positionClass": "toast-center",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "3000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				};
+
+				toastr.success('Record is Deleted Successfully'); 
+        	}
+			else { 
+				alert( 'There was a problem in the processing.')
+			}
+	    }
 	document.getElementById('edit').value = 'Edit';
    	document.getElementById('delete').style.display = '';
+
+	setTimeout(resetButtons, 1000); 
+
    }
+
+   function resetButtons() {
+		isProcessing = false;
+		document.getElementById('edit').disabled = false;
+		const deleteBtn = document.getElementById('delete');
+		if (deleteBtn) deleteBtn.disabled = false;
+	}
 
    function showNew () {
    	document.getElementById('pk_leads').value = '';
@@ -155,6 +228,13 @@ getKeywords = function(){
 	document.getElementById('empDisplay').innerHTML = '<cfoutput>#session.userinfo.lname#</cfoutput>, <cfoutput>#session.userinfo.fname#</cfoutput>';
 	document.getElementById('emailButton').style.display = 'none';
    	document.getElementById('edit').value = 'Add';
+   	document.getElementById('Addresstype').value = 'Add';
+   	document.getElementById('website').value = 'Add';
+
+	if (window.updateArtists) window.updateArtists();
+	if (window.updateTitles) window.updateTitles();
+	if (window.updateNotes) window.updateNotes();
+
 	<cfif session.loggedin EQ true AND session.userinfo.sa EQ 1>
    		document.getElementById('delete').style.display = 'none';
 	</cfif>
@@ -245,6 +325,11 @@ getKeywords = function(){
 			}
 		}
 	} 
+
+	  // ✅ Update counters again after populating data
+    if (window.updateArtists) setTimeout(window.updateArtists, 200);
+    if (window.updateTitles)  setTimeout(window.updateTitles, 200);
+    if (window.updateNotes)   setTimeout(window.updateNotes, 200);
 
 
 	var fname = strLead.RESULTSET.DATA[0][4]; // FNAME

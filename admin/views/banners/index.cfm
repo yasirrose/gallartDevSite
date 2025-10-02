@@ -8,7 +8,8 @@
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 
-    <cfif isDefined('form.edit') and form.edit eq 'Add'>
+		
+    <cfif isDefined('form.actionType') and form.actionType eq 'Add'>
         <cftry>    
             <!--- Save banner details into the database --->
             <cfquery name="qSaveData" datasource="#application.dsource#">
@@ -85,7 +86,7 @@
     </cfif>
     
 
-	<cfif isDefined('form.edit') and form.edit eq 'Edit'>
+	<cfif isDefined('form.actionType') and form.actionType eq 'Edit'>
 
 		<cftry>    
 			<!--- Update banner details in the database --->
@@ -288,7 +289,7 @@
 						<!--- <a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br> --->
 					</td>
 				</tr>
-				
+				<input type="hidden" name="actionType" id="actionType" value="">
 				
 				<tr>
 					<td colspan="2">
@@ -302,8 +303,12 @@
 
 						</cfif>
 						<cfinput type="hidden" value="#deleteChecck#" name="deleteCheck" id="deleteCheck" >
-						<cfinput type="submit" name="edit" id="Add" value="Add"  style="display:none;" />
-						<cfinput type="submit" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" style="#buttonStyle#" />
+						<!--- <cfinput type="submit" name="edit" id="Add" value="Add"  style="display:none;" />
+						<cfinput type="submit" name="edit" id="edit" value="Edit"  onclick="doEdit('edit');" style="#buttonStyle#" /> --->
+
+						<cfinput type="button" name="add_btn" id="Add" value="Add" onclick="return handleAction(this,'Add');" style="display:none;" />
+						<cfinput type="button" name="edit_btn" id="edit" value="Edit" onclick="return handleAction(this,'Edit');" style="#buttonStyle#" />
+					
 						<cfinput type="submit" name="delete" id="delete" value="Delete" onclick="return confirmDelete();" style="#buttonStyle#" />
 					</td>			
 				</tr>
@@ -313,76 +318,120 @@
 	</tr>
 </table>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-	setTimeout(function() {
-		// Assuming the bannerImage value is set as a hidden field or directly fetched
-		var bannerImage = document.getElementById('bannerImages').value;
+	document.addEventListener('DOMContentLoaded', function() {
+		setTimeout(function() {
+			// Assuming the bannerImage value is set as a hidden field or directly fetched
+			var bannerImage = document.getElementById('bannerImages').value;
 
-		if (bannerImage) {
-			document.getElementById('mainImg').src = "/images/banners/" + bannerImage;
-		} else {
-			console.log("Banner image value is not defined.");
+			if (bannerImage) {
+				document.getElementById('mainImg').src = "/images/banners/" + bannerImage;
+			} else {
+				console.log("Banner image value is not defined.");
+			}
+		}, 1000);
+	});
+	function doEdit(type) {
+		<!--- <cfdump var="#type#" abort=true> --->
+		var filterName = document.getElementById('bannerName').value.trim();
+		var filterType = document.getElementById('bannerType').value.trim();
+
+		
+		var edit = new admin.models.banners();
+
+		if (type == 'edit'){
+				if (filterName === '' || filterType === '') {
+				alert('Please fill out all fields.');
+				return; 
+			}
 		}
-	}, 1000);
-});
-function doEdit(type) {
-    <!--- <cfdump var="#type#" abort=true> --->
-  var filterName = document.getElementById('bannerName').value.trim();
-  var filterType = document.getElementById('bannerType').value.trim();
 
-  
- var edit = new admin.models.banners();
+		edit.setForm("editForm");
+			if (type == 'edit'){
+		
+		}
+		else if (type == 'delete'){
+			if ( edit.deleteEmployee()) {
+				// ColdFusion.Grid.refresh('data', true);
+			} 
 
- if (type == 'edit'){
-	 if (filterName === '' || filterType === '') {
-      alert('Please fill out all fields.');
-      return; 
-  }
- }
+		else {
+			alert( 'There was a problem in the processing.')
+			}
+		}
+		document.getElementById('edit').value = 'Edit';
+		document.getElementById('delete').style.display = '';
+	}
 
- edit.setForm("editForm");
- if (type == 'edit'){
- 
-}
-else if (type == 'delete'){
-		if ( edit.deleteEmployee()) {
-			// ColdFusion.Grid.refresh('data', true);
+	function confirmDelete() {
+		if (confirm('DELETE -- ARE YOU SURE?')) {
+			doEdit('delete');
+			return true; // allow form submit or your custom logic
+		} else {
+			return false; // stop form submit if cancel pressed
+		}
+	}
+
+	function validateImage() {
+		var fileInput = document.getElementById('bannerImage');
+		var filePath = fileInput.value;
+		var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+		var errorElement = document.getElementById('fileError');
+		var maxSize = 300 * 1024;
+
+		if (!allowedExtensions.exec(filePath)) {
+			errorElement.innerHTML = 'Please upload a file with .jpg or .png extension only.';
+			fileInput.value = '';
+			return false;
 		} 
 
-  else { alert( 'There was a problem in the processing.')}
-   }
-document.getElementById('edit').value = 'Edit';
- document.getElementById('delete').style.display = '';
-}
-
-function confirmDelete() {
-    if (confirm('DELETE -- ARE YOU SURE?')) {
-        doEdit('delete');
-        return true; // allow form submit or your custom logic
-    } else {
-        return false; // stop form submit if cancel pressed
-    }
-}
-
-function validateImage() {
-	var fileInput = document.getElementById('bannerImage');
-	var filePath = fileInput.value;
-	var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-	var errorElement = document.getElementById('fileError');
-	var maxSize = 300 * 1024;
-
-	if (!allowedExtensions.exec(filePath)) {
-		errorElement.innerHTML = 'Please upload a file with .jpg or .png extension only.';
-		fileInput.value = '';
-		return false;
-	} 
-
-	if(fileInput.files && fileInput.files[0].size > maxSize) {
-		errorElement.innerHTML = 'Please upload an image smaller than 300 KB.';
-        fileInput.value = '';
-        return false;
+		if(fileInput.files && fileInput.files[0].size > maxSize) {
+			errorElement.innerHTML = 'Please upload an image smaller than 300 KB.';
+			fileInput.value = '';
+			return false;
+		}
+		errorElement.innerHTML = '';
+		return true;
 	}
-	errorElement.innerHTML = '';
-	return true;
+
+	var formSubmitted = false;
+
+function handleAction(btn, action) {
+    var form = btn.form || document.forms['editForm'];
+    if (!form) return false;
+
+    // Run HTML5 validation first (if any required fields exist)
+    if (typeof form.checkValidity === 'function' && !form.checkValidity()) {
+        if (typeof form.reportValidity === 'function') form.reportValidity();
+        return false;
+    }
+
+    if (formSubmitted) return false;
+    formSubmitted = true;
+
+    // Set hidden 'edit' field so CF receives the action (preserves existing server checks)
+    var editField = document.getElementById('actionType');
+    if (editField) editField.value = action;
+
+    // Disable & give feedback
+    try {
+        btn.disabled = true;
+        btn.value = action + 'ing...';
+    } catch(e) {}
+
+    // Disable all other buttons to prevent double-clicks
+    var elems = form.querySelectorAll('input[type=submit], input[type=button], button');
+    elems.forEach(function(el){ el.disabled = true; });
+
+    // Small delay to ensure DOM updates, then submit the form programmatically
+    setTimeout(function(){
+        if (typeof form.requestSubmit === 'function') {
+            form.requestSubmit(); // better for HTML5 submit handling when available
+        } else {
+            form.submit();
+        }
+    }, 10);
+
+    return false;
 }
+
 </script>

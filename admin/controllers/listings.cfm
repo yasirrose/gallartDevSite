@@ -44,10 +44,12 @@
 	
 	<cfcase value="procListing">
     	<cfset fileSizeLimit = 2000000 />
+
+		<!--- <cfdump var="#form#" abort="true"> --->
 	
-		<cfif structKeyExists(form,'Edit')>
+		<cfif structKeyExists(form,'HIDDENEDIT')>
 		
-			<cfif form.Edit EQ 'Delete'>
+			<cfif form.HIDDENEDIT EQ 'Delete'>
 			
 				<cfscript>
 					deleteListing = application.objectFactoryAdmin.getInstance('art').deleteListing( argumentcollection = form );
