@@ -82,15 +82,21 @@ function init(){
 			<cfform name="gridForm">
 			<table cellspacing="0" cellpadding="1" border="0" width="100%">
 				<tr>
-					<td align="right" style="font-size: 10px;">
+					<td align="left" style="font-size: 10px;">
 						<strong>Last Name:</strong>
-					</td>
-					<td>
 						<cfinput name="searchLname" size="30" />
+					</td>
+					<td align="left" style="font-size: 10px;">
+						<strong>Email:</strong>
+						<cfinput name="searchEmail" size="30" />
+					</td>
+					<td align="left" style="font-size: 10px;">
+						<strong>Event Name:</strong>
+						<cfinput name="searchEventTitle" size="30" />
 					</td>
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
+				<!--- <tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>Email:</strong>
 					</td>
@@ -107,17 +113,23 @@ function init(){
 						<cfinput name="searchEventTitle" size="30" />
 					</td>
 					<td>&nbsp;</td>
-				</tr>
+				</tr> --->
 				<tr>
-					<td align="right" style="font-size: 10px;">
+					<td align="left" class="date-field" style="font-size: 10px;" nowrap>
 						<strong>Date from:</strong>
-					</td>
-					<td nowrap>
+						<br>
 						<cfinput name="searchFromDate" type="datefield" validate="date" size="10" />
+					</td>
+					<td align="left" class="date-field" style="font-size: 10px;" nowrap>
+						<strong>Date to:</strong>
+						<br>
+						<cfinput name="searchToDate" type="datefield" validate="date" size="10" />
+						<input type="Reset">
+						<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
 					</td>
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
+				<!--- <tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>Date to:</strong>
 					</td>
@@ -125,9 +137,10 @@ function init(){
 						<cfinput name="searchToDate" type="datefield" validate="date" size="10" />
 					</td>
 					<td>
-						<input type="Reset"><cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
+						<input type="Reset">
+						<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
 					</td>
-				</tr>
+				</tr> --->
 				<tr>
 					<td colspan="3">
 						<cfgrid format="html" name="data" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.events.getRegistrations({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchLname},{searchEmail},{searchEventTitle},{searchFromDate},{searchToDate})">
@@ -163,7 +176,7 @@ function init(){
 									First Name:
 								</td>
 								<td>
-									<cfinput type="text" name="fname" id="fname"  bind="{data.fname}" size="50">
+									<cfinput type="text" name="fname" id="fname" maxlength="50" bind="{data.fname}" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -171,7 +184,7 @@ function init(){
 									Last Name:
 								</td>
 								<td>
-									<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" size="50">
+									<cfinput type="text" name="lname" id="lname" maxlength="50" bind="{data.lname}" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -179,7 +192,7 @@ function init(){
 									Address 1
 								</td>
 								<td>
-									<cfinput type="text" name="address1" id="address1"  bind="{data.address1}" size="50">
+									<cfinput type="text" name="address1" id="address1" maxlength="50" bind="{data.address1}" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -187,7 +200,7 @@ function init(){
 									Address 2
 								</td>
 								<td>
-									<cfinput type="text" name="address2" id="address2"  bind="{data.address2}" size="50">
+									<cfinput type="text" name="address2" id="address2" maxlength="50" bind="{data.address2}" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -195,7 +208,7 @@ function init(){
 									City
 								</td>
 								<td>
-									<cfinput type="text" name="city" id="city"  bind="{data.city}" size="50">
+									<cfinput type="text" name="city" id="city"  bind="{data.city}" maxlength="50" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -203,7 +216,7 @@ function init(){
 									State
 								</td>
 								<td>
-									<cfinput type="text" name="state" id="state"  bind="{data.state}" size="50">
+									<cfinput type="text" name="state" id="state"  bind="{data.state}" maxlength="50" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -211,7 +224,7 @@ function init(){
 									Zipcode
 								</td>
 								<td>
-									<cfinput type="text" name="zip" id="zip"  bind="{data.zip}" size="25">
+									<cfinput type="text" name="zip" id="zip"  bind="{data.zip}" maxlength="50" size="25">
 								</td>
 							</tr>
 							<tr>
@@ -219,7 +232,7 @@ function init(){
 									Country
 								</td>
 								<td>
-									<cfinput type="text" name="country" id="country"  bind="{data.country}" size="50">
+									<cfinput type="text" name="country" id="country"  bind="{data.country}" maxlength="50" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -227,7 +240,7 @@ function init(){
 									Primary Phone
 								</td>
 								<td>
-									<cfinput type="text" name="primary_phone" id="primary_phone"  bind="{data.primary_phone}" size="25">
+									<cfinput type="text" name="primary_phone" id="primary_phone" maxlength="50" bind="{data.primary_phone}" size="25">
 								</td>
 							</tr>
 							<tr>
@@ -235,7 +248,7 @@ function init(){
 									Secondary Phone
 								</td>
 								<td>
-									<cfinput type="text" name="secondary_phone" id="secondary_phone"  bind="{data.secondary_phone}" size="25">
+									<cfinput type="text" name="secondary_phone" id="secondary_phone" maxlength="50"  bind="{data.secondary_phone}" size="25">
 								</td>
 							</tr>
 							<tr>
@@ -243,7 +256,7 @@ function init(){
 									Email:
 								</td>
 								<td>
-									<cfinput type="text" name="email" id="email"  bind="{data.email}" size="50">
+									<cfinput type="text" name="email" id="email"  bind="{data.email}" maxlength="50" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -251,7 +264,7 @@ function init(){
 									Artist Interested In:
 								</td>
 								<td>
-									<cfinput type="text" name="art_interested" id="art_interested"  bind="{data.art_interested}" size="50"  />
+									<cfinput type="text" name="art_interested" id="art_interested" maxlength="50" bind="{data.art_interested}" size="50"  />
 								</td>
 							</tr>
 							<tr>
@@ -259,7 +272,7 @@ function init(){
 									Other Artist Not Listed:
 								</td>
 								<td>
-									<cfinput type="text" name="other_artist" id="other_artist"  bind="{data.other_artist}" size="50"  />
+									<cfinput type="text" name="other_artist" id="other_artist" maxlength="50" bind="{data.other_artist}" size="50"  />
 								</td>
 							</tr>
 							<tr>
@@ -276,13 +289,13 @@ function init(){
 									Number of People in Party:
 								</td>
 								<td>
-									<cfinput type="text" name="number_people" id="number_people"  bind="{data.number_people}" size="25">
+									<cfinput type="text" name="number_people" id="number_people" maxlength="25" bind="{data.number_people}" size="25">
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2">
 									<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
-									<cfinput type="button" name="delete" id="delete" value="Delete" onclick="if (confirm('DELETE -- ARE YOU SURE?')){ doEdit('delete');}" />
+									<cfinput type="button" name="delete" id="delete" value="Delete" onclick="doEdit('delete')" />
 								</td>
 							</tr>
 						</table>
@@ -293,3 +306,39 @@ function init(){
 		</td>
 	</tr>
 </table>
+
+<style>
+	.toast-center {
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%) !important;
+		position: fixed !important;
+		z-index: 999999 !important;
+	}
+
+	#toast-container > .toast {
+		background-color: #ff4da6 !important;
+		color: white !important;
+	}
+</style>
+
+<style>
+
+	
+	.date-field div {
+		float: none !important;
+		width: max-content;
+		display: inline-block;
+	}
+	.date-field input.datefieldinput {
+		padding-right: 18px;
+		max-width: 178px;
+	}
+
+	.date-field div#searchFromDategridForm_cf_buttondiv, .date-field div#searchToDategridForm_cf_buttondiv {
+		position: absolute;
+		top: 2px;
+		right: 2px;
+		padding: 0 !important;
+	}
+</style>

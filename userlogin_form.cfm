@@ -29,7 +29,19 @@
             <cfset session.sellerinfo.fname = ValidUser.fname>
             <cfset session.sellerinfo.lname = ValidUser.lname>
             <cfset session.sellerinfo.email = ValidUser.email>
-            <cfset session.sellerinfo.login = 1>   
+            <cfset session.sellerinfo.login = 1>
+
+            <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+            <cfset date = now()>
+            <cfset moduleName = 'login'>
+             
+            <cfquery name="addLog" datasource="#application.dsource#" >
+                INSERT INTO logs 
+                    ( moduleName, ipAddress, date)
+                    VALUES
+                    ( '#moduleName#', '#ipAddress#', #date#)
+            </cfquery>
+            
             <cfset url_string = "overView" />
     
             <cfset result = {
@@ -111,24 +123,24 @@
 
 <script>
 
-			$(document).ready(function() {
-				toastr.options = {
-					'closeButton': true,
-					'debug': false,
-					'newestOnTop': false,
-					'progressBar': true,
-					'positionClass': 'toast-top-right',
-					'preventDuplicates': false,
-					'showDuration': '1000',
-					'hideDuration': '1000',
-					'timeOut': '5000',
-					'extendedTimeOut': '1000',
-					'showEasing': 'swing',
-					'hideEasing': 'linear',
-					'showMethod': 'fadeIn',
-					'hideMethod': 'fadeOut',
-				}
-			});
+        $(document).ready(function() {
+            toastr.options = {
+                'closeButton': true,
+                'debug': false,
+                'newestOnTop': false,
+                'progressBar': true,
+                'positionClass': 'toast-top-right',
+                'preventDuplicates': false,
+                'showDuration': '1000',
+                'hideDuration': '1000',
+                'timeOut': '5000',
+                'extendedTimeOut': '1000',
+                'showEasing': 'swing',
+                'hideEasing': 'linear',
+                'showMethod': 'fadeIn',
+                'hideMethod': 'fadeOut',
+            }
+        });
 
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault(); // Prevent form from refreshing the page
@@ -166,7 +178,7 @@
             }
 
             
-             if (!isValid) {
+            if (!isValid) {
                 // Re-enable button if validation fails
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Sign In';

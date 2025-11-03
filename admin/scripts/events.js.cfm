@@ -17,27 +17,96 @@ function gridChange(thisId) {
 			frm.isCurrent[i].checked = false;
 		}
 	}
+	document.getElementById('edit').value = 'Edit';
+	document.getElementById('delete').style.display = '';
 }
   
 function doEdit(type) {
+
+	var editBtn = document.getElementById('edit');
+	var deleteBtn = document.getElementById('delete');
 
     var edit = new admin.models.events();
     edit.setForm("editForm");
     
     if (type == 'edit'){
+
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
     		
-     if ( edit.editEventsFromForm()) {
-         ColdFusion.Grid.refresh('data',true);
-		 toastr.success('Data is Added or Updated Successfully!'); 
-     } 
-     else { alert( 'There was a problem in the processing.')}
+		if ( edit.editEventsFromForm()) {
+
+				toastr.options = {
+					"closeButton": true,
+					"debug": false,
+					"newestOnTop": true,
+					"progressBar": true,
+					"positionClass": "toast-center",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "3000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				};
+
+			ColdFusion.Grid.refresh('data',true);
+			toastr.success('Data is Added or Updated Successfully!'); 
+
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
+		} 
+		else { 
+			alert( 'There was a problem in the processing.')
+		}
       }
    else {
-   	
-   	if ( edit.deleteEvent()) {
-         ColdFusion.Grid.refresh('data',true);
-     } 
-     else { alert( 'There was a problem in the processing.')}
+
+		if (!confirm('Delete -- ARE YOU SURE? ')) {
+			return false; 
+		}
+
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
+
+		if ( edit.deleteEvent()) {
+
+			 toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-center",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
+
+			ColdFusion.Grid.refresh('data',true);
+			toastr.success('Record is Deleted Successfully'); 
+		
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
+		} 
+     	else 
+			{ 
+				alert( 'There was a problem in the processing.')
+			}
       }
       
 	document.getElementById('edit').value = 'Edit';

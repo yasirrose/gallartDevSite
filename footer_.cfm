@@ -9,24 +9,24 @@
 								<h3>Main Menu</h3>
 								<!--- <cfdump var="#cookiesAccepted#"> --->
 								<ul>
-									<li> <a href="index.cfm?xss=#xss#">Home</a> </li>
-									<!--- <li> <a href="user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
-									<li> <a href="requests.cfm?xss=#xss#">Requests</a> </li>
-									<li> <a href="quotes.cfm?xss=#xss#">Quotes</a> </li>
-									<li> <a href="mailing_list.cfm?xss=#xss#">Mailing List</a> </li>
-									<li> <a href="buyer_info.cfm?xss=#xss#">Buyer Info</a> </li>
-									<li> <a href="seller_info.cfm?xss=#xss#">Seller Info</a> </li>
-									<li> <a href="searchpage.cfm?xss=#xss#">Search</a> </li>
-									<li> <a href="alerts.cfm?xss=#xss#">Alert</a> </li>
+									<li> <a href="/">Home</a> </li>
+									<!--- <li> <a href="user_registration">Sell Your Art</a> </li>
+									<li> <a href="requests">Requests</a> </li>
+									<li> <a href="quotes">Quotes</a> </li>
+									<li> <a href="mailing_list">Mailing List</a> </li>
+									<li> <a href="buyer_info">Buyer Info</a> </li>
+									<li> <a href="seller_info">Seller Info</a> </li>
+									<li> <a href="searchpage">Search</a> </li>
+									<li> <a href="alerts">Alert</a> </li>
 									<li> <a href="http://blog.gallart.com/">Blog</a> </li> --->
-									<!-- <li> <a href="contact.cfm?xss=#xss#">Contact Us</a> </li> -->
-									<li> <a href="searchpage.cfm?xss=#xss#">Search</a> </li>
-									<li> <a href="new_listings.cfm?xss=#xss#">Recent Acquisitions</a> </li>
-									<li> <a href="sales.cfm?xss=#xss#">Sales</a> </li>
-									<li> <a href="classifieds.cfm?xss=#xss#">Classifieds</a> </li>
-									<li> <a href="featured_events.cfm?xss=#xss#">Events</a> </li>
-									<li> <a href="new_user_registration.cfm?xss=#xss#">Sell Your Art</a> </li>
-									<li> <a href="promotion.cfm?xss=#xss#">Promotion</a> </li>
+									<!-- <li> <a href="contact">Contact Us</a> </li> -->
+									<li> <a href="/search">Search</a> </li>
+									<li> <a href="/recent-acquisitions">Recent Acquisitions</a> </li>
+									<li> <a href="/sale-items">Sales</a> </li>
+									<li> <a href="/classifieds">Classifieds</a> </li>
+									<li> <a href="/events">Events</a> </li>
+									<li> <a href="/sell-your-art">Sell Your Art</a> </li>
+									<li> <a href="/promotion">Promotion</a> </li>
 
 									
 								</ul>
@@ -36,11 +36,11 @@
 							<div class="footer-menu">
 								<h3>Customer Service</h3>
 								<ul>
-									<li> <a href="">Account</a> </li>
-									<li> <a href="view.cfm?xss=#xss#">View Cart</a> </li>
-									<li> <a href="shippingpolicy.cfm?xss=#xss#">Shipping Policy</a> </li>
-									<li> <a href="pns.cfm?xss=#xss#">Privacy</a> </li>
-									<li> <a href="termsUse.cfm?xss=#xss#">Terms of Use</a> </li>
+									<li> <a href="/login">Account</a> </li>
+									<li> <a href="/view-cart">View Cart</a> </li>
+									<li> <a href="/shipping-policy">Shipping Policy</a> </li>
+									<li> <a href="/privacy">Privacy</a> </li>
+									<li> <a href="/terms">Terms of Use</a> </li>
 								</ul>
 							</div>
 						</div>
@@ -58,7 +58,7 @@
 									<ul>
 										<li><a href="tel:305.932.6166">305.932.6166</a></li>
 										<li><a href="305.439.7422">305.439.7422 (Text) </a></li>
-										<li><a href="contact.cfm?xss=#xss#">info@gallart.com</a></li>
+										<li><a href="/contact-us">info@gallart.com</a></li>
 									</ul>
 
 									
@@ -70,7 +70,7 @@
 							<div class="footer-menu">								
 								<div class="map-image">
 									<a href="https://maps.app.goo.gl/MZniVSbiddj1X1vWA" target="_blank">
-										<img src="images/Gallery-Art-Map-V2.jpg" alt="image">
+										<img src="/images/Gallery-Art-Map-V2.jpg" alt="image">
 									</a>
 								</div>
 							</div>
@@ -81,8 +81,8 @@
 								<div class="address">
 									<p class="mb-3">Subscribe to receive our newsletter and notifications about new arrivals.</p>
 									<div class="footer__newsletter">
-										<form method="POST" onsubmit="return validateForm()">
-											<input type="email" id="footerEmail" size="15" maxsize="15" name="footerEmail"  placeholder="Enter Your Email">
+										<form method="POST" onsubmit="return validateFormForNewsletter()">
+											<input type="email" id="footerEmail" size="15" maxsize="15" maxlength="20" name="footerEmail"  placeholder="Enter Your Email">
 											<span class="error-message" id="footerEmailError"></span>
 											<button type="submit" class="footer__newsletter-btn" name="commit" aria-label="Subscribe">
 												<i class="fa fa-envelope"></i>
@@ -175,7 +175,7 @@
 		</cfif>
 
 		<script>
-			function validateForm() {
+			function validateFormForNewsletter() {
 				let isValid = true;
 			
 				// Clear previous error messages
@@ -213,7 +213,7 @@
 
 	<cfif isDefined('form.footerEmail') and form.footerEmail neq ''>
 		<cfset email = trim(FORM.footerEmail)>
-		<cfset ipAddress = cgi.remote_addr>
+		<cfset ipAddress = cgi.HTTP_X_FORWARDED_FOR>
 		<cfset createdAt = now()>
 
 		
@@ -247,7 +247,7 @@
 					<cfoutput>
 						<script>
 							alert('Your Email is Submitted');
-							window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
+							window.location.href = '/';
 						</script>
 					</cfoutput>
 				<cfelse>
@@ -255,7 +255,7 @@
 					<cfoutput>
 						<script>
 							alert('You are already subscribed.');
-							window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
+							window.location.href = '/';
 						</script>
 					</cfoutput>
 			</cfif>
@@ -263,7 +263,7 @@
 			<cfoutput>
 				<script>
 					alert('You cannnot add record more than 2 times');
-					// window.location.href = '#script_name#?xss=<cfoutput>#xss#</cfoutput>';
+					// window.location.href = '#script_name#';
 				</script>
 			</cfoutput>
 		</cfif>
@@ -279,7 +279,7 @@
 	</cfif>
 
 	
-	</cfoutput>
+</cfoutput>
 	
 	
 

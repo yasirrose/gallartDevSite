@@ -195,6 +195,7 @@
 		<cfargument name="phoneType" type="string" default="">
 		<cfargument name="addressType" type="string" default="">
 		<cfargument name="State_Outside" type="string" default="">
+		<cfargument name="moduleName" type="string" default="">
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
 
@@ -233,11 +234,7 @@
 		<cfelse>
 			<cfset finalState = "">
 			<cfset country = "">
-		</cfif>
-
-		
-		
-
+		</cfif>		
    
 	    <cftry>
 	    	
@@ -295,9 +292,21 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.addressType#">
 					)
 	            </cfquery>
+
+				
+				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+				<cfset date = now()>				
+				<cfset action = 'Insert'>
+
+				<cfquery name="addLog" datasource="#application.dsource#" >
+					INSERT INTO logs 
+						( moduleName, ipAddress, date, action)
+						VALUES
+						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+				</cfquery>
 		
 			
-			<cfelse>
+			 <cfelse>
 
 				<cfif len(arguments.maillist)>
 					<cfset maillist_value = 1 />
@@ -328,10 +337,22 @@
 					titles 				= <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.titles#">,
 					notes 				= <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.notes#">,
 					origin				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.origin#">,
-					addressType				= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.addressType#">,
+					addressType			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.addressType#">,
 					maillist			= <cfqueryparam cfsqltype="cf_sql_tinyint" value="#maillist_value#">
-	                WHERE pk_leads		 = '#arguments.pk_leads#'
+	                WHERE pk_leads		= '#arguments.pk_leads#'
 	            </cfquery>
+
+				
+				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+				<cfset date = now()>				
+				<cfset action = 'Update'>
+
+				<cfquery name="addLog" datasource="#application.dsource#" >
+					INSERT INTO logs 
+						( moduleName, ipAddress, date, action)
+						VALUES
+						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+				</cfquery>
 			
 			</cfif>
 	    
@@ -351,12 +372,26 @@
 		
 		<cftry>
 	
-		<cfquery name="deleteLead" datasource="#application.dsource#"> 
-           	DELETE from leads
-            WHERE pk_leads = '#arguments.pk_leads#'
-        </cfquery>
+			<cfquery name="deleteLead" datasource="#application.dsource#"> 
+				DELETE from leads
+				WHERE pk_leads = '#arguments.pk_leads#'
+			</cfquery>
+
+			<cfset moduleName = 'Lead Module'>
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
 		
-		<cfcatch type="any"><cfset success = false /></cfcatch>
+			<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
 		</cftry>
 	
 		<cfreturn success />

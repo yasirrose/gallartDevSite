@@ -17,12 +17,10 @@
 	SELECT  * FROM tracker WHERE sessionid = '#session.xss#'
 </cfquery>
 
-<!--- Insert info into customers table if new customer remove this section if not supported --->
-<cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT id as cusid, email, phone, lname, name from customers where (email = '#trim(email)#')
-</cfquery>
-
-	<!--- <cfdump var="#form#" abort="true"> --->
+	<!--- Insert info into customers table if new customer remove this section if not supported --->
+	<cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+		SELECT id as cusid, email, phone, lname, name from customers where (email = '#trim(email)#')
+	</cfquery>
 
 	<cfif form.phoneNumber NEQ '' and form.phoneType EQ 'Cell Phone'>
 		<cfset CELLPHONE = form.phoneNumber>
@@ -65,86 +63,83 @@
 		<cfset Shipcountry = ''>
 	</cfif>
 
-<cfif not find_cust.recordcount>
-	<!--- <cfdump var="test1" abort="true"> --->
-	<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		INSERT into customers
-		(
-			NAME,
-			LNAME,
-			FNAME,
-			ADDRESS1,
-			ADDRESS2,
-			CITY,
-			STATE,
-			COUNTRY,
-			ZIP,
-			PHONE,
-			CELLPHONE,
-			BUSINESSPHONE,
-			OTHERPHONE,
-			EMAIL,
-			SADDRESS1,
-			SADDRESS2,
-			SCITY,
-			SSTATE,
-			WEBSITE,
-			AddressType
-		)
-		VALUES
-		(
-			'#BILLNAME#', 
-			'#BILLNAME#', 
-			'#BILLNAMEF#',
-			'#BILLADDRESS1#',
-			'#BILLADDRESS2#',
-			'#BILLCITY#',
-			'#BILLSTATE#',
-			'#BILLCOUNTRY#',
-			'#BILLZIP#',
-			'#BILLPHONE#',
-			'#CELLPHONE#',
-			'#BUSINESSPHONE#',
-			'#OTHERPHONE#',
-			'#EMAIL#',
-			'#SHIPADDRESS1#',
-			'#SHIPADDRESS2#', 
-			'#SHIPCITY#',
-			'#SHIPSTATE#',
-			'#WEBSITE#',
-			'#ADDRESSTYPE#'
-		);
-		SELECT SCOPE_IDENTITY() AS uid
-	</cfquery>
-	
-	<cfset customerId = insert_cust.uid />
-									
-<cfelse>
-	<!--- <cfdump var="test2" abort="true"> --->
-	<cfquery name="update_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		UPDATE customers SET 
-			EMAIL = '#EMAIL#'
-			<cfif BILLPHONE NEQ "">
-				,PHONE = '#BILLPHONE#'
-			</cfif>
-			<cfif CELLPHONE NEQ "">
-				,CELLPHONE = '#CELLPHONE#'
-			</cfif>
-			<cfif BUSINESSPHONE NEQ "">
-				,BUSINESSPHONE = '#BUSINESSPHONE#'
-			</cfif>
-			<cfif OTHERPHONE NEQ "">
-				,OTHERPHONE = '#OTHERPHONE#'
-			</cfif>
-		WHERE id = #find_cust.cusid#
-	</cfquery>
+	<cfif not find_cust.recordcount>
 
-	<cfset customerId = find_cust.cusid />
+		<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+			INSERT into customers
+			(
+				NAME,
+				LNAME,
+				FNAME,
+				ADDRESS1,
+				ADDRESS2,
+				CITY,
+				STATE,
+				COUNTRY,
+				ZIP,
+				PHONE,
+				CELLPHONE,
+				BUSINESSPHONE,
+				OTHERPHONE,
+				EMAIL,
+				SADDRESS1,
+				SADDRESS2,
+				SCITY,
+				SSTATE,
+				WEBSITE,
+				AddressType
+			)
+			VALUES
+			(
+				'#BILLNAME#', 
+				'#BILLNAME#', 
+				'#BILLNAMEF#',
+				'#BILLADDRESS1#',
+				'#BILLADDRESS2#',
+				'#BILLCITY#',
+				'#BILLSTATE#',
+				'#BILLCOUNTRY#',
+				'#BILLZIP#',
+				'#BILLPHONE#',
+				'#CELLPHONE#',
+				'#BUSINESSPHONE#',
+				'#OTHERPHONE#',
+				'#EMAIL#',
+				'#SHIPADDRESS1#',
+				'#SHIPADDRESS2#', 
+				'#SHIPCITY#',
+				'#SHIPSTATE#',
+				'#WEBSITE#',
+				'#ADDRESSTYPE#'
+			);
+			SELECT SCOPE_IDENTITY() AS uid
+		</cfquery>
 		
+		<cfset customerId = insert_cust.uid />
+										
+	<cfelse>
 
-</cfif>
+		<cfquery name="update_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+			UPDATE customers SET 
+				EMAIL = '#EMAIL#'
+				<cfif BILLPHONE NEQ "">
+					,PHONE = '#BILLPHONE#'
+				</cfif>
+				<cfif CELLPHONE NEQ "">
+					,CELLPHONE = '#CELLPHONE#'
+				</cfif>
+				<cfif BUSINESSPHONE NEQ "">
+					,BUSINESSPHONE = '#BUSINESSPHONE#'
+				</cfif>
+				<cfif OTHERPHONE NEQ "">
+					,OTHERPHONE = '#OTHERPHONE#'
+				</cfif>
+			WHERE id = #find_cust.cusid#
+		</cfquery>
 
-
+		<cfset customerId = find_cust.cusid />
+			
+	</cfif>
 
 <CFSET ORDERUSERID = customerId >
 <!--- end of customer insert --->
@@ -173,45 +168,46 @@
 <cfset cardcountry=#trim(billcountry)#>
 
 <cfif shipnamef gt 1>
-<CFSET SHIPNAME=#trim(SHIPNAMEF)#&" "&#trim(SHIPNAME)#>
+	<CFSET SHIPNAME=#trim(SHIPNAMEF)#&" "&#trim(SHIPNAME)#>
 <Cfelse>
-<CFSET SHIPNAME = #trim(BILLNAMEF)#&" "&#trim(BILLNAME)#>
+	<CFSET SHIPNAME = #trim(BILLNAMEF)#&" "&#trim(BILLNAME)#>
 </cfif>
 <CFIF SHIPADDRESS1 GT 1>
-<CFSET SHIPADDRESS1=#trim(SHIPADDRESS1)#>
+	<CFSET SHIPADDRESS1=#trim(SHIPADDRESS1)#>
 <CFELSE>
-<CFSET SHIPADDRESS1=#trim(BILLADDRESS1)#>
+	<CFSET SHIPADDRESS1=#trim(BILLADDRESS1)#>
 </CFIF>
 <CFIF SHIPADDRESS2 GT 1>
-<CFSET SHIPADDRESS2=#trim(SHIPADDRESS2)#>
+	<CFSET SHIPADDRESS2=#trim(SHIPADDRESS2)#>
 <CFELSE>
-<CFSET SHIPADDRESS2=#trim(BILLADDRESS2)#>
+	<CFSET SHIPADDRESS2=#trim(BILLADDRESS2)#>
 </CFIF>
 <CFIF SHIPCITY GT 1>
-<CFSET SHIPCITY=#trim(SHIPCITY)#>
+	<CFSET SHIPCITY=#trim(SHIPCITY)#>
 <CFELSE>
-<CFSET SHIPCITY=#trim(BILLCITY)#>
+	<CFSET SHIPCITY=#trim(BILLCITY)#>
 </CFIF>
 <CFIF SHIPSTATE GT 1>
-<CFSET SHIPSTATE=#trim(SHIPSTATE)#>
+	<CFSET SHIPSTATE=#trim(SHIPSTATE)#>
 <CFELSE>
-<CFSET SHIPSTATE=#trim(BILLSTATE)#>
+	<CFSET SHIPSTATE=#trim(BILLSTATE)#>
 </CFIF>
 <CFIF SHIPCOUNTRY GT 1>
-<CFSET SHIPCOUNTRY=#trim(SHIPCOUNTRY)#>
+	<CFSET SHIPCOUNTRY=#trim(SHIPCOUNTRY)#>
 <CFELSE>
-<CFSET SHIPCOUNTRY=#trim(BILLCOUNTRY)#>
+	<CFSET SHIPCOUNTRY=#trim(BILLCOUNTRY)#>
 </CFIF>
 <CFIF SHIPZIP GT 1>
-<CFSET SHIPZIP=#trim(SHIPZIP)#>
+	<CFSET SHIPZIP=#trim(SHIPZIP)#>
 <CFELSE>
-<CFSET SHIPZIP=#trim(BILLZIP)#>
+	<CFSET SHIPZIP=#trim(BILLZIP)#>
 </CFIF>
 <CFIF SHIPPHONE GT 1>
-<CFSET SHIPPHONE=#trim(SHIPPHONE)#>
+	<CFSET SHIPPHONE=#trim(SHIPPHONE)#>
 <CFELSE>
-<CFSET SHIPPHONE=#trim(BILLPHONE)#>
+	<CFSET SHIPPHONE=#trim(BILLPHONE)#>
 </CFIF>
+
 <CFSET SHIPMETHOD=#trim(SHIPMETHOD)#>
 <CFSET INSURANCE=#trim(INSURANCE)#>
 <CFSET SHIPPING = ''>
@@ -235,13 +231,8 @@
 
 
 <!--- Set values for orders table --->
-<!--- <Cfif isDefined('find_cust.cusid')>
-	<cfset customerid = #find_cust.cusid#>
-<cfelse>
-	<cfset customerid = "">
-</cfif> --->
 <cfset FK_LOCATIONS = '#form.FK_LOCATIONS#'>
-<CFSET DATE=#createodbcdate(now())#>
+<CFSET DATE=#createODBCDateTime(now())#>
 <cfset comments = '#form.comments#'>
 <CFSET IPADDRESS=#trim(getuserinfo.originIP)#>
 <CFSET REFERRINGPAGE=#trim(getuserinfo.referrer)#>
@@ -251,106 +242,102 @@
 <CFSET PARTNER="#partner#">
 <CFSET ORIGIN="#ORIGIN#">
 
-<!--- <cfdump var="#ORDERUSERID#" ><br>
-<cfdump var="#customerId#" abort="true"> --->
-
 <!--- Insert info into orders table --->
 <cflock name="insert" timeout="10">
 	<!--- <cfdump var="test3" abort="true"> --->
 
 	<cftry>
-		<!--- <cfdump var="#form#" abort="true">  --->
 		<cfquery name="insert_orders" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			INSERT INTO orders
-					(
-						customerid,
-						ORDERID,
-						FK_LOCATIONS,
-						DATE,
-						SHIPNAME,
-						SHIPADDRESS1,
-						SHIPADDRESS2,
-						SHIPCITY,
-						SHIPSTATE,
-						SHIPCOUNTRY,
-						SHIPZIP,
-						SHIPPHONE,
-						SHIPMETHOD,
-						INSURANCE,
-						BILLNAME,
-						BILLADDRESS1,
-						BILLADDRESS2,
-						BILLCITY,
-						BILLSTATE,
-						BILLCOUNTRY,
-						BILLZIP,
-						BILLPHONE,
-						CELLPHONE,
-						BUSINESSPHONE,
-						OTHERPHONE,
-						EMAIL,
-						WEBSITE,
-						IPADDRESS,
-						REFERRINGPAGE,
-						ENTRYPOINT,
-						SHIPPING,
-						PAYMENT_METHOD,
-						CARDNUMBER,
-						CARDEXPIRY,
-						COMMENTS,
-						LINKFROM,
-						WARNING,
-						PARTNER,
-						XSS,
-						TBC,
-						ORIGIN
-					)
+				(
+					customerid,
+					ORDERID,
+					FK_LOCATIONS,
+					DATE,
+					SHIPNAME,
+					SHIPADDRESS1,
+					SHIPADDRESS2,
+					SHIPCITY,
+					SHIPSTATE,
+					SHIPCOUNTRY,
+					SHIPZIP,
+					SHIPPHONE,
+					SHIPMETHOD,
+					INSURANCE,
+					BILLNAME,
+					BILLADDRESS1,
+					BILLADDRESS2,
+					BILLCITY,
+					BILLSTATE,
+					BILLCOUNTRY,
+					BILLZIP,
+					BILLPHONE,
+					CELLPHONE,
+					BUSINESSPHONE,
+					OTHERPHONE,
+					EMAIL,
+					WEBSITE,
+					IPADDRESS,
+					REFERRINGPAGE,
+					ENTRYPOINT,
+					SHIPPING,
+					PAYMENT_METHOD,
+					CARDNUMBER,
+					CARDEXPIRY,
+					COMMENTS,
+					LINKFROM,
+					WARNING,
+					PARTNER,
+					XSS,
+					TBC,
+					ORIGIN
+				)
 
-					VALUES
-					(
-						<cfqueryparam value="#customerid#" cfsqltype="cf_sql_integer" null="#NOT LEN(TRIM(customerid))#">,
-						<cfqueryparam value="#ORDERID#" cfsqltype="cf_sql_varchar" null="#NOT LEN(TRIM(ORDERID))#">,
-						<cfqueryparam value="#FK_LOCATIONS#" cfsqltype="cf_sql_integer" null="#NOT LEN(TRIM(FK_LOCATIONS))#">,
-						<cfqueryparam value="#DATE#" cfsqltype="cf_sql_timestamp">,
-						<cfqueryparam value="#SHIPNAME#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#SHIPADDRESS1#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#SHIPADDRESS2#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#SHIPCITY#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#SHIPSTATE#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#SHIPCOUNTRY#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#SHIPZIP#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#SHIPPHONE#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#SHIPMETHOD#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#INSURANCE#" cfsqltype="cf_sql_money" null="#NOT LEN(TRIM(INSURANCE))#">,
-						<cfqueryparam value="#BILLNAME#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#BILLADDRESS1#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#BILLADDRESS2#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#BILLCITY#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#BILLSTATE#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#BILLCOUNTRY#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#BILLZIP#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#BILLPHONE#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#CELLPHONE#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#BUSINESSPHONE#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#OTHERPHONE#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#EMAIL#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#WEBSITE#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#IPADDRESS#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#REFERRINGPAGE#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#ENTRYPOINT#" cfsqltype="cf_sql_varchar">,
-						'#SHIPPING#',
-						'#CARDTYPE#',
-						<cfqueryparam value="#CARDNUMBER#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#CARDEXPIRY#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#COMMENTS#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#LINKFROM#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#WARNING#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#PARTNER#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#session.xss#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#batchproc#" cfsqltype="cf_sql_integer" null="#NOT LEN(TRIM(batchproc))#">,
-						<cfqueryparam value="#ORIGIN#" cfsqltype="cf_sql_varchar">
-					)
-					SELECT SCOPE_IDENTITY() AS orderuid
+				VALUES
+				(
+					<cfqueryparam value="#customerid#" cfsqltype="cf_sql_integer" null="#NOT LEN(TRIM(customerid))#">,
+					<cfqueryparam value="#ORDERID#" cfsqltype="cf_sql_varchar" null="#NOT LEN(TRIM(ORDERID))#">,
+					<cfqueryparam value="#FK_LOCATIONS#" cfsqltype="cf_sql_integer" null="#NOT LEN(TRIM(FK_LOCATIONS))#">,
+					<cfqueryparam value="#DATE#" cfsqltype="cf_sql_timestamp">,
+					<cfqueryparam value="#SHIPNAME#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#SHIPADDRESS1#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#SHIPADDRESS2#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#SHIPCITY#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#SHIPSTATE#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#SHIPCOUNTRY#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#SHIPZIP#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#SHIPPHONE#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#SHIPMETHOD#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#INSURANCE#" cfsqltype="cf_sql_money" null="#NOT LEN(TRIM(INSURANCE))#">,
+					<cfqueryparam value="#BILLNAME#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#BILLADDRESS1#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#BILLADDRESS2#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#BILLCITY#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#BILLSTATE#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#BILLCOUNTRY#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#BILLZIP#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#BILLPHONE#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#CELLPHONE#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#BUSINESSPHONE#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#OTHERPHONE#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#EMAIL#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#WEBSITE#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#IPADDRESS#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#REFERRINGPAGE#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#ENTRYPOINT#" cfsqltype="cf_sql_varchar">,
+					'#SHIPPING#',
+					'#CARDTYPE#',
+					<cfqueryparam value="#CARDNUMBER#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#CARDEXPIRY#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#COMMENTS#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#LINKFROM#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#WARNING#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#PARTNER#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#session.xss#" cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value="#batchproc#" cfsqltype="cf_sql_integer" null="#NOT LEN(TRIM(batchproc))#">,
+					<cfqueryparam value="#ORIGIN#" cfsqltype="cf_sql_varchar">
+				)
+				SELECT SCOPE_IDENTITY() AS orderuid
 		</cfquery>
 		<cfset OrderUid = insert_orders.orderuid />
 
@@ -369,47 +356,43 @@
 
 <!--- Loop through cart to place items in items and options tables --->
 <CFLOOP QUERY="GetCartInfo">
-<cfquery name="extproductinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	select * from products
-	where uid = #pid#
-</cfquery>
+	<cfquery name="extproductinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+		select * from products
+		where uid = #pid#
+	</cfquery>
 
+	<!--- Set values for items table --->
+	<CFSET ORDERDATE=#lsdateformat(createodbcdate(now()), 'mm/dd/yyyy')#>
+	<CFSET COST= #extproductinfo.truecost#>
+	<CFSET CANCELCODE="">
+	<CFSET CUSTOMERID = #find_cust.cusid#>
+	<CFSET ORDER_ID= #orderid#>
+	<CFSET PRODUCT_ID=#extproductinfo.code#>
+	<CFSET PRODUCT_CODE="#extproductinfo.code#">
+	<CFSET QUANTITY=#GetCartInfo.QTY#>
+	<CFSET UNIT_PRICE=#GetCartInfo.CHARGE#>
+	<CFSET PO="">
+	<CFSET VENDORCODE="#extproductinfo.vendor#">
+	<CFSET EXPSHIP="">
+	<CFSET VENDORACCEPT="">
+	<CFSET DODONE="1">
+	<!--- set trackreq to 1 if all products sold should get tracking number from shipping --->
+	<CFSET TRACKREQ="1">
+	<CFSET TRACKINGNUMBER="">
+	<CFSET VCAN="">
+	<CFSET CHECKNO="">
+	<CFSET FLAG="0">
+	<CFSET PARTNER="#partner#">
+	<CFSET LINETOTAL=(#GetCartInfo.QTY# * #GetCartInfo.charge#)>
+	<CFSET ITEMEXT="">
+	<CFSET PROCCHOICE="0">
+	<CFSET MODELNO=extproductinfo.modelno>
+	<CFSET PRODUCTUID=extproductinfo.uid>
+	<CFSET TITLE=extproductinfo.name>
+	<CFSET ARTIST=extproductinfo.manufacturer>
+	<!--- Put cart items in items table --->
 
-<!--- Set values for items table --->
-		<CFSET ORDERDATE=#lsdateformat(createodbcdate(now()), 'mm/dd/yyyy')#>
-		<CFSET COST= #extproductinfo.truecost#>
-		<CFSET CANCELCODE="">
-		<CFSET CUSTOMERID = #find_cust.cusid#>
-		<CFSET ORDER_ID= #orderid#>
-		<CFSET PRODUCT_ID=#extproductinfo.code#>
-		<CFSET PRODUCT_CODE="#extproductinfo.code#">
-		<CFSET QUANTITY=#GetCartInfo.QTY#>
-		<CFSET UNIT_PRICE=#GetCartInfo.CHARGE#>
-		<CFSET PO="">
-		<CFSET VENDORCODE="#extproductinfo.vendor#">
-		<CFSET EXPSHIP="">
-		<CFSET VENDORACCEPT="">
-		<CFSET DODONE="1">
-		<!--- set trackreq to 1 if all products sold should get tracking number from shipping --->
-		<CFSET TRACKREQ="1">
-		<CFSET TRACKINGNUMBER="">
-		<CFSET VCAN="">
-		<CFSET CHECKNO="">
-		<CFSET FLAG="0">
-		<CFSET PARTNER="#partner#">
-		<CFSET LINETOTAL=(#GetCartInfo.QTY# * #GetCartInfo.charge#)>
-		<CFSET ITEMEXT="">
-		<CFSET PROCCHOICE="0">
-		<CFSET MODELNO=extproductinfo.modelno>
-		<CFSET PRODUCTUID=extproductinfo.uid>
-		<CFSET TITLE=extproductinfo.name>
-		<CFSET ARTIST=extproductinfo.manufacturer>
-<!--- Put cart items in items table --->
-
-
-
-		<cflock name="insert" timeout="15">
-			<!--- <cfdump var="test4" abort="true"> --->
+	<cflock name="insert" timeout="15">
 		<cfquery name="insert_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			INSERT into items
 			(
@@ -418,6 +401,7 @@
 				CANCELCODE,
 				ORDER_ID,
 				LINE_ID,
+				OrderUid,
 				PRODUCT_ID,
 				PRODUCT_CODE,
 				QUANTITY,
@@ -448,6 +432,7 @@
 				'#CANCELCODE#',
 				'#ORDER_ID#',
 				'#LINE_ID#',
+				'#OrderUid#',
 				'#PRODUCT_ID#',
 				'#PRODUCT_CODE#',
 				'#QUANTITY#',
@@ -472,7 +457,7 @@
 				'#ARTIST#'
 			)
 		</cfquery>
-		</cflock>
+	</cflock>
 
 	<cfset ext = #charge# * #qty#>
 	<cfset subtotal = #subtotal# + #ext#>
@@ -485,11 +470,9 @@
 <!--- Calculate and Enter Taxes --->
 <cfif #billstate# is #taxst#>
 
-		<cfset tax = (taxamount*0.01)*subtotal />
+	<cfset tax = (taxamount*0.01)*subtotal />
 
-		<cflock name="insert" timeout="15">
-
-			<!--- <cfdump var="test5" abort="true"> --->
+	<cflock name="insert" timeout="15">
 
 		<cfquery name="insert_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			INSERT into items
@@ -544,14 +527,13 @@
 			)
 		</cfquery>
 
-		</cflock>
+	</cflock>
 
-<Cfelse>
+ <Cfelse>
 
-		<cfset tax = 0>
+	<cfset tax = 0>
 
 	<cflock name="insert" timeout="15">
-		<!--- <cfdump var="test6" abort="true"> --->
 
 		<cfquery name="insert_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			INSERT into items
@@ -564,6 +546,17 @@
 
 </cfif>
 
+<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+<cfset date = now()>
+<cfset moduleName = 'purchase'>
+<cfset action = 'Insert'>
+
+<cfquery name="addLog" datasource="#application.dsource#" >
+	INSERT INTO logs 
+	( moduleName, ipAddress, date, action)
+	VALUES
+	( '#moduleName#', '#ipAddress#', #date#, '#action#')
+</cfquery>
 
 
 <Cfset total = tax + insurance + subtotal>
@@ -602,9 +595,11 @@
 	</cfquery> --->
 </cfif>
 </cftransaction>
+
+
 <cfif approved eq 1>
 
-<!--- Send out confirmation email --->
+	<!--- Send out confirmation email --->
 	<cfmail 
 		server="#servername#"
 		username="onli16@onlinegalleryart.com"
@@ -613,7 +608,7 @@
 		from="onli16@onlinegalleryart.com" 
 		subject="Order - Confirmation" 
 		type="HTML"
-	>
+	 >
 		<br><br>
 		Thank you very much for your order.
 		<br><br>
@@ -637,7 +632,7 @@
 		from="onli16@onlinegalleryart.com" 
 		subject="GallArt.com <> Buying & Selling Fine Art <> New Order Placed" 
 		type="HTML"
-	> 
+	 > 
 		<br><br>
 		An order was placed on #DateFormat(createodbcdate(now()),"mmm dd, yyyy")#.
 		<br><br>
@@ -653,9 +648,9 @@
 		<a href="http://#sitename#/admin">Click Here to review Order</a><br>
 		Click the Log In button in the upper right corner of your screen, enter your password, then click Orders from the top menu.
 	</cfmail>
-<!--- End of confirmation email --->
-<cflocation url="/thankyou/y">
-<cfelse>
-<cflocation url="/thankyou/n/#ErrorMessage#">
+	<!--- End of confirmation email --->
+	<cflocation url="/thankyou/y">
+ <cfelse>
+	<cflocation url="/thankyou/n/#ErrorMessage#">
 </cfif>
 

@@ -11,14 +11,14 @@
 
 <script type="text/javascript">
 
-function validEntries(frm) {
+	function validEntries(frm) {
 
-	if(editForm.medium.value == ''){
-	alert('You must select a Medium.');
-	return false;
+		if(editForm.medium.value == ''){
+			alert('You must select a Medium.');
+			return false;
+		}
+
 	}
-
-}
 </script>
 
 <style>
@@ -65,14 +65,14 @@ function validEntries(frm) {
 				<tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>Name:</strong>
-						<cfinput name="searchName" maxlength="30" size="30" />
+						<cfinput name="searchName" maxlength="50" size="30" />
 					</td>
 					<!--- <td>
 						
 					</td> --->
 					<td align="right" style="font-size: 10px;">
 						<strong>Email:</strong>
-						<cfinput name="searchEmail" maxlength="30" size="30" />
+						<cfinput name="searchEmail" maxlength="50" size="30" />
 					</td>
 					<!--- <td>
 						
@@ -91,12 +91,12 @@ function validEntries(frm) {
 				<tr>
 					<td align="right" class="date-field" style="font-size: 10px;">
 						<strong>Date from:</strong>
-						<cfinput name="searchFromDate" type="datefield" validate="date" maxlength="30" size="30" />
+						<cfinput name="searchFromDate" type="datefield" validate="date" maxlength="50" size="30" />
 					</td>
 
 					<td align="right" class="date-field" style="font-size: 10px;">
 						<strong>Date to:</strong>
-						<cfinput name="searchToDate" type="datefield" validate="date" maxlength="30" size="30" />
+						<cfinput name="searchToDate" type="datefield" validate="date" maxlength="50" size="30" />
 					</td>
 
 					<td>&nbsp;</td>
@@ -124,6 +124,7 @@ function validEntries(frm) {
 			<!--- <input type="button" value="New" onclick="showNew()"> --->
 			<cfform name="editForm" enctype="multipart/form-data" onsubmit="return CheckEntries()">
 				<cfinput type="hidden" name="pk_purchases_consignments" id="pk_purchases_consignments" bind="{data.pk_purchases_consignments}">
+				<cfinput type="hidden" name="moduleName" id="moduleName" value="admin/purchases_consignments">
 				<table border = "0" width = "500" cellpadding = "1" cellspacing = "0" class="editBox">
 					<tr>
 						<td>

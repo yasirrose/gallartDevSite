@@ -1,99 +1,99 @@
 <!DOCTYPE html>
 <cfparam name="xss" default="">
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <cfoutput>
-        <title>#companyname# - #titletext#</title>
-    </cfoutput>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <cfoutput>
+            <title>#companyname# - #titletext#</title>
+        </cfoutput>
 
-    <cfinclude template="meta.cfm">
+        <cfinclude template="meta.cfm">
 
-    <cfoutput>
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-        <script language="JavaScript" src="./js/utils.js"></script>
-    </cfoutput>
+        <cfoutput>
+            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+            <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+            <script language="JavaScript" src="/js/utils.js"></script>
+        </cfoutput>
 
-    <link href="stylesheet_.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript">
-    
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-34565365-1']);
-      _gaq.push(['_trackPageview']);
-    
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    
-    </script>
+        <link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript">
+        
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-34565365-1']);
+            _gaq.push(['_trackPageview']);
+            
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        
+        </script>
 
-    <!-- BEGIN ROBLY WIDGET CODE -->
-    <script type='text/javascript'>
-        var _d_site = _d_site || 'ebb8c5f7da7077e127988b3276107648';
-        (function(w, d, p, s, s2) {
-        w[p] = w[p] || function() { (w[p].q = w[p].q || []).push(arguments) };
-        s = d.createElement('script'); s.async = 1; s.src = '//s3.amazonaws.com/roblyimages/accounts/20559/forms/29541/signup_popup.js';
-        s2 = d.getElementsByTagName('script')[0]; s2.parentNode.insertBefore(s, s2);
-        })(window, document, 'Robly');
-    </script>
-    <!-- END ROBLY WIDGET CODE -->
+        <!-- BEGIN ROBLY WIDGET CODE -->
+        <script type='text/javascript'>
+            var _d_site = _d_site || 'ebb8c5f7da7077e127988b3276107648';
+            (function(w, d, p, s, s2) {
+            w[p] = w[p] || function() { (w[p].q = w[p].q || []).push(arguments) };
+            s = d.createElement('script'); s.async = 1; s.src = '//s3.amazonaws.com/roblyimages/accounts/20559/forms/29541/signup_popup.js';
+            s2 = d.getElementsByTagName('script')[0]; s2.parentNode.insertBefore(s, s2);
+            })(window, document, 'Robly');
+        </script>
+        <!-- END ROBLY WIDGET CODE -->
 
-     <!--- The below code is used for 4 dropdowns that on home page --->
-     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function drop(gothere, selectName) {
-                var form = document.forms['dropdownSearchForclassifieds'];
-               
-                if (form) {
-                    var select = form.elements[selectName];
-                    console.log('yes'+selectName);
-                    if (select) {
-                        parent.location = gothere + select.options[select.selectedIndex].value;
+        <!--- The below code is used for 4 dropdowns that on home page --->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                function drop(gothere, selectName) {
+                    var form = document.forms['dropdownSearchForclassifieds'];
+                
+                    if (form) {
+                        var select = form.elements[selectName];
+                        console.log('yes'+selectName);
+                        if (select) {
+                            parent.location = gothere + select.options[select.selectedIndex].value;
+                        } else {
+                            console.error("Select element '" + selectName + "' not found.");
+                        }
                     } else {
-                        console.error("Select element '" + selectName + "' not found.");
+                        console.error("Form 'dropdown' not found.");
                     }
-                } else {
-                    console.error("Form 'dropdown' not found.");
+                    return true;
                 }
-                return true;
-            }
-            // Make the function globally available
-            window.drop = drop;
-        });
-    </script>
+                // Make the function globally available
+                window.drop = drop;
+            });
+        </script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
-    <!--- Toastr CDN  --->
+        <!--- Toastr CDN  --->
 
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 
-<script id="scripts" type="text/javascript" src="/scripts_887a5339b2625a8970658c4f5f9bd94f1067ab7a.js"></script>
-<meta name="referrer" content="same-origin" />
+        <script id="scripts" type="text/javascript" src="/scripts_887a5339b2625a8970658c4f5f9bd94f1067ab7a.js"></script>
+        <meta name="referrer" content="same-origin" />
 
-			<link rel="icon" sizes="16x16" type="image/png" href=/assets/favicon_16.png />
-			<link rel="icon" sizes="32x32" type="image/png" href=/assets/favicon_32.png />
-				<link rel="icon" sizes="any" type="image/svg+xml" href=/assets/favicon.svg />
-<title>Techleadz</title><meta name="application-name" content="Techleadz"><meta name="apple-mobile-web-app-title" content="Techleadz">
-<meta http-equiv="content-language" content=""><meta name="language" content="">
-<meta name="robots" content="INDEX,FOLLOW">
-<meta name="msvalidate.01" content="">
-<meta name="google-site-verification" content="">
-<meta property="fb:app_id" content="">
+        <!--- <link rel="icon" sizes="16x16" type="image/png" href=/assets/favicon_16.png />
+        <link rel="icon" sizes="32x32" type="image/png" href=/assets/favicon_32.png />
+        <link rel="icon" sizes="any" type="image/svg+xml" href=/assets/favicon.svg /> --->
+        <title>Techleadz</title><meta name="application-name" content="Techleadz"><meta name="apple-mobile-web-app-title" content="Techleadz">
+        <meta http-equiv="content-language" content=""><meta name="language" content="">
+        <meta name="robots" content="INDEX,FOLLOW">
+        <meta name="msvalidate.01" content="">
+        <meta name="google-site-verification" content="">
+        <meta property="fb:app_id" content="">
 
-<base href="/">
-</head>
+        <base href="/">
+    </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
     <!--- <cfquery name="getArtists" dbtype="query">
@@ -174,7 +174,7 @@
 
                                     <div aria-label="breadcrumb">
                                         <ol class="breadcrumb">
-                                          <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+                                          <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
                                           <li class="breadcrumb-item active" aria-current="page">Classifieds</li>
                                         </ol>
                                     </div>

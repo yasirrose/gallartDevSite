@@ -12,59 +12,59 @@
 	
 			<cfelse>
 			
-			<form method="post" action="index.cfm?event=exports.artistsXls">
-			<table>
-				<tr>
-					<td valign="top">
-						<table cellspacing="0" cellpadding="0" border="0" width="100%">
-							<tr>
-								<td>
-									<strong>ENTER LIST OF ARTIST NAMES:</strong>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<textarea name="artists" cols="40" rows="5"></textarea>
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td>
-						<table cellspacing="0" cellpadding="0" border="0" width="100%">
-							<tr>
-							<td colspan="2" style="font-size: 9pt;">
-								<b>Show fields: Artist, Art ID, Title, Medium, Size, Gallery Price</b>
-								</br></br>
-								<b>Or, choose Fields You Want To Export:</b>
-							</td>
-						</tr>
+				<form method="post" action="index.cfm?event=exports.artistsXls" onsubmit="disableSubmit(this)">
+					<table>
 						<tr>
-							<td colspan="2" style="font-size: 9pt;">
-								<input type="Checkbox" name="displayFields" value="ModelNo">Model No<br>
-								<input type="Checkbox" name="displayFields" value="Artist">Artist<br>
-								<input type="Checkbox" name="displayFields" value="Medium">Medium<br>
-								<input type="Checkbox" name="displayFields" value="Retail">Retail Price<br>
-								<input type="Checkbox" name="displayFields" value="Gallery">Gallery Price<br>
-								<input type="Checkbox" name="displayFields" value="Sale">Sale Price<br>
-								<input type="Checkbox" name="displayFields" value="Trump">Trump Price<br>
-								<input type="Checkbox" name="displayFields" value="Year">Year<br>
-								<input type="Checkbox" name="displayFields" value="Size">Size<br>
-								<input type="Checkbox" name="displayFields" value="Edition">Edition<br>
-								<input type="Checkbox" name="displayFields" value="Low">Low Estimate<br>
-								<input type="Checkbox" name="displayFields" value="High">High Estimate<br>
-								<input type="Checkbox" name="displayFields" value="Thumbnail">Thumbnail
+							<td valign="top">
+								<table cellspacing="0" cellpadding="0" border="0" width="100%">
+									<tr>
+										<td>
+											<strong>ENTER LIST OF ARTIST NAMES:</strong>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<textarea name="artists" cols="40" rows="5"></textarea>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<table cellspacing="0" cellpadding="0" border="0" width="100%">
+									<tr>
+									<td colspan="2" style="font-size: 9pt;">
+										<b>Show fields: Artist, Art ID, Title, Medium, Size, Gallery Price</b>
+										</br></br>
+										<b>Or, choose Fields You Want To Export:</b>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2" style="font-size: 9pt;">
+										<input type="Checkbox" name="displayFields" value="ModelNo">Model No<br>
+										<input type="Checkbox" name="displayFields" value="Artist">Artist<br>
+										<input type="Checkbox" name="displayFields" value="Medium">Medium<br>
+										<input type="Checkbox" name="displayFields" value="Retail">Retail Price<br>
+										<input type="Checkbox" name="displayFields" value="Gallery">Gallery Price<br>
+										<input type="Checkbox" name="displayFields" value="Sale">Sale Price<br>
+										<input type="Checkbox" name="displayFields" value="Trump">Trump Price<br>
+										<input type="Checkbox" name="displayFields" value="Year">Year<br>
+										<input type="Checkbox" name="displayFields" value="Size">Size<br>
+										<input type="Checkbox" name="displayFields" value="Edition">Edition<br>
+										<input type="Checkbox" name="displayFields" value="Low">Low Estimate<br>
+										<input type="Checkbox" name="displayFields" value="High">High Estimate<br>
+										<input type="Checkbox" name="displayFields" value="Thumbnail">Thumbnail
+									</td>
+								</tr>
+									<tr>
+										<td>
+											<input type="Submit" value="CREATE EXCEL LISTING" name="create">
+										</td>
+									</tr>
+								</table>
 							</td>
 						</tr>
-							<tr>
-								<td>
-									<input type="Submit" value="CREATE EXCEL LISTING" name="create">
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-			</form>
+					</table>
+				</form>
 			</cfif>
 		</td>
 	</tr>
@@ -74,4 +74,13 @@
 		</td>
 	</tr>
 </table>	
+
+<script>
+	function disableSubmit(form) {
+		const button = form.querySelector('input[type="submit"]');
+		button.disabled = true;
+		button.value = "Processing...";
+	}
+</script>
+
 </cfoutput>

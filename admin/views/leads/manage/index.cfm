@@ -12,9 +12,35 @@
 	'>
 <script language="javascript" src="../js/jquery-1.3.2.js"></script>
 <script type="text/javascript">
-	function exportLeads(){
+	function exportLeads(btn){
+
+		btn.disabled = true;
+		btn.value = "Exporting...";      
+		// btn.form.submit();  
+
 		$('#leadExport').attr('src','index.cfm?event=exports.exportLeads');
+
+		setTimeout(function(){
+			btn.disabled = false;
+			btn.value = "Export All Leads";
+		}, 5000);
 	}
+
+	function exportFilteredLeads(btn) {
+		// disable button
+		btn.disabled = true;
+		btn.value = "Exporting...";
+
+		// trigger export via iframe
+		document.getElementById('createXls').src = 'views/exports/create_lead_xls.cfm';
+
+		// re-enable after 5 seconds
+		setTimeout(function(){
+			btn.disabled = false;
+			btn.value = "Export Filtered Leads";
+		}, 5000);
+	}
+
 </script>
 <cfajaxproxy cfc="admin.models.leads" />
 
@@ -116,8 +142,9 @@
 								</div>
 								<div class="col-md-12">
 									<div class="form-buttons">
-										<input type="button" value="Export All Leads" onclick="exportLeads()" />
-										<input type="button" value="Export Filtered Leads" onclick="document.getElementById('createXls').src='views/exports/create_lead_xls.cfm'" />
+										<input type="button" value="Export All Leads" onclick="exportLeads(this)" />
+										<!--- <input type="button" value="Export Filtered Leads" onclick="document.getElementById('createXls').src='views/exports/create_lead_xls.cfm'" /> --->
+										<input type="button" id="exportBtn" value="Export Filtered Leads" onclick="exportFilteredLeads(this)" />
 									</div>
 								</div>
 								<div class="col-md-12">
@@ -148,6 +175,9 @@
 							<cfinput type="hidden" name="pk_leads" id="pk_leads" bind="{leadGrid.pk_leads}">
 							<cfinput type="hidden" name="fname" id="fname" bind="{leadGrid.fname}">
 							<cfinput type="hidden" name="lname" id="lname" bind="{leadGrid.lname}">
+
+							<cfinput type="hidden" name="moduleName" id="moduleName" value="Lead Module">
+
 							<div class="row">
 								<div class="col-md-4">
 									<div class="form-group">
@@ -363,27 +393,7 @@
 										<cfinput type="text" name="website" id="website" maxlength="30" bind="{leadGrid.website}">
 									</div>
 								</div>
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>Artists:</label>
-										<cftextarea name="theartists" id="artists" cols="40" rows="3" maxlength="30" bind="{leadGrid.artists}"></cftextarea>
-										<div id="artistsCount" class="mb-3">0 / 100 characters</div>
-									</div>
-								</div>
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>Titles:</label>
-										<cftextarea name="titles" id="titles" cols="40" rows="3" maxlength="30" bind="{leadGrid.titles}"></cftextarea>
-										<div id="titlesCount" class="mb-3">0 / 100 characters</div> 
-									</div>
-								</div>
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>Notes:</label>
-										<cftextarea name="notes" id="notes" cols="40" rows="10" maxlength="30" bind="{leadGrid.notes}"></cftextarea>
-										<div id="notesCount" class="mb-3">0 / 500 characters</div> 
-									</div>
-								</div>
+
 								<div class="col-md-4">
 									<div class="form-group">
 										<label>Orign:</label>
@@ -398,6 +408,7 @@
 										</cfoutput>
 									</div>
 								</div>
+								
 								<div class="col-md-4">
 									<div class="form-group mail-list">
 										<label>Mail list:</label>
@@ -405,6 +416,30 @@
 										<input type="hidden" name="maillist" value="">
 									</div>
 								</div>
+
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>Artists:</label>
+										<cftextarea name="theartists" id="artists" cols="40" rows="3" maxlength="30" bind="{leadGrid.artists}"></cftextarea>
+										<div id="artistsCount" class="mb-3">0 / 100 characters</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>Titles:</label>
+										<cftextarea name="titles" id="titles" cols="40" rows="3" maxlength="30" bind="{leadGrid.titles}"></cftextarea>
+										<div id="titlesCount" class="mb-3">0 / 100 characters</div> 
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Notes:</label>
+										<cftextarea name="notes" id="notes" cols="40" rows="10" maxlength="30" bind="{leadGrid.notes}"></cftextarea>
+										<div id="notesCount" class="mb-3">0 / 500 characters</div> 
+									</div>
+								</div>
+								
+
 								<div class="col-md-4"></div>
 								<div class="col-md-12">
 									<div class="reset-search-btn">

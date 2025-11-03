@@ -33,20 +33,20 @@
 	   		]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
 	   		<cfset errorMsg=errorMsg & "Please enter your home phone number in the format (xxx) xxx-xxxx <br/>" />
 		</cfif> --->
-	<cfif errorMsg NEQ "">
-	   <cfset phoneError=true />
-	   <cfelse>
-	   <cftry>
-		  <!--- Decrypt the check value. --->
-		  <cfset strCaptcha=Decrypt( FORM.captcha_check, "gallart-is-the-best" , "CFMX_COMPAT" , "HEX" ) />
-		  <cfif (strCaptcha EQ FORM.captcha)>
-			 <cfset blnIsBot=false />
-		  </cfif>
-		  <cfcatch>
-			 <cfset blnIsBot=true />
-		  </cfcatch>
-	   </cftry>
-	</cfif>
+		<cfif errorMsg NEQ "">
+			<cfset phoneError=true />
+		<cfelse>
+			<cftry>
+				<!--- Decrypt the check value. --->
+				<cfset strCaptcha=Decrypt( FORM.captcha_check, "gallart-is-the-best" , "CFMX_COMPAT" , "HEX" ) />
+				<cfif (strCaptcha EQ FORM.captcha)>
+					<cfset blnIsBot=false />
+				</cfif>
+				<cfcatch>
+					<cfset blnIsBot=true />
+				</cfcatch>
+			</cftry>
+		</cfif>
 	</cfif>
 	<cfset arrValidChars=ListToArray( "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z," &
 	"2,3,4,5,6,7,8,9" ) />
@@ -54,7 +54,7 @@
 	<cfset CreateObject( "java" , "java.util.Collections" ).Shuffle( arrValidChars ) />
 	<cfset strCaptcha=( arrValidChars[ 1 ] & arrValidChars[ 2 ] ) />
 	<cfset FORM.captcha_check=Encrypt( strCaptcha,"gallart-is-the-best", "CFMX_COMPAT" , "HEX" ) />
- </cfsilent>
+</cfsilent>
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
  <cfparam name="xss" default="">
  <html>
@@ -165,406 +165,407 @@
 								  <div class="bottom-content">
 									 <div class="user-registrations row">
 										<div class="col-md-12">
-										   <div>
-											  <cfif productinfo.recordcount>
-												 <cfoutput>
-													<div class="top-heading text-left">
-														<h3>Make an Offer</h3>
-												 	</div>
-													
-													<cfif FORM.submitted>
-
-														<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
-
-														<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
-															<cfhttpparam type="formField" name="secret" value="#apikey#">
-															<cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
-															<cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
-														</cfhttp>
-																
-														<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
-
-													   <cfif phoneError>
-														  <cfoutput>
-															 <script language="JavaScript">
-																// document.errorFrm.fname.value = '#form.fname#'
-																// document.errorFrm.lname.value = '#form.lname#'
-																document.errorFrm.name.value = '#form.name#'
-																document.errorFrm.email.value = '#form.email#'
-																document.errorFrm.phone.value = '#form.phone#'
-																document.errorFrm.otherphone.value = '#form.otherphone#'
-																document.errorFrm.best_time.value = '#form.best_time#'
-																document.errorFrm.email_only.value = '#form.email_only#'
-																document.errorFrm.comments.value = '#form.comments#'
-																document.errorFrm.Offer.value = '#form.Offer#'
-																document.errorFrm.errorMsg.value = '#errorMsg#'
-																document.errorFrm.errorPhone.value = '1'
-																document.errorFrm.pid.value = '#form.pid#'
-																document.errorFrm.submit();
-															 </script>
-														  </cfoutput>
-														  <cfelseif captchaResponse.success NEQ 'YES'>
-														  <cfoutput>
-															 <script language="JavaScript">
-																// document.errorFrm.fname.value = '#form.fname#'
-																// document.errorFrm.lname.value = '#form.lname#'
-																document.errorFrm.name.value = '#form.name#'
-																document.errorFrm.email.value = '#form.email#'
-																document.errorFrm.phone.value = '#form.phone#'
-																document.errorFrm.otherphone.value = '#form.otherphone#'
-																document.errorFrm.best_time.value = '#form.best_time#'
-																document.errorFrm.email_only.value = '#form.email_only#'
-																document.errorFrm.comments.value = '#form.comments#'
-																document.errorFrm.Offer.value = '#form.Offer#'
-																document.errorFrm.errorMsg.value = '#errorMsg#'
-																document.errorFrm.captchaError.value = '1'
-																document.errorFrm.pid.value = '#form.pid#'
-																document.errorFrm.submit();
-															 </script>
-														  </cfoutput>
-														  <cfelse>
-															
-
-															<cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
-																<cfset phone = form.phone>
-															<cfelse>
-																<cfset phone = "">
-															</cfif>
-
-															<cfif len(trim(form.phone)) AND form.phoneType EQ "Cell Phone">
-																<cfset cellphone = form.phone>
-															<cfelse>
-																<cfset cellphone = "">
-															</cfif>
-
-															<cfif len(trim(form.phone)) AND form.phoneType EQ "Business Phone">
-																<cfset businessphone = form.phone>
-															<cfelse>
-																<cfset businessphone = "">
-															</cfif>
-
-															<cfif len(trim(form.phone)) AND form.phoneType EQ "OutsideUS">
-																<cfset otherphone = form.phone>
-															<cfelse>
-																<cfset otherphone = "">
-															</cfif>
-
-														  <cfif form.name neq ''  and form.Offer neq '' >
-														  <cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-															 SELECT * from customers where (email = '#trim(email)#')
-														  </cfquery>
-
-														<cfif form.email eq ''>
-
-															<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-																INSERT into customers
-																(
-																NAME,
-																PHONE,
-																cellphone,
-																businessphone,
-																otherphone,
-																EMAIL
-																)
-																VALUES
-																(
-																'#form.NAME#',
-																'#phone#',
-																'#cellphone#',
-																'#businessphone#',
-																'#otherphone#',
-																'#form.EMAIL#'
-																)
-																SELECT @@identity as uid 
-															</cfquery>
-															<cfset customerId=insert_cust.uid />
-
-														 <cfelse>
-														  <cfif not find_cust.recordcount>
-															 <cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-																INSERT into customers
-																(
-																NAME,
-																PHONE,
-																cellphone,
-																businessphone,
-																otherphone,
-																EMAIL
-																)
-																VALUES
-																(
-																'#form.NAME#',
-																'#phone#',
-																'#cellphone#',
-																'#businessphone#',
-																'#otherphone#',
-																'#form.EMAIL#'
-																)
-																SELECT @@identity as uid
-															 </cfquery>
-															 <cfset customerId=insert_cust.uid />
-															 <cfelse>
-															 <cfquery name="update_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-																UPDATE customers SET
-																EMAIL = '#EMAIL#'
-																<cfif form.phone NEQ "">
-																   ,PHONE = '#phone#'
-																</cfif>
-																<cfif form.otherphone NEQ "">
-																   ,OTHERPHONE = '#otherphone#'
-																</cfif>
-																WHERE id = #find_cust.id#
-															 </cfquery>
-															 <cfset customerId=find_cust.id />
-														  </cfif>
-
-														</cfif>
-														  <cfquery datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-															 INSERT into makeoffer
-															 (
-																fk_customers,
-																fk_products,
-																offer,
-																makeoffer_phone,
-																best_time
-															 )
-															 VALUES
-															 (
-															 #customerId#,
-															 #productinfo.uid#,
-															 '#form.Offer#',
-															 '#form.phone#',
-															 '#form.best_time#'
-															)
-													   </cfquery>
-
-															<cftry>
-
-																<cfmail 
-																	server="#application.mailserver#" 
-																	username="#application.mailserver_un#"
-																	password="#application.mailserver_pw#" 
-																	to="tldz.dev12@gmail.com"   
-																	from="sales@gallart.com" 
-																	subject="GallArt.com <> We Buy & Sell Fine Art <> Make An Offer" 
-																	port="587" type="HTML"
-																	>
-																	<font style="font-size: 10pt; font-family: Arial;">
-																	The following user made an offer on the piece below:
-																	<br><br>
-																	<!--- Name: #form.FNAME# #form.LNAME#<br> --->
-																	Name: #form.NAME#<br>
-																	Email Address: #form.Email#<br>
-																	Phone: #form.phone#<br>
-																	<cfif form.best_time NEQ "">
-																		Best time to call: #form.best_time#<br>
-																	</cfif>
-																	Offer: $#form.Offer#<br>
-																	Artist: #ucase(productinfo.manufacturer)#<br>
-																	Title: #productinfo.name#<br>
-																	Art ID: #productinfo.modelno#<br>
-																	Retail Price: #dollarFormat(productinfo.retail_price)#<br>
-																	Gallery Price: #dollarFormat(productinfo.gallery_price)#<br>
-																	<!--- removed for make offer 5/6/15 --->
-																	<!--- Sale Price: #dollarFormat(productinfo.sale_price)# --->
-																	<cfif productinfo.fk_users GT 1>
-																		<br>
-																		Seller: #productinfo.fname# #productinfo.lname#<br>
-																		Seller Email: #productinfo.email#<br>
-																		Seller Phone: #productinfo.phone#
-																	</cfif>
-																	<br><br>
-																	</font>
-																</cfmail>
-
-																<cfcatch>
-																	<cfdump var="#cfcatch#" abort="true">
-																</cfcatch>
-															</cftry>
-
-													   
-
-
-													<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">
-															THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY
-															<br><br>
-															<a href="/" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">
-																CLICK HERE
-															</a> TO MAKE ANOTHER OFFER
-														</span>
-													</cfif>
-													</cfif>
-													<cfelse>
-													<div class="form-section flex-form-section">
-													   <cfform action="" method="post" name="frm1" onsubmit="return setFormActionAndValidate()">
-														<div class="row top-row">
-															<div class="col-lg-5 col-md-6 col-sm-12">
-																<div class="img-sec">
-																	<!--- <img src="images/Gallery-Art-Map-V2.jpg" alt="image"> --->
-
-																	<cfif fileexists("http://#server_name#/img/thumbnails/#productInfo.uid#.jpg")> 
-																		<IMG SRC="/img/#productInfo.uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(productInfo.modelno)#" align="Center">
-																		<cfelse>
-																			
-																			<img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
-																	</cfif>
-
-																</div>
-															</div>
-															<div class="col-lg-7 col-md-6 col-sm-12 border-left">
-																<input type="hidden" name="submitted" value="1" />
-																<input type="hidden" name="captcha_check" value="#form.captcha_check#" />
-																<input type="hidden" name="pid" id="pid" value="#form.pid#" />
-																<cfif FORM.captchaError EQ 1>
-																   <span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE
-																   EXACTLY AS YOU SEE THEM</span>
-																</cfif>
-																<cfif FORM.errorPhone EQ 1>
-																   <span style="color: ##ff0000; font-weight: bold;">
-																   #form.errorMsg#
-																   </span>
-																</cfif>
-																<div class="input-form">
-
-																	<cfif listlen(productinfo.manufacturer) gt 1>
-																		<cfset artist_name = "#listlast(productinfo.manufacturer)# #listfirst(productinfo.manufacturer)#" />
-																		<cfset artist_name_url = "#listlast(productinfo.manufacturer)#_#listfirst(productinfo.manufacturer)#" />
-																	<cfelse>
-																		<cfset artist_name = productinfo.manufacturer />
-																		<cfset artist_name_url = productinfo.manufacturer />
-																	</cfif>
-																	
-																	<h2 class="title">
-																		
-
-																		<cfset words = ListToArray(productinfo.name, " ")>
-																		<cfset updatedName = "">
-
-																		<cfloop index="word" array="#words#">
-																			<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
-
-																			<cfif cleanWord EQ "FS">
-																				<!--- Preserve "FS" in uppercase --->
-																				<cfset updatedName = updatedName & " " & UCase(word)>
-																			<cfelse>
-																				<!--- Keep the original case of other words --->
-																				<cfset updatedName = updatedName & " " & word>
-																			</cfif>
-																		</cfloop>
-
-																		<cfset updatedName = Trim(updatedName)>
-
-																		<b>#artist_name# '#updatedName#' </b> - 
-																		<span>
-																			<!--- <cfif productinfo.retail_price gt 0 > --->
-
-																				
-																				<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
-																				   <cfif application.showSalePrice EQ 1>
-																					  <!--- #DollarFormat(productinfo.special_price)#  &nbsp; --->
-																					   <!--- <b> --->
-																						<cfif productinfo.gallery_price gt 0 and productinfo.gallery_price LTE productinfo.special_price >
-																							#DollarFormat(productinfo.gallery_price)#  &nbsp;
-																						<cfelse>
-																							<span style="color: ##ff0000;">
-																								#DollarFormat(productinfo.special_price)# 
-																							</span>
-																						</cfif>	
-																					  <!--- </b> --->
-																				   </cfif>
-																				<cfelseif productinfo.gallery_price gt 0>
-																				   #DollarFormat(productinfo.gallery_price)#  &nbsp;
-																				  <!--- <b> #DollarFormat(productinfo.gallery_price)# </b> --->
-																				</cfif>
-
-
-																				<cfset actualPrice = 0>
-																				<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and application.showSalePrice EQ 1>
-																					<cfset actualPrice = productinfo.special_price>
-																				<cfelseif productinfo.gallery_price gt 0>
-																					<cfset actualPrice = productinfo.gallery_price>
-																				</cfif>
-
-																				<input type="hidden" id="actualPrice" value="#actualPrice#">
-						  
-																			 
-																			 <!--- </cfif> --->
-
-
-																		</span> 
-																	</h2>
-																	<div class="row">
-																	
-
-																		<span style="color: ##ff0000;">* Required</span> <br><br>
-
-																		<div class="col-md-12">
-																			<div class="input-field">
-																				<cfinput type="text" size=40 maxsize=50 maxlength="30" placeholder="Enter your Name*" name="name" id="name" value="#form.name#" >
-																				<span class="error-message" id="nameError"></span>
-																			</div>
-																		</div>
-
-																		<div class="col-md-12">
-																			<div class="input-field">
-																				<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" id="email" value="#form.email#"  >
-																				<span class="error-message" id="emailError"></span>
-																			</div>
-																		</div>
-																		
-
-																		<div class="col-md-12">
-																			<div class="input-field">
-																				<select name="phoneType" id="phoneType" class="form-control" style="width:100% !important;">
-																					<option value="Cell Phone">Cell Phone</option>
-																					<option value="Home Phone">Home Phone</option>
-																					<option value="Business Phone">Business Phone</option>
-																					<option value="OutsideUS">Outside US Phone</option>
-																				</select>
-																			</div>
-																		</div>
-
-																		<div class="col-md-12">
-																			<div class="input-field">
-																				<cfinput type="text" size=40 maxlength="20" name="phone" placeholder="Enter your Phone Number" id="phone" value="#form.phone#" required="No">
-																				<span id="formatSign">(xxx) xxx-xxxx</span>
-																				<span class="error-message" id="phoneError"></span>
-																			</div>
-																		</div>
-
-																		
-
-																		
-																		<div class="col-md-12">
-																			<div class="input-field">
-																				<cfinput type="text" name="Offer" size="5" maxlength="6" id="Offer" message="Enter a Dollar amount, no $ or decimal." placeholder="Enter a Dollar amount, no $ or decimal.*" validate="integer" >
-																				<span class="error-message" id="OfferError"></span>
-																			</div>
-																		</div>
-																	
-
-																		<div class="input-field pt-3">
-																			<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
-																			<span class="error-message" id="m_recaptchaError"></span>
-																		</div>
-
-																		<div class="col-md-12 mt-3">
-																			<div class="input-button">
-																				<button type="submit" class="SeeMore" id="submitBtn">Submit</button>
-																				<button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
-																			 </div>
-																		</div>
-																  	</div>
-																</div>
-															</div>
+											<div>
+												<cfif productinfo.recordcount>
+													<cfoutput>
+														<div class="top-heading text-left">
+															<h3>Make an Offer</h3>
 														</div>
-														
-													   </cfform>
-													</div>
-											  </cfif>
-											  </cfoutput>
-											  </cfif>		
-										   </div>
+													
+														<cfif FORM.submitted>
+
+															<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+
+															<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+																<cfhttpparam type="formField" name="secret" value="#apikey#">
+																<cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+																<cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+															</cfhttp>
+																	
+															<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+
+															<cfif phoneError>
+																<cfoutput>
+																	<script language="JavaScript">
+																	// document.errorFrm.fname.value = '#form.fname#'
+																	// document.errorFrm.lname.value = '#form.lname#'
+																	document.errorFrm.name.value = '#form.name#'
+																	document.errorFrm.email.value = '#form.email#'
+																	document.errorFrm.phone.value = '#form.phone#'
+																	document.errorFrm.otherphone.value = '#form.otherphone#'
+																	document.errorFrm.best_time.value = '#form.best_time#'
+																	document.errorFrm.email_only.value = '#form.email_only#'
+																	document.errorFrm.comments.value = '#form.comments#'
+																	document.errorFrm.Offer.value = '#form.Offer#'
+																	document.errorFrm.errorMsg.value = '#errorMsg#'
+																	document.errorFrm.errorPhone.value = '1'
+																	document.errorFrm.pid.value = '#form.pid#'
+																	document.errorFrm.submit();
+																	</script>
+																</cfoutput>
+															 <cfelseif captchaResponse.success NEQ 'YES'>
+																<cfoutput>
+																	<script language="JavaScript">
+																	// document.errorFrm.fname.value = '#form.fname#'
+																	// document.errorFrm.lname.value = '#form.lname#'
+																	document.errorFrm.name.value = '#form.name#'
+																	document.errorFrm.email.value = '#form.email#'
+																	document.errorFrm.phone.value = '#form.phone#'
+																	document.errorFrm.otherphone.value = '#form.otherphone#'
+																	document.errorFrm.best_time.value = '#form.best_time#'
+																	document.errorFrm.email_only.value = '#form.email_only#'
+																	document.errorFrm.comments.value = '#form.comments#'
+																	document.errorFrm.Offer.value = '#form.Offer#'
+																	document.errorFrm.errorMsg.value = '#errorMsg#'
+																	document.errorFrm.captchaError.value = '1'
+																	document.errorFrm.pid.value = '#form.pid#'
+																	document.errorFrm.submit();
+																	</script>
+																</cfoutput>
+															 <cfelse>
+																
+
+																<cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
+																	<cfset phone = form.phone>
+																<cfelse>
+																	<cfset phone = "">
+																</cfif>
+
+																<cfif len(trim(form.phone)) AND form.phoneType EQ "Cell Phone">
+																	<cfset cellphone = form.phone>
+																<cfelse>
+																	<cfset cellphone = "">
+																</cfif>
+
+																<cfif len(trim(form.phone)) AND form.phoneType EQ "Business Phone">
+																	<cfset businessphone = form.phone>
+																<cfelse>
+																	<cfset businessphone = "">
+																</cfif>
+
+																<cfif len(trim(form.phone)) AND form.phoneType EQ "OutsideUS">
+																	<cfset otherphone = form.phone>
+																<cfelse>
+																	<cfset otherphone = "">
+																</cfif>
+
+																<cfif form.name neq ''  and form.Offer neq '' >
+																	<cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																		SELECT * from customers where (email = '#trim(email)#')
+																	</cfquery>
+
+																	<cfif form.email eq ''>
+
+																		<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																			INSERT into customers
+																			(
+																				NAME,
+																				PHONE,
+																				cellphone,
+																				businessphone,
+																				otherphone,
+																				EMAIL
+																			)
+																			VALUES
+																			(
+																				'#form.NAME#',
+																				'#phone#',
+																				'#cellphone#',
+																				'#businessphone#',
+																				'#otherphone#',
+																				'#form.EMAIL#'
+																			)
+																			SELECT @@identity as uid 
+																		</cfquery>
+																		<cfset customerId=insert_cust.uid />
+
+																	<cfelse>
+																		<cfif not find_cust.recordcount>
+																			<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																				INSERT into customers
+																				(
+																					NAME,
+																					PHONE,
+																					cellphone,
+																					businessphone,
+																					otherphone,
+																					EMAIL
+																				)
+																				VALUES
+																				(
+																					'#form.NAME#',
+																					'#phone#',
+																					'#cellphone#',
+																					'#businessphone#',
+																					'#otherphone#',
+																					'#form.EMAIL#'
+																				)
+																				SELECT @@identity as uid
+																			</cfquery>
+																			<cfset customerId=insert_cust.uid />
+																		<cfelse>
+																			<cfquery name="update_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																				UPDATE customers SET
+																				EMAIL = '#EMAIL#'
+																				<cfif form.phone NEQ "">
+																				,PHONE = '#phone#'
+																				</cfif>
+																				<cfif form.otherphone NEQ "">
+																				,OTHERPHONE = '#otherphone#'
+																				</cfif>
+																				WHERE id = #find_cust.id#
+																			</cfquery>
+																			<cfset customerId=find_cust.id />
+																		</cfif>
+
+																	</cfif>
+																	<cfquery datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																		INSERT into makeoffer
+																		(
+																			fk_customers,
+																			fk_products,
+																			offer,
+																			makeoffer_phone,
+																			best_time
+																		)
+																		VALUES
+																		(
+																			#customerId#,
+																			#productinfo.uid#,
+																			'#form.Offer#',
+																			'#form.phone#',
+																			'#form.best_time#'
+																			)
+																	</cfquery>
+
+																	<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+																	<cfset date = now()>
+																	<cfset moduleName = 'Make Offer'>
+																	<cfset action = 'Insert'>
+
+																	<cfquery name="addLog" datasource="#application.dsource#" >
+																		INSERT INTO logs 
+																			( moduleName, ipAddress, date, action)
+																			VALUES
+																			( '#moduleName#', '#ipAddress#', #date#, '#action#')
+																	</cfquery>
+
+																	<cftry>
+
+																		<cfmail 
+																			server="#application.mailserver#" 
+																			username="#application.mailserver_un#"
+																			password="#application.mailserver_pw#" 
+																			to="tldz.dev12@gmail.com"   
+																			from="sales@gallart.com" 
+																			subject="GallArt.com <> We Buy & Sell Fine Art <> Make An Offer" 
+																			port="587" type="HTML"
+																			>
+																				<font style="font-size: 10pt; font-family: Arial;">
+																					The following user made an offer on the piece below:
+																					<br><br>
+																					<!--- Name: #form.FNAME# #form.LNAME#<br> --->
+																					Name: #form.NAME#<br>
+																					Email Address: #form.Email#<br>
+																					Phone: #form.phone#<br>
+																					<cfif form.best_time NEQ "">
+																						Best time to call: #form.best_time#<br>
+																					</cfif>
+																					Offer: $#form.Offer#<br>
+																					Artist: #ucase(productinfo.manufacturer)#<br>
+																					Title: #productinfo.name#<br>
+																					Art ID: #productinfo.modelno#<br>
+																					Retail Price: #dollarFormat(productinfo.retail_price)#<br>
+																					Gallery Price: #dollarFormat(productinfo.gallery_price)#<br>
+																					<!--- removed for make offer 5/6/15 --->
+																					<!--- Sale Price: #dollarFormat(productinfo.sale_price)# --->
+																					<cfif productinfo.fk_users GT 1>
+																						<br>
+																						Seller: #productinfo.fname# #productinfo.lname#<br>
+																						Seller Email: #productinfo.email#<br>
+																						Seller Phone: #productinfo.phone#
+																					</cfif>
+																					<br><br>
+																				</font>
+																		</cfmail>
+
+																		<cfcatch>
+																			<cfdump var="#cfcatch#" abort="true">
+																		</cfcatch>
+																	</cftry>
+															
+																	<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">
+																		THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY
+																		<br><br>
+																		<a href="/" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">
+																			CLICK HERE
+																		</a> TO MAKE ANOTHER OFFER
+																	</span>
+																</cfif>
+															</cfif>
+														 <cfelse>
+															<div class="form-section flex-form-section">
+																<cfform action="" method="post" name="frm1" onsubmit="return setFormActionAndValidate()">
+																		<div class="row top-row">
+																			<div class="col-lg-5 col-md-6 col-sm-12">
+																				<div class="img-sec">
+																					<!--- <img src="images/Gallery-Art-Map-V2.jpg" alt="image"> --->
+
+																					<cfif fileexists("http://#server_name#/img/thumbnails/#productInfo.uid#.jpg")> 
+																						<IMG SRC="/img/#productInfo.uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(productInfo.modelno)#" align="Center">
+																						<cfelse>
+																							
+																							<img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
+																					</cfif>
+
+																				</div>
+																			</div>
+																			<div class="col-lg-7 col-md-6 col-sm-12 border-left">
+																				<input type="hidden" name="submitted" value="1" />
+																				<input type="hidden" name="captcha_check" value="#form.captcha_check#" />
+																				<input type="hidden" name="pid" id="pid" value="#form.pid#" />
+																				<cfif FORM.captchaError EQ 1>
+																					<span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE
+																					EXACTLY AS YOU SEE THEM</span>
+																				</cfif>
+																				<cfif FORM.errorPhone EQ 1>
+																					<span style="color: ##ff0000; font-weight: bold;">
+																					#form.errorMsg#
+																					</span>
+																				</cfif>
+																				<div class="input-form">
+
+																					<cfif listlen(productinfo.manufacturer) gt 1>
+																						<cfset artist_name = "#listlast(productinfo.manufacturer)# #listfirst(productinfo.manufacturer)#" />
+																						<cfset artist_name_url = "#listlast(productinfo.manufacturer)#_#listfirst(productinfo.manufacturer)#" />
+																					<cfelse>
+																						<cfset artist_name = productinfo.manufacturer />
+																						<cfset artist_name_url = productinfo.manufacturer />
+																					</cfif>
+																					
+																					<h2 class="title">
+																						
+
+																						<cfset words = ListToArray(productinfo.name, " ")>
+																						<cfset updatedName = "">
+
+																						<cfloop index="word" array="#words#">
+																							<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+
+																							<cfif cleanWord EQ "FS">
+																								<!--- Preserve "FS" in uppercase --->
+																								<cfset updatedName = updatedName & " " & UCase(word)>
+																							<cfelse>
+																								<!--- Keep the original case of other words --->
+																								<cfset updatedName = updatedName & " " & word>
+																							</cfif>
+																						</cfloop>
+
+																						<cfset updatedName = Trim(updatedName)>
+
+																						<b>#artist_name# '#updatedName#' </b> - 
+																						<span>
+																							<!--- <cfif productinfo.retail_price gt 0 > --->
+
+																								
+																								<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
+																								<cfif application.showSalePrice EQ 1>
+																									<!--- #DollarFormat(productinfo.special_price)#  &nbsp; --->
+																									<!--- <b> --->
+																										<cfif productinfo.gallery_price gt 0 and productinfo.gallery_price LTE productinfo.special_price >
+																											#DollarFormat(productinfo.gallery_price)#  &nbsp;
+																										<cfelse>
+																											<span style="color: ##ff0000;">
+																												#DollarFormat(productinfo.special_price)# 
+																											</span>
+																										</cfif>	
+																									<!--- </b> --->
+																								</cfif>
+																								<cfelseif productinfo.gallery_price gt 0>
+																								#DollarFormat(productinfo.gallery_price)#  &nbsp;
+																								<!--- <b> #DollarFormat(productinfo.gallery_price)# </b> --->
+																								</cfif>
+
+
+																								<cfset actualPrice = 0>
+																								<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and application.showSalePrice EQ 1>
+																									<cfset actualPrice = productinfo.special_price>
+																								<cfelseif productinfo.gallery_price gt 0>
+																									<cfset actualPrice = productinfo.gallery_price>
+																								</cfif>
+
+																								<input type="hidden" id="actualPrice" value="#actualPrice#">
+										
+																							
+																							<!--- </cfif> --->
+
+
+																						</span> 
+																					</h2>
+																					<div class="row">																	
+																						<span style="color: ##ff0000;">* Required</span> <br><br>
+
+																						<div class="col-md-12">
+																							<div class="input-field">
+																								<cfinput type="text" size=40 maxsize=50 maxlength="30" placeholder="Enter your Name*" name="name" id="name" value="#form.name#" >
+																								<span class="error-message" id="nameError"></span>
+																							</div>
+																						</div>
+
+																						<div class="col-md-12">
+																							<div class="input-field">
+																								<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" id="email" value="#form.email#"  >
+																								<span class="error-message" id="emailError"></span>
+																							</div>
+																						</div>
+																						
+																						<div class="col-md-12">
+																							<div class="input-field">
+																								<select name="phoneType" id="phoneType" class="form-control" style="width:100% !important;">
+																									<option value="Cell Phone">Cell Phone</option>
+																									<option value="Home Phone">Home Phone</option>
+																									<option value="Business Phone">Business Phone</option>
+																									<option value="OutsideUS">Outside US Phone</option>
+																								</select>
+																							</div>
+																						</div>
+
+																						<div class="col-md-12">
+																							<div class="input-field">
+																								<cfinput type="text" size=40 maxlength="20" name="phone" placeholder="Enter your Phone Number" id="phone" value="#form.phone#" required="No">
+																								<span id="formatSign">(xxx) xxx-xxxx</span>
+																								<span class="error-message" id="phoneError"></span>
+																							</div>
+																						</div>																		
+																						
+																						<div class="col-md-12">
+																							<div class="input-field">
+																								<cfinput type="text" name="Offer" size="5" maxlength="6" id="Offer" message="Enter a Dollar amount, no $ or decimal." placeholder="Enter a Dollar amount, no $ or decimal.*" validate="integer" >
+																								<span class="error-message" id="OfferError"></span>
+																							</div>
+																						</div>
+																					
+																						<div class="input-field pt-3">
+																							<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+																							<span class="error-message" id="m_recaptchaError"></span>
+																						</div>
+
+																						<div class="col-md-12 mt-3">
+																							<div class="input-button">
+																								<button type="submit" class="SeeMore" id="submitBtn">Submit</button>
+																								<button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
+																							</div>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																		</div>														
+																</cfform>
+															</div>
+														</cfif>
+													</cfoutput>
+												</cfif>		
+											</div>
 										</div>
 									 </div>
 								  </div>

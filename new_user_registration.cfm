@@ -438,8 +438,8 @@
 					<cflocation url="#script_name#?reachedMax=true" addtoken="No">
 				 <cfelse>
 					
-					<!--- <cfdump var="#cgi.content_length#">
-					<cfdump var="#fileSizeLimit#" abort="true"> --->
+						<!--- <cfdump var="#cgi.content_length#">
+						<cfdump var="#fileSizeLimit#" abort="true"> --->
 	
 					<!--- <cfif cgi.content_length LTE fileSizeLimit> --->
 						
@@ -463,6 +463,7 @@
 						<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
 						<cfset date = now()>
 						<cfset moduleName = 'purchase_consignment'>
+						<cfset action = 'Insert'>
 						
 						<!--- <cfdump var="#ipAddress#" ><br>
 						<cfdump var="#date#" ><br>
@@ -470,11 +471,9 @@
 
 						<cfquery name="getLogs" datasource="#application.dsource#">
 							SELECT * From logs where ipAddress = '#ipAddress#' and moduleName = '#moduleName#' and CAST([date] AS DATE) = #date#
-						</cfquery>
+						</cfquery>					
 
-						<!--- <cfdump var="#getlogs.recordCount#" abort="true"> --->
-
-					<cfif getlogs.recordCount LT 2>
+					 <cfif getlogs.recordCount LT 2>
 	
 						<cfif 
 							form.fname NEQ '' 
@@ -483,7 +482,7 @@
 							and form.lname NEQ '' 
 							and form.size NEQ '' >
 	
-							<!--- <cfdump var="#form#" abort="true"> --->
+								<!--- <cfdump var="#form#" abort="true"> --->
 	
 								<cfloop collection="#form#" item="idx">
 									<cfif left(idx,9) EQ "addImage_">
@@ -505,9 +504,7 @@
 										</cfif>
 									</cfif>
 								</cfloop>
-
-								
-	
+									
 								<cfif NOT fileTooLarge>
 									<cftry>
 										<!--- <cfdump var="#cffile.serverFile#" abort="true"> --->
@@ -585,17 +582,17 @@
 												(
 													moduleName,
 													ipAddress,
-													date
+													date,
+													action
 												)
 												VALUES
 												(
 													'#moduleName#',
 													'#ipAddress#',
-													#date#
+													#date#,
+													'#action#'
 												)
-										   </cfquery>
-				
-										
+										   </cfquery>														
 									
 											<cfmail 
 												server="#application.mailserver#"
@@ -649,21 +646,15 @@
 						</cfif>
 
 
-					<cfelse>
+					 <cfelse>
 						<cfoutput>
 							<script>
 								// toastr.error('You cannnot add record more than 2 times');
 								alert('You cannnot add record more than 2 times')
 							</script>
 						</cfoutput>
-					</cfif>
-
-
-						
-						
-						
-						
-						
+					 </cfif>						
+																								
 						<!--- <cfelse>
 						<cflocation url="#script_name#?xss=#xss#&error=filetoolarge" addtoken="No">
 					</cfif> --->
@@ -671,12 +662,8 @@
 				</cfif>
 			</cfif>
 
-
 		</cfif>
-		
-	
-		
-	
+						
 	</cfif>
 	
 	<!-- End processing -->
@@ -768,7 +755,7 @@
 														</script>
 														</cfoutput>
 
-												<cfelseif captchaResponse.success NEQ 'YES'>
+												 <cfelseif captchaResponse.success NEQ 'YES'>
 														<cfoutput>
 															<!--- <cfdump var="testing 2" abort="true"> --->
 														<script language="JavaScript">
@@ -786,164 +773,174 @@
 														</script>
 														</cfoutput>
 													
-												<cfelse>
+												 <cfelse>
 					
 													<cfquery name="CheckDups" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 															select pk_users from users where email =  <cfqueryparam value="#trim(form.email)#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
 													</cfquery>
 													
-														<cfif CheckDups.recordcount gt 0>
-															<script language="JavaScript">
-																alert('The email you selected is taken. If you are already a member please log in.');
-																history.go(-1);
-															</script>
-															<cfabort>
-														</cfif>
+													<cfif CheckDups.recordcount gt 0>
+														<script language="JavaScript">
+															alert('The email you selected is taken. If you are already a member please log in.');
+															history.go(-1);
+														</script>
+														<cfabort>
+													</cfif>
+													
+													<cfif form.password neq form.password2>
+														<script language="JavaScript">
+															alert('Password missmatch. Please retype your password.');
+															history.go(-1);
+														</script>
+														<cfabort>
+													</cfif>														
+
+													<!--- <cfdump var="testing 3" abort="true"> --->
+
+													<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "Home Phone">
+														<cfset phone = form.cellphone>
+													<cfelse>
+														<cfset phone = "">
+													</cfif>
+
+													<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "Cell Phone">
+														<cfset cellphone = form.cellphone>
+													<cfelse>
+														<cfset cellphone = "">
+													</cfif>
+
+													<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "Business Phone">
+														<cfset businessphone = form.cellphone>
+													<cfelse>
+														<cfset businessphone = "">
+													</cfif>
+
+													<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "OutsideUS">
+														<cfset otherphone = form.cellphone>
+													<cfelse>
+														<cfset otherphone = "">
+													</cfif>
 														
-														<cfif form.password neq form.password2>
-															<script language="JavaScript">
-																alert('Password missmatch. Please retype your password.');
-																history.go(-1);
-															</script>
-															<cfabort>
-														</cfif>
-
-														
-
-														<!--- <cfdump var="testing 3" abort="true"> --->
-
-														<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "Home Phone">
-															<cfset phone = form.cellphone>
-														<cfelse>
-															<cfset phone = "">
-														</cfif>
-
-														<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "Cell Phone">
-															<cfset cellphone = form.cellphone>
-														<cfelse>
-															<cfset cellphone = "">
-														</cfif>
-
-														<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "Business Phone">
-															<cfset businessphone = form.cellphone>
-														<cfelse>
-															<cfset businessphone = "">
-														</cfif>
-
-														<cfif len(trim(form.cellphone)) AND form.S_phoneType EQ "OutsideUS">
-															<cfset otherphone = form.cellphone>
-														<cfelse>
-															<cfset otherphone = "">
-														</cfif>
-														
-														<cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq '' and form.cellphone neq '' >
-															<cflock name="insertuser" timeout="10">
-																<!--- <cfdump var="test data" abort="true"> --->
-																<cfquery name="insertUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-																	INSERT into users
-																	(
-																		fname,
-																		lname,
-																		email,
-																		password,
-																		cellphone,
-																		phone,
-																		businessphone,
-																		otherphone
-																		
-																	)
-																	values
-																	(
-																		<cfqueryparam value="#form.fname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
-																		<cfqueryparam value="#form.lname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
-																		<cfqueryparam value="#form.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
-																		<cfqueryparam value="#form.password#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
-																		<cfqueryparam value="#cellphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
-																		<cfqueryparam value="#phone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
-																		<cfqueryparam value="#businessphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
-																		<cfqueryparam value="#otherphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
-																		
-																	)
-																</cfquery>
-
-
-
+													<cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq '' and form.cellphone neq '' >
+														<cflock name="insertuser" timeout="10">
+															<!--- <cfdump var="test data" abort="true"> --->
+															<cfquery name="insertUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																INSERT into users
+																(
+																	fname,
+																	lname,
+																	email,
+																	password,
+																	cellphone,
+																	phone,
+																	businessphone,
+																	otherphone,
+																	datestamp
 																	
-																
-																<!--- getting the last input UID --->
-																<cfquery name="lastUID" datasource="#dsource#" username="#uname#" password="#pword#">
-																	SELECT @@identity as uid FROM users
-																</cfquery>
-																
-																<cfset session.sellerinfo.pk_users = lastUID.uid>
-																<cfset session.sellerinfo.fname = form.fname>
-																<cfset session.sellerinfo.lname = form.lname>
-																<cfset session.sellerinfo.email = form.email>
-																<cfset session.sellerinfo.login = 1 />
-																
-																</cflock>
-																
-																<cfmail 
-																server="#servername#" 
-																username="onli16@onlinegalleryart.com"
-																password="re3objec" 
-																to="#emailsupport#" 
-																cc="#emailsupportcc#" 
-																from="#form.email#" 
-																subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller" type="HTML">
-																	<font style="font-size: 10pt; font-family: Arial;">
-																	<strong>#session.sellerinfo.fname# #session.sellerinfo.lname#</strong> registered as a new Member on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
-																	<br><br>
-																</cfmail>
-																
-																<cfmail 
-																server="#servername#" 
-																username="onli16@onlinegalleryart.com"
-																password="re3objec" 
-																to="#form.email#" 
-																from="onli16@onlinegalleryart.com"
-																 subject="Gallery Art - Welcome New Member" 
-																 type="HTML"
-																 >
-																	<font style="font-size: 10pt; font-family: Arial;">
-																	Thank you, #session.sellerinfo.fname# #session.sellerinfo.lname#, for registering as a Member at www.gallart.com. <br><br>
-																	Your password is:<br>
-																	#form.password#<br><br>
-																	Please keep it in a safe place.<br><br>
-																	You are now ready to list your artwork!<br><br>
-																	#getPages.page_content#
-																	<br><br>
-																</cfmail>
+																)
+																values
+																(
+																	<cfqueryparam value="#form.fname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
+																	<cfqueryparam value="#form.lname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
+																	<cfqueryparam value="#form.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
+																	<cfqueryparam value="#form.password#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
+																	<cfqueryparam value="#cellphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
+																	<cfqueryparam value="#phone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
+																	<cfqueryparam value="#businessphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
+																	<cfqueryparam value="#otherphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
+																	<cfqueryparam value="#now()#" cfsqltype="CF_SQL_TIMESTAMP" maxlength="100">
+																	
+																)
+															</cfquery>																
+															
+															<!--- getting the last input UID --->
+															<cfquery name="lastUID" datasource="#dsource#" username="#uname#" password="#pword#">
+																SELECT @@identity as uid FROM users
+															</cfquery>
+															
+															<cfset session.sellerinfo.pk_users = lastUID.uid>
+															<cfset session.sellerinfo.fname = form.fname>
+															<cfset session.sellerinfo.lname = form.lname>
+															<cfset session.sellerinfo.email = form.email>
+															<cfset session.sellerinfo.login = 1 />
 
-																<script>
-																	$(document).ready(function() {
-																		toastr.options = {
-																			'closeButton': true,
-																			'debug': false,
-																			'newestOnTop': false,
-																			'progressBar': true,
-																			'positionClass': 'toast-top-right',
-																			'preventDuplicates': false,
-																			'showDuration': '1000',
-																			'hideDuration': '1000',
-																			'timeOut': '5000',
-																			'extendedTimeOut': '1000',
-																			'showEasing': 'swing',
-																			'hideEasing': 'linear',
-																			'showMethod': 'fadeIn',
-																			'hideMethod': 'fadeOut',
-																		}
-																	});
+															<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+															<cfset date = now()>
+															<cfset moduleName = 'Become a Seller'>
+															<cfset action = 'Insert'>
+															
+															<cfquery name="addLog" datasource="#application.dsource#" >
+																INSERT INTO logs 
+																	( moduleName, ipAddress, date, action)
+																	VALUES
+																	( '#moduleName#', '#ipAddress#', #date#, '#action#')
+															</cfquery>
+															
+														</cflock>
+															
+														<cfmail 
+															server="#servername#" 
+															username="onli16@onlinegalleryart.com"
+															password="re3objec" 
+															to="#emailsupport#" 
+															cc="#emailsupportcc#" 
+															from="#form.email#" 
+															subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller" 
+															type="HTML"
+															>
+															<font style="font-size: 10pt; font-family: Arial;">
+															<strong>#session.sellerinfo.fname# #session.sellerinfo.lname#</strong> registered as a new Member on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
+															<br><br>
+														</cfmail>
+														
+														<cfmail 
+															server="#servername#" 
+															username="onli16@onlinegalleryart.com"
+															password="re3objec" 
+															to="#form.email#" 
+															from="onli16@onlinegalleryart.com"
+															subject="Gallery Art - Welcome New Member" 
+															type="HTML"
+															>
+															<font style="font-size: 10pt; font-family: Arial;">
+															Thank you, #session.sellerinfo.fname# #session.sellerinfo.lname#, for registering as a Member at www.gallart.com. <br><br>
+															Your password is:<br>
+															#form.password#<br><br>
+															Please keep it in a safe place.<br><br>
+															You are now ready to list your artwork!<br><br>
+															#getPages.page_content#
+															<br><br>
+														</cfmail>
 
-																	toastr.success('Your Record is added successfully.');
-																</script>
+														<script>
+															$(document).ready(function() {
+																toastr.options = {
+																	'closeButton': true,
+																	'debug': false,
+																	'newestOnTop': false,
+																	'progressBar': true,
+																	'positionClass': 'toast-top-right',
+																	'preventDuplicates': false,
+																	'showDuration': '1000',
+																	'hideDuration': '1000',
+																	'timeOut': '5000',
+																	'extendedTimeOut': '1000',
+																	'showEasing': 'swing',
+																	'hideEasing': 'linear',
+																	'showMethod': 'fadeIn',
+																	'hideMethod': 'fadeOut',
+																}
+															});
 
-																<cflocation url="overView" addtoken="No">
-															<cfelse>
-																<cfoutput>
-																	<p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
-																</cfoutput>
-														</cfif>
+															toastr.success('Your Record is added successfully.');
+														</script>
+
+															<cflocation url="overView" addtoken="No">
+													 <cfelse>
+														<cfoutput>
+															<p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
+														</cfoutput>
+													</cfif>
 														
 												</cfif>	
 											 <cfelse>
@@ -968,330 +965,316 @@
 														</div> 
 													</div>
 												</div>
-											 <div class="user-registrations new-user-form">
-												<div class="row">
-													<!---  <div class="col-md-6"> 
-														<div class="main-banner-image">
-															<img src="http://23.20.226.157/img/12478.jpg" alt="image" style="width: 100%;" />
-														</div>
-													</div> --->
-													<div class="col-md-12">
-														<div class="form-sectiom">
-															<div class="main-heading">
-																<h3>Type of Sale</h3>
+												<div class="user-registrations new-user-form">
+													<div class="row">
+														<!---  <div class="col-md-6"> 
+															<div class="main-banner-image">
+																<img src="http://23.20.226.157/img/12478.jpg" alt="image" style="width: 100%;" />
 															</div>
-															<div class="general-saller-tabs">
-																<!-- <div class="tabs-buttons">
-																	<div class="form-check form-check-inline" id="tab-general">
-																		<input type="radio" name="collapseTabs" id="radio1" class="form-check-input me-2" checked>
-																		 <input type="radio" class="btn-check" name="tabs" id="tab-general" checked> 
-																		<label class="btn" for="radio1" onclick="setActiveTab('general')">
-																			General
-																		</label>
-																	</div>
-																	<div class="form-check form-check-inline" id="tab-seller">
-																		<input type="radio" name="collapseTabs" id="radio2" class="form-check-input me-2">
-																		 <input type="radio" class="btn-check" name="tabs" id="tab-seller"> 
-																		<label class="btn" for="radio2" onclick="setActiveTab('seller')">
-																			Seller
-																		</label>
-																	</div>
-																</div> -->
-																<div class="tabs-dropdown">
-																	<select class="form-select" id="tabSelector" onchange="setActiveTab(this.value)">
-																		<option value="general" selected>Direct Sale</option>
-																		<option value="seller">Become a Seller</option>
-																	</select>
+														</div> --->
+														<div class="col-md-12">
+															<div class="form-sectiom">
+																<div class="main-heading">
+																	<h3>Type of Sale</h3>
 																</div>
-																<div>
-																	<div  id="content-general" class="tab-content" style="display: block;">
-																		<div class="general-salaer-form">
-																			<div class="user-content"> 
-																				<cfif structKeyExists(url,'processed')>
-																					<span style="color: #ff0000; font-size: 13px;">
-																					<cfif FORM.captchaError2>
-																						<!---<span style="color: ##ff0000; font-weight: bold;">
-																							PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM
-																						</span>--->
-																						<br><br>
-																					<cfelse>
-																						<!--- <cfset remainingEntries = 5 - (entryCount + 1)> --->
-
-																						
-																						
-																						<br />
-																						<!--- <cfif remainingEntries LT 5 AND remainingEntries GT 0> --->
-
-																							<!--- <script>
-																								toastr.success('Sent');
-																							</script> --->
-
-																							<!--- YOU MAY ENTER <cfoutput>#remainingEntries#</cfoutput> MORE ITEMS
-																						<cfelse>
-																							YOU HAVE REACHED THE MAXIMUM NUMBER OF ENTRIES <br />
-																							FOR THIS FORM
-																						</cfif> --->
-																					</cfif>
-																					</span>
-																					<br /><br />
-																				</cfif>
-																				<cfoutput>
-																				<cfform name="frm1" action="/sell-your-art" method="post" enctype="multipart/form-data" id="generalForm" onsubmit="return validateGeneralForm(event)">
-																				<input	type="hidden" name="captcha_check2"	value="#FORM.captcha_check2#" />
-																				<div class="input-form">
-																					<div class="row">
-																						<!--- <div class="col-md-12">
-																							<div class="input-field">
-																								<label><b>Your Name:<span style="color: ##ff0000;">*</span></b></label> 
-																							</div>
-																						</div> --->
-																						<div class="col-md-6">
-																							<div class="input-field"> 
-																								<label><b> First Name<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" maxlength="15" >
-																								<span class="error-message" id="G_fnameError"></span>
-																							</div>
-																						</div>
-																						<div class="col-md-6">
-																							<div class="input-field"> 
-																								<label><b>Last Name<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="lname" id="lname" value="#form.lname#" size="30" maxlength="15" >
-																								<span class="error-message" id="G_lnameError"></span>
-																							</div>
-																						</div>
-																						<div class="col-md-4 pt-4">
-																							<div class="input-field">
-																								<label><b>Email<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="email_purchase" id="email_purchase" value="#form.email_purchase#" size="30" maxlength="20"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$"  >
-																								<span class="error-message" id="G_email_purchaseError"></span>
-																							</div>
-																						</div>
-
-																						<div class="col-md-4 pt-4">
-																							<div class="input-field">
-																								<label><b>Phone Type <span style="color: ##ff0000;">*</span></b></label>
-																								 <select name="phoneType" id="phoneType" >
-																									<option value="Cell Phone">Cell Phone</option>
-																									<option value="Home Phone">Home Phone</option>
-																									<option value="Business Phone">Business Phone</option>
-																									<option value="OutsideUS">Outside US Phone</option>
-																								</select>
-																								<span class="error-message" id="G_phoneTypeError"></span>
-																							</div>
-																						</div>
-
-																						<div class="col-md-4 pt-4">
-																							<div class="input-field">
-																								<label><b>Phone Number <span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="phone" id="phone" value="#form.phone#" size="30" maxlength="20" >
-																								<span id="formatSign">(xxx) xxx-xxxx</span>
-																								<span class="error-message" id="G_phoneError"></span>
-																							</div>
-																						</div>
-																						<div class="col-md-12">
-																							<div class="input-field">
-																								<label><b>Tell us About the Artwork<span style="color: ##ff0000;">*</span></b></label>
-																								<textarea name="additional_details" id="additional_details" maxlength="500" cols="50" rows="4" placeholder="Artist Name, Artwork Title, Medium, Edition, Year, Size, Artwork Location ">#form.additional_details#</textarea>
-																								<span class="error-message" id="G_additional_details"></span>
-																								<div id="charCount" class="mb-3">0 / 500 characters</div>
-																							</div>
-																						</div>
-																						<div class="col-md-12">
-																							<div class="input-field pb-3">
-																								<label><b>Price Desired<span style="color: ##ff0000;">*</span></b></label>
-																								<cfinput type="text" name="size" value="#form.size#" maxlength="6" size="30" id="size" placeholder="e.g $2000">
-																								<span class="error-message" id="G_sizeError"></span>
-																							</div>
-																						</div>
-																						<div class="col-md-12">
-																							<div class="input-field image-upload pb-2"> 
-																								<h3>
-																									UPLOAD IMAGES
-																								</h3>
-																								<ul>
-																									<li>- Please attach an image of the entire artwork/(s) </li>
-																									<li>- Up close images of the artist signature, edition, watermark or stamp (if applicable). </li>
-																									<li>- Image of the artwork verso if there is anything there by the artist, studio or publisher. </li>
-																									<li>- Image of the frame verso if there is a provenance label. </li>
-																									<li>- Images of any certificates, documentation or provenance. </li> 
-																									<li>- Image size maximum <b>5MB</b>. </li> 
-																								</ul>
-																							</div>
-
-																							<!--- <div class="file-upload-wrapper">
-																								<label for="file-upload" class="file-upload-label">
-																								  <div class="file-upload-icon">
-																									<!-- Example SVG icon -->
-																									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-																									  <path d="M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z" />
-																									</svg>
-																								  </div>
-																								  <div class="file-upload-text">
-																									<strong>Browse Files</strong>
-																									<p>Drag and drop files here</p>
-																								  </div>
-																								</label>
-																								<input type="file"  name="thisImage" id="file-upload" class="file-upload-input" >
-																							</div> --->
-
-																							<div class="col-md-12">
-																								<div class="input-field sm-input-field pb-3">
-																									<input type="button" value="Add Additional Image" id="addImageButton" class="img-btn" />
-
-																								</div>
-																								<div id="addImageContainer" class="flex-img-container"></div>
-																							</div>
-
-																							<!--- <div class="input-field">
-																								<cfimage action="captcha" height="75" width="363" text="#strCaptcha2#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
+																<div class="general-saller-tabs">
+																	
+																	<div class="tabs-dropdown">
+																		<select class="form-select" id="tabSelector" onchange="setActiveTab(this.value)">
+																			<option value="general" selected>Direct Sale</option>
+																			<option value="seller">Become a Seller</option>
+																		</select>
+																	</div>
+																	<div>
+																		<div  id="content-general" class="tab-content" style="display: block;">
+																			<div class="general-salaer-form">
+																				<div class="user-content"> 
+																					<cfif structKeyExists(url,'processed')>
+																						<span style="color: #ff0000; font-size: 13px;">
+																							<cfif FORM.captchaError2>
+																								<!---<span style="color: ##ff0000; font-weight: bold;">
+																									PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM
+																								</span>--->
 																								<br><br>
-																								<FONT face="verdana,arial,helvetica" color="000000" size="-2"><b>Please enter the characters in the image above:</b></FONT><br><br>
-																								<cfinput type="text" name="captcha2" id="captcha2">
-																								<span class="error-message" id="G_captcha2Error"></span>
-																							</div> --->
+																							<cfelse>
+																								<!--- <cfset remainingEntries = 5 - (entryCount + 1)> --->
 
-																							<div class="input-field pt-3">
-																								<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
-																								<span class="error-message" id="G_recaptchaError"></span>
+																								
+																								
+																								<br />
+																								<!--- <cfif remainingEntries LT 5 AND remainingEntries GT 0> --->
+
+																									<!--- <script>
+																										toastr.success('Sent');
+																									</script> --->
+
+																									<!--- YOU MAY ENTER <cfoutput>#remainingEntries#</cfoutput> MORE ITEMS
+																								<cfelse>
+																									YOU HAVE REACHED THE MAXIMUM NUMBER OF ENTRIES <br />
+																									FOR THIS FORM
+																								</cfif> --->
+																							</cfif>
+																						</span>
+																						<br /><br />
+																					</cfif>
+																					<cfoutput>
+																						<cfform name="frm1" action="/sell-your-art" method="post" enctype="multipart/form-data" id="generalForm" onsubmit="return validateGeneralForm(event)">
+																							<input	type="hidden" name="captcha_check2"	value="#FORM.captcha_check2#" />
+																							<div class="input-form">
+																								<div class="row">
+																									<!--- <div class="col-md-12">
+																										<div class="input-field">
+																											<label><b>Your Name:<span style="color: ##ff0000;">*</span></b></label> 
+																										</div>
+																									</div> --->
+																									<div class="col-md-6">
+																										<div class="input-field"> 
+																											<label><b> First Name<span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" maxlength="15" >
+																											<span class="error-message" id="G_fnameError"></span>
+																										</div>
+																									</div>
+																									<div class="col-md-6">
+																										<div class="input-field"> 
+																											<label><b>Last Name<span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="text" name="lname" id="lname" value="#form.lname#" size="30" maxlength="15" >
+																											<span class="error-message" id="G_lnameError"></span>
+																										</div>
+																									</div>
+																									<div class="col-md-4 pt-4">
+																										<div class="input-field">
+																											<label><b>Email<span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="text" name="email_purchase" id="email_purchase" value="#form.email_purchase#" size="30" maxlength="20"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$"  >
+																											<span class="error-message" id="G_email_purchaseError"></span>
+																										</div>
+																									</div>
+
+																									<div class="col-md-4 pt-4">
+																										<div class="input-field">
+																											<label><b>Phone Type <span style="color: ##ff0000;">*</span></b></label>
+																											<select name="phoneType" id="phoneType" >
+																												<option value="Cell Phone">Cell Phone</option>
+																												<option value="Home Phone">Home Phone</option>
+																												<option value="Business Phone">Business Phone</option>
+																												<option value="OutsideUS">Outside US Phone</option>
+																											</select>
+																											<span class="error-message" id="G_phoneTypeError"></span>
+																										</div>
+																									</div>
+
+																									<div class="col-md-4 pt-4">
+																										<div class="input-field">
+																											<label><b>Phone Number <span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="text" name="phone" id="phone" value="#form.phone#" size="30" maxlength="20" >
+																											<span id="formatSign">(xxx) xxx-xxxx</span>
+																											<span class="error-message" id="G_phoneError"></span>
+																										</div>
+																									</div>
+																									<div class="col-md-12">
+																										<div class="input-field">
+																											<label><b>Tell us About the Artwork<span style="color: ##ff0000;">*</span></b></label>
+																											<textarea name="additional_details" id="additional_details" maxlength="500" cols="50" rows="4" placeholder="Artist Name, Artwork Title, Medium, Edition, Year, Size, Artwork Location ">#form.additional_details#</textarea>
+																											<span class="error-message" id="G_additional_details"></span>
+																											<div id="charCount" class="mb-3">0 / 500 characters</div>
+																										</div>
+																									</div>
+																									<div class="col-md-12">
+																										<div class="input-field pb-3">
+																											<label><b>Price Desired<span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="text" name="size" value="#form.size#" maxlength="6" size="30" id="size" placeholder="e.g $2000">
+																											<span class="error-message" id="G_sizeError"></span>
+																										</div>
+																									</div>
+																									<div class="col-md-12">
+																										<div class="input-field image-upload pb-2"> 
+																											<h3>
+																												UPLOAD IMAGES
+																											</h3>
+																											<ul>
+																												<li>- Please attach an image of the entire artwork/(s) </li>
+																												<li>- Up close images of the artist signature, edition, watermark or stamp (if applicable). </li>
+																												<li>- Image of the artwork verso if there is anything there by the artist, studio or publisher. </li>
+																												<li>- Image of the frame verso if there is a provenance label. </li>
+																												<li>- Images of any certificates, documentation or provenance. </li> 
+																												<li>- Image size maximum <b>5MB</b>. </li> 
+																											</ul>
+																										</div>
+
+																										<!--- <div class="file-upload-wrapper">
+																											<label for="file-upload" class="file-upload-label">
+																											<div class="file-upload-icon">
+																												<!-- Example SVG icon -->
+																												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+																												<path d="M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z" />
+																												</svg>
+																											</div>
+																											<div class="file-upload-text">
+																												<strong>Browse Files</strong>
+																												<p>Drag and drop files here</p>
+																											</div>
+																											</label>
+																											<input type="file"  name="thisImage" id="file-upload" class="file-upload-input" >
+																										</div> --->
+
+																										<div class="col-md-12">
+																											<div class="input-field sm-input-field pb-3">
+																												<input type="button" value="Add Additional Image" id="addImageButton" class="img-btn" />
+
+																											</div>
+																											<div id="addImageContainer" class="flex-img-container"></div>
+																										</div>
+
+																										<!--- <div class="input-field">
+																											<cfimage action="captcha" height="75" width="363" text="#strCaptcha2#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
+																											<br><br>
+																											<FONT face="verdana,arial,helvetica" color="000000" size="-2"><b>Please enter the characters in the image above:</b></FONT><br><br>
+																											<cfinput type="text" name="captcha2" id="captcha2">
+																											<span class="error-message" id="G_captcha2Error"></span>
+																										</div> --->
+
+																										<div class="input-field pt-3">
+																											<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+																											<span class="error-message" id="G_recaptchaError"></span>
+																										</div>
+
+																									</div>
+																								</div>
+																								<div class="input-button">
+																									<input type="Hidden" name="process_purchase_consignment">
+																									<button type="submit" class="SeeMore"  id="G_submitbtn">Send</button> 
+																								</div>
+																								<!-- <div class="any-question">
+																									<p><b>*If you any questions please email <a href="mailto: sales@gallart.com">sales@gallart.com</a> or call 305-932-6166 for further assistance. </b></p>
+																								</div> -->
 																							</div>
-
-																						</div>
-																					</div>
-																					<div class="input-button">
-																						<input type="Hidden" name="process_purchase_consignment">
-																						<button type="submit" class="SeeMore"  id="G_submitbtn">Send</button> 
-																					</div>
-																					<!-- <div class="any-question">
-																						<p><b>*If you any questions please email <a href="mailto: sales@gallart.com">sales@gallart.com</a> or call 305-932-6166 for further assistance. </b></p>
-																					</div> -->
-																				</div>
-																				</cfform>						
-																				</cfoutput>
+																						</cfform>						
+																					</cfoutput>
 																				</cfif>
 
 
 
 
+																				</div>
 																			</div>
 																		</div>
-																	</div>
-																	<div id="content-seller" class="tab-content" style="display: none;"> 
-																		<div class="general-salaer-form">
-																			<cfoutput>
-																				<div class="user-content"> 
-																					<h3>Create an Account</h3>
-																					<h4> Already have an account? <a href="login" style="color: ##EC008C"> <b>Log in </b></a> </h4>
+																		<div id="content-seller" class="tab-content" style="display: none;"> 
+																			<div class="general-salaer-form">
+																				<cfoutput>
+																					<div class="user-content"> 
+																						<h3>Create an Account</h3>
+																						<h4> Already have an account? <a href="login" style="color: ##EC008C"> <b>Log in </b></a> </h4>
 
-																					<br><br>
+																						<br><br>
 
-																					<cfif FORM.captchaError>
-																						<!---	<span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span><br><br>--->
-																					</cfif>
-																					<cfif FORM.errorPhone EQ 1>
-																						<span style="color: ##ff0000; font-weight: bold;">
-																							#form.errorMsg#
-																						</span><br><br>
-																					</cfif>
-																					<!--- onsubmit="return validateSellerForm()" --->
-																					<CFFORM ACTION="#script_name#" METHOD="POST"  id="submitSellerForm">
-																						<input type="hidden" name="submitted" value="1" />
-																						<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
-																						<div class="input-form">
-																							<div class="row">
-																								<div class="col-md-6">
-																									<div class="input-field">
-																										<label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="text" name="fname" id="S_fname" value="#form.fname#" size="30" maxlength="15" >
-																										<span class="error-message" id="S_fnameError"></span>
+																						<cfif FORM.captchaError>
+																							<!---	<span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</span><br><br>--->
+																						</cfif>
+																						<cfif FORM.errorPhone EQ 1>
+																							<span style="color: ##ff0000; font-weight: bold;">
+																								#form.errorMsg#
+																							</span><br><br>
+																						</cfif>
+																						<!--- onsubmit="return validateSellerForm()" --->
+																						<CFFORM ACTION="#script_name#" METHOD="POST"  id="submitSellerForm">
+																							<input type="hidden" name="submitted" value="1" />
+																							<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
+																							<div class="input-form">
+																								<div class="row">
+																									<div class="col-md-6">
+																										<div class="input-field">
+																											<label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="text" name="fname" id="S_fname" value="#form.fname#" size="30" maxlength="15" >
+																											<span class="error-message" id="S_fnameError"></span>
+																										</div>
 																									</div>
-																								</div>
-																								<div class="col-md-6">
-																									<div class="input-field">
-																										<label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="text" name="lname" id="S_lname" value="#form.lname#" size="30" maxlength="15">
-																										<span class="error-message" id="S_lnameError"></span>
+																									<div class="col-md-6">
+																										<div class="input-field">
+																											<label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="text" name="lname" id="S_lname" value="#form.lname#" size="30" maxlength="15">
+																											<span class="error-message" id="S_lnameError"></span>
+																										</div>
 																									</div>
-																								</div>
-																								<div class="col-md-4">
-																									<div class="input-field">
-																										<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30" maxlength="20" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
-																										<span class="error-message" id="S_EmailError"></span>
+																									<div class="col-md-4">
+																										<div class="input-field">
+																											<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30" maxlength="20" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
+																											<span class="error-message" id="S_EmailError"></span>
+																										</div>
 																									</div>
-																								</div>
 
-																								<div class="col-md-4">
-																									<div class="input-field">
-																										<label><b>Phone Type <span style="color: ##ff0000;">*</span></b></label>
-																										<select name="S_phoneType" id="S_phoneType" >
-																											<option value="Cell Phone">Cell Phone</option>
-																											<option value="Home Phone">Home Phone</option>
-																											<option value="Business Phone">Business Phone</option>
-																											<option value="OutsideUS">Outside US Phone</option>
-																										</select>
-																										<span class="error-message" id="S_phoneTypeError"></span>
+																									<div class="col-md-4">
+																										<div class="input-field">
+																											<label><b>Phone Type <span style="color: ##ff0000;">*</span></b></label>
+																											<select name="S_phoneType" id="S_phoneType" >
+																												<option value="Cell Phone">Cell Phone</option>
+																												<option value="Home Phone">Home Phone</option>
+																												<option value="Business Phone">Business Phone</option>
+																												<option value="OutsideUS">Outside US Phone</option>
+																											</select>
+																											<span class="error-message" id="S_phoneTypeError"></span>
+																										</div>
 																									</div>
-																								</div>
 
-																								<div class="col-md-4">
-																									<div class="input-field">
-																										<label><b>Phone Number:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#" maxlength="20"  size="30">
-																										<span id="S_formatSign">(xxx) xxx-xxxx</span>
-																										<span class="error-message" id="S_cellphoneError"></span>
+																									<div class="col-md-4">
+																										<div class="input-field">
+																											<label><b>Phone Number:<span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="text" name="cellphone" id="S_cellphone" value="#form.cellphone#" maxlength="20"  size="30">
+																											<span id="S_formatSign">(xxx) xxx-xxxx</span>
+																											<span class="error-message" id="S_cellphoneError"></span>
+																										</div>
 																									</div>
-																								</div>
-																							
-																								<div class="col-md-6">
-																									<div class="input-field">
-																										<label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="password" name="password" id="S_password" size="30" maxlength="15" >
-																										<span class="error-message" id="S_passwordError"></span>
-																									</div>
-																								</div>
-																								<div class="col-md-6">
-																									<div class="input-field">
-																										<label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
-																										<cfinput type="password" name="password2" id="S_password2" size="30" maxlength="15" >
-																										<span class="error-message" id="S_password2Error"></span>
-																									</div>
-																								</div>
-																							</div>
-
-																							<!--- <div class="input-field">
-																								<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
-																								<br><br>
-																								<FONT face="verdana,arial,helvetica" color="000000"><b>Please enter the characters in the image above:</b></FONT><br><br>
-																								<cfinput type="text" name="captcha" id="S_captcha">
-																								<span class="error-message" id="S_captchaError"></span>
-																							</div> --->
-
-																							<div class="input-field pt-3">
-																								<div class="g-recaptcha" id="gRecaptchaSeller" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
-																								<span class="error-message" id="S_recaptchaError"></span>
-																							</div>
-
-																							<div class="input-button mt-3">
 																								
-																								<cfif NOT structKeyExists(session, 'sellerinfo') >
-																									<input type="Hidden" name="proc_reg">																								
-																									<button type="button" class="SeeMore" id="S_submitbtn" onclick="validateSellerForm()">Create an account</button>
-																								<cfelse>
-																									<p>
-																										You are already logged in. If you want to add listings, please <b><a href="user_listing_detail">click here</a></b>.
-																									</p>
-																								</cfif>
-																								
-																								<br>
-																								
+																									<div class="col-md-6">
+																										<div class="input-field">
+																											<label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="password" name="password" id="S_password" size="30" maxlength="15" >
+																											<span class="error-message" id="S_passwordError"></span>
+																										</div>
+																									</div>
+																									<div class="col-md-6">
+																										<div class="input-field">
+																											<label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
+																											<cfinput type="password" name="password2" id="S_password2" size="30" maxlength="15" >
+																											<span class="error-message" id="S_password2Error"></span>
+																										</div>
+																									</div>
+																								</div>
+
+																								<!--- <div class="input-field">
+																									<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low" fonts="verdana,arial,times new roman,courier" fontsize="28"	/>
+																									<br><br>
+																									<FONT face="verdana,arial,helvetica" color="000000"><b>Please enter the characters in the image above:</b></FONT><br><br>
+																									<cfinput type="text" name="captcha" id="S_captcha">
+																									<span class="error-message" id="S_captchaError"></span>
+																								</div> --->
+
+																								<div class="input-field pt-3">
+																									<div class="g-recaptcha" id="gRecaptchaSeller" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+																									<span class="error-message" id="S_recaptchaError"></span>
+																								</div>
+
+																								<div class="input-button mt-3">
+																									
+																									<cfif NOT structKeyExists(session, 'sellerinfo') >
+																										<input type="Hidden" name="proc_reg">																								
+																										<button type="button" class="SeeMore" id="S_submitbtn" onclick="validateSellerForm()">Create an account</button>
+																									<cfelse>
+																										<p>
+																											You are already logged in. If you want to add listings, please <b><a href="user_listing_detail">click here</a></b>.
+																										</p>
+																									</cfif>
+																									
+																									<br>
+																									
+																								</div>
+																								<!--- <p style="text-align: center;">
+																									If you have already signed up as a seller, please <a href="user_login_page.cfm?xss=#xss#"> <b>Sign In </b></a>
+																								</p> --->
 																							</div>
-																							<!--- <p style="text-align: center;">
-																								If you have already signed up as a seller, please <a href="user_login_page.cfm?xss=#xss#"> <b>Sign In </b></a>
-																							</p> --->
-																						</div>
-																					</cfform>
-																				</div>
-																			</cfoutput>
+																						</cfform>
+																					</div>
+																				</cfoutput>
+																			</div>
 																		</div>
 																	</div>
 																</div>
@@ -1300,7 +1283,6 @@
 													</div>
 												</div>
 											</div>
-										</div>
 									</div>
 								</div>
 							</div>

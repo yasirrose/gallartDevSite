@@ -190,6 +190,16 @@ function gridChange(thisId) {
 	frm.artSize.value 	    = strListing['ARTSIZE'];
 	artSize 				= strListing['ARTSIZE'];
 
+	frm.location_notes.value 	= strListing['LOCATION_NOTES'];
+
+	frm.caption.value = strListing['CAPTION'] || '';
+	frm.caption.dispatchEvent(new Event('input'));   // 👈 counter update karega
+
+	frm.location_notes.value = strListing['LOCATION_NOTES'] || '';
+	frm.location_notes.dispatchEvent(new Event('input')); 
+
+	<!--- setupCharCounter(); --->
+
 	for(i = 0; i < frm.artistview.options.length; i++){
 		if(frm.artistview.options[i].value == artist){
 			frm.artistview.options[i].selected = true;
@@ -231,7 +241,7 @@ function gridChange(thisId) {
 				
         var chosenSelect = editFrame.querySelector('.artSubjectvalue');		
         if (chosenSelect) {
-            chosenSelect.dispatchEvent(new Event('chosen:updated', { bubbles: true }));
+            chosenSelect.dispatchEvent(new Event('chosen:updated', { bubbles: false }));
         }
 	}
 	
@@ -391,7 +401,7 @@ function gridChange(thisId) {
 	<!--- frm.location_price.value 	= formatAsDollars(strListing['LOCATION_PRICE']);
 	frm.location_floor.value 	= strListing['LOCATION_FLOOR'];
 	frm.location_wall.value 	= strListing['LOCATION_WALL']; --->
-	frm.location_notes.value 	= strListing['LOCATION_NOTES'];
+	
 	// auction site
 	auction = strListing['AUCTION'];
 	if(auction == 1){
@@ -423,6 +433,9 @@ function gridChange(thisId) {
 	else {
     	editFrame.getElementById('addImageFrame').src = '';
    	}
+
+	editFrame.getElementById('edit').value 	= 'Edit';
+	editFrame.getElementById('delete').style.display = '';
 
 	
 }
@@ -536,10 +549,16 @@ function showNew () {
 	}
 	frm.low_estimate.value	= '';
 	frm.high_estimate.value	= '';
-	frm.quantity.value		= '1';
-	frm.caption.value		= '';
+	frm.quantity.value		= '1';	
 	frm.datestamp.value		= '';
 	frm.lastedit.value		= '';
+
+	frm.caption.value		= '';
+	frm.caption.dispatchEvent(new Event('input'));
+	frm.location_notes.value 	= '';
+	frm.location_notes.dispatchEvent(new Event('input'));
+
+
 	frm.active[0].checked 	= true;
 	frm.frontshow.options[0].selected 		= true;
 	for(i = 0; i < frm.family.length; i++){
@@ -560,7 +579,7 @@ function showNew () {
 	<!--- frm.location_price.value 	= '';
 	frm.location_floor.value 	= '';
 	frm.location_wall.value 	= ''; --->
-	frm.location_notes.value 	= '';
+	
 	// auction site
 	for(i = 0; i < frm.auction.length; i++){
 		frm.auction[i].checked = false;

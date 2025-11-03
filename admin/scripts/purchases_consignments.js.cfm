@@ -116,6 +116,9 @@
 
 			var phone = document.getElementById('phone').value.trim();
 			var phoneType = document.getElementById('PhoneType').value;
+			var fname = document.getElementById('fname').value;
+			var lname = document.getElementById('lname').value;
+			var name = document.getElementById('name').value;
 
 			
 
@@ -130,6 +133,14 @@
 					return false;
 				}
 			}
+
+			if (fname === '' && lname === '' && name === '') {
+				alert('Please Add the Name.');
+				document.getElementById('fname').focus();
+				return false;
+			}
+
+			
 				
 			if ( edit.editPurchasesConsignmentsFromForm()) {
 				ColdFusion.Grid.refresh('data',true);

@@ -19,6 +19,8 @@
 		<cfargument name="Areacode" required="no" type="string" default="">
 		<cfargument name="City" required="no" type="string" default="">
 		<cfargument name="State" required="no" type="string" default="">
+
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 		
 		<cfset var qCustomers='' />
 		
@@ -29,20 +31,31 @@
 		<cfset session.qCustomers.City = arguments.City />
 		<cfset session.qCustomers.State = arguments.State />
 
+		<!--- <cfset session.customerFilters = {
+			Fname = arguments.Fname,
+			Lname = arguments.Lname,
+			Email = arguments.Email,
+			Areacode = arguments.Areacode,
+			City = arguments.City,
+			State = arguments.State
+		}> --->
+
+		
+
 	   	<cfquery name="qCustomers" datasource="#application.dsource#">
 	      	SELECT email as customer_email, *
 	      	FROM customers C
 			WHERE 0=0
-			<cfif arguments.Fname neq ''>
+			<cfif arguments.Fname neq '' and arguments.Fname neq 'searchFname'>
 	      		AND C.fname like '#arguments.Fname#%'
 	      	</cfif>
-			<cfif arguments.Lname neq ''>
+			<cfif arguments.Lname neq '' and arguments.Lname neq 'searchLname'>
 	      		AND C.lname like '#arguments.Lname#%'
 	      	</cfif>
-			<cfif arguments.Email neq ''>
+			<cfif arguments.Email neq '' and arguments.Email neq 'searchEmail'>
 	      		AND C.email like '%#arguments.Email#%'
 	      	</cfif>
-			<cfif arguments.Areacode neq ''>
+			<cfif arguments.Areacode neq '' and arguments.Areacode neq 'searchAreacode'>
 	      		AND (
 					C.phone like '#arguments.Areacode#%' OR
 					C.phone like '(#arguments.Areacode#%' OR
@@ -50,10 +63,10 @@
 					C.businessphone like '(#arguments.Areacode#%'
 					)
 	      	</cfif>
-			<cfif arguments.City neq ''>
+			<cfif arguments.City neq '' and arguments.City neq 'searchCity'>
 	      		AND C.city like '#arguments.City#%'
 	      	</cfif>
-			<cfif arguments.State neq ''>
+			<cfif arguments.State neq '' and arguments.State neq 'searchState'>
 	      		AND C.state like '#arguments.State#%'
 	      	</cfif>
 	      	<cfif gridsortcolumn neq ''>
@@ -138,7 +151,7 @@
 		<cfargument name="state_dropdown" type="string" default="">
 		<cfargument name="phoneNumber" type="string" default="">
 		<cfargument name="phoneType" type="string" default="">
-		
+		<cfargument name="moduleName" type="string" default="">		
 
 
 		<cfif arguments.addressType EQ "USA">
@@ -207,8 +220,19 @@
 					)
 					SELECT @@identity as uid 
 	            </cfquery>
+
+				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+				<cfset date = now()>				
+				<cfset action = 'Insert'>
+
+				<cfquery name="addLog" datasource="#application.dsource#" >
+					INSERT INTO logs 
+						( moduleName, ipAddress, date, action)
+						VALUES
+						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+				</cfquery>
 			
-			<cfelse>
+			 <cfelse>
 			
 				<cfquery name="editCustomer" datasource="#application.dsource#"> 
 	                UPDATE customers SET 
@@ -238,11 +262,24 @@
 					comments		= <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.comments#">
 	                WHERE id 		= <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
 	            </cfquery>
+
+				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+				<cfset date = now()>				
+				<cfset action = 'Update'>
+
+				<cfquery name="addLog" datasource="#application.dsource#" >
+					INSERT INTO logs 
+						( moduleName, ipAddress, date, action)
+						VALUES
+						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+				</cfquery>
 				
 			</cfif>
 			
-	    	<cfcatch type="any"><cfset success = false /></cfcatch>
-			</cftry>
+	    	<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
+		</cftry>
 			
 		<cfreturn success> 
 	        
@@ -250,6 +287,7 @@
 	
 	<cffunction name="deleteCustomer" access="remote">
 		<cfargument name="id" type="string" default="">
+		<cfargument name="moduleName" type="string" default="">
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
 		
@@ -257,23 +295,34 @@
 		
 		<cftry>
 	
-		<cfquery name="deleteCustomer" datasource="#application.dsource#"> 
-           	DELETE from customers WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
-        </cfquery>
-		
-		<!--- <cfquery name="deleteCustomerRoles" datasource="#application.dsource#"> 
-			DELETE from employees_roles
-			WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
-		</cfquery> --->
+			<cfquery name="deleteCustomer" datasource="#application.dsource#"> 
+				DELETE from customers WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
+			</cfquery>
+			
+			<!--- <cfquery name="deleteCustomerRoles" datasource="#application.dsource#"> 
+				DELETE from employees_roles
+				WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
+			</cfquery> --->
 
-		<cfquery name="deleteCustomerOrders" datasource="#application.dsource#">
-				DELETE from orders where customerid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
-		</cfquery>
+			<cfquery name="deleteCustomerOrders" datasource="#application.dsource#">
+					DELETE from orders where customerid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
+			</cfquery>
+
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
 		
-		<cfcatch type="any">
-			<cfdump var="#cfcatch#" abort="true">
-			<cfset success = false />
-		</cfcatch>
+			<cfcatch type="any">
+				<cfdump var="#cfcatch#" abort="true">
+				<cfset success = false />
+			</cfcatch>
 		</cftry>
 	
 		<cfreturn success />
@@ -338,122 +387,120 @@
 		<cfelse>
 			<cfset otherphone = "">
 		</cfif>
-
-
 		
 			<cfscript>
 				getCustomerIdFromEmail = application.objectFactoryAdmin.getInstance('customers').getCustomerIdFromEmail(arguments.email);
-			</cfscript>
-			
-			
+			</cfscript>			
 		
 	    	<cftry>
 	    
-	    	<cfif arguments.id EQ '' AND getCustomerIdFromEmail EQ ''>
-		    	
-		    	<cfquery name="addCustomer" datasource="#application.dsource#"> 
-	                INSERT into customers
-	                (
-						assignedto,
-	                	fname,
-	                	lname,
-	                	email,
-						phone,
-						otherphone,
-						Address1,
-						AddressType,	
-						City,	
-						State,	
-						Zip,	
-						Country,	
-						CellPhone,	
-						Fax,	
-						DriversLicense,	
-						Consultant,
-						businessphone,
-						website
-	                )
-	                values
-                	(
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.assignedto#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Country#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#Cellphone#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Fax#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.DriversLicense#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Consultant#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">
-					)
-					SELECT @@identity as uid 
-	            </cfquery>
+				<cfif arguments.id EQ '' AND getCustomerIdFromEmail EQ ''>
+					
+					<cfquery name="addCustomer" datasource="#application.dsource#"> 
+						INSERT into customers
+						(
+							assignedto,
+							fname,
+							lname,
+							email,
+							phone,
+							otherphone,
+							Address1,
+							AddressType,	
+							City,	
+							State,	
+							Zip,	
+							Country,	
+							CellPhone,	
+							Fax,	
+							DriversLicense,	
+							Consultant,
+							businessphone,
+							website
+						)
+						values
+						(
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.assignedto#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Country#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#Cellphone#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Fax#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.DriversLicense#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Consultant#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">
+						)
+						SELECT @@identity as uid 
+					</cfquery>
+					
+					<cfset thisCustomerId = addCustomer.uid />
 				
-				<cfset thisCustomerId = addCustomer.uid />
+				<cfelseif getCustomerIdFromEmail NEQ ''>
+				
+					<cfquery name="editCustomer" datasource="#application.dsource#"> 
+						UPDATE customers SET 
+						fname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
+						lname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
+						email 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#">,
+						phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+						otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
+						Address1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
+						AddressType 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
+						City 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
+						State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
+						Zip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
+						Country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Country#">,
+						CellPhone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#CellPhone#">,
+						Fax 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Fax#">,
+						DriversLicense 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.DriversLicense#">,
+						Consultant 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Consultant#">,
+						businessphone	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
+						website 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">
+						WHERE id 		= <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#getCustomerIdFromEmail#">
+					</cfquery>
+					
+					<cfset thisCustomerId = getCustomerIdFromEmail />
+					
+				<cfelse>
+				
+					<cfquery name="editCustomer" datasource="#application.dsource#"> 
+						UPDATE customers SET 
+						fname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
+						lname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
+						email 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#">,
+						phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+						otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
+						Address1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
+						AddressType 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
+						City 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
+						State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
+						Zip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
+						Country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Country#">,
+						CellPhone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#CellPhone#">,
+						Fax 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Fax#">,
+						DriversLicense 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.DriversLicense#">,
+						Consultant 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Consultant#">,
+						businessphone	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
+						website 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">
+						WHERE id 		= <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
+					</cfquery>
+					
+					<cfset thisCustomerId = getCustomerFromEmail.id />
+					
+				</cfif>
 			
-			<cfelseif getCustomerIdFromEmail NEQ ''>
-			
-				<cfquery name="editCustomer" datasource="#application.dsource#"> 
-	                UPDATE customers SET 
-	                fname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
-	                lname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
-					email 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#">,
-					phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
-					otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
-					Address1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
-					AddressType 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
-					City 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
-					State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
-					Zip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
-					Country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Country#">,
-					CellPhone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#CellPhone#">,
-					Fax 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Fax#">,
-					DriversLicense 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.DriversLicense#">,
-					Consultant 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Consultant#">,
-					businessphone	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
-					website 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">
-	                WHERE id 		= <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#getCustomerIdFromEmail#">
-	            </cfquery>
-				
-				<cfset thisCustomerId = getCustomerIdFromEmail />
-				
-			<cfelse>
-			
-				<cfquery name="editCustomer" datasource="#application.dsource#"> 
-	                UPDATE customers SET 
-	                fname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
-	                lname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
-					email 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#">,
-					phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
-					otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
-					Address1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
-					AddressType 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
-					City 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
-					State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
-					Zip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
-					Country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Country#">,
-					CellPhone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#CellPhone#">,
-					Fax 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Fax#">,
-					DriversLicense 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.DriversLicense#">,
-					Consultant 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Consultant#">,
-					businessphone	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
-					website 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">
-	                WHERE id 		= <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
-	            </cfquery>
-				
-				<cfset thisCustomerId = getCustomerFromEmail.id />
-				
-			</cfif>
-			
-	    	<cfcatch type="any"><cfset returnStruct.success = false /></cfcatch>
+	    		<cfcatch type="any">
+					<cfset returnStruct.success = false />
+				</cfcatch>
 			</cftry>
 			
 		<cfset returnStruct.thisCustomerId = thisCustomerId />

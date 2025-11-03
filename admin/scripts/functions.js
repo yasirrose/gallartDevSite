@@ -200,6 +200,7 @@ function getContact(email) {
 		document.orderForm.fname.value 		= strContact['FNAME'];
 		document.orderForm.lname.value 		= strContact['LNAME'];
 		// document.orderForm.Phone.value 		= strContact['PHONE'];
+		document.orderForm.AddressType.value 	= strContact['ADDRESSTYPE'];
 		document.orderForm.Address1.value 	= strContact['ADDRESS'];
 		document.orderForm.City.value 		= strContact['CITY'];
 		document.orderForm.State.value 		= strContact['STATE'];
@@ -226,6 +227,42 @@ function getContact(email) {
 			document.orderForm.PhoneNumber.value = '';
 			document.orderForm.PhoneType.value   = "Cell Phone";
 		}
+
+		if (strContact['ADDRESSTYPE'] === "Outside") {
+			document.orderForm.AddressType.value = "Outside";
+
+			// Fill Outside USA fields
+			document.orderForm.Address1_Outside.value = strContact['ADDRESS'] || "";
+			document.orderForm.City_Outside.value     = strContact['CITY'] || "";
+			document.orderForm.State_Outside.value    = strContact['STATE'] || "";
+			document.orderForm.Zip_Outside.value      = strContact['ZIP'] || "";
+			document.orderForm.Country.value          = strContact['COUNTRY'] || "";
+
+			// Clear USA fields
+			document.orderForm.Address1.value = "";
+			document.orderForm.City.value     = "";
+			document.orderForm.State.value    = "";
+			document.orderForm.Zip.value      = "";
+
+		} else {
+			document.orderForm.AddressType.value = "USA";
+
+			// Fill USA fields
+			document.orderForm.Address1.value = strContact['ADDRESS1'] || "";
+			document.orderForm.City.value     = strContact['CITY'] || "";
+			document.orderForm.State.value    = strContact['STATE'] || "";
+			document.orderForm.Zip.value      = strContact['ZIP'] || "";
+			document.orderForm.Country.value  = strContact['COUNTRY'] || "";
+
+			// Clear Outside fields
+			document.orderForm.Address1_Outside.value = "";
+			document.orderForm.City_Outside.value     = "";
+			document.orderForm.State_Outside.value    = "";
+			document.orderForm.Zip_Outside.value      = "";
+		}
+
+		// Call toggle function to show relevant section
+		toggleAddressFields();
 
 		ColdFusion.Window.hide('searchAllContactsWindow');
 }
@@ -486,6 +523,18 @@ function addPrice(thisIndex,thisValue) {
 function validateLeadForm() {
     let phoneType = document.getElementById("PhoneType").value;
     let phoneInput = document.getElementById("PhoneNumber").value.trim();
+    let leadEmail = document.getElementById("leadEmail").value.trim();
+
+	if(leadEmail == ''){
+		alert("Please enter email");
+		return false;
+	}else {
+		var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailPattern.test(leadEmail)) {
+			alert('Please enter a valid email address.');			
+			return false;
+		}
+	}
 
     if (phoneType === "OutsideUS") {
         return true; // no validation required
@@ -512,15 +561,24 @@ function checkPasswordLead() {
         return false; // Agar phone number valid nahi to submit stop
     }
 
-	document.getElementById("submitBtn").disabled = true;
-    leadSubmitting = true;
+	if(document.leadForm.fname.value == ''){
+		alert('Please enter a first name')
+	}
+	if(document.leadForm.lname.value == ''){
+		alert('Please enter a last name')
+	} else{
+		document.getElementById("submitBtn").disabled = true;
+    	leadSubmitting = true;
 	
-
-	// remove lname validation
-	/*if(document.leadForm.lname.value == ''){alert('Please enter a last name for the lead')}
-	else{ColdFusion.Ajax.submitForm('leadForm','models/employees.cfc?method=checkPassword',passwordResponseLead);}
-	return false;*/
-	ColdFusion.Ajax.submitForm('leadForm','models/employees.cfc?method=checkPassword',passwordResponseLead);
+		// remove lname validation
+		/*if(document.leadForm.lname.value == ''){alert('Please enter a last name for the lead')}
+		else{ColdFusion.Ajax.submitForm('leadForm','models/employees.cfc?method=checkPassword',passwordResponseLead);}
+		return false;*/
+		ColdFusion.Ajax.submitForm('leadForm','models/employees.cfc?method=checkPassword',passwordResponseLead);
+	}
+	
+	return false;
+	
 }
 
 function passwordResponseLead(s) {
@@ -587,8 +645,7 @@ function checkPasswordOrder() {
         return false; // Agar phone number valid nahi to submit stop
     }
 
-	document.getElementById("orderBtny").disabled = true;
-    leadSubmitting = true;
+	
 
 	 var qtyInputs = document.querySelectorAll("input[id^='quantity_']");
 		for (var i = 0; i < qtyInputs.length; i++) {
@@ -603,10 +660,24 @@ function checkPasswordOrder() {
 	if(document.orderForm.lname.value == ''){
 		alert('Please enter a last name on the order')
 	}
-	if(document.orderForm.Email.value == ''){
-		alert('Please enter an email address for the customer on the order')
-	}
+	
+	var email = document.orderForm.Email.value.trim();
+    if (email === '') {
+        alert('Please enter an email address for the customer on the order.');
+        document.orderForm.Email.focus();
+		return false;
+        
+    }
+
+	var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        alert('Please enter a valid email address (e.g., name@example.com).');
+        document.orderForm.Email.focus();
+        return false;
+    }
 	else{
+		document.getElementById("orderBtn").disabled = true;
+    	OrderSubmitting = true;
 		ColdFusion.Ajax.submitForm('orderForm','models/employees.cfc?method=checkPassword',passwordResponseOrder);
 	}
 	return false;

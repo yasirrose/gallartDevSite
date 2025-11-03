@@ -42,21 +42,85 @@ function gridChange(thisId) {
   
 function doEdit(type) {
 
+	var editBtn = document.getElementById('edit');
+	var deleteBtn = document.getElementById('delete');
+
     var edit = new admin.models.events();
     edit.setForm("editForm");
     
     if (type == 'edit'){
+
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
     		
      if ( edit.editEventsFromForm()) {
-         ColdFusion.Grid.refresh('data',true);
-		 toastr.success('Data is Added or Updated Successfully!');
+
+			toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-center",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
+
+         
+		 toastr.success('Data is Updated Successfully!');
+		 ColdFusion.Grid.refresh('data',true);
+
+		 setTimeout(function () {
+			editBtn.disabled = false;
+			deleteBtn.disabled = false;
+		}, 5000);
+
      } 
      else { alert( 'There was a problem in the processing.')}
       }
    else {
-   	
+	
+		if (!confirm('Delete -- ARE YOU SURE? ')) {
+				return false; 
+			}
+
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
+
    	if ( edit.deleteEvent()) {
+
+		toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"newestOnTop": true,
+			"progressBar": true,
+			"positionClass": "toast-center",
+			"preventDuplicates": false,
+			"onclick": null,
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "3000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		};
+
+		 toastr.success('Record is Deleted Successfully'); 
          ColdFusion.Grid.refresh('data',true);
+
+		setTimeout(function () {
+			editBtn.disabled = false;
+			deleteBtn.disabled = false;
+		}, 5000);
      } 
      else { alert( 'There was a problem in the processing.')}
       }

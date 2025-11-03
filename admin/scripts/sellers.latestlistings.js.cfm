@@ -52,12 +52,26 @@ function latestGridChange(thisId) {
 			frm.path.options[i].selected = false;
 		}
 	}
+
+	 var ta = document.getElementById('caption');
+		if (ta) {
+			// try common key names (uppercase/lowercase)
+			var addDetails = strLatest['CAPTION'];
+			ta.value = addDetails;
+		}
+
+		updateAdditionalDetailsCounter();
+
  	document.getElementById('clickEnlarge').href = 'http://<cfoutput>#server_name#</cfoutput>/img/'+thisId+'.jpg?'+new Date().getTime();
 	document.getElementById('mainImg').src = 'http://<cfoutput>#server_name#</cfoutput>/img/thumbnails/'+thisId+'.jpg?'+new Date().getTime();
 	//ColdFusion.Grid.refresh('data',true);
 }
 
   function doEdit(type) {
+
+	  var editBtn = document.getElementById('edit');
+	  var deleteBtn = document.getElementById('delete');
+
 	  var frm = document.forms["latestEditForm"];
       var edit = new admin.models.art();
       edit.setForm("latestEditForm");
@@ -78,19 +92,39 @@ function latestGridChange(thisId) {
       }
 	  
       if (type == 'edit'){
+
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
       		
        if ( edit.editListingsFromForm()) {
            ColdFusion.Grid.refresh('data',true);
 		   //populateFirstRow();
 		   alert( 'Listing successfully edited.')
+
+		   setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
        } 
        else { alert( 'There was a problem in the processing.')}
         }
      else {
+
+		if (!confirm('Delete -- ARE YOU SURE? ')) {
+			return false; 
+		}
+
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
      	
      	if ( edit.deleteListing()) {
            ColdFusion.Grid.refresh('data',true);
 		   //populateFirstRow();
+ 			alert( 'Listing successfully Deleted.')
+		   setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
        } 
        else { alert( 'There was a problem in the processing.')}
         }

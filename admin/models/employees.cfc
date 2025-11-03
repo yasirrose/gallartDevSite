@@ -23,10 +23,10 @@
 	      	FROM employees E
 			LEFT OUTER JOIN employees_roles ER ON E.pk_employees = ER.fk_employees
 			WHERE 0=0 and emp_fname !=''
-			<cfif arguments.Lname neq ''>
+			<cfif arguments.Lname neq '' and arguments.Lname neq 'searchLname'>
 	      		AND E.emp_lname like '#arguments.Lname#%'
 	      	</cfif>
-			<cfif arguments.Email neq ''>
+			<cfif arguments.Email neq '' and arguments.Email neq 'searchEmail'>
 	      		AND E.emp_email like '#arguments.Email#%'
 	      	</cfif>
 			GROUP BY emp_fname,emp_lname,emp_email,pk_employees,emp_phone,password,roles,commission_minus,commission_percent
@@ -65,6 +65,7 @@
 		<cfargument name="roles" type="string" default="">
 		<cfargument name="commission_minus" type="string" default="">
 		<cfargument name="commission_percent" type="numeric" default="">
+		<cfargument name="moduleName" type="string" default="">
 	    
 	    <cfset var success = true />
 		
@@ -107,9 +108,21 @@
 							</cfquery>
 					
 							<cfset employeeId = addEmployee.uid />
+
+							<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+							<cfset date = now()>				
+							<cfset action = 'Insert'>
+
+							<cfquery name="addLog" datasource="#application.dsource#" >
+								INSERT INTO logs 
+									( moduleName, ipAddress, date, action)
+									VALUES
+									( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+							</cfquery>
+
 						</cfif>
 
-					<cfelse>
+					 <cfelse>
 					
 						<cfquery name="editEmployee" datasource="#application.dsource#"> 
 							UPDATE employees SET 
@@ -129,6 +142,17 @@
 						</cfquery>
 						
 						<cfset employeeId = arguments.pk_employees />
+
+						<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+						<cfset date = now()>				
+						<cfset action = 'Update'>
+
+						<cfquery name="addLog" datasource="#application.dsource#" >
+							INSERT INTO logs 
+								( moduleName, ipAddress, date, action)
+								VALUES
+								( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+						</cfquery>
 					
 					</cfif>
 					
@@ -147,10 +171,7 @@
 								)
 							</cfquery>
 						</cfloop>
-					</cfif>
-				
-	    
-	    	
+					</cfif>					    	    	
 			
 				<cfcatch type="any">
 					<cfset success = false />
@@ -168,17 +189,30 @@
 		
 		<cftry>
 	
-		<cfquery name="deleteEmployee" datasource="#application.dsource#"> 
-           	DELETE from employees
-            WHERE pk_employees = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_employees#">
-        </cfquery>
+			<cfquery name="deleteEmployee" datasource="#application.dsource#"> 
+				DELETE from employees
+				WHERE pk_employees = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_employees#">
+			</cfquery>
 		
-		<cfquery name="deleteEmployeeRoles" datasource="#application.dsource#"> 
+			<cfquery name="deleteEmployeeRoles" datasource="#application.dsource#"> 
                 DELETE from employees_roles
                 WHERE fk_employees = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_employees#">
             </cfquery>
+
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
 		
-		<cfcatch type="any"><cfset success = false /></cfcatch>
+			<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
 		</cftry>
 	
 		<cfreturn success />

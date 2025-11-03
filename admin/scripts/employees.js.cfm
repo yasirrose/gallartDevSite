@@ -51,68 +51,135 @@ function doEdit(type) {
 	  var lname = document.getElementById('emp_lname').value.trim();
 	  var email = document.getElementById('emp_email').value.trim();
 	  var password = document.getElementById('password').value.trim();
-    if (fname === '') {
-        toastr.error('First Name is required.');
-        document.getElementById('emp_fname').focus();
-        return false;
-    }
 
-	if (lname === '') {
-        toastr.error('Last Name is required.');
-        document.getElementById('emp_lname').focus();
-        return false;
-    }
-
-	if (email === '') {
-		toastr.error('Email is required.');
-		document.getElementById('emp_email').focus();
-		return false;
-	} else {
-		// Simple email format check using regex
-		var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		if (!emailPattern.test(email)) {
-			toastr.error('Please enter a valid email address.');
-			document.getElementById('emp_email').focus();
-			return false;
-		}
-	}
-
-	if (password === '') {
-		toastr.error('Password is required.');
-		document.getElementById('password').focus();
-		return false;
-	} else {
-		
-		var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-		if (!passwordPattern.test(password)) {
-			toastr.error('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.');
-			document.getElementById('password').focus();
-			return false;
-		}
-	}
+	  var editBtn = document.getElementById('edit');
+	  var deleteBtn = document.getElementById('delete');
 
     var edit = new admin.models.employees();
 
     edit.setForm("editForm");
     
    if (type == 'edit') {
+
+		if (fname === '') {
+			toastr.error('First Name is required.');
+			document.getElementById('emp_fname').focus();
+			return false;
+		}
+
+		if (lname === '') {
+			toastr.error('Last Name is required.');
+			document.getElementById('emp_lname').focus();
+			return false;
+		}
+
+		if (email === '') {
+			toastr.error('Email is required.');
+			document.getElementById('emp_email').focus();
+			return false;
+		} else {
+			// Simple email format check using regex
+			var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailPattern.test(email)) {
+				toastr.error('Please enter a valid email address.');
+				document.getElementById('emp_email').focus();
+				return false;
+			}
+		}
+
+		if (password === '') {
+			toastr.error('Password is required.');
+			document.getElementById('password').focus();
+			return false;
+		} else {
+			
+			var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+			if (!passwordPattern.test(password)) {
+				toastr.error('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.');
+				document.getElementById('password').focus();
+				return false;
+			}
+		}
+
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
+
         var result = edit.editEmployeeFromForm(); 
 
         if (result) {
 		console.log(result);
-            ColdFusion.Grid.refresh('data', true);
+            
+			toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-center",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
+
             toastr.success('Data is Updated Successfully!');
+			ColdFusion.Grid.refresh('data', true);
+
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
+
         } else {
             toastr.error('Your Password is already exist. Please change your password');
         }
     }
    else if (type == 'delete'){
-   	if ( edit.deleteEmployee()) {
-         ColdFusion.Grid.refresh('data',true);
-     } 
-     else { alert( 'There was a problem in the processing.')}
-      }
-document.getElementById('edit').value = 'Edit';
+		if (!confirm('Delete -- ARE YOU SURE? ')) {
+			return false; 
+		}
+
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
+
+		if ( edit.deleteEmployee()) {
+
+			toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-center",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
+
+			toastr.success('Data is Deleted Successfully!');
+			ColdFusion.Grid.refresh('data',true);
+
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
+		} 
+		else { 
+				alert( 'There was a problem in the processing.')
+			}
+    }
+	document.getElementById('edit').value = 'Edit';
 	document.getElementById('delete').style.display = '';
 }
 

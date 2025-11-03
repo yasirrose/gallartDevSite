@@ -63,134 +63,135 @@
 		</td>
 		<td valign="top">
 			<cfform name="latestEditForm">
-			<cfinput type="hidden" name="uid" id="uid" bind="{data.uid}">
-			<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox">
-				<tr>
-					<td id="stuff" colspan="2"></td>
-				</tr>
-				<tr>
-					<td width="100">
-						First Name:
-					</td>
-					<td>
-						<cfinput type="text" name="fname" id="fname"  bind="{data.fname}" size="30" class="displayInput" disabled>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Last Name:
-					</td>
-					<td>
-						<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" size="30" class="displayInput" disabled>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Email:
-					</td>
-					<td>
-						<cfinput type="text" name="seller_email" id="seller_email" size="30" class="displayInput" disabled>&nbsp;
-						<span  id="emailLink"></span>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Phone:
-					</td>
-					<td>
-						<cfinput type="text" name="phone" id="phone"  bind="{data.phone}" size="30" class="displayInput" disabled>&nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Title:
-					</td>
-					<td>
-						<cfinput type="text" name="name" id="name"  bind="{data.name}" size="30">&nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						Artist:
-					</td>
-					<td>
-						<select name="manufacturer" id="manufacturer">
-						<cfoutput query="getAllArtists" group="manufacturer">
-							<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-							<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
-							</cfif>
-						</cfoutput>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Medium:
-					</td>
-					<td>
-						<select name="path">
-							<cfoutput query="getAllMedium" group="path">
-								<option value="#path#">#path#
-							</cfoutput>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Size:
-					</td>
-					<td>
-						<cfinput type="text" name="size" id="size"  bind="{data.size}" size="30">&nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						Description:
-					</td>
-					<td>
-						<cftextarea name="caption" id="caption"  bind="{data.caption}" cols="40" rows="5" />
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Retail Price:
-					</td>
-					<td>
-						<cfinput type="text" name="retail_price" id="retail_price"  bind="{data.retail_price}" size="30">&nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Gallery Price:
-					</td>
-					<td>
-						<cfinput type="text" name="gallery_price" id="gallery_price"  bind="{data.gallery_price}" size="30">&nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Active:
-					</td>
-					<td>
-						<input type="radio" name="active" value="1">Active <input type="radio" name="active" value="0">Inactive
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Thumbnail:
-					</td>
-					<td id="imageDisplay" height="150">
-						<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
-						<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" >
-						<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
-						<cfinput type="button" name="delete" id="delete" value="Delete" onclick="if (confirm('DELETE -- ARE YOU SURE?')){ doEdit('delete');}" />
-					</td>
-				</tr>
-			</table>
+				<cfinput type="hidden" name="uid" id="uid" bind="{data.uid}">
+				<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox">
+					<tr>
+						<td id="stuff" colspan="2"></td>
+					</tr>
+					<tr>
+						<td width="100">
+							First Name:
+						</td>
+						<td>
+							<cfinput type="text" name="fname" id="fname"  bind="{data.fname}" maxlength="30" size="30" class="displayInput" disabled>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Last Name:
+						</td>
+						<td>
+							<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" maxlength="30" size="30" class="displayInput" disabled>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Email:
+						</td>
+						<td>
+							<cfinput type="text" name="seller_email" id="seller_email" size="30" maxlength="30" class="displayInput" disabled>&nbsp;
+							<span  id="emailLink"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Phone:
+						</td>
+						<td>
+							<cfinput type="text" name="phone" id="phone"  bind="{data.phone}" size="30" maxlength="30" class="displayInput" disabled>&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Title:
+						</td>
+						<td>
+							<cfinput type="text" name="name" id="name"  bind="{data.name}" maxlength="30" size="30">&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
+							Artist:
+						</td>
+						<td>
+							<select name="manufacturer" id="manufacturer">
+								<cfoutput query="getAllArtists" group="manufacturer">
+									<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+									<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
+									</cfif>
+								</cfoutput>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Medium:
+						</td>
+						<td>
+							<select name="path">
+								<cfoutput query="getAllMedium" group="path">
+									<option value="#path#">#path#
+								</cfoutput>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Size:
+						</td>
+						<td>
+							<cfinput type="text" name="size" id="size"  bind="{data.size}" maxlength="30" size="30">&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td valign="top">
+							Description:
+						</td>
+						<td>
+							<cftextarea name="caption" id="caption"  bind="{data.caption}" cols="40" rows="5" maxlength="500"/>
+							<div id="captionCount" class="mb-3">0 / 500 characters</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Retail Price:
+						</td>
+						<td>
+							<cfinput type="text" name="retail_price" id="retail_price"  bind="{data.retail_price}" maxlength="10" size="30">&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Gallery Price:
+						</td>
+						<td>
+							<cfinput type="text" name="gallery_price" id="gallery_price"  bind="{data.gallery_price}" maxlength="10" size="30">&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Active:
+						</td>
+						<td>
+							<input type="radio" name="active" value="1">Active <input type="radio" name="active" value="0">Inactive
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Thumbnail:
+						</td>
+						<td id="imageDisplay" height="150">
+							<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
+							<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" >
+							<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
+							<cfinput type="button" name="delete" id="delete" value="Delete" onclick="doEdit('delete')" />
+						</td>
+					</tr>
+				</table>
 			</cfform>
 		</td>
 	</tr>
@@ -209,3 +210,36 @@
 		}
 	</script>
 </cfif>
+
+<script>
+	/* ---------- global counter function ---------- */
+	function updateAdditionalDetailsCounter() {
+		var textarea = document.getElementById('caption');
+		var counter = document.getElementById('captionCount');
+		var maxLength = 500;
+		if (!textarea || !counter) return;
+		var len = textarea.value ? textarea.value.length : 0;
+		counter.textContent = len + ' / ' + maxLength + ' characters';
+
+		// optional red warning
+		if (len > maxLength) {
+			counter.style.color = 'red';
+		} else {
+			counter.style.color = '';
+		}
+	}
+
+	/* ---------- run on page load and attach input handler ---------- */
+	document.addEventListener("DOMContentLoaded", function() {
+		const textarea = document.getElementById("caption");
+		const maxLength = 500;
+
+		textarea.addEventListener("input", function() {
+			if (this.value.length > maxLength) {
+				this.value = this.value.substring(0, maxLength); // trim extra text
+			}
+			updateAdditionalDetailsCounter();
+		});
+	});
+</script>
+

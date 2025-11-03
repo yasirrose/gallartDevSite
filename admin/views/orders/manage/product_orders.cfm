@@ -94,44 +94,63 @@ function popupWinEmail(url) {
 			<cfform name="gridForm">
 			<table cellspacing="5" cellpadding="1" border="0" width="100%">
 				<tr>
-					<td align="right" style="font-size: 10px;">
+					<td align="left" style="font-size: 10px;">
 						<strong>Last Name:</strong>
+						<br>
+						<cfinput name="searchLname" size="35" maxlength="50" value="#form.searchLname#" />
 					</td>
-					<td>
-						<cfinput name="searchLname" size="35" value="#form.searchLname#" />
+					<td align="left" style="font-size: 10px;">
+						<strong>First Name:</strong>
+						<br>
+						<cfinput name="searchFname" size="35" maxlength="50" />
+
 					</td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
-					<td align="right" style="font-size: 10px;">
-						<strong>First Name---:</strong>
+					<td align="left" style="font-size: 10px;">
+						<strong>Company Name:</strong>
+						<br>
+						<cfinput name="searchCompany" size="35" maxlength="50" value="#form.searchCompany#" />
 					</td>
-					<td>
-						<cfinput name="searchFname" size="35"  />
+					<td align="left" style="font-size: 10px;">
+						<strong>Price:</strong>
+						<br>
+						<cfinput name="searchprice" size="35" maxlength="50" />
 					</td>
 					<td>&nbsp;</td>
 				</tr>
 
 				<tr>
-					<td align="right" style="font-size: 10px;">
-						<strong>Country----:</strong>
+					<td align="left" style="font-size: 10px;">	
+						<strong>Amount Sale:</strong>
+						<br>
+						<cfinput name="searchAmountSale" size="35" maxlength="35" value="#form.searchAmountSale#" />												
 					</td>
-					<td>
-						<cfinput name="searchcountry" size="35"  />
+					<td align="left" style="font-size: 10px;">
+						<strong>Country:</strong>
+						<br>
+						<cfinput name="searchcountry" size="35" maxlength="50" />
 					</td>
 					<td>&nbsp;</td>
 				</tr>
 
 				<tr>
-					<td align="right" style="font-size: 10px;">
-						<strong>Price----:</strong>
+					<td align="left" style="font-size: 10px;">
+						<strong>Email:</strong>
+						<br>
+						<cfinput name="searchEmail" size="35" maxlength="50" value="#form.searchEmail#" />
 					</td>
-					<td>
-						<cfinput name="searchprice" size="35"  />
+					<td align="left" style="font-size: 10px;">
+						<strong>Employee:</strong>
+						<br>
+						<cfselect query="getEmployees" name="searchEmployeeId" display="emp_name" value="pk_employees" selected="#form.searchEmployeeId#" queryPosition="below">
+							<option value="">All</option>
+						</cfselect>
 					</td>
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
+				<!--- <tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>Company Name:</strong>
 					</td>
@@ -139,8 +158,8 @@ function popupWinEmail(url) {
 						<cfinput name="searchCompany" size="35" value="#form.searchCompany#" />
 					</td>
 					<td>&nbsp;</td>
-				</tr>
-				<tr>
+				</tr> --->
+				<!--- <tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>Amount Sale:</strong>
 					</td>
@@ -148,8 +167,8 @@ function popupWinEmail(url) {
 						<cfinput name="searchAmountSale" size="35" value="#form.searchAmountSale#" />
 					</td>
 					<td>&nbsp;</td>
-				</tr>
-				<tr>
+				</tr> --->
+				<!--- <tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>Email:</strong>
 					</td>
@@ -157,8 +176,8 @@ function popupWinEmail(url) {
 						<cfinput name="searchEmail" size="35" value="#form.searchEmail#" />
 					</td>
 					<td>&nbsp;</td>
-				</tr>
-				<tr>
+				</tr> --->
+				<!--- <tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>Employee:</strong>
 					</td>
@@ -168,17 +187,21 @@ function popupWinEmail(url) {
 						</cfselect>
 					</td>
 					<td>&nbsp;</td>
-				</tr>
+				</tr> --->
 				<tr>
-					<td align="right" style="font-size: 10px;">
+					<td align="left" style="font-size: 10px;">
 						<strong>Title:</strong>
+						<br>
+						<cfinput name="searchTitle" size="35" maxlength="60" value="#form.searchTitle#" />
 					</td>
-					<td>
-						<cfinput name="searchTitle" size="35" value="#form.searchTitle#" />
+					<td align="left" style="font-size: 10px;">
+						<strong>Artist:</strong>
+						<br>
+						<cfinput name="searchArtist" size="35" maxlength="60" value="#form.searchArtist#" />
 					</td>
 					<td>&nbsp;</td>
 				</tr>
-				<tr>
+				<!--- <tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>Artist:</strong>
 					</td>
@@ -186,56 +209,72 @@ function popupWinEmail(url) {
 						<cfinput name="searchArtist" size="35" value="#form.searchArtist#" />
 					</td>
 					<td>&nbsp;</td>
+				</tr> --->
+				
+				<tr>
+					<td align="left" style="font-size: 10px;">
+						<strong>Origin:</strong>
+						<br>
+						<cfset originValues = "WALK-IN,WEBSITE,PHONE,OTHER" />
+
+						<cfoutput>
+							<select name="searchOrigin">
+								<option value="">All</option>
+								<cfloop list="#originValues#" index="idx">
+									<option value="#idx#">#idx#</option>
+								</cfloop>
+							</select>
+						</cfoutput>
+					</td>
+					<td  align="left" style="font-size: 10px;">
+						<strong>State:</strong>
+						<br>
+						<cfselect query="getStates" name="searchStates" display="state" value="stateAbb" selected="#form.searchStates#" queryPosition="below">
+							<option value="0">All</option>
+						</cfselect>
+					</td>
+					<td>&nbsp;</td>
 				</tr>
 				<tr>
-					<td align="right" style="font-size: 10px;">
-						<strong>Balance Due:</strong>
+					<td align="left" class="date-field" style="font-size: 10px;" nowrap>
+						<strong>Date from:</strong>
+						<cfinput name="searchFromDate" type="datefield" validate="date" size="10" maxlength="25" value="#form.searchFromDate#" />
 					</td>
-					<td>
+					<td align="left" class="date-field" style="font-size: 10px;" nowrap>
+						<strong>Date to:</strong>
+						<cfinput name="searchToDate" type="datefield" validate="date" size="10" maxlength="25" value="#form.searchToDate#" />
+					</td>
+					<td>&nbsp;</td>
+				</tr>
+
+				<tr>
+					<td align="left" style="font-size: 10px;">
+						<strong>Balance Due:</strong>
 						<input type="Checkbox" name="searchBalancedue">
 						<input type="Hidden" name="searchBalancedue">
 					</td>
-					<td>&nbsp;</td>
-				</tr>
-				<tr>
-					<td align="right" style="font-size: 10px;">
-						<strong>Origin:</strong>
-					</td>
-					<td>
-						<cfset originValues = "WALK-IN,WEBSITE,PHONE,OTHER" />
-						<cfoutput>
-						<select name="searchOrigin">
-							<option value="">All</option>
-							<cfloop list="#originValues#" index="idx">
-								<option value="#idx#">#idx#</option>
-							</cfloop>
-						</select>
-						</cfoutput>
+					<td align="left" style="font-size: 10px;">
+						<image src="<cfoutput>#imgpath#</cfoutput>/checkmark-bw.png" border="0" width="12" />
+						<input type="Checkbox" name="searchLexy">
+						<input type="Hidden" name="searchLexy">
 					</td>
 					<td>&nbsp;</td>
 				</tr>
+
 				<tr>
-					<td align="right" style="font-size: 10px;">
-						<strong>Date from:</strong>
-					</td>
-					<td nowrap>
-						<cfinput name="searchFromDate" type="datefield" validate="date" size="10" value="#form.searchFromDate#" />
-					</td>
-					<td>&nbsp;</td>
-				</tr>
-				<tr>
-					<td align="right" style="font-size: 10px;">
+					<!--- <td align="right" class="date-field" style="font-size: 10px;">
 						<strong>Date to:</strong>
 					</td>
 					<td nowrap>
 						<cfinput name="searchToDate" type="datefield" validate="date" size="10" value="#form.searchToDate#" />
 						
-					</td>
+					</td> --->
 					<td>
-						<input type="Reset"><cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
+						<input type="Reset" onclick="setTimeout(function(){location.reload();},100);">
+						<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
 					</td>
 				</tr>
-                <tr>
+                <!--- <tr>
 					<td align="right" style="font-size: 10px;">
 						<strong>State:</strong>
 					</td>
@@ -245,8 +284,8 @@ function popupWinEmail(url) {
 						</cfselect>
 					</td>
 					<td>&nbsp;</td>
-				</tr>
-				<tr>
+				</tr> --->
+				<!--- <tr>
 					<td align="right" style="font-size: 10px;">
 						<image src="<cfoutput>#imgpath#</cfoutput>/checkmark-bw.png" border="0" width="12" />
 					</td>
@@ -255,7 +294,7 @@ function popupWinEmail(url) {
 						<input type="Hidden" name="searchLexy">
 					</td>
 					<td>&nbsp;</td>
-				</tr>
+				</tr> --->
 				<tr>
 					<td colspan="3">
 						<cfgrid format="html" name="data" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.orders.getOrders({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchLname},{searchCompany},{searchAmountSale},{searchEmail},{searchEmployeeId},{searchTitle},{searchArtist},{searchBalancedue},{searchOrigin},{searchFromDate},{searchToDate},{searchStates},{searchLexy},{searchcountry},{searchFname},{searchprice})">
@@ -282,7 +321,7 @@ function popupWinEmail(url) {
 				</tr>
 				<tr>
 					<td colspan="3" align="center"><br>
-						<cfinput type="submit" name="exportBtn" value="Export to CSV" formaction="http://23.20.226.157/admin/views/orders/manage/exportOrder.cfm" formmethod="post" />
+						<cfinput type="submit" name="exportBtn" value="Export to CSV" formaction="http://23.20.226.157/admin/views/orders/manage/exportOrder.cfm" formmethod="post"  onclick="disableExportBtn(this);"/>
 					</td>
 				</tr>
 			</table>
@@ -292,6 +331,25 @@ function popupWinEmail(url) {
 				<input type="button" value="Create Order Report" onclick="createReport();" />
 			</span> --->
 		</td>
+
+		<script type="text/javascript">
+			function disableExportBtn(btn) {
+				btn.disabled = true;             
+
+				btn.form.action = btn.getAttribute("formaction");  
+        		btn.form.method = btn.getAttribute("formmethod"); 
+
+				btn.value = "Exporting...";      
+				btn.form.submit();  
+				
+				setTimeout(function(){
+					btn.disabled = false;
+					btn.value = "Export to CSV";
+				}, 5000); 
+				
+			}
+		</script>
+
 		<td valign="top">
 
 			<cfform name="editForm" method="POST" id="editForm" action="index.cfm?event=orders.productOrdersProcess" onsubmit="return validateOrderForm();">
@@ -315,6 +373,9 @@ function popupWinEmail(url) {
 			<cfinput type="hidden" name="searchEmailValue">
 			<cfinput type="hidden" name="searchFromDateValue">
 			<cfinput type="hidden" name="searchToDateValue">
+
+			<cfinput type="hidden" name="moduleName" id="moduleName" value="Order Module">
+
 			<table border = "0" width = "700" cellpadding = "1" cellspacing = "0" class="editBox">
 				<tr>
 					<td>
@@ -352,7 +413,7 @@ function popupWinEmail(url) {
 									First Name:
 								</td>
 								<td>
-									<cfinput type="text" name="fname" id="fname"  bind="{data.customer_fname}" size="35" class="displayInput">
+									<cfinput type="text" name="fname" id="fname"  bind="{data.customer_fname}" size="35" class="displayInput" maxlength="35">
 								</td>
 							</tr>
 							<tr>
@@ -360,7 +421,7 @@ function popupWinEmail(url) {
 									Last Name:
 								</td>
 								<td>
-									<cfinput type="text" name="lname" id="lname"  bind="{data.customer_lname}" size="35" class="displayInput">
+									<cfinput type="text" name="lname" id="lname" maxlength="35" bind="{data.customer_lname}" size="35" class="displayInput">
 								</td>
 							</tr>
 
@@ -386,7 +447,7 @@ function popupWinEmail(url) {
 									Address
 								</td>
 								<td>
-									<cfinput type="text" name="address1" id="address1"  bind="{data.address1}" size="35" class="displayInput">
+									<cfinput type="text" name="address1" id="address1" maxlength="35"  bind="{data.address1}" size="35" class="displayInput">
 								</td>
 							</tr>
 							<tr>
@@ -394,7 +455,7 @@ function popupWinEmail(url) {
 									City
 								</td>
 								<td>
-									<cfinput type="text" name="city" id="city"  bind="{data.city}" size="35" class="displayInput">
+									<cfinput type="text" name="city" id="city" maxlength="35" bind="{data.city}" size="35" class="displayInput">
 								</td>
 							</tr>
 
@@ -412,7 +473,7 @@ function popupWinEmail(url) {
 									State/Province
 								</td>
 								<td>
-									<cfinput type="text" name="state" id="state"  bind="{data.state}" size="35" class="displayInput"> &nbsp;&nbsp;
+									<cfinput type="text" name="state" id="state" maxlength="35" bind="{data.state}" size="35" class="displayInput"> &nbsp;&nbsp;
 									<!--- Country &nbsp;&nbsp;
 									<cfinput type="text" name="country" id="country"  bind="{data.country}" size="35" class="displayInput"> --->
 
@@ -441,7 +502,7 @@ function popupWinEmail(url) {
 									Zipcode
 								</td>
 								<td>
-									<cfinput type="text" name="zip" id="zip" size="35" class="displayInput">
+									<cfinput type="text" name="zip" id="zip" size="35" maxlength="35" class="displayInput">
 								</td>
 							</tr>
 
@@ -450,7 +511,7 @@ function popupWinEmail(url) {
 									Country
 								</td>
 								<td>
-									<cfinput type="text" name="country" id="country"  bind="{data.country}" size="35" class="displayInput">
+									<cfinput type="text" name="country" id="country" maxlength="35" bind="{data.country}" size="35" class="displayInput">
 								</td>
 							</tr>
 
@@ -486,7 +547,7 @@ function popupWinEmail(url) {
 									Phone Number:
 								</td>
 								<td>
-									<cfinput type="text" name="phoneNumber" id="phoneNumber" >
+									<cfinput type="text" name="phoneNumber" id="phoneNumber" maxlength="20" >
 									<span id="formatSign">(xxx) xxx-xxxx</span>
 								</td>
 							</tr>
@@ -575,7 +636,7 @@ function popupWinEmail(url) {
 									Fax:
 								</td>
 								<td>
-									<cfinput type="text" name="customer_fax" id="customer_fax"  bind="{data.customer_fax}" size="35" class="displayInput">
+									<cfinput type="text" name="customer_fax" id="customer_fax"  bind="{data.customer_fax}" size="35" class="displayInput" maxlength="35">
 								</td>
 							</tr>
 							<tr>
@@ -583,7 +644,7 @@ function popupWinEmail(url) {
 									Consultant:
 								</td>
 								<td>
-									<cfinput type="text" name="consultant" id="consultant"  bind="{data.order_consultant}" size="35" class="displayInput">
+									<cfinput type="text" name="consultant" id="consultant"  bind="{data.order_consultant}" size="35" class="displayInput" maxlength="35">
 								</td>
 							</tr>
 							<tr>
@@ -591,7 +652,7 @@ function popupWinEmail(url) {
 									Company Name:
 								</td>
 								<td>
-									<cfinput type="text" name="company" id="company"  bind="{data.order_company}" size="35" class="displayInput">
+									<cfinput type="text" name="company" id="company"  bind="{data.order_company}" size="35" class="displayInput" maxlength="35">
 								</td>
 							</tr>
 							<tr>
@@ -599,7 +660,7 @@ function popupWinEmail(url) {
 									Website:
 								</td>
 								<td>
-									<cfinput type="text" name="customer_website" id="customer_website"  bind="{data.customer_website}" size="35" class="displayInput">
+									<cfinput type="text" name="customer_website" id="customer_website"  bind="{data.customer_website}" size="35" class="displayInput" maxlength="35">
 								</td>
 							</tr>
 							<tr>
@@ -607,7 +668,7 @@ function popupWinEmail(url) {
 									Drivers License:
 								</td>
 								<td>
-									<cfinput type="text" name="customer_driverslicense" id="customer_driverslicense"  bind="{data.customer_driverslicense}" size="35" class="displayInput">
+									<cfinput type="text" name="customer_driverslicense" id="customer_driverslicense"  bind="{data.customer_driverslicense}" size="35" class="displayInput" maxlength="35">
 								</td>
 							</tr>
 							<tr>
@@ -636,7 +697,7 @@ function popupWinEmail(url) {
 									Card Number:
 								</td>
 								<td>
-									<cfinput type="text" name="CardNumber" id="CardNumber"  bind="{data.CardNumber}" size="35" class="displayInput">
+									<cfinput type="text" name="CardNumber" id="CardNumber"  bind="{data.CardNumber}" size="35" class="displayInput" maxlength="35">
 								</td>
 							</tr>
 							<tr>
@@ -644,7 +705,7 @@ function popupWinEmail(url) {
 									Expiration Date:
 								</td>
 								<td>
-									<cfinput type="text" name="CardExpiry" id="CardExpiry"  bind="{data.CardExpiry}" size="35" class="displayInput">
+									<cfinput type="text" name="CardExpiry" id="CardExpiry"  bind="{data.CardExpiry}" size="35" class="displayInput" maxlength="35">
 								</td>
 							</tr>
 							<tr>
@@ -688,7 +749,7 @@ function popupWinEmail(url) {
 									Location:
 								</td>
 								<td>
-									<cfinput type="text" name="location_name" id="location_name"  bind="{data.location_name}" size="15" class="displayInput" disabled>
+									<cfinput type="text" name="location_name" id="location_name" maxlength="35" bind="{data.location_name}" size="15" class="displayInput" disabled>
 								</td>
 							</tr>
 							<tr>
@@ -696,7 +757,7 @@ function popupWinEmail(url) {
 									Amount of Sale:
 								</td>
 								<td>
-									<cfinput type="text" name="amountSaleDisplay" id="amountSaleDisplay"  size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
+									<cfinput type="text" name="amountSaleDisplay" id="amountSaleDisplay" maxlength="15" size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
 								</td>
 							</tr>
 							<!--- <tr>
@@ -712,7 +773,7 @@ function popupWinEmail(url) {
 									Tax:
 								</td>
 								<td>
-									<cfinput type="text" name="taxDisplay" id="taxDisplay" size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
+									<cfinput type="text" name="taxDisplay" id="taxDisplay" maxlength="15" size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
 								</td>
 							</tr>
 							<tr>
@@ -720,7 +781,7 @@ function popupWinEmail(url) {
 									Subtotal:
 								</td>
 								<td>
-									<cfinput type="text" name="subtotalDisplay" id="subtotalDisplay"  size="15" class="displayInput" style="text-align:right;" disabled>
+									<cfinput type="text" name="subtotalDisplay" id="subtotalDisplay" maxlength="15" size="15" class="displayInput" style="text-align:right;" disabled>
 								</td>
 							</tr>
 							<tr>
@@ -728,7 +789,7 @@ function popupWinEmail(url) {
 									Shipping Cost:
 								</td>
 								<td>
-									<cfinput type="text" name="shipCostDisplay" id="shipCostDisplay"  size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
+									<cfinput type="text" name="shipCostDisplay" id="shipCostDisplay" maxlength="15" size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
 								</td>
 							</tr>
 							<tr>
@@ -753,7 +814,7 @@ function popupWinEmail(url) {
 									Insurance:
 								</td>
 								<td>
-									<cfinput type="text" name="insuranceDisplay" id="insuranceDisplay"  size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
+									<cfinput type="text" name="insuranceDisplay" id="insuranceDisplay" maxlength="15" size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
 								</td>
 							</tr>
 							<tr>
@@ -761,7 +822,7 @@ function popupWinEmail(url) {
 									Total:
 								</td>
 								<td>
-									<cfinput type="text" name="totalDisplay" id="totalDisplay" size="15" class="displayInput" style="text-align:right;" disabled>
+									<cfinput type="text" name="totalDisplay" id="totalDisplay" maxlength="15" size="15" class="displayInput" style="text-align:right;" disabled>
 								</td>
 							</tr>
 							<tr>
@@ -769,7 +830,7 @@ function popupWinEmail(url) {
 									Discount:
 								</td>
 								<td>
-									<cfinput type="text" name="discountDisplay" id="discountDisplay"  size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
+									<cfinput type="text" name="discountDisplay" id="discountDisplay" maxlength="15" size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
 								</td>
 							</tr>
 							<tr>
@@ -777,7 +838,7 @@ function popupWinEmail(url) {
 									Amount Paid:
 								</td>
 								<td>
-									<cfinput type="text" name="amountPaidDisplay" id="amountPaidDisplay" size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
+									<cfinput type="text" name="amountPaidDisplay" id="amountPaidDisplay" maxlength="15" size="15" class="displayInput" style="text-align:right;" onkeyup="computeAmountProductOrder();">
 								</td>
 							</tr>
 							<tr>
@@ -785,7 +846,7 @@ function popupWinEmail(url) {
 									Balance Due:
 								</td>
 								<td>
-									<cfinput type="text" name="balanceDueDisplay" id="balanceDueDisplay" size="15" class="displayInput" style="text-align:right;" disabled>
+									<cfinput type="text" name="balanceDueDisplay" id="balanceDueDisplay" maxlength="15" size="15" class="displayInput" style="text-align:right;" disabled>
 								</td>
 							</tr>
 							<tr>
@@ -793,7 +854,7 @@ function popupWinEmail(url) {
 									Tracking Number:
 								</td>
 								<td>
-									<cfinput type="text" name="tracking_number" id="tracking_number"  bind="{data.tracking_number}"  size="35" class="displayInput">
+									<cfinput type="text" name="tracking_number" id="tracking_number" maxlength="35" bind="{data.tracking_number}"  size="35" class="displayInput">
 								</td>
 							</tr>
 							<tr>
@@ -801,7 +862,7 @@ function popupWinEmail(url) {
 									Special Instructions:
 								</td>
 								<td>
-									<cftextarea name="comments" id="comments" style="width: 400px;" class="displayInput" />
+									<cftextarea name="comments" id="comments" style="width: 400px;" class="displayInput" maxlength="500" />
 								</td>
 							</tr>
 							<tr>
@@ -809,7 +870,7 @@ function popupWinEmail(url) {
 									Estimate (1 for estimate, 0 for standard order):
 								</td>
 								<td>
-									<cfinput type="text" name="estimate" id="estimate"  bind="{data.estimate}"  size="1" class="displayInput">
+									<cfinput type="text" name="estimate" id="estimate"  bind="{data.estimate}" maxlength="1" size="1" class="displayInput">
 								</td>
 							</tr>
 							<tr>
@@ -862,7 +923,7 @@ function popupWinEmail(url) {
 									<cfif session.userinfo.sa EQ 1>
 										<cfinput type="button" name="delete" id="delete" value="Delete Order" onclick="javascript:deleteOrder(document.editForm.orderuid.value);" />&nbsp;
 									</cfif>
-									<cfinput type="button" name="printInvoice" id="printInvoice" value="Print Invoice" onclick="if (confirm('Save your changes before printing - continue?')) { popupWin('http://23.20.226.157/admin/views/orders/manage/print_product_invoice.cfm'); };" />
+									<cfinput type="button" name="printInvoice" id="printInvoice" value="Print Invoice" onclick="if (confirm('Save your changes before printing - continue?')) { popupWin('http://#server_name#/admin/views/orders/manage/print_product_invoice.cfm'); };" />
 									<cfif NOT listFindNoCase(session.userinfo.roles,'special admin')>
 										<cfinput type="button" style="display:none;" name="emailInvoice" id="emailInvoice" value="Email Invoice" onclick="if (confirm('Save your changes before emailing - continue?')) { popupWinEmail('http://#server_name#/admin/views/orders/manage/email_product_invoice.cfm'); };" />
 									</cfif>
@@ -903,6 +964,14 @@ function popupWinEmail(url) {
 				return false;
 			}
 		}
+
+		document.getElementById("edit").disabled = true;
+		let deleteBtn = document.getElementById("delete");
+		if (deleteBtn) {
+			deleteBtn.disabled = true;
+		}
+
+		
 
 		// OutsideUS ke liye koi restriction nahi
 		return true;
@@ -961,11 +1030,11 @@ function popupWinEmail(url) {
 
 <script>
 	function openProductEntryWindowAdmin( id ) {
-		window.open('index.cfm?event=orders.artInfoManage&order=' + id, 'artInfo', 'width=500,height=250,left=0,top=0,resizable=yes,scrollbars=yes');
+		window.open('index.cfm?event=orders.artInfoManage&order=' + id, 'artInfo', 'width=500,height=250,left=500,top=200,resizable=yes,scrollbars=yes');
 	}
 
 	function openFramingEntryWindowAdmin( id ) {
-		window.open('index.cfm?event=orders.framingInfoManage&order=' + id, 'framingInfo', 'width=500,height=250,left=0,top=0,resizable=yes,scrollbars=yes');
+		window.open('index.cfm?event=orders.framingInfoManage&order=' + id, 'framingInfo', 'width=500,height=250,left=500,top=200,resizable=yes,scrollbars=yes');
 	}
 </script>
 
@@ -1011,20 +1080,31 @@ function popupWinEmail(url) {
 
 		<tr>
 			<td align="center" style="font-family: Arial; font-size: 11px;">
-				<input type="text" name="modelno" id="modelno" size="20" value="">&nbsp;&nbsp;<input type="Button" value="ADD" onclick="findArt(document.getElementById('modelno').value,document.getElementById('orderId_artId').value);" />
-			</td>
-		</tr>
-		<tr>
-			<td align="center" style="padding-top: 10px;">
+				<input type="text" name="modelno" id="modelno" size="20" value="">
+				&nbsp;
+				<input type="Button" value="ADD" onclick="findArt(document.getElementById('modelno').value,document.getElementById('orderId_artId').value);" />
 				<input type="Button" value="Close" onclick="ColdFusion.Window.hide('artIdWindow');" style="font-size: 10px;">
 			</td>
 		</tr>
+		<!--- <tr>
+			<td align="center" style="padding-top: 10px;">
+				<input type="Button" value="Close" onclick="ColdFusion.Window.hide('artIdWindow');" style="font-size: 10px;">
+			</td>
+		</tr> --->
 	</table>
 </cfwindow>
 
 <style>
 	div.autosuggestcontainer .yui-ac-content {
 		*left: -5;
+	}
+	.x-window-default, .x-css-shadow {
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%);
+	}
+	.x-body {
+		position: relative;
 	}
 </style>
 
@@ -1056,13 +1136,14 @@ function popupWinEmail(url) {
 		<tr>
 			<td align="center" style="font-family: Arial; font-size: 11px; padding-top: 15px;">
 				<input type="Button" value="ADD" onclick="insertArtFromTitle(document.getElementById('artTitle').value,document.getElementById('orderId_title').value);" />
-			</td>
-		</tr>
-		<tr>
-			<td align="center" style="padding-top: 10px;">
 				<input type="Button" value="Close" onclick="ColdFusion.Window.hide('artTitleWindow');" style="font-size: 10px;">
 			</td>
 		</tr>
+		<!--- <tr>
+			<td align="center" style="padding-top: 10px;">
+				<input type="Button" value="Close" onclick="ColdFusion.Window.hide('artTitleWindow');" style="font-size: 10px;">
+			</td>
+		</tr> --->
 	</table>
 </cfwindow>
 
@@ -1253,4 +1334,37 @@ function popupWinEmail(url) {
 		}
 	}
 </script>
+
+<style>
+
+	#imageDisplay {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+	#imageDisplay .image-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		margin: 6px;
+		gap: 6px;
+	}
+	.date-field div {
+		float: none !important;
+		width: max-content;
+		display: inline-block;
+	}
+	.date-field input.datefieldinput {
+		padding-right: 18px;
+		max-width: 178px;
+	}
+
+	.date-field div#searchFromDategridForm_cf_buttondiv, .date-field div#searchToDategridForm_cf_buttondiv {
+		position: absolute;
+		top: 2px;
+		right: 2px;
+		padding: 0 !important;
+	}
+</style>
 

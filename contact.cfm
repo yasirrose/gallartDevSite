@@ -74,8 +74,8 @@
 	<cfset CreateObject( "java", "java.util.Collections"	).Shuffle(	arrValidChars )	/>
 
 	<cfset strCaptcha = (
-	arrValidChars[ 1 ] &
-	arrValidChars[ 2 ] 
+		arrValidChars[ 1 ] &
+		arrValidChars[ 2 ] 
 	) />
 
 	<cfset FORM.captcha_check = Encrypt( strCaptcha,"gallart-is-the-best", "CFMX_COMPAT", "HEX" ) />
@@ -192,7 +192,6 @@
 													
 											<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
 
-
 										   <!--- Check for a bot. --->
 										   <cfif phoneError>
 											  <cfoutput>
@@ -230,52 +229,7 @@
 											  <cfelse>
 
 												<cftry>
-
-													<!--- <script>
-																$(document).ready(function () {
-																	toastr.options = {
-																		closeButton: true,
-																		debug: false,
-																		newestOnTop: false,
-																		progressBar: true,
-																		positionClass: 'toast-center-center', // custom class
-																		preventDuplicates: false,
-																		showDuration: '1000',
-																		hideDuration: '1000',
-																		timeOut: '5000',
-																		extendedTimeOut: '1000',
-																		showEasing: 'swing',
-																		hideEasing: 'linear',
-																		showMethod: 'fadeIn',
-																		hideMethod: 'fadeOut'
-																	};
-
-																	toastr.success('Your Record is added successfully.');
-																});
-
-																
-															</script>
-
-															<style>
-																/* Force center positioning */
-																#toast-container.toast-center-center {
-																	top: 50% !important;
-																	left: 50% !important;
-																	transform: translate(-50%, -50%) !important;
-																	position: fixed !important;
-																	margin: 0 auto;
-																}
-
-																/* Custom pink + white */
-																#toast-container > .toast-success {
-																	background-color: #ff4da6 !important;
-																	color: #fff !important;
-																	font-weight: bold;
-																}
-															</style>
 													
-													<cfdump var="test 1" abort="true"> --->
-
 													<cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
 														<cfset phone = form.phone>
 													<cfelse>
@@ -300,14 +254,16 @@
 														<cfset otherphone = "">
 													</cfif>
 
+													<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+													<cfset date = now()>
+													<cfset moduleName = 'contact'>
+													<cfset action = 'Insert'>
 													
 													<cfif form.name neq '' and form.email neq ''>
 														<cfquery name="addgLead" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 															insert into leads (name, notes, email, phone,cellphone, businessphone, otherphone, maillist)
 															values('#form.name#', '#form.comments#', '#form.email#', '#phone#', '#cellphone#', '#businessphone#', '#otherphone#', '#form.list#')
-														</cfquery>
-
-													
+														</cfquery>													
 
 															<script>
 																$(document).ready(function() {
@@ -351,8 +307,13 @@
 																}
 															</style>
 
-													
-											  
+															<cfquery name="addLog" datasource="#application.dsource#" >
+																INSERT INTO logs 
+																	( moduleName, ipAddress, date, action)
+																	VALUES
+																	( '#moduleName#', '#ipAddress#', #date#, '#action#')
+															</cfquery>
+																								  
 															<cfmail 
 																server="#servername#" 
 																username="gallart@onlinegalleryart.com"
@@ -416,40 +377,19 @@
 													<span style="color: ##ff0000;">* Required</span><br><br>
 
 													<div class="input-form">
-														<div class="row">
-															<!--- <div class="col-md-6">
-																<div class="input-field">
-																	<!--- <label><FONT color="000000"><b>FIRST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
-																	<cfinput type="text" size=40 maxsize=50 name="fname" placeholder="First Name*" value="#form.fname#">
-																	<!--- <span class="star">*</span> --->
-																	<span class="error-message" id="fnameError"></span>
-																</div>
-															</div> --->
-
-															<!--- <div class="col-md-6">
-																<div class="input-field">
-																<!--- <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
-																<cfinput type="text" size=40 maxsize=50 name="lname" placeholder="Enter your Name*" value="#form.lname#" >
-																<!--- <span class="star">*</span> --->
-																<span class="error-message" id="lnameError"></span>
-																</div>
-															</div> --->
+														<div class="row">															
 
 															<div class="col-md-6">
 																<div class="input-field">
-																<!--- <label><FONT color="000000"><b>LAST NAME &nbsp;<span style="color:##ff0000;">*</span></b></FONT></label> --->
-																<cfinput type="text" size=40 maxsize=50 maxLength="30" name="name" id="name" placeholder="Enter your Name*" value="#form.name#" >
-																<!--- <span class="star">*</span> --->
-																<span class="error-message" id="nameError"></span>
+																	<cfinput type="text" size=40 maxsize=50 maxLength="30" name="name" id="name" placeholder="Enter your Name*" value="#form.name#" >
+																	<span class="error-message" id="nameError"></span>
 																</div>
 															</div>
 
 															<div class="col-md-6">
 																<div class="input-field">
-																
-																<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" value="#form.email#" >
-																
-																<span class="error-message" id="emailError"></span>
+																	<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" value="#form.email#" >
+																	<span class="error-message" id="emailError"></span>
 																</div>
 															</div>
 
@@ -466,18 +406,17 @@
 
 															<div class="col-md-6">
 																<div class="input-field">
-																
-																<cfinput type="text" size=40 maxsize=50 maxLength="20" name="phone" placeholder="Enter your Phone Number" value="#form.phone#" >
-																<span id="formatSign">(xxx) xxx-xxxx</span>
-																<span class="error-message" id="phoneError"></span>
+																	<cfinput type="text" size=40 maxsize=50 maxLength="20" name="phone" placeholder="Enter your Phone Number" value="#form.phone#" >
+																	<span id="formatSign">(xxx) xxx-xxxx</span>
+																	<span class="error-message" id="phoneError"></span>
 																</div>
 															</div>
 
 														</div>
 														<div class="input-field">
-														<!--- <label><FONT color="000000"><b>COMMENTS</b></FONT></label> --->
-														<TEXTAREA NAME="comments" id="comments" maxlength="500" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
-														 <div id="charCount" class="mb-3">0 / 500 characters</div>
+														
+															<TEXTAREA NAME="comments" id="comments" maxlength="500" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
+														 	<div id="charCount" class="mb-3">0 / 500 characters</div>
 														</div>
 
 														<!--- <div class="input-field">
@@ -493,8 +432,8 @@
 														</div>
 
 														<div class="input-button">
-														<button type="submit" id="submitBtn" class="SeeMore">Send</button>
-														<button type="reset" class="SeeMore">Reset</button>
+															<button type="submit" id="submitBtn" class="SeeMore">Send</button>
+															<button type="reset" class="SeeMore">Reset</button>
 														</div>
 													</div>
 												</CFFORM>
@@ -528,8 +467,6 @@
 			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
 			
 			// Get form field values
-			//  const fname = document.getElementById('fname').value.trim();
-			//  const lname = document.getElementById('lname').value.trim();
 			const name = document.getElementById('name').value.trim();
 			const email = document.getElementById('email').value.trim();
 			const phone = document.getElementById('phone').value.trim();
@@ -548,18 +485,7 @@
 				document.getElementById("recaptchaError").innerText = "Please confirm you are not a robot.";
 				isValid = false;
 			}
-			
-			// Validate FIRST NAME
-			//  if (!fname) {
-			//     document.getElementById('fnameError').textContent = 'Please fill in your first name.';
-			//     isValid = false;
-			//  }
-			
-			//  // Validate LAST NAME
-			//  if (!lname) {
-			//     document.getElementById('lnameError').textContent = 'Please fill in your last name.';
-			//     isValid = false;
-			//  }
+						
 
 			if (!name) {
 				document.getElementById('nameError').textContent = 'Please enter your name.';
@@ -596,7 +522,7 @@
 			} else {
 				
 				submitButton.disabled = true;
-				submitButton.innerText = "Submitting…";
+				submitButton.innerText = "Sending...";
 
 				// prevent default submit first
 				e.preventDefault();

@@ -278,7 +278,6 @@ function computeAmountProductOrder() {
 		decimalFormat(document.editForm.shipCostDisplay.value) +
 		decimalFormat(document.editForm.insuranceDisplay.value) -
 		decimalFormat(document.editForm.amountPaidDisplay.value)
-		console.log('test total: ')
 }
 
 
@@ -313,7 +312,7 @@ function openItemEdit(itemId) {
 
 
 function openItemEditWindow(itemId) {
-	window.open('index.cfm?event=orders.editItem&id=' + itemId, 'editItem', 'width=500,height=250,left=0,top=0,resizable=yes,scrollbars=yes');
+	window.open('index.cfm?event=orders.editItem&id=' + itemId, 'editItem', 'width=500,height=250,left=500,top=200,resizable=yes,scrollbars=yes');
 }
 
 function submitItemEdit() {
@@ -363,7 +362,6 @@ function deleteOrderItem(itemId,orderId) {
 }
 
 function openItemAddWindow(orderId) {
-	console.log('test orderid: ' + orderId)
 	document.getElementById('orderId_mainWindow').value = orderId;
 	ColdFusion.Window.show('newItemWindow');
 

@@ -290,6 +290,19 @@
 						SELECT SCOPE_IDENTITY() as uid
 		        </cfquery>
 
+
+				<cfset moduleName = 'New Order Form'>
+				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+				<cfset date = now()>				
+				<cfset action = 'Insert'>
+
+				<cfquery name="addLog" datasource="#application.dsource#" >
+					INSERT INTO logs 
+						( moduleName, ipAddress, date, action)
+						VALUES
+						( '#moduleName#', '#ipAddress#', #date#, '#action#')
+				</cfquery>
+
 		        <cfquery name="qInternationalOrders" datasource="#application.dsource#">
 		        	SELECT O.orderuid
 					FROM   orders AS O
@@ -316,9 +329,7 @@
 					GROUP BY O.orderuid, C.fname, C.lname, C.Email, O.date, C.email, C.address1, C.city, C.state,C.country,C.zip,C.phone,C.otherphone,C.cellphone,C.businessphone,C.website,C.fax,C.driverslicense,L.name, E.emp_lname, E.emp_fname, A.emp_lname, A.emp_fname,O.orderuid,O.customerid,O.consultant,O.date,O.saleCode,O.percentMarkdown,O.shipCost,O.insurance,O.discount,O.CardNumber,O.CardExpiry,O.shipMethod,O.tax,O.amountSale,O.Total,O.amountPaid,O.balanceDue,O.framingAmount,O.company,O.tracking_number,O.businessphone,O.estimate,O.incomplete
 				</cfquery>
 
-		        <cfset returnStruct.thisOrderId = qOrders.uid />
-
-				
+		        <cfset returnStruct.thisOrderId = qOrders.uid />				
 
 		        <cfif listFindNoCase(session.userinfo.roles,'international')>
 					<cfset returnStruct.thisDisplayOrderId = "C" & (qInternationalOrders.recordcount + 1) />
@@ -415,14 +426,6 @@
 		<cfargument name="country" required="no" type="string" default="0">
 		<cfargument name="Fname" required="no" type="string" default="0">
 		<cfargument name="Price" required="no" type="string" default="0">
-
-		<!--- <cfdump var="#arguments#" abort="true"> --->
-		
-		<!--- <cfif arguments.fromDate neq '' and arguments.fromDate neq ''>
-			<cfdump var="testing yes" abort="true">
-			<cfelse>
-				<cfdump var="testing no" abort="true">
-		</cfif> --->
 
 		<cfset var qOrders='' />
 
@@ -687,17 +690,17 @@
 	<cffunction name="editProductOrder" access="remote" output="false" returntype="boolean">
 	    <cfargument name="form" type="struct">
 
-		<!--- <cfdump var="#form#" abort="true"> --->
+			<!--- <cfdump var="#form#" abort="true"> --->
 
-		<cfif form.addressType EQ "USA">
-			<cfset finalState = form.state_dropdown>
-		<cfelseif form.addressType EQ "Outside">
-			<cfset finalState = form.state>
-			<cfset country = form.country>
-		<cfelse>
-			<cfset finalState = "">
-			<cfset country = "">
-		</cfif>
+			<cfif form.addressType EQ "USA">
+				<cfset finalState = form.state_dropdown>
+			<cfelseif form.addressType EQ "Outside">
+				<cfset finalState = form.state>
+				<cfset country = form.country>
+			<cfelse>
+				<cfset finalState = "">
+				<cfset country = "">
+			</cfif>
 
 			<cfif len(trim(form.phoneNumber)) AND form.phoneType EQ "Home Phone">
 				<cfset phone = form.phoneNumber>
@@ -723,7 +726,7 @@
 				<cfset otherphone = "">
 			</cfif>
 
-	    <cfset var success = true />
+	    	<cfset var success = true />
 
 	    	<cftry>
 
@@ -799,6 +802,18 @@
 			            </cfquery>
 					</cfif>
 				</cfloop>
+
+				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+				<cfset date = now()>				
+				<cfset action = 'Update'>
+
+				<cfquery name="addLog" datasource="#application.dsource#" >
+					INSERT INTO logs 
+						( moduleName, ipAddress, date, action)
+						VALUES
+						( '#form.moduleName#', '#ipAddress#', #date#, '#action#')
+				</cfquery>
+
 				<!---<cfloop collection="#form#" item="idx">
 					<cfif left(idx,11) EQ 'commission_'>
 					<cfset itemId = mid(idx,12,100) />
@@ -839,7 +854,21 @@
 	            WHERE orderuid = #arguments.orderuid#
 	        </cfquery>
 
-			<cfcatch type="any"><cfset success = false /></cfcatch>
+			<cfset moduleName = 'Order Module'>
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
+
+			<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
 		</cftry>
 
 		<cfreturn success />
@@ -1183,8 +1212,8 @@
 
 	<cffunction name="updateTotals" access="remote" output="false" returntype="string">
 
-		<cfargument name="orderId" type="numeric">
-		
+		<cfargument name="orderId" type="numeric">		
+	
 
 		<cfset var success = true />
 
@@ -1195,20 +1224,32 @@
 				WHERE orderuid = '#arguments.orderid#'
 			</cfquery>
 
+		
+			<cfset shipcost   = (isNumeric(qOrder.shipcost) ? qOrder.shipcost : 0)>
+			<cfset tax        = (isNumeric(qOrder.tax) ? qOrder.tax : 0)>
+			<cfset discount   = (isNumeric(qOrder.discount) ? qOrder.discount : 0)>
+			<cfset amountpaid = (isNumeric(qOrder.amountpaid) ? qOrder.amountpaid : 0)>
+			
+
 			<cfquery name="itemTotal" datasource="#application.dsource#">
 				SELECT sum(cast(unit_price as float) * cast(quantity as float)) as item_sum 
 				from items
-				WHERE orderuid = '#arguments.orderid#'
+				WHERE orderuid = '#arguments.orderid#' and orderuid !=''  AND CAST(unit_price AS FLOAT) != 0;
 			</cfquery>
 
 			<cfif qOrder.discount == "">
 				<cfset qOrder.discount = 0>
 			</cfif>
 
-			<!--- <cfdump var="#itemTotal#" > --->
+			
+			
 
-			<cfset total = itemTotal.item_sum + qOrder.tax + qOrder.shipcost />
-			<cfset balancedue = total - qOrder.discount + qOrder.amountpaid />
+			<!--- <cfset total = itemTotal.item_sum + qOrder.tax + qOrder.shipcost />
+			<cfset balancedue = total - qOrder.discount + qOrder.amountpaid /> --->
+
+			<cfset total = itemTotal.item_sum + tax + shipcost />
+			<cfset balancedue = total - discount + amountpaid />
+
 
 			<cfquery name="updateOrder" datasource="#application.dsource#">
 				UPDATE orders SET

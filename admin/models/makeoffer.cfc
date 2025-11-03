@@ -62,18 +62,31 @@
 	
 		
 	<cffunction name="deleteMakeoffer" access="remote">
-		<cfargument name="pk_makeoffer" type="string" default="">
+		<cfargument name="pk_makeoffer" type="string" default="">		
 		
 		<cfset var success = true />
 		
 		<cftry>
 	
-		<cfquery name="deleteGuest" datasource="#application.dsource#"> 
-           	DELETE from makeoffer
-            WHERE pk_makeoffer = '#arguments.pk_makeoffer#'
-        </cfquery>
+			<cfquery name="deleteGuest" datasource="#application.dsource#"> 
+				DELETE from makeoffer
+				WHERE pk_makeoffer = '#arguments.pk_makeoffer#'
+			</cfquery>
+
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
 		
-		<cfcatch type="any"><cfset success = false /></cfcatch>
+			<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
 		</cftry>
 	
 		<cfreturn success />

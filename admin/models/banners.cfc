@@ -115,6 +115,8 @@
 
 <cffunction name="deleteEmployee" access="remote" output="false" returntype="boolean">
     <cfargument name="id" type="string" required="true">
+
+    <!--- <cfdump var="test delete" abort="true"> --->
     
     <cfset var success = true />
     
@@ -125,6 +127,19 @@
                 DELETE FROM banners
                 WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
             </cfquery>
+            
+            <cfset moduleName = 'Banner Module'>
+            <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+            <cfset date = now()>				
+            <cfset action = 'Delete'>
+
+            <cfquery name="addLog" datasource="#application.dsource#" >
+                INSERT INTO logs 
+                    ( moduleName, ipAddress, date, action)
+                    VALUES
+                    ( '#moduleName#', '#ipAddress#', #date#, '#action#')
+            </cfquery>
+
         </cfif>
         <cfcatch type="any">
             <cfset success = false />

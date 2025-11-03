@@ -112,6 +112,16 @@ function gridChange(thisId) {
 		}
 	}
 
+	var ta = document.getElementById('comments');
+	if (ta) {
+		// try common key names (uppercase/lowercase)
+		var addDetails = strCustomer['COMMENTS'];
+		ta.value = addDetails;
+	}
+
+	// update counter immediately after populating
+	updateAdditionalDetailsCounter();
+
 	<!--- var td =  $("##PhoneType").val(); --->
 	var phoneType = document.getElementById('PhoneType').value
 	var formatSign = document.getElementById("formatSign");
@@ -132,7 +142,8 @@ function doEdit(type) {
 	
 
 
-
+	var editBtn = document.getElementById('edit');
+	var deleteBtn = document.getElementById('delete');
 	
 
     var edit = new admin.models.customers();
@@ -146,25 +157,89 @@ function doEdit(type) {
 		var phone = document.getElementById('phoneNumber').value.trim();
 		var phoneType = document.getElementById('PhoneType').value;
 
-	if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
-		// Format: (123) 456-7890
-		var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
-		if (!phonePattern.test(phone)) {
-			alert("Please enter phone number in format: (xxx) xxx-xxxx");
-			document.getElementById('phoneNumber').focus();
-			return false;
+		
+
+		if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
+			// Format: (123) 456-7890
+			var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+			if (!phonePattern.test(phone)) {
+				alert("Please enter phone number in format: (xxx) xxx-xxxx");
+				document.getElementById('phoneNumber').focus();
+				return false;
+			}
 		}
-	}
+
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
     		
-     if ( edit.editCustomerFromForm()) {
-         ColdFusion.Grid.refresh('data',true);
-		 toastr.success('Data is Updated Successfully!');
-     } 
-     	else { alert( 'There was a problem in the processing.')}
+		if ( edit.editCustomerFromForm()) {			
+
+				toastr.options = {
+					"closeButton": true,
+					"debug": false,
+					"newestOnTop": true,
+					"progressBar": true,
+					"positionClass": "toast-center",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "3000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				};
+
+			toastr.success('Data is Updated Successfully!');
+			ColdFusion.Grid.refresh('data',true);
+
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
+		} 
+     	else {
+			 alert( 'There was a problem in the processing.')
+			}
       }
    else if (type == 'delete'){
+
+	 if (!confirm('Delete -- ARE YOU SURE? ')) {
+        return false; 
+    }
+
+	editBtn.disabled = true;
+	deleteBtn.disabled = true;
+
    	if ( edit.deleteCustomer()) {
-         ColdFusion.Grid.refresh('data',true);
+         
+
+			toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-center",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
+			toastr.success('Data is Deleted Successfully!');
+			ColdFusion.Grid.refresh('data',true);
+
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
      } 
      else { alert( 'There was a problem in the processing.')}
       }

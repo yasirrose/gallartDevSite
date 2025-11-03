@@ -89,19 +89,19 @@
 		<tr>
 			<td>Artist:</td>
 			<td>
-				<input type="text" name="artist" id="artist" maxlength="40" size="40" size="40" value="">
+				<input type="text" name="artist" id="artist" maxlength="40" size="40" value="">
 			</td>
 		</tr>
 		<tr>
 			<td>Short Description:</td>
 			<td>
-				<input type="text" name="desc" id="desc" maxlength="40" size="40" size="40" value="">
+				<input type="text" name="desc" id="desc" maxlength="40" size="40" value="">
 			</td>
 		</tr>
 		<tr>
 			<td>Price:</td>
 			<td>
-				$<input type="number" min="0" step="0.01" name="priceInput" id="priceInput"  size="40" size="10" value="" onkeyup="limitLength(this,10); formatPrice( this );">
+				$<input type="number" min="0" step="0.01" name="priceInput" id="priceInput" size="10" value="" onkeyup="limitLength(this,10); formatPrice( this );">
 				<input type="Submit" id="addBtn" value="Add" style="font-family: Arial; font-size: 11px;" />
 				<input type="Button" value="Close" onclick="window.close();" style="font-family: Arial; font-size: 11px;">
 			</td>

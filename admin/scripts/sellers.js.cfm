@@ -68,7 +68,7 @@ function gridChange(thisId) {
     }
     else {
         $("#phoneNumber").val("");
-        $("#PhoneType").val(""); // default
+        $("#PhoneType").val('Cell Phone'); // default
     }
 
 	<!--- var td =  $("##PhoneType").val(); --->
@@ -98,12 +98,13 @@ function doEdit(type) {
 	  var fname = document.getElementById('fname').value.trim();
 	  var lname = document.getElementById('lname').value.trim();
 	  var email = document.getElementById('seller_email').value.trim();
-	  var password = document.getElementById('password').value.trim();
+	  <!--- var password = document.getElementById('password').value.trim(); --->
 
 	  var phone = document.getElementById('phoneNumber').value.trim();
 	  var phoneType = document.getElementById('PhoneType').value;
 
-		
+	  var editBtn = document.getElementById('edit');
+	  var deleteBtn = document.getElementById('delete');
 
     var edit = new admin.models.users();
 
@@ -137,7 +138,7 @@ function doEdit(type) {
 			}
 		}
 
-		if (password === '') {
+		<!--- if (password === '') {
 			toastr.error('Password is required.');
 			document.getElementById('password').focus();
 			return false;
@@ -149,7 +150,7 @@ function doEdit(type) {
 				document.getElementById('password').focus();
 				return false;
 			}
-		}
+		} --->
 
 		if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
 			// Format: (123) 456-7890
@@ -161,20 +162,120 @@ function doEdit(type) {
 			}
 		}
 
-
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
     		
-     if ( edit.editUserFromForm()) {
-         ColdFusion.Grid.refresh('data',true);
-     } 
-     else 
-	 	{ 
-			alert( 'There was a problem in the processing.')
+		var result = edit.editUserFromForm();
+
+		<!--- console.log('test result: ' + result); --->
+
+			if (result === "success") {
+
+				toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-center",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
+
+			toastr.success('Record saved successfully.');
+			ColdFusion.Grid.refresh('data', true);
+
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
+		} 
+		else if (result === "duplicate") {
+			
+			toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-center",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
+
+			toastr.success('This email already exists. Please use a different email.');
+			
+			ColdFusion.Grid.refresh('data', true);
+
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
+		} 
+		else if (result === "error") {
+			alert('There was a problem while processing the request.');
+
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
+		} 
+		else {
+			alert('Unexpected response received.');
 		}
       }
 	  
    else if (type == 'delete'){
+
+	  if (!confirm('Delete -- ARE YOU SURE? ')) {
+			return false; 
+		}
+
+	editBtn.disabled = true;
+	deleteBtn.disabled = true;
+
    	if ( edit.deleteUser()) {
          ColdFusion.Grid.refresh('data',true);
+
+		 toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"newestOnTop": true,
+			"progressBar": true,
+			"positionClass": "toast-center",
+			"preventDuplicates": false,
+			"onclick": null,
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "3000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		};
+
+		toastr.success('Record is Deleted Successfully'); 
+		
+		setTimeout(function () {
+			editBtn.disabled = false;
+			deleteBtn.disabled = false;
+		}, 5000);
+
      } 
      else { alert( 'There was a problem in the processing.')}
       }

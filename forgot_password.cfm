@@ -82,9 +82,26 @@
 		</cfquery>
 	
 		<cfif findUser.recordcount>
-			<cfmail server="#servername#" username="onli16@onlinegalleryart.com"
-				password="re3objec" to="#findUser.email#" from="onli16@onlinegalleryart.com"
-				subject="Gallery Art Password Retrieval" type="HTML">
+
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+            <cfset date = now()>
+            <cfset moduleName = 'forgot_password'>
+             
+            <cfquery name="addLog" datasource="#application.dsource#" >
+                INSERT INTO logs 
+                    ( moduleName, ipAddress, date)
+                    VALUES
+                    ( '#moduleName#', '#ipAddress#', #date#)
+            </cfquery>
+
+			<cfmail 
+				server="#servername#" 
+				username="onli16@onlinegalleryart.com"
+				password="re3objec" 
+				to="#findUser.email#" 
+				from="onli16@onlinegalleryart.com"
+				subject="Gallery Art Password Retrieval"
+				 type="HTML">
 				<font style="font-size: 10pt; font-family: Arial;">
 				Your Gallery Art Password is:
 				<br><br>

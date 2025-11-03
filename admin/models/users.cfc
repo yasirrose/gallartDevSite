@@ -21,25 +21,26 @@
 	
 		<cfset var qUsers='' />
 		
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 
 	   	<cfquery name="qUsers" datasource="#application.dsource#">
 	      	SELECT pk_users,fname,lname,email as seller_email,phone,cellPhone,businessPhone,otherphone,website,password
 	      	FROM users U
 			LEFT OUTER JOIN products P on U.pk_users = P.fk_users
 			WHERE 0=0
-			<cfif arguments.Lname neq ''>
+			<cfif arguments.Lname neq '' and arguments.Lname neq 'searchLname'>
 	      		AND U.lname like '#arguments.Lname#%'
 	      	</cfif>
-			<cfif arguments.Email neq ''>
+			<cfif arguments.Email neq '' and arguments.Email neq 'searchEmail'>
 	      		AND U.email like '#arguments.Email#%'
 	      	</cfif>
-			<cfif arguments.Title neq ''>
+			<cfif arguments.Title neq '' and arguments.Title neq 'searchTitle'>
 				and name like '%#arguments.Title#%'
 			</cfif>
-			<cfif arguments.Artist neq ''>
+			<cfif arguments.Artist neq '' and arguments.Artist neq 'searchArtist'>
 				and manufacturer like '%#arguments.Artist#%'
 			</cfif>
-			<cfif arguments.Listed neq ''>
+			<cfif arguments.Listed neq '' and arguments.Listed neq 'searchListed'>
 				<cfif arguments.Listed eq 'Yes'>
 					AND P.name is not null
 				</cfif>
@@ -111,13 +112,14 @@
 	    </cfif>
 	</cffunction>
 
-	<cffunction name="editUserFromForm" access="remote" output="false" returntype="boolean">
+	<cffunction name="editUserFromForm" access="remote" output="false" returntype="any">
 	    <cfargument name="pk_users" type="string" default="">
 	    <cfargument name="fname" type="string" default="">
 	    <cfargument name="lname" type="string" default="">
 	    <cfargument name="seller_email" type="string" default="">
 		<cfargument name="phone" type="string" default="">
 		<cfargument name="password" type="string" default="">
+		<cfargument name="moduleName" type="string" default="">
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
 
@@ -145,65 +147,101 @@
 			<cfset otherphone = "">
 		</cfif>
 	    
-	    <cfset var success = true />
+	    <cfset var response = 'success' />
 	    
 	    	<cftry>
 	    
-	    	<cfif arguments.pk_users eq ''>
-		    	
-		    	<cfquery name="addUser" datasource="#application.dsource#"> 
-	                INSERT into users
-	                (
-	                	fname,
-	                	lname,
-	                	email,
-						phone,
-						cellphone,
-						businessphone,
-						otherphone,
-						password
-	                )
-	                values
-                	(
-						'#arguments.fname#',
-						'#arguments.lname#',
-						'#arguments.seller_email#',
-						'#phone#',
-						'#cellphone#',
-						'#businessphone#',
-						'#otherphone#',
-						'#arguments.password#'
-					)
-	            </cfquery>
-		
+				<cfif arguments.pk_users eq ''>
+
+					<cfquery name="checkEmail" datasource="#application.dsource#">
+						SELECT pk_users FROM users 
+						WHERE LOWER(email) = LOWER(<cfqueryparam value="#arguments.seller_email#" cfsqltype="cf_sql_varchar">)
+					</cfquery>
+
+					<cfif checkEmail.recordCount GT 0>
+						<!--- Email already exists --->
+						<cfset response = "duplicate" />
+						<cfreturn response>
+					</cfif>
+					
+					<cfquery name="addUser" datasource="#application.dsource#"> 
+						INSERT into users
+						(
+							fname,
+							lname,
+							email,
+							phone,
+							cellphone,
+							businessphone,
+							otherphone,
+							password
+						)
+						values
+						(
+							'#arguments.fname#',
+							'#arguments.lname#',
+							'#arguments.seller_email#',
+							'#phone#',
+							'#cellphone#',
+							'#businessphone#',
+							'#otherphone#',
+							'#arguments.password#'
+						)
+					</cfquery>
+
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Insert'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+					</cfquery>
 			
-			<cfelse>
-			
-				<cfquery name="editUser" datasource="#application.dsource#"> 
-	                UPDATE users SET 
-	                fname = '#arguments.fname#',
-	                lname = '#arguments.lname#',
-					email = '#arguments.seller_email#',
-					phone = '#phone#',
-					cellphone = '#cellphone#',
-					businessphone = '#businessphone#',
-					otherphone = '#otherphone#',
-					password = '#arguments.password#'
-	                WHERE pk_users = '#arguments.pk_users#'
-	            </cfquery>
-			
-			</cfif>
+				
+				<cfelse>
+				
+					<cfquery name="editUser" datasource="#application.dsource#"> 
+						UPDATE users SET 
+						fname = '#arguments.fname#',
+						lname = '#arguments.lname#',
+						email = '#arguments.seller_email#',
+						phone = '#phone#',
+						cellphone = '#cellphone#',
+						businessphone = '#businessphone#',
+						otherphone = '#otherphone#',
+						password = '#arguments.password#'
+						WHERE pk_users = '#arguments.pk_users#'
+					</cfquery>
+
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Update'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+					</cfquery>
+				
+				</cfif>
 	    
 	    			
-			<cfcatch type="any"><cfset success = false /></cfcatch>
+				<cfcatch type="any">
+					<cfset response = 'error' />
+				</cfcatch>
 			</cftry>
 			
-		<cfreturn success> 
+		<cfreturn response> 
 	        
 	</cffunction>
 	
 	<cffunction name="deleteUser" access="remote">
 		<cfargument name="pk_users" type="string" default="">
+		<cfargument name="moduleName" type="string" default="">
 		
 		<cfset var success = true />
 		
@@ -215,6 +253,17 @@
 
 			<cfquery name="deleteUserListings" datasource="#application.dsource#">
 				DELETE from products WHERE fk_users = '#arguments.pk_users#'
+			</cfquery>
+
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 			</cfquery>
 		
 			<cfcatch type="any">
@@ -268,17 +317,17 @@
 
 	
 	<cffunction name="lookupUsers" access="remote" returntype="string">
-    <cfargument name="search" type="any" required="false" default="">
+    	<cfargument name="search" type="any" required="false" default="">
 
-    <!--- Do search --->
-    <cfquery datasource="#application.dsource#" name="data">
-       SELECT email
-       FROM users
-       WHERE email LIKE '#ARGUMENTS.search#%'
-       ORDER BY email
-    </cfquery>
-   <!--- And return it --->
-   <cfreturn ValueList(data.email)>
+		<!--- Do search --->
+		<cfquery datasource="#application.dsource#" name="data">
+			SELECT email
+			FROM users
+			WHERE email LIKE '#ARGUMENTS.search#%'
+			ORDER BY email
+		</cfquery>
+		<!--- And return it --->
+   		<cfreturn ValueList(data.email)>
    </cffunction> 
 
 
@@ -302,8 +351,8 @@
 		<cfset var qUsers='' />
 
 		   <cfquery name="qUsers" datasource="#application.dsource#">
-		      SELECT UPPER(lname)+','+UPPER(fname) as full_seller_name,*
-		      FROM users
+		      SELECT lname +', '+ fname  as full_seller_name,*
+		      FROM users WHERE fname is not null and fname !='' and lname is not null and lname !='' and fname !='?????' and fname !='88952634'
 		      order by lname, fname
 		   </cfquery>
 	   

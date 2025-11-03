@@ -50,13 +50,13 @@
 						<strong>Gallery Price from:</strong>
 					</td>
 					<td width="100">
-						$<cfinput name="FromPrice" size="10" />
+						$<cfinput name="FromPrice" size="10" maxlength="10"/>
 					</td>
 					<td width="25" style="font-size: 10px;">
 						<strong>to:</strong>
 					</td>
 					<td nowrap>
-						$<cfinput name="ToPrice" size="10" />
+						$<cfinput name="ToPrice" size="10" maxlength="10"/>
 					</td>
 				</tr>
 			</table>
@@ -83,415 +83,417 @@
     </form>--->
 	<tr>
 		<td colspan="2">
-			<cfform method="post" action="index.cfm?event=massupdate.results">
-			<table cellspacing="0" cellpadding="0" border="0" width="75%" align="left">
-				<tr>
-			    	<td colspan="2" style="font-size: 11px;"><strong>SEARCH:</strong></td>
-			  	</tr>
-				<tr>
-					<td valign="top" width="50%">
-						<table cellspacing="0" cellpadding="3" border="0" width="100%">
-							<tr>
-								<td width="100" style="font-size: 10px;">
-									<strong>Art ID:</strong>
-								</td>
-								<td>
-									<cfinput name="modelno" size="10" />
-								</td>
-			
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Title:</strong>
-								</td>
-								<td>
-									<cfinput name="name" size="30" />
-								</td>
-			
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Artist:</strong>
-								</td>
-								<td>
-									<select name="manufacturer" class="select2">
-										<option value="">All
-										<cfoutput query="getAllArtists" group="manufacturer">
-										<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-											<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
-										</cfif>
-										</cfoutput>
+			<cfform method="post" action="index.cfm?event=massupdate.results" onsubmit="return disableSubmitBtn()">
+				<table cellspacing="0" cellpadding="0" border="0" width="75%" align="left">
+					<tr>
+						<td colspan="2" style="font-size: 11px;"><strong>SEARCH:</strong></td>
+					</tr>
+					<tr>
+						<td valign="top" width="50%">
+							<table cellspacing="0" cellpadding="3" border="0" width="100%">
+								<tr>
+									<td width="100" style="font-size: 10px;">
+										<strong>Art ID:</strong>
+									</td>
+									<td>
+										<cfinput name="modelno" size="10" maxlength="10"/>
+									</td>
+				
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Title:</strong>
+									</td>
+									<td>
+										<cfinput name="name" size="30" maxlength="30"/>
+									</td>
+				
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Artist:</strong>
+									</td>
+									<td>
+										<select name="manufacturer" class="select2">
+											<option value="">All
+											<cfoutput query="getAllArtists" group="manufacturer">
+											<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+												<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
+											</cfif>
+											</cfoutput>
+											</select>
+									</td>
+				
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Medium:</strong>
+									</td>
+									<td>
+										<select name="path" class="select2">
+											<option value="">All
+											<cfoutput query="getAllMedium">
+												<option value="#path#">#path#
+											
+										</cfoutput></select>
+									</td>
+				
+								</tr>
+
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Art Style:</strong>
+									</td>
+									<td>
+										<cfquery name="qGetStyle" datasource="#application.dsource#">
+											SELECT * 
+											FROM filterOption
+											WHERE filterType = 'Style'
+											ORDER BY filterName ASC
+										</cfquery>
+
+										<select name="artType">
+											<option value="">All
+											<cfoutput query="qGetStyle">
+												<option value="#filterName#">#filterName#</option>
+											
+										</cfoutput></select>
+									</td>
+				
+								</tr>
+
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Art Size:</strong>
+									</td>
+
+									<cfquery name="qGetSize" datasource="#application.dsource#">
+										SELECT * 
+										FROM filterOption
+										WHERE filterType = 'Size'
+										ORDER BY filterName ASC
+									</cfquery>
+
+									<td>
+										<select name="artSize">
+											<option value="">All
+											<cfoutput query="qGetSize">
+												<option value="#filterName#">#filterName#</option>
+											
+										</cfoutput></select>
+									</td>
+				
+								</tr>
+
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Art Type:</strong>
+									</td>
+									<td>
+										<cfquery name="qGetType" datasource="#application.dsource#">
+											SELECT * 
+											FROM filterOption
+											WHERE filterType = 'Type'
+											ORDER BY filterName ASC
+										</cfquery>
+
+										<select name="artTypee">
+											<option value="">All
+											<cfoutput query="qGetType">
+												<option value="#filterName#">#filterName#</option>
+											
+										</cfoutput></select>
+									</td>
+				
+								</tr>
+
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Art Subject:</strong>
+									</td>
+									<td>
+
+										<cfquery name="qGetSubject" datasource="#application.dsource#">
+											SELECT * 
+											FROM filterOption
+											WHERE filterType = 'Subject'
+											ORDER BY filterName ASC
+										</cfquery>
+
+										<select name="artSubject">
+											<option value="">All
+											<cfoutput query="qGetSubject">
+												<option value="#filterName#">#filterName#</option>
+											
+										</cfoutput></select>
+									</td>
+				
+								</tr>
+
+								<tr>
+									<td colspan="2">
+										<table cellspacing="0" cellpadding="0" border="0" width="100%">
+											<tr>
+												<td width="106" style="font-size: 10px;">
+													<strong>Year:</strong>
+												</td>
+												<td width="100">
+													<cfinput name="Year" size="10" maxlength="10"/>
+												</td>
+												<td width="50" style="font-size: 10px;">
+													<strong>Size:</strong>
+												</td>
+												<td>
+													<cfinput type="Text" name="Height" style="width: 50px;" maxlength="4">
+													&nbsp;x&nbsp;
+													<cfinput type="Text" name="Width" style="width: 50px;" maxlength="4"> (HEIGHT X WIDTH)
+												</td>
+											</tr>
+										</table>					
+									</td>
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Description:</strong> (keywords)
+									</td>
+									<td>
+										<cfinput name="caption" size="30" maxlength="30"/>
+									</td>
+				
+								</tr>
+								<tr>
+									<td colspan="2">
+										<table cellspacing="0" cellpadding="0" border="0" width="100%">
+											<tr>
+												<td width="106" style="font-size: 10px;">
+													<strong>Gallery Price from:</strong>
+												</td>
+												<td width="100">
+													$<cfinput name="FromPrice" size="10" maxlength="10"/>
+												</td>
+												<td width="25" style="font-size: 10px;">
+													<strong>to:</strong>
+												</td>
+												<td nowrap>
+													$<cfinput name="ToPrice" size="10" maxlength="10"/>
+												</td>
+											</tr>
+										</table>					
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<table cellspacing="0" cellpadding="0" border="0" width="100%">
+											<tr>
+												<td width="106" style="font-size: 10px;">
+													<strong>Date from:</strong>
+												</td>
+												<td width="100">
+													<cfinput name="FromDate" type="datefield" validate="date" size="10" maxlength="10"/>
+												</td>
+												<td width="25" style="font-size: 10px;">
+													<strong>to:</strong>
+												</td>
+												<td nowrap>
+													<cfinput name="ToDate" type="datefield" validate="date" size="10" maxlength="10"/>
+												</td>
+											</tr>
+										</table>					
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<table cellspacing="0" cellpadding="0" border="0" width="100%">
+											<tr>
+												<td width="106" style="font-size: 10px;">
+													<strong>Last Edit from:</strong>
+												</td>
+												<td width="100">
+													<cfinput name="FromLastedit" type="datefield" validate="date" size="10" maxlength="10"/>
+												</td>
+												<td width="25" style="font-size: 10px;">
+													<strong>to:</strong>
+												</td>
+												<td nowrap>
+													<cfinput name="ToLastedit" type="datefield" validate="date" size="10" maxlength="10"/>
+												</td>
+											</tr>
+										</table>					
+									</td>
+								</tr>
+								<tr>
+									<td style="font-size: 10px;" colspan="2">
+										<strong>Gallery Listings Only:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="gallery_only" value="1" checked>
+									</td>
+				
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Seller:</strong>
+									</td>
+									<td>
+										<select name="SellerId" class="select2">
+											<option value="">All
+											<option value="0">Only Seller Listings
+											<cfoutput query="getAllSellers">
+												<option value="#pk_users#">#full_seller_name#
+											
+										</cfoutput></select>
+									</td>
+				
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Active/Inactive:</strong>
+									</td >
+									<td style="font-size: 10px;">
+										<input type="radio" name="Active" value="1" checked>Active
+										<input type="radio" name="Active" value="0">Inactive
+										<input type="radio" name="Active" value="">All
+									</td>
+				
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Promotion:</strong>
+									</td >
+									<td style="font-size: 10px;">
+										<input type="Checkbox" name="Promotion" value="1">
+										<input type="Hidden" name="Promotion" value="">
+									</td>
+				
+								</tr>
+								<tr>
+									<td style="font-size: 10px;">
+										<strong>Number of Records:</strong>
+									</td >
+									<td style="font-size: 10px;">
+										<select name="number_records">
+											<option value="">All</option>
+											<option value="1">1 - 50</option>
+											<option value="51">51 - 100</option>
+											<option value="101">101 - 150</option>
+											<option value="151">151 - 200</option>
+											<option value="201">201 - 250</option>
+											<option value="251">251 - 300</option>
 										</select>
-								</td>
-			
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Medium:</strong>
-								</td>
-								<td>
-									<select name="path" class="select2">
-										<option value="">All
-										<cfoutput query="getAllMedium">
-											<option value="#path#">#path#
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<table cellspacing="0" cellpadding="0" border="0" width="100%">
+											<tr>
+												<td width="106" style="font-size: 10px;">&nbsp;
+													
+												</td>
+												<td width="20">
+													<input type="Checkbox" name="OnSale" value="1">
+													<input type="Hidden" name="OnSale" value="">
+												</td>
+												<td width="75" style="font-size: 10px;">
+													On Sale
+												</td>
+												<td width="20">
+													<input type="Checkbox" name="Trump" value="1">
+													<input type="Hidden" name="Trump" value="">
+												</td>
+												<td width="75" style="font-size: 10px;">
+													Trump Site
+												</td>
+												<td width="20">
+													<input type="Checkbox" name="Auction" value="1">
+													<input type="Hidden" name="Auction" value="">
+												</td>
+												<td>
+													Auction Site
+												</td>
+												<td width="20">
+													<input type="Checkbox" name="Slideshow">
+													<input type="Hidden" name="Slideshow">
+												</td>
+												<td>
+													Slideshow
+												</td>
+											</tr>
+										</table>					
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<table cellspacing="0" cellpadding="0" border="0" width="100%">
+											<tr>
+												<td width="50" style="font-size: 10px;">&nbsp;
+													
+												</td>
+												<td width="10">
+													<input type="Checkbox" name="Frontshow">
+													<input type="Hidden" name="Frontshow">
+												</td>
+												<td width="70" style="font-size: 10px;">
+													Featured on Home Page
+												</td>
+												<td width="10">
+													<input type="Checkbox" name="BottomHome">
+													<input type="Hidden" name="BottomHome">
+												</td>
+												<td width="70" style="font-size: 10px;">
+													Bottom of Home Page
+												</td>
+											</tr>
+										</table>					
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td valign="top" width="50%">
+							<table cellspacing="0" cellpadding="3" border="0" width="100%">
+								<tr>
+									<td style="font-size: 10pt;">
+										<b>Choose Fields You Want To Display:</b>
+									</td>
+								</tr>
+								<tr>
+									<td style="font-size: 9pt;">
+										<input type="Checkbox" name="displayFields" value="ModelNo" checked>Art ID<br>
+										<input type="Checkbox" name="displayFields" value="Artist" checked>Artist<br>
+										<input type="Checkbox" name="displayFields" value="Medium" checked>Medium<br>
+										<input type="Checkbox" name="displayFields" value="Year">Year<br>
+										<input type="Checkbox" name="displayFields" value="Size">Size<br>
+										<input type="Checkbox" name="displayFields" value="Edition">Edition<br>
+										<input type="Checkbox" name="displayFields" value="Low" checked>Low Estimate<br>
+										<input type="Checkbox" name="displayFields" value="High" checked>High Estimate<br>
+										<input type="Checkbox" name="displayFields" value="Retail" checked>Retail Price<br>
+										<input type="Checkbox" name="displayFields" value="Gallery" checked>Gallery Price<br>
+										<input type="Checkbox" name="displayFields" value="Sale" checked>Sale Price<br>
+										<input type="Checkbox" name="displayFields" value="SellerInfo">Seller Info<br>
+										<input type="Checkbox" name="displayFields" value="Thumbnail" checked>Thumbnail<br>
+										<input type="Checkbox" name="displayFields" value="artType" >Art Style <br>
+										<input type="Checkbox" name="displayFields" value="artSize" >Art Size <br>
+										<input type="Checkbox" name="displayFields" value="artSubject" >Art Subject<br>
+										<input type="Checkbox" name="displayFields" value="artTypee" >Art Type<br>
+										<input type="Checkbox" name="displayFields" value="quantity" >Quantity<br>
+										<input type="Checkbox" name="displayFields" value="datestamp" >Listing Date<br>
+										<input type="Checkbox" name="displayFields" value="lastEdit" >Last Edit<br>
+										<input type="Checkbox" name="displayFields" value="location_notes" >Notes <br>
+										<input type="Checkbox" name="displayFields" value="caption" >Description <br>
+										<input type="Checkbox" name="displayFields" value="Slideshow" >Slide Show <br>
+										<input type="Checkbox" name="displayFields" value="Frontshow" >Featured on Home Page <br>
+										<input type="Checkbox" name="displayFields" value="BottomHome" >Bottom on Home Page <br>
+										<input type="Checkbox" name="displayFields" value="Promotion" >Promotion  
 										
-									</cfoutput></select>
-								</td>
-			
-							</tr>
-
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Art Style:</strong>
-								</td>
-								<td>
-									<cfquery name="qGetStyle" datasource="#application.dsource#">
-										SELECT * 
-										FROM filterOption
-										WHERE filterType = 'Style'
-										ORDER BY filterName ASC
-									</cfquery>
-
-									<select name="artType">
-										<option value="">All
-										<cfoutput query="qGetStyle">
-											<option value="#filterName#">#filterName#</option>
-										
-									</cfoutput></select>
-								</td>
-			
-							</tr>
-
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Art Size:</strong>
-								</td>
-
-								<cfquery name="qGetSize" datasource="#application.dsource#">
-									SELECT * 
-									FROM filterOption
-									WHERE filterType = 'Size'
-									ORDER BY filterName ASC
-								</cfquery>
-
-								<td>
-									<select name="artSize">
-										<option value="">All
-										<cfoutput query="qGetSize">
-											<option value="#filterName#">#filterName#</option>
-										
-									</cfoutput></select>
-								</td>
-			
-							</tr>
-
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Art Type:</strong>
-								</td>
-								<td>
-									<cfquery name="qGetType" datasource="#application.dsource#">
-										SELECT * 
-										FROM filterOption
-										WHERE filterType = 'Type'
-										ORDER BY filterName ASC
-									</cfquery>
-
-									<select name="artTypee">
-										<option value="">All
-										<cfoutput query="qGetType">
-											<option value="#filterName#">#filterName#</option>
-										
-									</cfoutput></select>
-								</td>
-			
-							</tr>
-
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Art Subject:</strong>
-								</td>
-								<td>
-
-									<cfquery name="qGetSubject" datasource="#application.dsource#">
-										SELECT * 
-										FROM filterOption
-										WHERE filterType = 'Subject'
-										ORDER BY filterName ASC
-									</cfquery>
-
-									<select name="artSubject">
-										<option value="">All
-										<cfoutput query="qGetSubject">
-											<option value="#filterName#">#filterName#</option>
-										
-									</cfoutput></select>
-								</td>
-			
-							</tr>
-
-							<tr>
-								<td colspan="2">
-									<table cellspacing="0" cellpadding="0" border="0" width="100%">
-										<tr>
-											<td width="106" style="font-size: 10px;">
-												<strong>Year:</strong>
-											</td>
-											<td width="100">
-												<cfinput name="Year" size="10" />
-											</td>
-											<td width="50" style="font-size: 10px;">
-												<strong>Size:</strong>
-											</td>
-											<td>
-												<cfinput type="Text" name="Height" style="width: 50px;">&nbsp;x&nbsp;<cfinput type="Text" name="Width" style="width: 50px;"> (HEIGHT X WIDTH)
-											</td>
-										</tr>
-									</table>					
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Description:</strong> (keywords)
-								</td>
-								<td>
-									<cfinput name="caption" size="30" />
-								</td>
-			
-							</tr>
-							<tr>
-								<td colspan="2">
-									<table cellspacing="0" cellpadding="0" border="0" width="100%">
-										<tr>
-											<td width="106" style="font-size: 10px;">
-												<strong>Gallery Price from:</strong>
-											</td>
-											<td width="100">
-												$<cfinput name="FromPrice" size="10" />
-											</td>
-											<td width="25" style="font-size: 10px;">
-												<strong>to:</strong>
-											</td>
-											<td nowrap>
-												$<cfinput name="ToPrice" size="10" />
-											</td>
-										</tr>
-									</table>					
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<table cellspacing="0" cellpadding="0" border="0" width="100%">
-										<tr>
-											<td width="106" style="font-size: 10px;">
-												<strong>Date from:</strong>
-											</td>
-											<td width="100">
-												<cfinput name="FromDate" type="datefield" validate="date" size="10" />
-											</td>
-											<td width="25" style="font-size: 10px;">
-												<strong>to:</strong>
-											</td>
-											<td nowrap>
-												<cfinput name="ToDate" type="datefield" validate="date" size="10" />
-											</td>
-										</tr>
-									</table>					
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<table cellspacing="0" cellpadding="0" border="0" width="100%">
-										<tr>
-											<td width="106" style="font-size: 10px;">
-												<strong>Last Edit from:</strong>
-											</td>
-											<td width="100">
-												<cfinput name="FromLastedit" type="datefield" validate="date" size="10" />
-											</td>
-											<td width="25" style="font-size: 10px;">
-												<strong>to:</strong>
-											</td>
-											<td nowrap>
-												<cfinput name="ToLastedit" type="datefield" validate="date" size="10" />
-											</td>
-										</tr>
-									</table>					
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;" colspan="2">
-									<strong>Gallery Listings Only:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									<input type="checkbox" name="gallery_only" value="1" checked>
-								</td>
-			
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Seller:</strong>
-								</td>
-								<td>
-									<select name="SellerId" class="select2">
-										<option value="">All
-										<option value="0">Only Seller Listings
-										<cfoutput query="getAllSellers">
-											<option value="#pk_users#">#full_seller_name#
-										
-									</cfoutput></select>
-								</td>
-			
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Active/Inactive:</strong>
-								</td >
-								<td style="font-size: 10px;">
-									<input type="radio" name="Active" value="1" checked>Active
-									<input type="radio" name="Active" value="0">Inactive
-									<input type="radio" name="Active" value="">All
-								</td>
-			
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									<strong>Promotion:</strong>
-								</td >
-								<td style="font-size: 10px;">
-									<input type="Checkbox" name="Promotion" value="1">
-									<input type="Hidden" name="Promotion" value="">
-								</td>
-			
-							</tr>
-                            <tr>
-								<td style="font-size: 10px;">
-									<strong>Number of Records:</strong>
-								</td >
-								<td style="font-size: 10px;">
-									<select name="number_records">
-                                    	<option value="">All</option>
-                                        <option value="1">1 - 50</option>
-                                        <option value="51">51 - 100</option>
-                                        <option value="101">101 - 150</option>
-                                        <option value="151">151 - 200</option>
-                                        <option value="201">201 - 250</option>
-                                        <option value="251">251 - 300</option>
-                                    </select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<table cellspacing="0" cellpadding="0" border="0" width="100%">
-										<tr>
-											<td width="106" style="font-size: 10px;">&nbsp;
-												
-											</td>
-											<td width="20">
-												<input type="Checkbox" name="OnSale" value="1">
-												<input type="Hidden" name="OnSale" value="">
-											</td>
-											<td width="75" style="font-size: 10px;">
-												On Sale
-											</td>
-											<td width="20">
-												<input type="Checkbox" name="Trump" value="1">
-												<input type="Hidden" name="Trump" value="">
-											</td>
-											<td width="75" style="font-size: 10px;">
-												Trump Site
-											</td>
-											<td width="20">
-												<input type="Checkbox" name="Auction" value="1">
-												<input type="Hidden" name="Auction" value="">
-											</td>
-											<td>
-												Auction Site
-											</td>
-											<td width="20">
-												<input type="Checkbox" name="Slideshow">
-												<input type="Hidden" name="Slideshow">
-											</td>
-											<td>
-												Slideshow
-											</td>
-										</tr>
-									</table>					
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<table cellspacing="0" cellpadding="0" border="0" width="100%">
-										<tr>
-											<td width="50" style="font-size: 10px;">&nbsp;
-												
-											</td>
-											<td width="10">
-												<input type="Checkbox" name="Frontshow">
-												<input type="Hidden" name="Frontshow">
-											</td>
-											<td width="70" style="font-size: 10px;">
-												Featured on Home Page
-											</td>
-											<td width="10">
-												<input type="Checkbox" name="BottomHome">
-												<input type="Hidden" name="BottomHome">
-											</td>
-											<td width="70" style="font-size: 10px;">
-												Bottom of Home Page
-											</td>
-										</tr>
-									</table>					
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td valign="top" width="50%">
-						<table cellspacing="0" cellpadding="3" border="0" width="100%">
-							<tr>
-								<td style="font-size: 10pt;">
-									<b>Choose Fields You Want To Display:</b>
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 9pt;">
-									<input type="Checkbox" name="displayFields" value="ModelNo" checked>Art ID<br>
-									<input type="Checkbox" name="displayFields" value="Artist" checked>Artist<br>
-									<input type="Checkbox" name="displayFields" value="Medium" checked>Medium<br>
-									<input type="Checkbox" name="displayFields" value="Year">Year<br>
-									<input type="Checkbox" name="displayFields" value="Size">Size<br>
-									<input type="Checkbox" name="displayFields" value="Edition">Edition<br>
-									<input type="Checkbox" name="displayFields" value="Low" checked>Low Estimate<br>
-									<input type="Checkbox" name="displayFields" value="High" checked>High Estimate<br>
-									<input type="Checkbox" name="displayFields" value="Retail" checked>Retail Price<br>
-									<input type="Checkbox" name="displayFields" value="Gallery" checked>Gallery Price<br>
-									<input type="Checkbox" name="displayFields" value="Sale" checked>Sale Price<br>
-									<input type="Checkbox" name="displayFields" value="SellerInfo">Seller Info<br>
-									<input type="Checkbox" name="displayFields" value="Thumbnail" checked>Thumbnail<br>
-									<input type="Checkbox" name="displayFields" value="artType" >Art Style <br>
-									<input type="Checkbox" name="displayFields" value="artSize" >Art Size <br>
-									<input type="Checkbox" name="displayFields" value="artSubject" >Art Subject<br>
-									<input type="Checkbox" name="displayFields" value="artTypee" >Art Type<br>
-									<input type="Checkbox" name="displayFields" value="quantity" >Quantity<br>
-									<input type="Checkbox" name="displayFields" value="datestamp" >Listing Date<br>
-									<input type="Checkbox" name="displayFields" value="lastEdit" >Last Edit<br>
-									<input type="Checkbox" name="displayFields" value="location_notes" >Notes <br>
-									<input type="Checkbox" name="displayFields" value="caption" >Description <br>
-									<input type="Checkbox" name="displayFields" value="Slideshow" >Slide Show <br>
-									<input type="Checkbox" name="displayFields" value="Frontshow" >Featured on Home Page <br>
-									<input type="Checkbox" name="displayFields" value="BottomHome" >Bottom on Home Page <br>
-									<input type="Checkbox" name="displayFields" value="Promotion" >Promotion  
-									
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-			    	<td colspan="2" style="padding-top: 10px;" align="center">
-						<input type="Reset" value="Reset">
-						<input type="Submit" value="Search">
-					</td>
-			  	</tr>
-			</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="padding-top: 10px;" align="center">
+							<input type="Reset" value="Reset">
+							<input type="Submit" id="submitBtn" value="Search">
+						</td>
+					</tr>
+				</table>
 			</cfform>
 		</td>
 	</tr>
@@ -500,58 +502,68 @@
 
 <script>
 	$(document).ready(function () {
-			 $('.select2').select2({
-				 matcher: function (params, data) {
-					 if ($.trim(params.term) === '') {
-						 return data;
-					 }
+		$('.select2').select2({
+			matcher: function (params, data) {
+				if ($.trim(params.term) === '') {
+					return data;
+				}
 
-					 // Prevent matching placeholder during search
-					 if (data.id === '') {
-						 return null;
-					 }
+				// Prevent matching placeholder during search
+				if (data.id === '') {
+					return null;
+				}
 
-					 var term = params.term.toLowerCase();
-					 var text = data.text.toLowerCase();
+				var term = params.term.toLowerCase();
+				var text = data.text.toLowerCase();
 
-					 // Starts with match
-					 if (text.startsWith(term)) {
-						 return data;
-					 }
+				// Starts with match
+				if (text.startsWith(term)) {
+					return data;
+				}
 
-					 // Contains match (less priority)
-					 if (text.indexOf(term) > -1) {
-						 var modifiedData = $.extend({}, data, true);
-						 modifiedData.text = data.text + ' ';
-						 return modifiedData;
-					 }
+				// Contains match (less priority)
+				if (text.indexOf(term) > -1) {
+					var modifiedData = $.extend({}, data, true);
+					modifiedData.text = data.text + ' ';
+					return modifiedData;
+				}
 
-					 return null;
-				 },
+				return null;
+			},
 
-				 sorter: function (data) {
-					 var term = $('.select2-search__field').val().toLowerCase();
-					 return data.sort(function (a, b) {
-						 var aStarts = a.text.toLowerCase().startsWith(term);
-						 var bStarts = b.text.toLowerCase().startsWith(term);
+			sorter: function (data) {
+				var term = $('.select2-search__field').val().toLowerCase();
+				return data.sort(function (a, b) {
+					var aStarts = a.text.toLowerCase().startsWith(term);
+					var bStarts = b.text.toLowerCase().startsWith(term);
 
-						 if (aStarts && !bStarts) return -1;
-						 if (!aStarts && bStarts) return 1;
-						 return 0;
-					 });
-				 }
-			 });
+					if (aStarts && !bStarts) return -1;
+					if (!aStarts && bStarts) return 1;
+					return 0;
+				});
+			}
+		});
 
-			  $('form').on('reset', function () {
-				// Wait a tiny bit for the form to actually reset its elements
-				setTimeout(function () {
-					$('.select2').val(null).trigger('change'); // clear the select2
-				}, 0);
-			});
+		$('form').on('reset', function () {
+			// Wait a tiny bit for the form to actually reset its elements
+			setTimeout(function () {
+				$('.select2').val(null).trigger('change'); // clear the select2
+			}, 0);
+		});
 
-		 });
+	});
 
 
-		 
+	function disableSubmitBtn() {
+		// get the button directly by ID (works reliably)
+		var btn = document.getElementById('submitBtn');
+		if (btn) {
+			btn.disabled = true;        // disable button to prevent double-submit
+			btn.value = 'Loading...';   // give user feedback
+		}
+		return true; // allow the form to submit
+	} 
 
 </script>
+
+

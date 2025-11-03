@@ -81,6 +81,7 @@
 		<cfargument name="SIZE" type="string" default="">
 		<cfargument name="ADDITIONAL_DETAILS" type="string" default="">
 		<cfargument name="PHONETYPE" type="string" default="">
+		<cfargument name="moduleName" type="string" default="">
 	    
 	    <cfset var success = true />
 		
@@ -91,61 +92,85 @@
 		
 	    	<cftry>
 	    
-	    	<cfif arguments.pk_purchases_consignments eq ''>
-		    	
-		    	<cfquery name="addPurchasesConsignments" datasource="#application.dsource#"> 
-	               INSERT into purchases_consignments
-					(	
-						NAME,
-						PHONE,
-						CUSTOMER_EMAIL,
-						<!---IMAGE_NAME,--->
-						ARTIST,
-						TITLE,
-						MEDIUM,
-						SIZE,
-						ADDITIONAL_DETAILS
-					)
-					values
-					(
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PHONE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CUSTOMER_EMAIL#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cffile.serverFile#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTIST#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.TITLE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MEDIUM#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDITIONAL_DETAILS#">
-					)
-	            </cfquery>
-		
+				<cfif arguments.pk_purchases_consignments eq ''>
+					
+					<cfquery name="addPurchasesConsignments" datasource="#application.dsource#"> 
+					INSERT into purchases_consignments
+						(	
+							NAME,
+							PHONE,
+							CUSTOMER_EMAIL,
+							<!---IMAGE_NAME,--->
+							ARTIST,
+							TITLE,
+							MEDIUM,
+							SIZE,
+							ADDITIONAL_DETAILS
+						)
+						values
+						(
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PHONE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CUSTOMER_EMAIL#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cffile.serverFile#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTIST#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.TITLE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MEDIUM#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDITIONAL_DETAILS#">
+						)
+					</cfquery>
+
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Insert'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+					</cfquery>
 			
-			<cfelse>
-			
-				<cfquery name="editPurchasesConsignments" datasource="#application.dsource#"> 
-	                UPDATE purchases_consignments SET 
-		                NAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
-		                FNAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FNAME#">,
-		                LNAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LNAME#">,
-						PHONE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PHONE#">,
-						EMAIL = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CUSTOMER_EMAIL#">,
-						<!---<cfif len(arguments.THISIMAGE)>
-							IMAGE_NAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cffile.serverFile#">,
-						</cfif>--->
-						ARTIST = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTIST#">,
-						TITLE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.TITLE#">,
-						MEDIUM = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MEDIUM#">,
-						SIZE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
-						PHONETYPE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PHONETYPE#">,
-						ADDITIONAL_DETAILS = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDITIONAL_DETAILS#">
-	                WHERE pk_purchases_consignments = #arguments.pk_purchases_consignments#
-	            </cfquery>
-			
-			</cfif>
+				
+				 <cfelse>
+				
+					<cfquery name="editPurchasesConsignments" datasource="#application.dsource#"> 
+						UPDATE purchases_consignments SET 
+							NAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
+							FNAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FNAME#">,
+							LNAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LNAME#">,
+							PHONE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PHONE#">,
+							EMAIL = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CUSTOMER_EMAIL#">,
+							<!---<cfif len(arguments.THISIMAGE)>
+								IMAGE_NAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cffile.serverFile#">,
+							</cfif>--->
+							ARTIST = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTIST#">,
+							TITLE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.TITLE#">,
+							MEDIUM = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MEDIUM#">,
+							SIZE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
+							PHONETYPE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PHONETYPE#">,
+							ADDITIONAL_DETAILS = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDITIONAL_DETAILS#">
+						WHERE pk_purchases_consignments = #arguments.pk_purchases_consignments#
+					</cfquery>
+
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Update'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+					</cfquery>
+				
+				</cfif>
 	    
 	    			
-			<cfcatch type="any"><cfset success = false /></cfcatch>
+				<cfcatch type="any">
+					<cfset success = false />
+				</cfcatch>
 			</cftry>
 			
 		<cfreturn success> 
@@ -154,17 +179,32 @@
 	
 	<cffunction name="deletePurchasesConsignments" access="remote">
 		<cfargument name="pk_purchases_consignments" type="string" default="">
+		<cfargument name="moduleName" type="string" default="">
+		
 		
 		<cfset var success = true />
 		
 		<cftry>
 	
-		<cfquery name="deletePurchasesConsignments" datasource="#application.dsource#"> 
-           	DELETE from purchases_consignments
-            WHERE pk_purchases_consignments = #arguments.pk_purchases_consignments#
-        </cfquery>
-		
-		<cfcatch type="any"><cfset success = false /></cfcatch>
+			<cfquery name="deletePurchasesConsignments" datasource="#application.dsource#"> 
+				DELETE from purchases_consignments
+				WHERE pk_purchases_consignments = #arguments.pk_purchases_consignments#
+			</cfquery>
+
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
+			
+			<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
 		</cftry>
 	
 		<cfreturn success />

@@ -66,54 +66,54 @@
 		
 	    	<cftry>
 	    
-	    	<cfif arguments.pk_event_registration_title eq ''>
-		    	
-		    	<cfquery name="addRegistrationTitle" datasource="#application.dsource#"> 
-	               INSERT into event_registration_title
-					(	
-						event_title,
-						event_date,
-						event_location,
-						isCurrent
-					)
-					values
-					(
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_title#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_date#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_location#">,
-						<cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.isCurrent),DE('1'),DE('0'))#">
-					)
-					SELECT @@identity as uid 
-	            </cfquery>
-		
-				<cfset thisId =  addRegistrationTitle.uid />
+				<cfif arguments.pk_event_registration_title eq ''>
+					
+					<cfquery name="addRegistrationTitle" datasource="#application.dsource#"> 
+					INSERT into event_registration_title
+						(	
+							event_title,
+							event_date,
+							event_location,
+							isCurrent
+						)
+						values
+						(
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_title#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_date#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_location#">,
+							<cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.isCurrent),DE('1'),DE('0'))#">
+						)
+						SELECT @@identity as uid 
+					</cfquery>
 			
-			<cfelse>
-			
-				<cfquery name="editRegistrationTitle" datasource="#application.dsource#"> 
-	                UPDATE event_registration_title SET 
-		                event_title = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_title#">,
-						event_date = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_date#">,
-						event_location = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_location#">,
-						isCurrent = <cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.isCurrent),DE('1'),DE('0'))#">
-	                WHERE pk_event_registration_title = #arguments.pk_event_registration_title#
-	            </cfquery>
+					<cfset thisId =  addRegistrationTitle.uid />
 				
-				<cfset thisId =  arguments.pk_event_registration_title />
-			
-			</cfif>
-			
-			<cfif len(arguments.isCurrent)>
-				<cfquery datasource="#application.dsource#"> 
-	               UPDATE  event_registration_title SET
-				   isCurrent = 0
-				   WHERE pk_event_registration_title <> #thisId#
-	            </cfquery>
-			</cfif>
+				<cfelse>
+				
+					<cfquery name="editRegistrationTitle" datasource="#application.dsource#"> 
+						UPDATE event_registration_title SET 
+							event_title = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_title#">,
+							event_date = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_date#">,
+							event_location = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_location#">,
+							isCurrent = <cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.isCurrent),DE('1'),DE('0'))#">
+						WHERE pk_event_registration_title = #arguments.pk_event_registration_title#
+					</cfquery>
+					
+					<cfset thisId =  arguments.pk_event_registration_title />
+				
+				</cfif>
+				
+				<cfif len(arguments.isCurrent)>
+					<cfquery datasource="#application.dsource#"> 
+					UPDATE  event_registration_title SET
+					isCurrent = 0
+					WHERE pk_event_registration_title <> #thisId#
+					</cfquery>
+				</cfif>
 	    			
-			<cfcatch type="any">
-                <cfset success = false />
-			</cfcatch>
+				<cfcatch type="any">
+					<cfset success = false />
+				</cfcatch>
 			</cftry> 
 			
 		<cfreturn success> 
@@ -160,19 +160,19 @@
 			INNER JOIN event_registration_title ERT 
 			ON ER.fk_event_registration_title = ERT.pk_event_registration_title
 			WHERE 0=0
-			<cfif arguments.Lname neq ''>
+			<cfif arguments.Lname neq '' and arguments.Lname neq 'searchLname'>
 	      		AND ER.lname like '#arguments.Lname#%'
 	      	</cfif>
-			<cfif arguments.Email neq ''>
+			<cfif arguments.Email neq '' and arguments.Email neq 'searchEmail'>
 	      		AND ER.email like '%#arguments.Email#%'
 	      	</cfif>
-			<cfif arguments.EventTitle neq ''>
+			<cfif arguments.EventTitle neq '' and arguments.EventTitle neq 'searchEventTitle'>
 	      		AND ERT.event_title like '%#arguments.EventTitle#%'
 	      	</cfif>
-			<cfif arguments.fromDate neq ''>
+			<cfif arguments.fromDate neq '' and arguments.fromDate neq 'searchFromDate'>
 				AND ER.datestamp >= '#dateFormat(arguments.fromDate)#'
 			</cfif>
-			<cfif arguments.toDate neq ''>
+			<cfif arguments.toDate neq '' and arguments.toDate neq 'searchToDate'>
 				AND ER.datestamp <= '#dateFormat(arguments.toDate)#'
 			</cfif>
 	      	<cfif gridsortcolumn neq ''>

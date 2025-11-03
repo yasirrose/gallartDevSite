@@ -32,32 +32,32 @@
    <cfif FORM.submitted>
       <cfset errorMsg = "" />
       <cfif len(form.phone) AND NOT isValid("regex",form.phone,"^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
-      <cfset errorMsg = "Please enter your phone number in the format (xxx) xxx-xxxx <br/>" />
-   </cfif>
-   <cfif errorMsg NEQ "">
-      <cfset phoneError = true />
+         <cfset errorMsg = "Please enter your phone number in the format (xxx) xxx-xxxx <br/>" />
+      </cfif>
+      <cfif errorMsg NEQ "">
+         <cfset phoneError = true />
       <cfelse>
-      <cftry>
-         <!--- Decrypt the check value. --->
-         <cfset strCaptcha = Decrypt( FORM.captcha_check, "gallart-is-the-best", "CFMX_COMPAT", "HEX"	) />
-         <cfif (strCaptcha EQ FORM.captcha)>
-            <cfset blnIsBot = false />
-         </cfif>
-         <cfcatch>
-            <cfset blnIsBot = true />
-         </cfcatch>
-      </cftry>
-   </cfif>
+         <cftry>
+            <!--- Decrypt the check value. --->
+            <cfset strCaptcha = Decrypt( FORM.captcha_check, "gallart-is-the-best", "CFMX_COMPAT", "HEX"	) />
+            <cfif (strCaptcha EQ FORM.captcha)>
+               <cfset blnIsBot = false />
+            </cfif>
+            <cfcatch>
+               <cfset blnIsBot = true />
+            </cfcatch>
+         </cftry>
+      </cfif>
    </cfif>
    <cfset arrValidChars = ListToArray(
-   "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z," &
-   "2,3,4,5,6,7,8,9"
+      "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z," &
+      "2,3,4,5,6,7,8,9"
    ) />
    <!--- Now, shuffle the array. --->
    <cfset CreateObject( "java", "java.util.Collections"	).Shuffle(	arrValidChars )	/>
    <cfset strCaptcha = (
-   arrValidChars[ 1 ] &
-   arrValidChars[ 2 ] 
+      arrValidChars[ 1 ] &
+      arrValidChars[ 2 ] 
    ) />
    <cfset FORM.captcha_check = Encrypt( strCaptcha,"gallart-is-the-best", "CFMX_COMPAT", "HEX" ) />
 </cfsilent>
@@ -975,7 +975,18 @@
                                                                               insert into leads (name, notes, email, phone, otherphone, cellphone, businessphone, maillist, artists, titles)
                                                                               values('#form.name#', '#form.comments#', '#form.email#', '#phone#', '#otherphone#', '#cellphone#', '#businessphone#', '#form.list#','#productinfo.manufacturer#','#productinfo.name#')
                                                                            </cfquery>
-                                                                        
+
+                                                                           <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+                                                                           <cfset date = now()>
+                                                                           <cfset moduleName = 'Artwork Inquire'>
+                                                                           <cfset action = 'Insert'>
+                                                                           
+                                                                           <cfquery name="addLog" datasource="#application.dsource#" >
+                                                                              INSERT INTO logs 
+                                                                                 ( moduleName, ipAddress, date, action)
+                                                                                 VALUES
+                                                                                 ( '#moduleName#', '#ipAddress#', #date#, '#action#')
+                                                                           </cfquery>
                                                                        
                                                                            <cfmail 
                                                                                  server="#servername#" 

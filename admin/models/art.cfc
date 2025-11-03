@@ -52,8 +52,10 @@
 			<cfset arguments.toPrice 	= rereplace(arguments.toPrice, "[^0-9|.]", "", "all")>
 		</cfif>
 
+		
+
 	   	<cfquery name="qListings" datasource="#application.dsource#">
-	      	SELECT CONVERT(CHAR(9),datestamp,6) as listingDate,CONVERT(CHAR(9),lastedit,6) as lasteditDate,'<a href="http://gallart.com/img/'+CAST(uid AS varchar(50))+'.jpg" target="_blank"><img src="http://gallart.com/img/thumbnails/'+CAST(uid AS varchar(50))+'.jpg" border="0" height="50" />' as 'Thumbnail',
+	      	SELECT CONVERT(CHAR(9),P.datestamp,6) as listingDate,CONVERT(CHAR(9),lastedit,6) as lasteditDate,'<a href="http://gallart.com/img/'+CAST(uid AS varchar(50))+'.jpg" target="_blank"><img src="http://gallart.com/img/thumbnails/'+CAST(uid AS varchar(50))+'.jpg" border="0" height="50" />' as 'Thumbnail',
 			UPPER(U.lname)+', '+UPPER(U.fname) as full_seller_name, p.promotion,  
 			CASE WHEN active = '0' THEN 'Inactive' ELSE 'Active' END AS Status,*
 	      	FROM products P
@@ -93,10 +95,10 @@
 				AND gallery_price <= #arguments.toPrice#
 			</cfif>
 			<cfif isDefined('arguments.fromDate') AND arguments.fromDate neq '' AND isDate(arguments.fromDate)>
-				AND datestamp >= '#dateFormat(arguments.fromDate)#'
+				AND P.datestamp >= '#dateFormat(arguments.fromDate)#'
 			</cfif>
 			<cfif isDefined('arguments.toDate') AND arguments.toDate neq '' AND isDate(arguments.toDate)>
-				AND datestamp <= '#dateFormat(arguments.toDate)#'
+				AND P.datestamp <= '#dateFormat(arguments.toDate)#'
 			</cfif>
 			<cfif isDefined('arguments.fromLastedit') AND arguments.fromLastedit neq '' AND isDate(arguments.fromLastedit)>
 				AND lastedit >= '#dateFormat(arguments.fromLastedit)#'
@@ -153,7 +155,7 @@
 	      	<cfif gridsortcolumn neq ''>
 	      		ORDER BY #gridsortcolumn# #gridsortdirection#
 			<cfelse>
-				ORDER BY datestamp desc
+				ORDER BY P.datestamp desc
 	      	</cfif>
 	   	</cfquery>
 
@@ -225,6 +227,7 @@
 		<cfargument name="artSubject" type="string" default="">
 		<cfargument name="artSize" type="string" default="">
 		<cfargument name="promotion" type="string" default="">
+		<cfargument name="moduleName" type="string" default="">
         <!---<cfargument name="addImage" type="string" default="">--->
 
 
@@ -279,7 +282,9 @@
 						artTypee,
 						artSubject,
 						artSize,
-						promotion
+						promotion,
+						emp_id
+						
 					)
 					values
 					(
@@ -306,7 +311,7 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FRONTSHOW#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FAMILY#">,
 						<cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.SLIDESHOW),DE(arguments.SLIDESHOW),DE(0))#">,
-						<cfqueryparam cfsqltype="CF_SQL_DATE" value="#createodbcdate(now())#">,
+						<cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION#">,
 						<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.LOCATION_PRICE#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_FLOOR#">,
@@ -317,14 +322,26 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artTypee#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
-						<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">
+						<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">,
+						<cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#session.userinfo.pk_employees#">
 					)
 					SELECT @@identity as newId
 	            </cfquery>
 
 				<cfset thisId = addListing.newId />
 
-			<cfelse>
+				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+				<cfset date = now()>				
+				<cfset action = 'Insert'>
+
+				<cfquery name="addLog" datasource="#application.dsource#" >
+					INSERT INTO logs 
+						( moduleName, ipAddress, date, action)
+						VALUES
+						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+				</cfquery>
+
+			 <cfelse>
 
 				<cfquery name="editListing" datasource="#application.dsource#">
 	                UPDATE products SET
@@ -350,7 +367,7 @@
 						FRONTSHOW 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FRONTSHOW#">,
 						FAMILY 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FAMILY#">,
 						SLIDESHOW		= <cfqueryparam cfsqltype="CF_SQL_BIT"value="#iif(len(arguments.SLIDESHOW),DE(arguments.SLIDESHOW),DE(0))#">,
-						LASTEDIT		= <cfqueryparam cfsqltype="CF_SQL_DATE" value="#createodbcdate(now())#">,
+						LASTEDIT		= <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">,
 						LOCATION		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION#">,
 						LOCATION_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.LOCATION_PRICE#">,
 						LOCATION_FLOOR	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_FLOOR#">,
@@ -361,7 +378,8 @@
 						artTypee     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artTypee#">,
 						artSubject     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
 						artSize     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
-						promotion     = <cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">
+						promotion     = <cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">,
+						emp_id     = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#session.userinfo.pk_employees#">
 						<cfif isDefined('form.deactivated') and form.deactivated EQ 1 AND form.active EQ 1>
 							,ACTIVE_DATE = #now()#
 						</cfif>
@@ -369,6 +387,17 @@
 	            </cfquery>
 
 				<cfset thisId = arguments.uid />
+
+				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+				<cfset date = now()>				
+				<cfset action = 'Update'>
+
+				<cfquery name="addLog" datasource="#application.dsource#" >
+					INSERT INTO logs 
+						( moduleName, ipAddress, date, action)
+						VALUES
+						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+				</cfquery>
 
 			</cfif>
 
@@ -822,7 +851,20 @@
 
             <cffile action="delete" file="#application.uploaddir#/#arguments.uid#.jpg">
 
-			<cfcatch type="any"><cfset success = false /></cfcatch>
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
+
+			<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
 		</cftry>
 
 		<cfreturn success />
@@ -1816,7 +1858,7 @@
         
         <cfif isDefined('form.updatedRowRecord') and form.updatedRowRecord neq '' >
             <cfset this_keyval = form.updatedRowRecord>
-
+			
             <cfquery name="update" datasource="#application.dsource#">
                 UPDATE products
                 SET
@@ -1912,10 +1954,13 @@
                 <cfelse>
                     ,promotion = 0
                 </cfif>
+				,LASTEDIT		= <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">
+				,emp_id		= <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#session.userinfo.pk_employees#">
+				
                 WHERE uid = #this_keyval#
             </cfquery>
 
-        <cfelse>
+         <cfelse>
 
             <cfloop collection="#form#" item="idx">
 
@@ -2022,6 +2067,7 @@
 						<cfelse>
 							,promotion = 0
 						</cfif>
+						,emp_id		= <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#session.userinfo.pk_employees#">
                         WHERE uid = #this_keyval#
                     </cfquery>
     

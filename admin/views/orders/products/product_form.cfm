@@ -17,556 +17,559 @@
 	</tr>
 </table>
 <cfoutput>
-<cfform action="index.cfm?event=orders.confirmInvoice" id="orderForm" name="orderForm">
-<input type="hidden" name="invoiceNumber" id="invoiceNumber" value="0">
-<input type="hidden" name="displayInvoiceNumber" id="displayInvoiceNumber" value="0">
-<input type="hidden" name="assignedTo" id="assignedTo">
-<table border = "0" width = "600" cellpadding = "5" cellspacing = "5" bgcolor="eeeeee">
+	<cfform action="index.cfm?event=orders.confirmInvoice" id="orderForm" name="orderForm">
+		<input type="hidden" name="invoiceNumber" id="invoiceNumber" value="0">
+		<input type="hidden" name="displayInvoiceNumber" id="displayInvoiceNumber" value="0">
+		<input type="hidden" name="assignedTo" id="assignedTo">
 
-	<cfif  session.loggedin EQ true >
-		<tr>
-			<td width="125">
-				Search Existing Customers:
-			</td>
-			<td>
-				<cfselect query="getCustomers" name="customerId" id="customerId" class="select2" display="full_customer_name" value="id" selected="#form.customerId#" onChange="getCustomer(this.value);" queryPosition="below">
-				<option value="">Please Select</option>
-				</cfselect>
-			</td>
-		</tr>
-		<tr>
-			<td width="125">
-				Search Leads:
-			</td>
-			<td>
-				<cfselect query="getLeads" name="leadId" id="leadId" display="full_lead_name" class="select2" value="pk_leads" selected="#form.leadId#" onChange="getLead(this.value);" queryPosition="below">
-				<option value="">Please Select</option>
-				</cfselect>
-			</td>
-		</tr>
-		<tr>
-			<td valign="top" colspan="2">
-				<input type="Button" value="Search All Contacts" onclick="openSearchAllContactsWindow();" />
-			</td>
-		</tr>
-	</cfif>
-	
-	<cfoutput>
-		<script>
-			// $(document).ready(function() {
-			// 	$('##customerId').select2({
-			// 	placeholder: "Please Select",
-			// 	allowClear: true
-			// 	});
-			// });
+		
 
-			 $(document).ready(function () {
-                $('.select2').select2({
-                    matcher: function (params, data) {
-                        if ($.trim(params.term) === '') {
-                            return data;
-                        }
+		<table border = "0" width = "600" cellpadding = "5" cellspacing = "5" bgcolor="eeeeee">
 
-                        // Prevent matching placeholder during search
-                        if (data.id === '') {
-                            return null;
-                        }
+			<cfif  session.loggedin EQ true >
+				<tr>
+					<td width="125">
+						Search Existing Customers:
+					</td>
+					<td>
+						<cfselect query="getCustomers" name="customerId" id="customerId" class="select2" display="full_customer_name" value="id" selected="#form.customerId#" onChange="getCustomer(this.value);" queryPosition="below">
+						<option value="">Please Select</option>
+						</cfselect>
+					</td>
+				</tr>
+				<tr>
+					<td width="125">
+						Search Leads:
+					</td>
+					<td>
+						<cfselect query="getLeads" name="leadId" id="leadId" display="full_lead_name" class="select2" value="pk_leads" selected="#form.leadId#" onChange="getLead(this.value);" queryPosition="below">
+						<option value="">Please Select</option>
+						</cfselect>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" colspan="2">
+						<input type="Button" value="Search All Contacts" onclick="openSearchAllContactsWindow();" />
+					</td>
+				</tr>
+			</cfif>
+			
+			<cfoutput>
+				<script>
+					// $(document).ready(function() {
+					// 	$('##customerId').select2({
+					// 	placeholder: "Please Select",
+					// 	allowClear: true
+					// 	});
+					// });
 
-                        var term = params.term.toLowerCase();
-                        var text = data.text.toLowerCase();
+					$(document).ready(function () {
+						$('.select2').select2({
+							matcher: function (params, data) {
+								if ($.trim(params.term) === '') {
+									return data;
+								}
 
-                        // Starts with match
-                        if (text.startsWith(term)) {
-                            return data;
-                        }
+								// Prevent matching placeholder during search
+								if (data.id === '') {
+									return null;
+								}
 
-                        // Contains match (less priority)
-                        if (text.indexOf(term) > -1) {
-                            var modifiedData = $.extend({}, data, true);
-                            modifiedData.text = data.text + ' ';
-                            return modifiedData;
-                        }
+								var term = params.term.toLowerCase();
+								var text = data.text.toLowerCase();
 
-                        return null;
-                    },
+								// Starts with match
+								if (text.startsWith(term)) {
+									return data;
+								}
 
-                    sorter: function (data) {
-                        var term = $('.select2-search__field').val().toLowerCase();
-                        return data.sort(function (a, b) {
-                            var aStarts = a.text.toLowerCase().startsWith(term);
-                            var bStarts = b.text.toLowerCase().startsWith(term);
+								// Contains match (less priority)
+								if (text.indexOf(term) > -1) {
+									var modifiedData = $.extend({}, data, true);
+									modifiedData.text = data.text + ' ';
+									return modifiedData;
+								}
 
-                            if (aStarts && !bStarts) return -1;
-                            if (!aStarts && bStarts) return 1;
-                            return 0;
-                        });
-                    }
-                });
-            });
+								return null;
+							},
 
+							sorter: function (data) {
+								var term = $('.select2-search__field').val().toLowerCase();
+								return data.sort(function (a, b) {
+									var aStarts = a.text.toLowerCase().startsWith(term);
+									var bStarts = b.text.toLowerCase().startsWith(term);
+
+									if (aStarts && !bStarts) return -1;
+									if (!aStarts && bStarts) return 1;
+									return 0;
+								});
+							}
+						});
+					});
+
+
+					
+
+				</script>
+			</cfoutput>
+
+
+			<tr>
+				<td>
+					First Name:
+				</td>
+				<td>
+					<!--- <cfinput name="fname" id="fname" autosuggest="cfc:admin.models.leads.searchLeadsByFname({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" align="left" style="z-index:1000;" tabindex="0"  value="#form.fname#"> --->
+					<input type="text" name="fname" id="fname"  size="50" maxlength="40" value="#form.fname#">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Last Name:
+				</td>
+				<td>
+					<cfinput name="lname" id="lname" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromLname({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="40" size="50" align="left" style="z-index:1000;" tabindex="0" value="#form.lname#">
+					&nbsp;
+					<input type="Button" value="Fill" onclick="fillLname('orderform',document.getElementById('lname').value)">
+					<!--- <input type="text" name="lname" id="lname"  size="50"  value="#form.lname#"> --->
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					Email Address:
+				</td>
+				<td>
+					<cfinput name="Email" id="Email" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromEmail({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="40" size="50" align="left" style="z-index:1000;" tabindex="0" value="#form.Email#">&nbsp;
+					<input type="Button" value="Fill" onclick="fillEmail('orderform',document.getElementById('Email').value)">
+					<!--- <input type="text" name="Email" id="Email" size="50" value="#form.Email#"> --->
+				</td>
+			</tr>
+			<!--- <tr>
+				<td>
+					<span style="color: ##ff0000;">Cell Phone</span>
+				</td>
+				<td>
+					<cfinput type="text" name="CellPhone" id="CellPhone"  size="50"  value="#form.CellPhone#" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the home cell number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
+				</td>
+			</tr>
+			<tr>
+				<td width="125">
+					Home Phone:
+				</td>
+				<td>
+					<cfinput type="text" name="Phone" id="Phone"  size="50"  value="#form.Phone#" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the home phone number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Business Phone
+				</td>
+				<td>
+					<cfinput type="text" name="BusinessPhone" id="BusinessPhone"  size="50"  value="#form.BusinessPhone#" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the business phone number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Phone Outside the US
+				</td>
+				<td>
+					<input type="text" name="OtherPhone" id="OtherPhone"  size="50"  value="#form.OtherPhone#">
+				</td>
+			</tr> --->
+
+			<tr>
+				<td>
+					Select Phone Number type
+				</td>
+				<td>		
+
+					<select name="PhoneType" id="PhoneType">
+						<option value="Home Phone" <cfif form.PhoneType EQ "Home Phone">selected</cfif>>Home</option>
+						<option value="Cell Phone" <cfif form.PhoneType EQ "Cell Phone">selected</cfif>>Mobile</option>
+						<option value="Business Phone" <cfif form.PhoneType EQ "Business Phone">selected</cfif>>Business</option>
+						<option value="OutsideUS" <cfif form.PhoneType EQ "OutsideUS">selected</cfif>>Outside US</option>
+					</select>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					Phone Number
+				</td>
+				<td>
+
+					<input type="text" name="PhoneNumber" id="PhoneNumber" maxlength="20"  size="20" value="#form.PhoneNumber#">
+					<span id="formatSign">(xxx) xxx-xxxx</span>
+				</td>
+			</tr>
+
+
+			<cfoutput>
+				<script>
+					document.addEventListener("DOMContentLoaded", function() {
+						const phoneInput = document.getElementById("PhoneNumber");
+						const phoneType = document.getElementById("PhoneType");
+						const formatSign = document.getElementById("formatSign");
+
+						function toggleFormatSign() {
+							if (phoneType.value === "OutsideUS") {
+								formatSign.style.display = "none";
+							} else {
+								formatSign.style.display = "inline";
+							}
+						}
+
+						// run on load (in case form already has value)
+						toggleFormatSign();
+
+						// run on change
+						phoneType.addEventListener("change", toggleFormatSign);
+
+						phoneInput.addEventListener("input", function(e) {
+							// If type is OutsideUS → skip formatting
+							if (phoneType.value === "OutsideUS") {
+								return;
+							}
+
+							let value = e.target.value.replace(/\D/g, ""); // only digits
+							if (value.length > 10) value = value.substring(0, 10);
+
+							// Apply formatting as user types
+							if (value.length > 6) {
+								e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+							} else if (value.length > 3) {
+								e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+							} else if (value.length > 0) {
+								e.target.value = `(${value}`;
+							} else {
+								e.target.value = "";
+							}
+						});
+					});
+
+				</script>
+			</cfoutput>
 
 			
 
-		</script>
-	</cfoutput>
+			<!--- <tr>
+				<td>
+					Fax:
+				</td>
+				<td>
+					<input type="text" name="Fax" id="Fax" size="50"  value="#form.Fax#">
+				</td>
+			</tr> --->
 
-
-	<tr>
-		<td>
-			First Name:
-		</td>
-		<td>
-			<!--- <cfinput name="fname" id="fname" autosuggest="cfc:admin.models.leads.searchLeadsByFname({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" align="left" style="z-index:1000;" tabindex="0"  value="#form.fname#"> --->
-			<input type="text" name="fname" id="fname"  size="50" maxlength="40" value="#form.fname#">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Last Name:
-		</td>
-		<td>
-			<cfinput name="lname" id="lname" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromLname({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="40" size="50" align="left" style="z-index:1000;" tabindex="0" value="#form.lname#">
-			&nbsp;
-			<input type="Button" value="Fill" onclick="fillLname('orderform',document.getElementById('lname').value)">
-			<!--- <input type="text" name="lname" id="lname"  size="50"  value="#form.lname#"> --->
-		</td>
-	</tr>
-	<tr>
-		<td valign="top">
-			Email Address:
-		</td>
-		<td>
-			<cfinput name="Email" id="Email" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromEmail({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="40" size="50" align="left" style="z-index:1000;" tabindex="0" value="#form.Email#">&nbsp;
-			<input type="Button" value="Fill" onclick="fillEmail('orderform',document.getElementById('Email').value)">
-			<!--- <input type="text" name="Email" id="Email" size="50" value="#form.Email#"> --->
-		</td>
-	</tr>
-	<!--- <tr>
-		<td>
-			<span style="color: ##ff0000;">Cell Phone</span>
-		</td>
-		<td>
-			<cfinput type="text" name="CellPhone" id="CellPhone"  size="50"  value="#form.CellPhone#" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the home cell number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
-		</td>
-	</tr>
-	<tr>
-		<td width="125">
-			Home Phone:
-		</td>
-		<td>
-			<cfinput type="text" name="Phone" id="Phone"  size="50"  value="#form.Phone#" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the home phone number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Business Phone
-		</td>
-		<td>
-			<cfinput type="text" name="BusinessPhone" id="BusinessPhone"  size="50"  value="#form.BusinessPhone#" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the business phone number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Phone Outside the US
-		</td>
-		<td>
-			<input type="text" name="OtherPhone" id="OtherPhone"  size="50"  value="#form.OtherPhone#">
-		</td>
-	</tr> --->
-
-	<tr>
-		<td>
-			Select Phone Number type
-		</td>
-		<td>		
-
-			 <select name="PhoneType" id="PhoneType">
-				<option value="Home Phone" <cfif form.PhoneType EQ "Home Phone">selected</cfif>>Home</option>
-				<option value="Cell Phone" <cfif form.PhoneType EQ "Cell Phone">selected</cfif>>Mobile</option>
-				<option value="Business Phone" <cfif form.PhoneType EQ "Business Phone">selected</cfif>>Business</option>
-				<option value="OutsideUS" <cfif form.PhoneType EQ "OutsideUS">selected</cfif>>Outside US</option>
-			</select>
-		</td>
-	</tr>
-
-	<tr>
-		<td>
-			Phone Number
-		</td>
-		<td>
-
-			<input type="text" name="PhoneNumber" id="PhoneNumber" maxlength="20"  size="20" value="#form.PhoneNumber#">
-			<span id="formatSign">(xxx) xxx-xxxx</span>
-		</td>
-	</tr>
-
-
-	<cfoutput>
-		<script>
-			document.addEventListener("DOMContentLoaded", function() {
-				const phoneInput = document.getElementById("PhoneNumber");
-				const phoneType = document.getElementById("PhoneType");
-				const formatSign = document.getElementById("formatSign");
-
-				function toggleFormatSign() {
-					if (phoneType.value === "OutsideUS") {
-						formatSign.style.display = "none";
-					} else {
-						formatSign.style.display = "inline";
-					}
-				}
-
-				// run on load (in case form already has value)
-				toggleFormatSign();
-
-				// run on change
-				phoneType.addEventListener("change", toggleFormatSign);
-
-				phoneInput.addEventListener("input", function(e) {
-					// If type is OutsideUS → skip formatting
-					if (phoneType.value === "OutsideUS") {
-						return;
-					}
-
-					let value = e.target.value.replace(/\D/g, ""); // only digits
-					if (value.length > 10) value = value.substring(0, 10);
-
-					// Apply formatting as user types
-					if (value.length > 6) {
-						e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
-					} else if (value.length > 3) {
-						e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
-					} else if (value.length > 0) {
-						e.target.value = `(${value}`;
-					} else {
-						e.target.value = "";
-					}
-				});
-			});
-
-		</script>
-	</cfoutput>
-
-	
-
-	<!--- <tr>
-		<td>
-			Fax:
-		</td>
-		<td>
-			<input type="text" name="Fax" id="Fax" size="50"  value="#form.Fax#">
-		</td>
-	</tr> --->
-
-	<tr>
-		<td>
-			Consultant:
-		</td>
-		<td>			
-			
-			<input type="text" name="Consultant" id="Consultant" maxlength="40" size="50"  value="#form.Consultant#">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Company Name:
-		</td>
-		<td>
-			<input type="text" name="Company" id="Company" maxlength="40" size="50"  value="#form.Company#">
-		</td>
-	</tr>
-	<!--- <tr>
-		<td>
-			Address:
-		</td>
-		<td>
-			<input type="text" name="Address1" id="Address1" size="50" value="#form.Address1#">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			City:
-		</td>
-		<td>
-			<input type="text" name="City" id="City" size="50" value="#form.City#">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			State:
-		</td>
-		<td>
-        	<select name="State" id="State">
-            <option value="">Please Select</option>
-            <cfloop query="getStates">
-                <option value="#stateAbb#" <cfif form.State EQ stateAbb>selected</cfif>>#state#</option>
-            </cfloop>
-            </select>
-			<!---<input type="text" name="State" id="State" size="50" value="#form.State#">--->
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Country:
-		</td>
-		<td>
-			<input type="text" name="Country" id="Country" size="50" value="#form.Country#">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Zip Code:
-		</td>
-		<td>
-			<input type="text" name="Zip" id="Zip" size="50" value="#form.Zip#">
-		</td>
-	</tr> --->
-
-	<tr>
-		<td>
-			Address Type:
-		</td>
-		<td>
-			<select name="AddressType" id="AddressType" onchange="toggleAddressFields()">
-				<option value="">Please Select</option>
-				<option value="USA" <cfif form.AddressType eq 'USA'>selected</cfif> >USA Address</option>
-				<option value="Outside" <cfif form.AddressType eq 'Outside'>selected</cfif>>Outside USA</option>
-			</select>
-		</td>
-	</tr>
-
-	<!-- USA Address Section -->
-	<tbody id="USAAddress" style="display:none;">
-		<tr>
-			<td>Street Address:</td>
-			<td><input type="text" name="Address1" id="Address1" maxlength="40" size="50" value="#form.Address1#"></td>
-		</tr>
-		<tr>
-			<td>City:</td>
-			<td><input type="text" name="City" id="City" maxlength="40" size="50" value="#form.City#"></td>
-		</tr>
-		<tr>
-			<td>State:</td>
-			<td>
-				<select name="State" id="State">
+			<tr>
+				<td>
+					Consultant:
+				</td>
+				<td>			
+					
+					<input type="text" name="Consultant" id="Consultant" maxlength="40" size="50"  value="#form.Consultant#">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Company Name:
+				</td>
+				<td>
+					<input type="text" name="Company" id="Company" maxlength="40" size="50"  value="#form.Company#">
+				</td>
+			</tr>
+			<!--- <tr>
+				<td>
+					Address:
+				</td>
+				<td>
+					<input type="text" name="Address1" id="Address1" size="50" value="#form.Address1#">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					City:
+				</td>
+				<td>
+					<input type="text" name="City" id="City" size="50" value="#form.City#">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					State:
+				</td>
+				<td>
+					<select name="State" id="State">
 					<option value="">Please Select</option>
 					<cfloop query="getStates">
-						<option value="#stateAbb#" <cfif form.State EQ stateAbb>selected</cfif> >#state#</option>
+						<option value="#stateAbb#" <cfif form.State EQ stateAbb>selected</cfif>>#state#</option>
 					</cfloop>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td>Zip Code:</td>
-			<td><input type="text" name="Zip" id="Zip" maxlength="10" size="50" value="#form.Zip#"></td>
-		</tr>
-	</tbody>
+					</select>
+					<!---<input type="text" name="State" id="State" size="50" value="#form.State#">--->
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Country:
+				</td>
+				<td>
+					<input type="text" name="Country" id="Country" size="50" value="#form.Country#">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Zip Code:
+				</td>
+				<td>
+					<input type="text" name="Zip" id="Zip" size="50" value="#form.Zip#">
+				</td>
+			</tr> --->
 
-	<!-- Outside USA Address Section -->
-	<tbody id="OutsideAddress" style="display:none;">
-		<tr>
-			<td>Street Address:</td>
-			<td><input type="text" name="Address1_Outside" id="Address1_Outside" maxlength="40" size="50" value="#form.Address1_Outside#"></td>
-		</tr>
-		<tr>
-			<td>City:</td>
-			<td><input type="text" name="City_Outside" id="City_Outside" maxlength="40" size="50" value="#form.City_Outside#"></td>
-		</tr>
-		<tr>
-			<td>State/Province:</td>
-			<td><input type="text" name="State_Outside" id="State_Outside" maxlength="40" size="50" value="#form.State_Outside#"></td>
-		</tr>
-		<tr>
-			<td>Zip Code:</td>
-			<td><input type="text" name="Zip_Outside" id="Zip_Outside" maxlength="10" size="50" value="#form.Zip_Outside#"></td>
-		</tr>
-		<tr>
-			<td>Country:</td>
-			<td><input type="text" name="Country" id="Country" maxlength="40" size="50" value="#form.Country#"></td>
-		</tr>
-	</tbody>
+			<tr>
+				<td>
+					Address Type:
+				</td>
+				<td>
+					<select name="AddressType" id="AddressType" onchange="toggleAddressFields()">
+						<option value="">Please Select</option>
+						<option value="USA" <cfif form.AddressType eq 'USA'>selected</cfif> >USA Address</option>
+						<option value="Outside" <cfif form.AddressType eq 'Outside'>selected</cfif>>Outside USA</option>
+					</select>
+				</td>
+			</tr>
 
-	<script>
-		function toggleAddressFields() {
-			var type = document.getElementById("AddressType").value;
-			document.getElementById("USAAddress").style.display = (type === "USA") ? "" : "none";
-			document.getElementById("OutsideAddress").style.display = (type === "Outside") ? "" : "none";
-		}
+			<!-- USA Address Section -->
+			<tbody id="USAAddress" style="display:none;">
+				<tr>
+					<td>Street Address:</td>
+					<td><input type="text" name="Address1" id="Address1" maxlength="40" size="50" value="#form.Address1#"></td>
+				</tr>
+				<tr>
+					<td>City:</td>
+					<td><input type="text" name="City" id="City" maxlength="40" size="50" value="#form.City#"></td>
+				</tr>
+				<tr>
+					<td>State:</td>
+					<td>
+						<select name="State" id="State">
+							<option value="">Please Select</option>
+							<cfloop query="getStates">
+								<option value="#stateAbb#" <cfif form.State EQ stateAbb>selected</cfif> >#state#</option>
+							</cfloop>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Zip Code:</td>
+					<td><input type="text" name="Zip" id="Zip" maxlength="10" size="50" value="#form.Zip#"></td>
+				</tr>
+			</tbody>
 
-		// Run on page load if form already has a value
-		window.onload = toggleAddressFields;
-	</script>
+			<!-- Outside USA Address Section -->
+			<tbody id="OutsideAddress" style="display:none;">
+				<tr>
+					<td>Street Address:</td>
+					<td><input type="text" name="Address1_Outside" id="Address1_Outside" maxlength="40" size="50" value="#form.Address1_Outside#"></td>
+				</tr>
+				<tr>
+					<td>City:</td>
+					<td><input type="text" name="City_Outside" id="City_Outside" maxlength="40" size="50" value="#form.City_Outside#"></td>
+				</tr>
+				<tr>
+					<td>State/Province:</td>
+					<td><input type="text" name="State_Outside" id="State_Outside" maxlength="40" size="50" value="#form.State_Outside#"></td>
+				</tr>
+				<tr>
+					<td>Zip Code:</td>
+					<td><input type="text" name="Zip_Outside" id="Zip_Outside" maxlength="10" size="50" value="#form.Zip_Outside#"></td>
+				</tr>
+				<tr>
+					<td>Country:</td>
+					<td><input type="text" name="Country" id="Country" maxlength="40" size="50" value="#form.Country#"></td>
+				</tr>
+			</tbody>
 
-	<tr>
-		<td>
-			Website:
-		</td>
-		<td>
-			<input type="text" name="website" id="website" maxlength="40" size="50" value="#form.website#">
-		</td>
-	</tr>
-	<tr>
-		<td valign="top">
-			Method of Payment:
-		</td>
-		<td>
-			<cfset paymentOptions = "VISA/MC,AMEX,CHECK,CASH,OTHER" />
-			<select name="Payment_Method" id="Payment_Method">
-				<option value="">Please Select</option>
-				<cfloop list="#paymentOptions#" index="idx">
-					<option value="#idx#" <cfif idx EQ form.Payment_Method>selected</cfif>>#idx#</option>
-				</cfloop>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td valign="top">
-			Credit Card Number:
-		</td>
-		<td>
-			
-			<input type="text" name="CardNumber" id="CardNumber" maxlength="40" size="50" value="#form.CardNumber#">
-		</td>
-	</tr>
-	<tr>
-		<td valign="top">
-			Expiration Date:
-		</td>
-		<td>
-			
-			MM&nbsp;
-			<select name="cardexpm">
-				<cfloop from="1" to="12" index="monthis">
-					<cfif len(monthis) EQ 1>
-						<option value="0#monthis#" <cfif monthis EQ form.cardexpm>selected</cfif>>0#monthis#</option>
-					<cfelse>
-						<option value="#monthis#" <cfif monthis EQ form.cardexpm>selected</cfif>>#monthis#</option>
-					</cfif>
-				</cfloop>
-			</select>
-			YY&nbsp;
-			<select name="cardexpy">
-				<cfset toyear = #Year(Now())# + 10>
-				<cfloop from="#Year(Now())#" to="#toyear#" index="yearis">
-					<option value="#right(yearis,2)#" <cfif right(yearis,2) EQ form.cardexpy>selected</cfif>>#right(yearis,2)#</option>
+			<script>
+				function toggleAddressFields() {
+					var type = document.getElementById("AddressType").value;
+					document.getElementById("USAAddress").style.display = (type === "USA") ? "" : "none";
+					document.getElementById("OutsideAddress").style.display = (type === "Outside") ? "" : "none";
+				}
 
-				</cfloop>
-			</td>
-	</tr>
-	<tr>
-		<td valign="top">
-			Auth Code:
-		</td>
-		<td>
-			<input type="text" name="authcode" id="authcode" maxlength="10" size="50" value="#form.authcode#">
-		</td>
-	</tr>
-	<tr>
-		<td valign="top">
-			Driver's License Number:
-		</td>
-		<td>
-			<input type="text" name="DriversLicense" id="DriversLicense" maxlength="20" size="50" value="#form.DriversLicense#">
-		</td>
-	</tr>
-	<tr>
-		<td valign="bottom">
-			TO BE SHIPPED:
-		</td>
-		<td valign="top">
-			<input type="checkbox" name="tobeshipped" align="texttop" id="tobeshipped" <cfif form.tobeshipped EQ 1>checked</cfif> >
-			<input type="Hidden" name="tobeshipped">
-		</td>
-	</tr>
-	<tr>
-		<td valign="bottom">
-			ESTIMATE:
-		</td>
-		<td valign="top">
-			<input type="checkbox" name="estimate" align="texttop" id="estimate" value="1" <cfif form.estimate EQ 1>checked</cfif> >
-			<input type="Hidden" name="estimate">
-		</td>
-	</tr>
-	<tr>
-		<td valign="top" colspan="2">
-			<input type="Button" value="Add Product By Art ID" onclick="openProductIdWindow();" />
-		</td>
-	</tr>
-	<tr>
-		<td valign="top" colspan="2">
-			<input type="Button" value="Add Product By Product Title" onclick="openProductTitleWindow();" />
-		</td>
-	</tr>
+				// Run on page load if form already has a value
+				window.onload = toggleAddressFields;
+			</script>
 
-<script>
-	function openArtInfo() {
-		window.open('index.cfm?event=orders.artInfo', 'artInfo', 'width=500,height=250,left=500,top=200,resizable=yes,scrollbars=yes');
-	}
+			<tr>
+				<td>
+					Website:
+				</td>
+				<td>
+					<input type="text" name="website" id="website" maxlength="40" size="50" value="#form.website#">
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					Method of Payment:
+				</td>
+				<td>
+					<cfset paymentOptions = "VISA/MC,AMEX,CHECK,CASH,OTHER" />
+					<select name="Payment_Method" id="Payment_Method">
+						<option value="">Please Select</option>
+						<cfloop list="#paymentOptions#" index="idx">
+							<option value="#idx#" <cfif idx EQ form.Payment_Method>selected</cfif>>#idx#</option>
+						</cfloop>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					Credit Card Number:
+				</td>
+				<td>
+					
+					<input type="text" name="CardNumber" id="CardNumber" maxlength="40" size="50" value="#form.CardNumber#">
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					Expiration Date:
+				</td>
+				<td>
+					
+					MM&nbsp;
+					<select name="cardexpm">
+						<cfloop from="1" to="12" index="monthis">
+							<cfif len(monthis) EQ 1>
+								<option value="0#monthis#" <cfif monthis EQ form.cardexpm>selected</cfif>>0#monthis#</option>
+							<cfelse>
+								<option value="#monthis#" <cfif monthis EQ form.cardexpm>selected</cfif>>#monthis#</option>
+							</cfif>
+						</cfloop>
+					</select>
+					YY&nbsp;
+					<select name="cardexpy">
+						<cfset toyear = #Year(Now())# + 10>
+						<cfloop from="#Year(Now())#" to="#toyear#" index="yearis">
+							<option value="#right(yearis,2)#" <cfif right(yearis,2) EQ form.cardexpy>selected</cfif>>#right(yearis,2)#</option>
 
-	function openFramingInfo() {
-		window.open('index.cfm?event=orders.framingInfo', 'framingInfo', 'width=500,height=250,left=500,top=200,resizable=yes,scrollbars=yes');
-	}
-</script>
+						</cfloop>
+					</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					Auth Code:
+				</td>
+				<td>
+					<input type="text" name="authcode" id="authcode" maxlength="10" size="50" value="#form.authcode#">
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					Driver's License Number:
+				</td>
+				<td>
+					<input type="text" name="DriversLicense" id="DriversLicense" maxlength="20" size="50" value="#form.DriversLicense#">
+				</td>
+			</tr>
+			<tr>
+				<td valign="bottom">
+					TO BE SHIPPED:
+				</td>
+				<td valign="top">
+					<input type="checkbox" name="tobeshipped" align="texttop" id="tobeshipped" <cfif form.tobeshipped EQ 1>checked</cfif> >
+					<input type="Hidden" name="tobeshipped">
+				</td>
+			</tr>
+			<tr>
+				<td valign="bottom">
+					ESTIMATE:
+				</td>
+				<td valign="top">
+					<input type="checkbox" name="estimate" align="texttop" id="estimate" value="1" <cfif form.estimate EQ 1>checked</cfif> >
+					<input type="Hidden" name="estimate">
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" colspan="2">
+					<input type="Button" value="Add Product By Art ID" onclick="openProductIdWindow();" />
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" colspan="2">
+					<input type="Button" value="Add Product By Product Title" onclick="openProductTitleWindow();" />
+				</td>
+			</tr>
 
-	<tr>
-		<td valign="top" colspan="2">
-			<input type="Button" value="Add Product Not In Database" onclick="openArtInfo();" />
-		</td>
-	</tr>
-	<tr>
-		<td valign="top" colspan="2">
-			<input type="Button" value="Add Framing Order" onclick="openFramingInfo();" />
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" id="artListings">
-		</td>
-	</tr>
-	<tr>
-		<td valign="top" colspan="2">
-			Special Instructions:
-		</td>
-	</tr>
-	<tr>
-		<td valign="top" colspan="2">
-			<textarea name="special_instructions" id="special_instructions" cols="50" maxlength="500" rows="3">#form.special_instructions#</textarea>
-			<div id="special_instructionsCount" class="mb-3">0 / 500 characters</div>
-		</td>
-	</tr>
-	<tr>
-		<td valign="top">
-			Origin:
-		</td>
-		<td>
-			<cfset originValues = "WALK-IN,WEBSITE,PHONE,HOUSE,OTHER" />
-			<select name="origin">
-				<option value="">Please Select</option>
-				<cfloop list="#originValues#" index="idx">
-					<option value="#idx#" <cfif idx EQ form.origin>selected</cfif>>#idx#</option>
-				</cfloop>
-			</select>
-		</td>
-	</tr>
-	<cfif session.loggedin EQ true AND (listFindNoCase(session.userinfo.roles,'orders') OR session.userinfo.sa EQ 1)>
-		<cfinput type="hidden" name="password" value="#session.userinfo.password#">
-	<cfelse>
-	<tr>
-		<td>
-			Employee password:
-		</td>
-		<td>
-			<cfinput type="password" name="password" id="password" size="30" required="Yes" message="You must enter your password.">
-		</td>
-	</tr>
-	</cfif>
-	<tr>
-		<td colspan="2">
-			<input type="Reset" value="Reset">
-			<input type="Button" value="Submit" id="orderBtn" onClick="checkPasswordOrder(); return false;" >
-		</td>
-	</tr>
-</table>
-</cfform>
+			<script>
+				function openArtInfo() {
+					window.open('index.cfm?event=orders.artInfo', 'artInfo', 'width=500,height=250,left=500,top=200,resizable=yes,scrollbars=yes');
+				}
+
+				function openFramingInfo() {
+					window.open('index.cfm?event=orders.framingInfo', 'framingInfo', 'width=500,height=250,left=500,top=200,resizable=yes,scrollbars=yes');
+				}
+			</script>
+
+			<tr>
+				<td valign="top" colspan="2">
+					<input type="Button" value="Add Product Not In Database" onclick="openArtInfo();" />
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" colspan="2">
+					<input type="Button" value="Add Framing Order" onclick="openFramingInfo();" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" id="artListings">
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" colspan="2">
+					Special Instructions:
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" colspan="2">
+					<textarea name="special_instructions" id="special_instructions" cols="50" maxlength="500" rows="3">#form.special_instructions#</textarea>
+					<div id="special_instructionsCount" class="mb-3">0 / 500 characters</div>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					Origin:
+				</td>
+				<td>
+					<cfset originValues = "WALK-IN,WEBSITE,PHONE,HOUSE,OTHER" />
+					<select name="origin">
+						<option value="">Please Select</option>
+						<cfloop list="#originValues#" index="idx">
+							<option value="#idx#" <cfif idx EQ form.origin>selected</cfif>>#idx#</option>
+						</cfloop>
+					</select>
+				</td>
+			</tr>
+			<cfif session.loggedin EQ true AND (listFindNoCase(session.userinfo.roles,'orders') OR session.userinfo.sa EQ 1)>
+				<cfinput type="hidden" name="password" value="#session.userinfo.password#">
+			<cfelse>
+			<tr>
+				<td>
+					Employee password:
+				</td>
+				<td>
+					<cfinput type="password" name="password" id="password" size="30" required="Yes" message="You must enter your password.">
+				</td>
+			</tr>
+			</cfif>
+			<tr>
+				<td colspan="2">
+					<input type="Reset" value="Reset">
+					<input type="Button" value="Submit" id="orderBtn" onClick="checkPasswordOrder(); return false;" >
+				</td>
+			</tr>
+		</table>
+	</cfform>
 
 </cfoutput>
 <script language="JavaScript">
@@ -621,7 +624,7 @@
 	div.autosuggestcontainer .yui-ac-content {
 		*left: -5;
 	}
-		.x-window-default, .x-css-shadow {
+	.x-window-default, .x-css-shadow {
 		top: 50% !important;
 		left: 50% !important;
 		transform: translate(-50%, -50%);
@@ -629,7 +632,7 @@
 	.x-body {
 		position: relative;
 	}
-	</style>
+</style>
 
 <cfwindow name="artTitleWindow" center="true" modal="true" resizable="false" closable="false" title="Enter Product Title" width="400" height="400" headerStyle="background-color:##dd3a7d;">
 	<table cellspacing="0" cellpadding="0" border="0" width="100%" bgcolor="#ffffff">

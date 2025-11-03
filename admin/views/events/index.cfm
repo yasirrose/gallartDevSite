@@ -41,7 +41,7 @@
 									Title:
 								</td>
 								<td>
-									<cfinput type="text" name="event_title" id="event_title"  bind="{data.event_title}" size="50">
+									<cfinput type="text" name="event_title" id="event_title" maxlength="50" bind="{data.event_title}" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -49,7 +49,7 @@
 									Date:
 								</td>
 								<td>
-									<cfinput type="datefield" name="event_date" id="event_date"  bind="{data.event_date}" size="50" validate="date">
+									<cfinput type="datefield" name="event_date" id="event_date" maxlength="50" bind="{data.event_date}" size="50" validate="date">
 								</td>
 							</tr>
 							<tr>
@@ -57,7 +57,7 @@
 									Location:
 								</td>
 								<td>
-									<cfinput type="text" name="event_location" id="event_location"  bind="{data.event_location}" size="50">
+									<cfinput type="text" name="event_location" id="event_location" maxlength="50" bind="{data.event_location}" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -80,7 +80,7 @@
 							<tr>
 								<td colspan="2">
 									<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
-									<cfinput type="button" name="delete" id="delete" value="Delete" onclick="if (confirm('DELETE -- ARE YOU SURE?')){ doEdit('delete');}" />
+									<cfinput type="button" name="delete" id="delete" value="Delete" onclick="doEdit('delete')" />
 								</td>
 							</tr>
 						</table>	
@@ -93,3 +93,17 @@
 </table>
 
 
+<style>
+	.toast-center {
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%) !important;
+		position: fixed !important;
+		z-index: 999999 !important;
+	}
+
+	#toast-container > .toast {
+		background-color: #ff4da6 !important;
+		color: white !important;
+	}
+</style>
