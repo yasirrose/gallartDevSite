@@ -34,6 +34,19 @@
                             )
                         </cfquery>
                         <cfset result.message = "Record added successfully.">
+
+                        <cfset moduleName = 'Filter Option'>
+                        <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+                        <cfset date = now()>				
+                        <cfset action = 'Insert'>
+
+                        <cfquery name="addLog" datasource="#application.dsource#" >
+                            INSERT INTO logs 
+                                ( moduleName, ipAddress, date, action)
+                                VALUES
+                                ( '#moduleName#', '#ipAddress#', #date#, '#action#')
+                        </cfquery>
+
                     <cfelse>
                         <cfquery name="updateFilterData" datasource="#application.dsource#">
                             UPDATE filterOption SET 
@@ -42,6 +55,19 @@
                             WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
                         </cfquery>
                         <cfset result.message = "Record updated successfully.">
+
+                        <cfset moduleName = 'Filter Option'>
+                        <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+                        <cfset date = now()>				
+                        <cfset action = 'Update'>
+
+                        <cfquery name="addLog" datasource="#application.dsource#" >
+                            INSERT INTO logs 
+                                ( moduleName, ipAddress, date, action)
+                                VALUES
+                                ( '#moduleName#', '#ipAddress#', #date#, '#action#')
+                        </cfquery>
+
                     </cfif>
                     <cfset result.success = true>
                 <cfelse>
@@ -111,6 +137,19 @@
                     DELETE FROM filterOption
                     WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
                 </cfquery>
+
+                <cfset moduleName = 'Filter Option'>
+                <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+                <cfset date = now()>				
+                <cfset action = 'Delete'>
+
+                <cfquery name="addLog" datasource="#application.dsource#" >
+                    INSERT INTO logs 
+                        ( moduleName, ipAddress, date, action)
+                        VALUES
+                        ( '#moduleName#', '#ipAddress#', #date#, '#action#')
+                </cfquery>
+
             </cfif>
             <cfcatch type="any">
                 <cfset success = false />

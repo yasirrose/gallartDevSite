@@ -650,7 +650,7 @@
 								<div class="email-form">
 									<form id="signupForm" method="POST"  onsubmit="return validateNewsletterForm()">
 										<div class="form-floating">
-											<input type="email" name="email"  class="form-control" id="email" placeholder="email">
+											<input type="email" name="email"  class="form-control" maxlength="20" id="email" placeholder="email">
 											<span class="error-message" id="emailError"></span>
 											<label for="floatingInput">Email</label>
 										</div>
@@ -724,6 +724,19 @@
 								<cfqueryparam value="#ipAddress#" cfsqltype="cf_sql_varchar">
 								)
 					</cfquery>
+
+					<cfset moduleName = 'Homepage NewsLetter'>
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Insert'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#moduleName#', '#ipAddress#', #date#, '#action#')
+					</cfquery>
+
 					<cfset session.email = email>
 						<cfoutput>
 							<script>

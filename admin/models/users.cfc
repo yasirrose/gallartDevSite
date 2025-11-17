@@ -187,17 +187,19 @@
 							'#otherphone#',
 							'#arguments.password#'
 						)
+						SELECT @@identity as newId
 					</cfquery>
 
+					<cfset thisId = addUser.newId />
 					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
 					<cfset date = now()>				
 					<cfset action = 'Insert'>
 
 					<cfquery name="addLog" datasource="#application.dsource#" >
 						INSERT INTO logs 
-							( moduleName, ipAddress, date, action)
+							( moduleName, ipAddress, date, action, sellerUser)
 							VALUES
-							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #thisId#)
 					</cfquery>
 			
 				
@@ -222,9 +224,9 @@
 
 					<cfquery name="addLog" datasource="#application.dsource#" >
 						INSERT INTO logs 
-							( moduleName, ipAddress, date, action)
+							( moduleName, ipAddress, date, action, sellerUser)
 							VALUES
-							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', '#arguments.pk_users#')
 					</cfquery>
 				
 				</cfif>
@@ -244,6 +246,8 @@
 		<cfargument name="moduleName" type="string" default="">
 		
 		<cfset var success = true />
+
+		<cfset deleteID = arguments.pk_users>
 		
 		<cftry>
 	
@@ -261,9 +265,9 @@
 
 			<cfquery name="addLog" datasource="#application.dsource#" >
 				INSERT INTO logs 
-					( moduleName, ipAddress, date, action)
+					( moduleName, ipAddress, date, action, sellerUser)
 					VALUES
-					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#',#deleteID#)
 			</cfquery>
 		
 			<cfcatch type="any">
@@ -285,7 +289,7 @@
 
 		   <cfquery name="qUsers" datasource="#application.dsource#">
 		      SELECT *
-		      FROM users
+		      FROM users where fname != 'CXU0VLNWVHP8HBNQQ1MZ0UXC http://google.com/245'
 		      <cfif gridsortcolumn neq "" or gridsortdirection neq ""> 
 		      order by #gridsortcolumn# #gridsortdirection#
 		      </cfif>
@@ -352,7 +356,7 @@
 
 		   <cfquery name="qUsers" datasource="#application.dsource#">
 		      SELECT lname +', '+ fname  as full_seller_name,*
-		      FROM users WHERE fname is not null and fname !='' and lname is not null and lname !='' and fname !='?????' and fname !='88952634'
+		      FROM users WHERE fname is not null and fname !='' and lname is not null and lname !='' and fname !='?????' and fname !='88952634' and fname != 'CXU0VLNWVHP8HBNQQ1MZ0UXC http://google.com/245' 
 		      order by lname, fname
 		   </cfquery>
 	   

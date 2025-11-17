@@ -622,7 +622,7 @@
 										</cfmail>
 										<cfset session.limitReached = true>
 										<cflocation url="/sell-your-art/true/#getPreviousEntries.recordcount#" addtoken="No">
-										<cfcatch type="Any">ERROR!!<cfabort></cfcatch>
+										<cfcatch type="Any"><cfdump var="#cfcatch#" abort="true"><cfabort></cfcatch>
 										
 										</cftry>
 	
@@ -871,9 +871,9 @@
 															
 															<cfquery name="addLog" datasource="#application.dsource#" >
 																INSERT INTO logs 
-																	( moduleName, ipAddress, date, action)
+																	( moduleName, ipAddress, date, action, sellerUser)
 																	VALUES
-																	( '#moduleName#', '#ipAddress#', #date#, '#action#')
+																	( '#moduleName#', '#ipAddress#', #date#, '#action#', #session.sellerinfo.pk_users#)
 															</cfquery>
 															
 														</cflock>
@@ -1030,14 +1030,14 @@
 																									<div class="col-md-6">
 																										<div class="input-field"> 
 																											<label><b> First Name<span style="color: ##ff0000;">*</span></b></label>
-																											<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" maxlength="15" >
+																											<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" maxlength="30" >
 																											<span class="error-message" id="G_fnameError"></span>
 																										</div>
 																									</div>
 																									<div class="col-md-6">
 																										<div class="input-field"> 
 																											<label><b>Last Name<span style="color: ##ff0000;">*</span></b></label>
-																											<cfinput type="text" name="lname" id="lname" value="#form.lname#" size="30" maxlength="15" >
+																											<cfinput type="text" name="lname" id="lname" value="#form.lname#" size="30" maxlength="30" >
 																											<span class="error-message" id="G_lnameError"></span>
 																										</div>
 																									</div>
@@ -1183,21 +1183,21 @@
 																									<div class="col-md-6">
 																										<div class="input-field">
 																											<label><b>First Name:<span style="color: ##ff0000;">*</span></b></label>
-																											<cfinput type="text" name="fname" id="S_fname" value="#form.fname#" size="30" maxlength="15" >
+																											<cfinput type="text" name="fname" id="S_fname" value="#form.fname#" size="30" maxlength="30" >
 																											<span class="error-message" id="S_fnameError"></span>
 																										</div>
 																									</div>
 																									<div class="col-md-6">
 																										<div class="input-field">
 																											<label><b>Last Name:<span style="color: ##ff0000;">*</span></b></label>
-																											<cfinput type="text" name="lname" id="S_lname" value="#form.lname#" size="30" maxlength="15">
+																											<cfinput type="text" name="lname" id="S_lname" value="#form.lname#" size="30" maxlength="30">
 																											<span class="error-message" id="S_lnameError"></span>
 																										</div>
 																									</div>
 																									<div class="col-md-4">
 																										<div class="input-field">
 																											<label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
-																											<cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30" maxlength="20" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
+																											<cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30" maxlength="30" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
 																											<span class="error-message" id="S_EmailError"></span>
 																										</div>
 																									</div>

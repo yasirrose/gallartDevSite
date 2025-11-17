@@ -217,9 +217,9 @@ function doEdit(type) {
 				"hideMethod": "fadeOut"
 			};
 
-			toastr.success('This email already exists. Please use a different email.');
+			alert('This email already exists. Please use a different email.');
 			
-			ColdFusion.Grid.refresh('data', true);
+			<!--- ColdFusion.Grid.refresh('data', true); --->
 
 			setTimeout(function () {
 				editBtn.disabled = false;
@@ -245,42 +245,53 @@ function doEdit(type) {
 			return false; 
 		}
 
-	editBtn.disabled = true;
-	deleteBtn.disabled = true;
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
 
-   	if ( edit.deleteUser()) {
-         ColdFusion.Grid.refresh('data',true);
+		if ( edit.deleteUser()) {
+			ColdFusion.Grid.refresh('data',true);
 
-		 toastr.options = {
-			"closeButton": true,
-			"debug": false,
-			"newestOnTop": true,
-			"progressBar": true,
-			"positionClass": "toast-center",
-			"preventDuplicates": false,
-			"onclick": null,
-			"showDuration": "300",
-			"hideDuration": "1000",
-			"timeOut": "3000",
-			"extendedTimeOut": "1000",
-			"showEasing": "swing",
-			"hideEasing": "linear",
-			"showMethod": "fadeIn",
-			"hideMethod": "fadeOut"
-		};
+			toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-center",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
 
-		toastr.success('Record is Deleted Successfully'); 
-		
-		setTimeout(function () {
-			editBtn.disabled = false;
-			deleteBtn.disabled = false;
-		}, 5000);
+			toastr.success('Record is Deleted Successfully'); 
+			
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
 
-     } 
-     else { alert( 'There was a problem in the processing.')}
-      }
-	document.getElementById('edit').value = 'Edit';
-	document.getElementById('delete').style.display = '';
+     	} 
+     	else { 
+			alert( 'There was a problem in the processing.')
+		}
+    }
+
+	<!--- document.getElementById('edit').value = 'Edit';
+	document.getElementById('delete').style.display = ''; --->
+
+	if (document.getElementById('pk_users').value === '') {
+		document.getElementById('edit').value = 'Add';
+		document.getElementById('delete').style.display = 'none';
+	} else{
+		document.getElementById('edit').value = 'Edit';
+		document.getElementById('delete').style.display = ''; 
+	}
 }
 	
 function showNew () {

@@ -260,39 +260,45 @@
 				</tr>
 				<cfif structKeyExists(session,'orderArray') AND isDefined('session.invoiceInfo.QUANTITY_1')>
 					<cfset amountSale = 0 />
+					<cfset negativeAmount = 0>
 					<cfloop from="1" to="#arrayLen(session.orderArray)#" index="idx">
-					<cfset thisQuantity = evaluate('session.invoiceinfo.QUANTITY_'&idx) />
-					<cfset thisPrice = evaluate('session.invoiceinfo.PRICE_'&idx) />
-					<cfset thisExt = thisQuantity * thisPrice />
-					<tr>
-						<td class="productCell" align="center">
-							<span class="data">#thisQuantity#</span>
-						</td>
-						<td class="productCell" align="center">
-							<span class="data">#session.orderArray[idx][2]#</span>
-						</td>
-						<td class="productCell" align="center">
-							<span class="data">#session.orderArray[idx][3]#</span>
-						</td>
-						<td class="productCell" style="padding-left: 3px;">
-							<span class="data">#session.orderArray[idx][4]#</span>
-						</td>
-						<td class="productCell" align="center">
-							<span class="data">#session.orderArray[idx][5]#</span>
-						</td>
-						<td class="productCell" align="center">
-							<span class="data"><cfif session.orderArray[idx][8] EQ 1>FRAMING</cfif></span>
-						</td>
-						<td class="productCell" align="right" style="padding-right: 2px;">
-							<span class="data">#dollarFormat(thisPrice)#</span>
-						</td>
-						<td class="productCell" align="right" style="padding-right: 2px;">
-							<span class="data">#dollarFormat(thisExt)#</span>
-						</td>
-					</tr>
-					<cfset amountSale = amountSale + thisExt />
+						<cfset thisQuantity = evaluate('session.invoiceinfo.QUANTITY_'&idx) />
+						<cfset thisPrice = evaluate('session.invoiceinfo.PRICE_'&idx) />
+						<cfset thisExt = thisQuantity * thisPrice />
+
+						<cfif thisExt LT 0>
+							<cfset negativeAmount = negativeAmount + thisExt>
+						</cfif>
+
+						<tr>
+							<td class="productCell" align="center">
+								<span class="data">#thisQuantity#</span>
+							</td>
+							<td class="productCell" align="center">
+								<span class="data">#session.orderArray[idx][2]#</span>
+							</td>
+							<td class="productCell" align="center">
+								<span class="data">#session.orderArray[idx][3]#</span>
+							</td>
+							<td class="productCell" style="padding-left: 3px;">
+								<span class="data">#session.orderArray[idx][4]#</span>
+							</td>
+							<td class="productCell" align="center">
+								<span class="data">#session.orderArray[idx][5]#</span>
+							</td>
+							<td class="productCell" align="center">
+								<span class="data"><cfif session.orderArray[idx][8] EQ 1>FRAMING</cfif></span>
+							</td>
+							<td class="productCell" align="right" style="padding-right: 2px;">
+								<span class="data">#dollarFormat(thisPrice)#</span>
+							</td>
+							<td class="productCell" align="right" style="padding-right: 2px;">
+								<span class="data">#dollarFormat(thisExt)#</span>
+							</td>
+						</tr>
+						<cfset amountSale = amountSale + thisExt />
 					</cfloop>
-				<cfelse>
+				 <cfelse>
 					<tr>
 						<td colspan="8" align="center" style="color: ##ff0000;font-size: 15px;font-weight:bold;">
 						<br><br><br>
@@ -375,7 +381,7 @@
 						<cfif isDefined('printFields')>
 							<span class="data">#dollarFormat(session.invoiceInfo.amountpaid)#</span>
 						<cfelse>
-							$<input type="Text" name="amountPaid" id="amountPaid" size="5" onkeyup="computeAmount();" style="font-size: 15px; text-align:right;" />
+							$<input type="Text" name="amountPaid" id="amountPaid" size="5" onkeyup="computeAmount();"  style="font-size: 15px; text-align:right;" />
 						</cfif>
 					</td>
 				</tr>
@@ -416,5 +422,6 @@
 		</td>
 	</tr>
 </table>
+
 </cfoutput>
 

@@ -110,14 +110,17 @@
 				// }
 				function isValidSize(value) {
 				// Regex: numbers, optional spaces, 'x' (case insensitive), optional spaces, numbers
-					var pattern = /^\d+\s*[xX]\s*\d+$/;
+					// var pattern = /^\d+\s*[xX]\s*\d+$/;
+					var pattern = /^[0-9]+(\.[0-9]+)*\s*[xX]\s*[0-9]+(\.[0-9]+)*(\s*[xX]\s*[0-9]+(\.[0-9]+)*)?$/;
 					return pattern.test(value.trim());
 				}
 
-				if (!isValidSize(frm.size.value)) {
-					alert('You must enter a valid SIZE in format: height x width (only numbers and the letter x)');
-					frm.size.focus();
-					return false;
+				if (frm.size.value.trim() !== '') {
+					if (!isValidSize(frm.size.value)) {
+						alert('You must enter a valid SIZE in format: height x width OR height x width x depth (only numbers and the letter x)');
+						frm.size.focus();
+						return false;
+					}
 				}
 
 				return true;
@@ -189,9 +192,8 @@
 									<select name="artistview"  onchange="ArtistView()">
 									<option value="">Please Select</option>
 									<cfoutput query="getAllArtists" group="manufacturer">
-										<!--- <cfset manufacturer = > --->
 										<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-										<option value="#HTMLEditFormat(manufacturer)#">#manufacturer#
+										<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
 										</cfif>
 									</cfoutput>
 									</select>
@@ -240,7 +242,6 @@
 										<option value="Realism">Realism</option>
 										<option value="Surrealism">Surrealism</option>
 										<option value="Urban Art">Urban Art</option>
-										<option value="Figurative">Figurative</option>
 										<option value="Animation">Animation</option>
 										<option value="Memorabilia">Memorabilia</option> --->
 									</select>
@@ -380,8 +381,7 @@
 									Gallery Price:
 								</td>
 								<td>
-									<cfinput type="text" name="gallery_price" id="gallery_price" maxlength="8" size="20">
-									<!--- <span style="color: red;">(This should be less then from Retail price)</span> --->
+									<cfinput type="text" name="gallery_price" id="gallery_price" maxlength="8" size="20">									
 								</td>
 							
 							</tr>

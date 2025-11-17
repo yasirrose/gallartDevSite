@@ -338,16 +338,30 @@
 				</td>
 			</tr>
 
+			<tr>
+				<td>Street Address:</td>
+				<td>
+					<cfinput type="text" name="Address1" id="Address1" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromAddress({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="40" size="50" value="#form.Address1#">
+				</td>
+			</tr>
+
+			<tr>
+				<td>City:</td>
+				<td>
+					<cfinput type="text" name="City" id="City" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromCity({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="40" size="50" value="#form.City#">
+				</td>
+			</tr>
+
+			<tr>
+				<td>Zip Code:</td>
+				<td>
+					<cfinput type="text" name="Zip" id="Zip" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromZipCode({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="10" size="50" value="#form.Zip#">
+				</td>
+			</tr>
+
 			<!-- USA Address Section -->
 			<tbody id="USAAddress" style="display:none;">
-				<tr>
-					<td>Street Address:</td>
-					<td><input type="text" name="Address1" id="Address1" maxlength="40" size="50" value="#form.Address1#"></td>
-				</tr>
-				<tr>
-					<td>City:</td>
-					<td><input type="text" name="City" id="City" maxlength="40" size="50" value="#form.City#"></td>
-				</tr>
+				
 				<tr>
 					<td>State:</td>
 					<td>
@@ -359,30 +373,27 @@
 						</select>
 					</td>
 				</tr>
-				<tr>
-					<td>Zip Code:</td>
-					<td><input type="text" name="Zip" id="Zip" maxlength="10" size="50" value="#form.Zip#"></td>
-				</tr>
+				
 			</tbody>
 
 			<!-- Outside USA Address Section -->
 			<tbody id="OutsideAddress" style="display:none;">
-				<tr>
+				<!--- <tr>
 					<td>Street Address:</td>
 					<td><input type="text" name="Address1_Outside" id="Address1_Outside" maxlength="40" size="50" value="#form.Address1_Outside#"></td>
 				</tr>
 				<tr>
 					<td>City:</td>
 					<td><input type="text" name="City_Outside" id="City_Outside" maxlength="40" size="50" value="#form.City_Outside#"></td>
-				</tr>
+				</tr> --->
 				<tr>
 					<td>State/Province:</td>
 					<td><input type="text" name="State_Outside" id="State_Outside" maxlength="40" size="50" value="#form.State_Outside#"></td>
 				</tr>
-				<tr>
+				<!--- <tr>
 					<td>Zip Code:</td>
 					<td><input type="text" name="Zip_Outside" id="Zip_Outside" maxlength="10" size="50" value="#form.Zip_Outside#"></td>
-				</tr>
+				</tr> --->
 				<tr>
 					<td>Country:</td>
 					<td><input type="text" name="Country" id="Country" maxlength="40" size="50" value="#form.Country#"></td>

@@ -746,8 +746,8 @@
 					cellphone 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cellphone#">,
 					businessphone 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
 					website 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_website#">,
-					driverslicense 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_driverslicense#">,
-					fax 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_fax#">
+					driverslicense 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.customer_driverslicense#">
+					
 	                WHERE id 	= #form.customerid#
 	            </cfquery>
 
@@ -1280,10 +1280,10 @@
 
 			<!--- Map Outside fields to standard fields if AddressType is Outside --->
 		<cfif structKeyExists(form, "AddressType") AND form.AddressType EQ "Outside">
-			<cfset form.Address1 = form.Address1_Outside>
-			<cfset form.City = form.City_Outside>
+			<!--- <cfset form.Address1 = form.Address1_Outside>
+			<cfset form.City = form.City_Outside> --->
 			<cfset form.State = form.State_Outside>
-			<cfset form.Zip = form.Zip_Outside>
+			<!--- <cfset form.Zip = form.Zip_Outside> --->
 			<cfset form.Country = form.Country>
 		</cfif>
 			

@@ -192,6 +192,17 @@ function gridChange(thisId) {
 		}
 	}
 
+	function formatAsDollars(amount) {
+		const num = parseFloat(amount);
+		if (isNaN(num)) return "$0.00";
+
+		// Use parentheses for negative values
+		if (num < 0) {
+			return "($" + Math.abs(num).toFixed(2) + ")";
+		} else {
+			return "$" + num.toFixed(2);
+		}
+	}
 
 
 	document.getElementById('productTable').innerHTML = strOrder['itemTable'];

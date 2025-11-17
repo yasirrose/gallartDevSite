@@ -11,7 +11,7 @@ getLname = function(){
  
 // get current row id 
 function gridChangeFilter(thisId) {
- populateFormfilter(thisId);
+    populateFormfilter(thisId);
 }
 
 // populate edit form using row id
@@ -29,6 +29,20 @@ function populateFormfilter(thisId){
         if(deleteCheck){
             document.getElementById('delete').style.display = '';
         }
+
+       active = strEmployee['FILTERTYPE']
+
+        <!--- console.log('test data: ' + active) --->
+
+        for(i = 0; i < frm.filterType.options.length; i++){
+            if(frm.filterType.options[i].value == active){
+                frm.filterType.options[i].selected = true;
+            }
+            else{
+                frm.filterType.options[i].selected = false;
+            }
+        }
+
     } else {
         alert('Failed to retrieve employee data.');
     }
@@ -38,55 +52,88 @@ function populateFormfilter(thisId){
 
 function doEdit(type) {
     
-  var filterName = document.getElementById('filterName').value.trim();
-  var filterType = document.getElementById('filterType').value.trim();
+    var filterName = document.getElementById('filterName').value.trim();
+    var filterType = document.getElementById('filterType').value.trim();
 
-  if (filterName === '' || filterType === '') {
-      alert('Please fill out all fields.');
-      return; 
-  }
- var edit = new admin.models.filterOption();
+    var editBtn = document.getElementById('edit');
+	var deleteBtn = document.getElementById('delete');
 
- edit.setForm("editForm");
+    if (filterName === '' || filterType === '') {
+        alert('Please fill out all fields.');
+        return; 
+    }
+    var edit = new admin.models.filterOption();
+
+    edit.setForm("editForm");
  
- if (type == 'edit'){
+    if (type == 'edit'){
 
 
-    console.log('Calling addFilterRecord...');
-        edit.addFilterRecord({
-            callback: function(result) {
-                console.log('Callback result:', result);
+            <!--- console.log('Calling addFilterRecord...');
+                edit.addFilterRecord({
+                    callback: function(result) {
+                        console.log('Callback result:', result);
 
-                if (result.success) {
-                    console.log('Success:', result.message);
-                    ColdFusion.Grid.refresh('data', true);
-                    setTimeout(function() {
-                        alert(result.message);
-                    }, 100);
-                } else {
-                    console.log('Error:', result.message);
-                    setTimeout(function() {
-                        alert(result.message || 'There was a problem in the processing.');
-                    }, 100);
-                }
+                        if (result.success) {
+                            console.log('Success:', result.message);
+                            ColdFusion.Grid.refresh('data', true);
+                            setTimeout(function() {
+                                alert(result.message);
+                            }, 100);
+                        } else {
+                            console.log('Error:', result.message);
+                            setTimeout(function() {
+                                alert(result.message || 'There was a problem in the processing.');
+                            }, 100);
+                        }
+                    }
+                }); --->
+
+            editBtn.disabled = true;
+		    deleteBtn.disabled = true;
+
+            result = edit.addFilterRecord();
+            
+            if (result.SUCCESS === true) {
+
+                 alert(result.MESSAGE);
+                 ColdFusion.Grid.refresh('data', true);
+
+                setTimeout(function() {
+                    editBtn.disabled = false;
+				    deleteBtn.disabled = false;                   
+                }, 5000);
+
+            } 
+            else {               
+                alert(result.MESSAGE);
+
+                setTimeout(function() {
+                    editBtn.disabled = false;
+				    deleteBtn.disabled = false;                   
+                }, 5000);
             }
-        });
-         
-  <!--- if ( edit.addFilterRecord()) {
-    ColdFusion.Grid.refresh('data', true);
-    } 
-    else {
-       alert( 'There was a problem in the processing.')
-    } --->
+    }
+    else if (type == 'delete'){
+        if ( edit.deleteEmployee()) {
+
+            alert('Record is Deleted Successfully');
+            ColdFusion.Grid.refresh('data', true);
+        } 
+        else { 
+            alert( 'There was a problem in the processing.')
+        }
    }
-else if (type == 'delete'){
-    if ( edit.deleteEmployee()) {
-        ColdFusion.Grid.refresh('data', true);
-  } 
-  else { alert( 'There was a problem in the processing.')}
-   }
-document.getElementById('edit').value = 'Edit';
- document.getElementById('delete').style.display = '';
+    <!--- document.getElementById('edit').value = 'Edit';
+    document.getElementById('delete').style.display = ''; --->
+
+    if (document.getElementById('id').value === '') {
+		document.getElementById('edit').value = 'Add';
+		document.getElementById('delete').style.display = 'none';
+	} else{
+		document.getElementById('edit').value = 'Edit';
+		document.getElementById('delete').style.display = ''; 
+	}
 }
 
 // clear all fields when new is clicked

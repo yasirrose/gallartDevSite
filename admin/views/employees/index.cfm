@@ -39,7 +39,8 @@
 							<tr>
 								<td colspan="2">&nbsp;</td>
 								<td>
-									<input type="Reset"><cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
+									<input type="Reset">
+									<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
 								</td>
 							</tr>
 							<tr>
@@ -131,30 +132,30 @@
 								</td>
 							</tr>
 							<cfif session.userinfo.sa EQ 1>
-							<tr>
-								<td colspan="2">
-									<strong>COMMISSION</strong>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									Minus amount (from total sales):
-								</td>
-								<td>
-									$<cfinput type="text" name="commission_minus" id="commission_minus"  bind="{data.commission_minus}" maxlength="30" size="30" validate="float" message="You must enter a dollar amount for the minus amount - no $ or ,">&nbsp;
-								</td>
-							</tr>
-							<tr>
-								<td>
-									Percentage:
-								</td>
-								<td>
-									<cfinput type="text" name="commission_percent" id="commission_percent"  bind="{data.commission_percent}" maxlength="30" size="30" validate="integer" message="You must enter an integer for the commission.">&nbsp;
-								</td>
-							</tr>
-							<cfelse>
-							<cfinput type="hidden" name="commission_minus"  bind="{data.commission_minus}">
-							<cfinput type="hidden" name="commission_percent"  bind="{data.commission_percent}">
+								<tr>
+									<td colspan="2">
+										<strong>COMMISSION</strong>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										Minus amount (from total sales):
+									</td>
+									<td>
+										$<cfinput type="text" name="commission_minus" id="commission_minus"  bind="{data.commission_minus}" maxlength="30" size="30" validate="float" message="You must enter a dollar amount for the minus amount - no $ or ,">&nbsp;
+									</td>
+								</tr>
+								<tr>
+									<td>
+										Percentage:
+									</td>
+									<td>
+										<cfinput type="text" name="commission_percent" id="commission_percent"  bind="{data.commission_percent}" maxlength="30" size="30" validate="integer" message="You must enter an integer for the commission.">&nbsp;
+									</td>
+								</tr>
+							 <cfelse>
+								<cfinput type="hidden" name="commission_minus"  bind="{data.commission_minus}">
+								<cfinput type="hidden" name="commission_percent"  bind="{data.commission_percent}">
 							</cfif>
 							<tr>
 								<td colspan="2" >

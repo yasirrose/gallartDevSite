@@ -12,15 +12,15 @@
 		
 		<cftry>
 	
-		<cfquery name="qLeads" datasource="#application.dsource#"> 
-           	SELECT lname + ',	' + fname AS full_lead_name, pk_leads 
-            FROM leads 
-            WHERE fname != '' AND lname != '' and fname Is not null and lname is not null and fname !='*' and lname!='*' and fname !='?' and lname !='????????'
-            GROUP BY EMAIL, pk_leads, lname, fname 
-            ORDER BY lname;
-        </cfquery>
+			<cfquery name="qLeads" datasource="#application.dsource#"> 
+				SELECT lname + ',	' + fname AS full_lead_name, pk_leads 
+				FROM leads 
+				WHERE fname != '' AND lname != '' and fname Is not null and lname is not null and fname !='*' and lname!='*' and fname !='?' and lname !='????????' and isdeleted is null
+				GROUP BY EMAIL, pk_leads, lname, fname 
+				ORDER BY lname;
+			</cfquery>
 		
-		<cfcatch type="any"></cfcatch>
+			<cfcatch type="any"></cfcatch>
 		</cftry>
 		
 	
@@ -62,7 +62,6 @@
 		<cfset session.qLeads.toDate = arguments.toDate />
 		<cfset session.qLeads.keywords = arguments.keywords />
 
-		<!--- <cfdump var="#arguments#" abort="true"> --->
 		
 	   	<cfquery name="qLeads" datasource="#application.dsource#">
 	      	SELECT CONVERT(CHAR(9),L.datestamp,6) as leadDate,L.email as leadEmail,E.emp_lname + ', ' + E.emp_fname as emp_name,
@@ -497,5 +496,47 @@
         <cfreturn qLeads />
         
   	</cffunction>
+
+	<cffunction name="searchLeadsByAddress" access="remote" returntype="string">
+		<cfargument name="cfautosuggestvalue" type="string">
+
+          	<cfquery name="qListings" datasource="#application.dsource#">
+				SELECT top 200 address FROM leads
+				WHERE address <> ''
+				AND upper(address) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+				ORDER BY address
+	       	</cfquery>
+	
+		<cfreturn valueList(qListings.address) />
+		
+	</cffunction>
+
+	<cffunction name="searchLeadsByCity" access="remote" returntype="string">
+		<cfargument name="cfautosuggestvalue" type="string">
+
+          	<cfquery name="qListings" datasource="#application.dsource#">
+				SELECT top 200 city FROM leads
+				WHERE city <> ''
+				AND upper(city) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+				ORDER BY city
+	       	</cfquery>
+	
+		<cfreturn valueList(qListings.city) />
+		
+	</cffunction>
+
+	<cffunction name="searchLeadsByZipCode" access="remote" returntype="string">
+		<cfargument name="cfautosuggestvalue" type="string">
+
+          	<cfquery name="qListings" datasource="#application.dsource#">
+				SELECT top 200 zip FROM leads
+				WHERE zip <> ''
+				AND upper(zip) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+				ORDER BY zip
+	       	</cfquery>
+	
+		<cfreturn valueList(qListings.zip) />
+		
+	</cffunction>
 	
 </cfcomponent>

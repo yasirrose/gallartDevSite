@@ -296,9 +296,9 @@
                                                       
                                                       <cfquery name="addLog" datasource="#application.dsource#" >
                                                          INSERT INTO logs 
-                                                            ( moduleName, ipAddress, date, action)
+                                                            ( moduleName, ipAddress, date, action, sellerUser)
                                                             VALUES
-                                                            ( '#moduleName#', '#ipAddress#', #date#, '#action#')
+                                                            ( '#moduleName#', '#ipAddress#', #date#, '#action#', #session.sellerinfo.pk_users#)
                                                       </cfquery>
 
                                                    </cflock>

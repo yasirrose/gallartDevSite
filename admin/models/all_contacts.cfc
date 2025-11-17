@@ -229,6 +229,51 @@
 		<cfreturn valueList(qContacts.contactInfo) />
 	
    	</cffunction>
+
+	<cffunction name="getAllContactsFromAddress" access="remote" returntype="string">
+
+		<cfargument name="cfautosuggestvalue" type="string">
+
+		<cfquery name="qContacts" datasource="#application.dsource#">
+			SELECT top 200 Address1 FROM customers
+			WHERE Address1 <> ''
+			AND upper(Address1) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+			ORDER BY Address1
+		</cfquery>
+
+		<cfreturn valueList(qContacts.Address1) />
+
+	</cffunction>
+
+	<cffunction name="getAllContactsFromCity" access="remote" returntype="string">
+
+		<cfargument name="cfautosuggestvalue" type="string">
+
+		<cfquery name="qContacts" datasource="#application.dsource#">
+			SELECT top 200 city FROM customers
+			WHERE city <> ''
+			AND upper(city) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+			ORDER BY city
+		</cfquery>
+
+		<cfreturn valueList(qContacts.city) />
+
+	</cffunction>
+
+	<cffunction name="getAllContactsFromZipCode" access="remote" returntype="string">
+
+		<cfargument name="cfautosuggestvalue" type="string">
+
+		<cfquery name="qContacts" datasource="#application.dsource#">
+			SELECT top 200 zip FROM customers
+			WHERE zip <> ''
+			AND upper(zip) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+			ORDER BY zip
+		</cfquery>
+
+		<cfreturn valueList(qContacts.zip) />
+
+	</cffunction>
 	
 	<cffunction name="getAllContactsFromEmail" access="remote" output="false" returntype="string">
 	  	

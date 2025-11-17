@@ -366,9 +366,9 @@ function gridChange(thisId) {
 	editFrame.getElementById('imageUrl').innerHTML = 'http://23.20.226.157/img/'+thisId+'.jpg';
 	editFrame.getElementById('imageUrl').style.display = 'block'; --->
 
-	var imageUrl = 'http://23.20.226.157/img/' + thisId + '.jpg';
-    var thumbnailUrl = 'http://23.20.226.157/img/thumbnails/' + thisId + '.jpg';
-    var defaultImageUrl = 'http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg'; 
+	var imageUrl = 'http://<cfoutput>#server_name#</cfoutput>/img/' + thisId + '.jpg';
+    var thumbnailUrl = 'http://<cfoutput>#server_name#</cfoutput>/img/thumbnails/' + thisId + '.jpg';
+    var defaultImageUrl = 'http://<cfoutput>#server_name#</cfoutput>/img/thumbnails/noImage.jfif.jpeg'; 
 
     var mainImg = editFrame.getElementById('mainImg');
     var clickEnlarge = editFrame.getElementById('clickEnlarge');
@@ -427,14 +427,13 @@ function gridChange(thisId) {
 		editFrame.getElementById('gridRefreshMsg').style.display = 'none';
 	}
     if (strListing['ADDITIONAL_IMAGES'].length != 0 ){
-		console.log(thisId);
         editFrame.getElementById('addImageFrame').src = 'http://23.20.226.157/admin/views/listings/showAdditional.cfm?pid=' + thisId;
     } 
 	else {
     	editFrame.getElementById('addImageFrame').src = '';
    	}
 
-	editFrame.getElementById('edit').value 	= 'Edit';
+	editFrame.getElementById('edit').value = 'Edit';
 	editFrame.getElementById('delete').style.display = '';
 
 	
@@ -490,7 +489,6 @@ function showNew () {
 	frm.manufacturer.value 	= '';
 	frm.path.value			= '';
 	frm.artType.value			= '';
-	<!--- document.getElementById('artistview').value = ''; --->
 
 	frm.artistview.options[0].selected 		= true;
 	frm.catstringview.options[0].selected 	= true;
@@ -523,11 +521,6 @@ function showNew () {
 	if (frm.artSubjectt.classList.contains('chosen-select')) {
 		frm.artSubjectt.dispatchEvent(new Event('chosen:updated', { bubbles: true }));
 	}
-	
-
-	<!--- frm.artistview.options[0].selected 		= true;
-	frm.artTypes.options[0].selected 		= true;
-	frm.catstringview.options[0].selected 	= true; --->
 
 	frm.year.value			= '';
 	frm.size.value			= '';

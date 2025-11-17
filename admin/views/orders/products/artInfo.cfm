@@ -37,7 +37,7 @@
 			document.getElementById('desc').focus();
 			return false;
 		}
-		if (priceInput === '' || isNaN(priceInput) || Number(priceInput) < 0) {
+		if (priceInput === '' || isNaN(priceInput)) {
 			alert('Please enter a valid Price.');
 			document.getElementById('priceInput').focus();
 			return false;
@@ -100,7 +100,7 @@
 		<tr>
 			<td>Price:</td>
 			<td>
-				$<input type="number" min="0" step="0.01" name="priceInput"  id="priceInput" size="10" value="" onkeyup="formatPrice( this ); limitLength(this,10);">
+				$<input type="number" min="-999999" step="0.01" name="priceInput"  id="priceInput" size="10" value="" onkeyup="formatPrice( this ); limitLength(this,10);">
 				<input type="Submit" id="addBtn" value="ADD" style="font-family: Arial; font-size: 11px;" />
 				<input type="Button" value="Close" onclick="window.close();" style="font-family: Arial; font-size: 11px;">
 			</td>

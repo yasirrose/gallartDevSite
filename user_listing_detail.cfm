@@ -11,6 +11,20 @@
 <cfset fileSizeLimit = 2000000 />
 <cfset fileSizeLimitKb = '2MB' />
 
+<cfif structKeyExists(CGI, "HTTP_X_FORWARDED_FOR") AND len(trim(CGI.HTTP_X_FORWARDED_FOR))>
+    <cfset ipAddress = listFirst(CGI.HTTP_X_FORWARDED_FOR)>
+<cfelse>
+    <cfset ipAddress = CGI.REMOTE_ADDR>
+</cfif>
+
+<cfif ipAddress EQ "15.204.91.93">
+    <cfoutput>
+        <h2 style="color:red;">Access Denied</h2>
+        <p>Your IP address (#ipAddress#) is blocked from performing this action.</p>
+    </cfoutput>
+    <cfabort>
+</cfif>
+
 <!--- Inserting, Updating or Deleting the Product Information --->
 <cfif isDefined('process')>
 
@@ -119,16 +133,16 @@
                         
                         <cfset thisId = insertListing.uid /> 
                         
-                        <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+                        <!--- <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR> --->
                         <cfset date = now()>
                         <cfset moduleName = 'Sell your art form'>
                         <cfset action = 'Insert'>
 
                         <cfquery name="addLog" datasource="#application.dsource#" >
                             INSERT INTO logs 
-                                ( moduleName, ipAddress, date, action)
+                                ( moduleName, ipAddress, date, action, sellerUser, sellerArtwork)
                                 VALUES
-                                ( '#moduleName#', '#ipAddress#', #date#, '#action#')
+                                ( '#moduleName#', '#ipAddress#', #date#, '#action#', #session.sellerinfo.pk_users#, #thisId#)
                         </cfquery>
                 
                 </cflock>
@@ -225,153 +239,158 @@
         </cfif>
 	
 	 <cfelseif structKeyExists(form, "process") AND ListFirst(form.process, ",") EQ "UPDATE">
-    
-    	<cfif cgi.content_length LTE fileSizeLimit>
+
+        <cfif isDefined('form.uid') and form.uid NEQ '' and form.uid NEQ 0>
+            <cfif cgi.content_length LTE fileSizeLimit>
 	
-		    <!--- parse out unwanted chars --->
-            <cfset form.retail_price 	= rereplace(form.retail_price, "[^0-9|.]", "", "all")> 
-            <cfset form.gallery_price 	= rereplace(form.gallery_price, "[^0-9|.]", "", "all")> 
-            
-            <cfif form.quantity lt 1>
-                <cfset tquantity = 0>
-            <Cfelse>
-                <cfset tquantity = form.quantity>
-            </cfif>
-            
-            <!--- <cfif category is not "">
-                <cfif right(category,1) neq ":">
-                    <cfset category = category&":">
-                <cfelse> --->
-                    <cfset category = category>
-                <!--- </cfif>
-            </cfif> --->
-
-            <cfquery name="currentaction" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                UPDATE products SET
-                    datestamp = '#datestamp#',
-                    name = '#form.name#', 
-                    orderable = #form.orderable#,
-                    quantity = #tquantity#,
-                    path = '#category#', 
-                    options = '#form.options#', 
-                    ship_weight = #ship_weight#, 
-                    Vendor = '#form.Vendor#',
-                    retail_price = #form.retail_price#,
-                    gallery_price = #form.gallery_price#,
-                    <cfif isDefined('Form.fileup') and Form.fileup is not "">
-                    imageURL = '#uploaddirweb#/#uid#.jpg', 
-                    </cfif>
-                    manufacturer = '#form.manufacturer#', 
-                    active = #form.active#,
-                    expressair = '#expressair#',
-                    shipinfo = '#shipinfo#',
-                    availablity = '#availablity#',
-                    caption = '#caption#',
-                    year = '#year#',
-                    size = '#size#',
-                    LASTEDIT = <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">
-                WHERE uid = #form.uid#
-            </cfquery>
-
-            <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
-            <cfset date = now()>
-            <cfset moduleName = 'Sell your art form'>
-            <cfset action = 'Update'>
-
-            <cfquery name="addLog" datasource="#application.dsource#" >
-                INSERT INTO logs 
-                    ( moduleName, ipAddress, date, action)
-                    VALUES
-                    ( '#moduleName#', '#ipAddress#', #date#, '#action#')
-            </cfquery>
-
-            <cfif isDefined('form.fileup') and form.fileup NEQ "">
-            
-                <cffile action="upload" nameconflict="overwrite" filefield="fileup" destination="#uploaddir#" result="fileupload">
-
-                <cfset fileExt = lcase(fileupload.clientFileExt)>
-
-                <cfif fileupload.fileWasSaved and fileExt EQ 'jpg'>
-
-                    <cffile 
-                        action="rename" 
-                        source="#fileupload.serverDirectory#/#fileupload.serverFile#" 
-                        destination="#fileupload.serverDirectory#/#form.uid#.jpg"
-                    >
+                <!--- parse out unwanted chars --->
+                <cfset form.retail_price 	= rereplace(form.retail_price, "[^0-9|.]", "", "all")> 
+                <cfset form.gallery_price 	= rereplace(form.gallery_price, "[^0-9|.]", "", "all")> 
                 
-                    <cfimage 
-                        action="read" 
-                        source="#application.uploaddir#/#form.uid#.jpg" 
-                        name="oImage" 
-                    />
-            
-                    <cfimage
-                        action="resize"
-                        source="#oImage#"
-                        width="100"
-                        height=""
-                        name="oImageSmall"
-                    />
-                
-                    <cfimage
-                        action="WRITE"
-                        source="#oImageSmall#"
-                        destination="#application.uploaddir#/thumbnails/#form.uid#.jpg"
-                        overwrite="true"
-                    />
-                                
-                 <cfelse>
-                    <cffile action="delete" file="#fileupload.serverDirectory#/#fileupload.serverFile#">
-                    <cfset session.ext = true>
-                    <cflocation url="/user_listing_detail/#form.uid#" addtoken="No">
+                <cfif form.quantity lt 1>
+                    <cfset tquantity = 0>
+                <Cfelse>
+                    <cfset tquantity = form.quantity>
                 </cfif>
+                
+                <!--- <cfif category is not "">
+                    <cfif right(category,1) neq ":">
+                        <cfset category = category&":">
+                    <cfelse> --->
+                        <cfset category = category>
+                    <!--- </cfif>
+                </cfif> --->
+
+                <cfquery name="currentaction" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                    UPDATE products SET
+                        datestamp = '#datestamp#',
+                        name = '#form.name#', 
+                        orderable = #form.orderable#,
+                        quantity = #tquantity#,
+                        path = '#category#', 
+                        options = '#form.options#', 
+                        ship_weight = #ship_weight#, 
+                        Vendor = '#form.Vendor#',
+                        retail_price = #form.retail_price#,
+                        gallery_price = #form.gallery_price#,
+                        <cfif isDefined('Form.fileup') and Form.fileup is not "">
+                        imageURL = '#uploaddirweb#/#uid#.jpg', 
+                        </cfif>
+                        manufacturer = '#form.manufacturer#', 
+                        active = #form.active#,
+                        expressair = '#expressair#',
+                        shipinfo = '#shipinfo#',
+                        availablity = '#availablity#',
+                        caption = '#caption#',
+                        year = '#year#',
+                        size = '#size#',
+                        LASTEDIT = <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">
+                    WHERE uid = #form.uid#
+                </cfquery>
+
+                <!--- <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR> --->
+                <cfset date = now()>
+                <cfset moduleName = 'Sell your art form'>
+                <cfset action = 'Update'>
+
+                <cfquery name="addLog" datasource="#application.dsource#" >
+                    INSERT INTO logs 
+                        ( moduleName, ipAddress, date, action, sellerUser, sellerArtwork)
+                        VALUES
+                        ( '#moduleName#', '#ipAddress#', #date#, '#action#', #session.sellerinfo.pk_users#, #form.uid#)
+                </cfquery>
+
+                <cfif isDefined('form.fileup') and form.fileup NEQ "">
+                
+                    <cffile action="upload" nameconflict="overwrite" filefield="fileup" destination="#uploaddir#" result="fileupload">
+
+                    <cfset fileExt = lcase(fileupload.clientFileExt)>
+
+                    <cfif fileupload.fileWasSaved and fileExt EQ 'jpg'>
+
+                        <cffile 
+                            action="rename" 
+                            source="#fileupload.serverDirectory#/#fileupload.serverFile#" 
+                            destination="#fileupload.serverDirectory#/#form.uid#.jpg"
+                        >
+                    
+                        <cfimage 
+                            action="read" 
+                            source="#application.uploaddir#/#form.uid#.jpg" 
+                            name="oImage" 
+                        />
+                
+                        <cfimage
+                            action="resize"
+                            source="#oImage#"
+                            width="100"
+                            height=""
+                            name="oImageSmall"
+                        />
+                    
+                        <cfimage
+                            action="WRITE"
+                            source="#oImageSmall#"
+                            destination="#application.uploaddir#/thumbnails/#form.uid#.jpg"
+                            overwrite="true"
+                        />
                                     
+                    <cfelse>
+                        <cffile action="delete" file="#fileupload.serverDirectory#/#fileupload.serverFile#">
+                        <cfset session.ext = true>
+                        <cflocation url="/user_listing_detail/#form.uid#" addtoken="No">
+                    </cfif>
+                                        
+                </cfif>
+                
+                <cftry>
+                
+                    <cfmail 
+                        server="#application.mailserver#" 
+                        username="#application.mailserver_un#" 
+                        password="#application.mailserver_pw#" 
+                        to="#emailsupport#" 
+                        cc="#emailsupportcc#" 
+                        from="#emailsupport#" 
+                        subject="Gallery Art Member Listing Update" 
+                        type="HTML"
+                        >
+                            <font style="font-size: 10pt; font-family: Arial;">
+                            <strong>
+                                #session.sellerinfo.fname# #session.sellerinfo.lname#
+                            </strong> updated a product on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  
+                            <br><br>
+                            Title: #form.name#<br>
+                            Artist: #form.manufacturer#<br>
+                            Year: #form.year#<br>
+                            Size: #form.size#<br>
+                            Medium: #form.category#<br>
+                            Retail Price: #form.retail_price#<br>
+                            Gallery Price: #form.gallery_price#<br>
+                            <!--- Art ID: #form.modelno#<br><br> --->
+                            Please review this product in Admin, and update the status to "Active" to show on the site.
+                            <br><br>
+                    </cfmail>
+                
+                <cfcatch type="Any">
+                    ERROR!!
+                    <cfabort>
+                </cfcatch>
+                
+                </cftry>
+                
+                <cflocation url="/overView" addtoken="No">
+                
+             <cfelse>
+                <cfset session.filetoolarge = true>
+                <cflocation url="/user_listing_detail/#form.uid#" addtoken="No">
             </cfif>
-            
-            <cftry>
-            
-                <cfmail 
-                    server="#application.mailserver#" 
-                    username="#application.mailserver_un#" 
-                    password="#application.mailserver_pw#" 
-                    to="#emailsupport#" 
-                    cc="#emailsupportcc#" 
-                    from="#emailsupport#" 
-                    subject="Gallery Art Member Listing Update" 
-                    type="HTML"
-                    >
-                        <font style="font-size: 10pt; font-family: Arial;">
-                        <strong>
-                            #session.sellerinfo.fname# #session.sellerinfo.lname#
-                        </strong> updated a product on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  
-                        <br><br>
-                        Title: #form.name#<br>
-                        Artist: #form.manufacturer#<br>
-                        Year: #form.year#<br>
-                        Size: #form.size#<br>
-                        Medium: #form.category#<br>
-                        Retail Price: #form.retail_price#<br>
-                        Gallery Price: #form.gallery_price#<br>
-                        <!--- Art ID: #form.modelno#<br><br> --->
-                        Please review this product in Admin, and update the status to "Active" to show on the site.
-                        <br><br>
-                </cfmail>
-            
-             <cfcatch type="Any">
-                ERROR!!
-                <cfabort>
-             </cfcatch>
-            
-            </cftry>
-            
-            <cflocation url="/overView" addtoken="No">
-            
-      	 <cfelse>
-            <cfset session.filetoolarge = true>
-        	<cflocation url="/user_listing_detail/#form.uid#" addtoken="No">
-		</cfif>
-		
-		
+         <cfelse>
+
+            <!--- redirect in sell art form if uid is null --->
+            <cflocation url="/user_listing_detail/" addtoken="No">
+        </cfif>    	
+				
 	
 	 <cfelseif structKeyExists(form, "process") AND ListFirst(form.process, ",") EQ "DELETE" >
 	
@@ -384,29 +403,27 @@
 			<cffile action="DELETE" file="#uploaddir#/thumbnails/#form.uid#.jpg">
 		 <cfcatch type="Any"></cfcatch>
 		</cftry>
-	
+        
+        <cfset deleteID = form.uid>
 		
 		<cfquery name="currentaction" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 			DELETE products where uid = #form.uid#	
 		</cfquery>
 
-        <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+        <!--- <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR> --->
         <cfset date = now()>
         <cfset moduleName = 'Sell your art form'>
         <cfset action = 'Delete'>
 
         <cfquery name="addLog" datasource="#application.dsource#" >
             INSERT INTO logs 
-                ( moduleName, ipAddress, date, action)
+                ( moduleName, ipAddress, date, action, sellerUser, sellerArtwork)
                 VALUES
-                ( '#moduleName#', '#ipAddress#', #date#, '#action#')
-        </cfquery>
-		
-		<cflocation url="/user_listing_results/delete" addtoken="No">
+                ( '#moduleName#', '#ipAddress#', #date#, '#action#', #session.sellerinfo.pk_users#, #deleteID#)
+        </cfquery>		
+		<cflocation url="/overView" addtoken="No">
 	
 	</cfif>
-    
-
 </cfif>
 
 <!--- End processing --->
@@ -513,8 +530,8 @@
                     isValid = false;
                 }
 
-                
 
+                
                 if(frm.gallery_price.value == '' || frm.gallery_price.value == '$0.00' || frm.gallery_price.value == 0){
                     toastr.error('You must enter a Gallery Price greater than zero');
                     isValid = false;
@@ -546,18 +563,18 @@
                     toastr.error('You must enter a artwork description.');
                     isValid = false;
                 }
-                
-            
 
+
+                
                 if(isValid){
                     const submitButton = frm.querySelector("input[type=submit]");
                     disableSubmitButton(submitButton);
                 }
 
-            
 
-                return isValid;
-                
+
+                return isValid;     
+                           
             }
             function ArtistView() {
                 var artistvalue = document.frm1.artistview.value;
@@ -769,17 +786,17 @@
                                                                         <input type="reset" value="Reset" class="SeeMore" />
                                                                         <input type="hidden" name="id" value="#url.id#">
                                                                             <Cfif isDefined('returnq')>
-                                                                            <input type="hidden" name="returnq" value="#returnq#">
+                                                                                <input type="hidden" name="returnq" value="#returnq#">
                                                                             </cfif>
                                                                         <input type="hidden" name="uid" value="#detail.uid#"><br><br>
                                                                         
-                                                                        <cfelse>
+                                                                     <cfelse>
                                                                         <input type="Hidden"  name="process" value="ADD">
                                                                         <input type="submit" id="btnAdd" name="process" class="SeeMore" value="Add Your Listing">
                                                                             <Cfif isDefined('returnq')>
-                                                                            <input type="hidden" name="returnq" value="#returnq#">
+                                                                                <input type="hidden" name="returnq" value="#returnq#">
                                                                             </cfif>
-                                                                        </cfif>
+                                                                    </cfif>
                                                                 </div>
                                                             </div>
                                                         </form>

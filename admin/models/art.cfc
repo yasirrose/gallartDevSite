@@ -41,7 +41,6 @@
 		<cfargument name="promotion" required="no" type="string" default="0">
 		<cfargument name="showResults" required="no" type="string" default="1">
 
-		<!--- <cfdump var="#arguments#" abort="true"> --->
 
 		<cfset var qListings='' />
 
@@ -60,7 +59,7 @@
 			CASE WHEN active = '0' THEN 'Inactive' ELSE 'Active' END AS Status,*
 	      	FROM products P
 			LEFT OUTER JOIN users U on P.fk_users = U.pk_users
-			WHERE 0=0 
+			WHERE 0=0 and ( P.fk_users IS NULL OR U.pk_users IS NOT NULL)
 			<cfif isDefined('arguments.modelno') AND arguments.modelno neq ''>
 	      		AND modelno like '#arguments.modelno#%'
 	      	</cfif>
@@ -114,34 +113,32 @@
 				</cfif>
 			</cfif>
 
-			<cfif isDefined('arguments.promotion')>
-				<cfif arguments.promotion EQ 1>
+			<cfif isDefined('arguments.promotion') and arguments.promotion EQ 'on,'>				
 					AND promotion = 1
-				
-				</cfif>
+								
 			</cfif>
 
-			<cfif isDefined('arguments.onSale') AND arguments.onSale EQ 1>
-				AND closeout = 1
-			</cfif>
+			-- <cfif isDefined('arguments.onSale') AND arguments.onSale EQ 1>
+			-- 	AND closeout = 1
+			-- </cfif>
             <cfif isDefined('arguments.imageName') AND arguments.imageName neq ''>
 				AND uid = '#arguments.imageName#'
 			</cfif>
-			<cfif isDefined('arguments.trump') AND arguments.trump EQ 2>
-				AND location = 2
-			</cfif>
-			<cfif isDefined('arguments.auction') AND arguments.auction EQ 1>
-				AND auction = 1
-			</cfif>
-			<cfif isDefined('arguments.slideshow') AND arguments.slideshow EQ 1>
-				AND slideshow = 1
-			</cfif>
-			<cfif isDefined('arguments.frontShow') AND arguments.frontShow EQ 1>
-				AND frontshow > 0
-			</cfif>
-			<cfif isDefined('arguments.bottomHome') AND arguments.bottomHome EQ 1>
-				AND family > 0
-			</cfif>
+			-- <cfif isDefined('arguments.trump') AND arguments.trump EQ 2>
+			-- 	AND location = 2
+			-- </cfif>
+			-- <cfif isDefined('arguments.auction') AND arguments.auction EQ 1>
+			-- 	AND auction = 1
+			-- </cfif>
+			-- <cfif isDefined('arguments.slideshow') AND arguments.slideshow EQ 1>
+			-- 	AND slideshow = 1
+			-- </cfif>
+			-- <cfif isDefined('arguments.frontShow') AND arguments.frontShow EQ 1>
+			-- 	AND frontshow > 0
+			-- </cfif>
+			-- <cfif isDefined('arguments.bottomHome') AND arguments.bottomHome EQ 1>
+			-- 	AND family > 0
+			-- </cfif>
 			<cfif isDefined('arguments.active')>
 				<cfif arguments.active EQ 1>
 					AND P.active = 1
@@ -336,9 +333,9 @@
 
 				<cfquery name="addLog" datasource="#application.dsource#" >
 					INSERT INTO logs 
-						( moduleName, ipAddress, date, action)
+						( moduleName, ipAddress, date, action, sellerArtwork)
 						VALUES
-						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #thisId#)
 				</cfquery>
 
 			 <cfelse>
@@ -394,9 +391,9 @@
 
 				<cfquery name="addLog" datasource="#application.dsource#" >
 					INSERT INTO logs 
-						( moduleName, ipAddress, date, action)
+						( moduleName, ipAddress, date, action, sellerArtwork)
 						VALUES
-						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #thisId#)
 				</cfquery>
 
 			</cfif>
@@ -839,6 +836,9 @@
 
 	<cffunction name="deleteListing" access="remote">
 		<cfargument name="uid" type="string" default="">
+		<cfargument name="moduleName" type="string" default="">
+
+		<cfset deleteID = arguments.uid>
 
 		<cfset var success = true />
 
@@ -857,9 +857,9 @@
 
 			<cfquery name="addLog" datasource="#application.dsource#" >
 				INSERT INTO logs 
-					( moduleName, ipAddress, date, action)
+					( moduleName, ipAddress, date, action, sellerArtwork)
 					VALUES
-					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #deleteID#)
 			</cfquery>
 
 			<cfcatch type="any">
@@ -1177,54 +1177,54 @@
 
 	<cfsavecontent variable="artDisplay">
 		<cfif structKeyExists(session,'orderArray') AND arrayLen(session.orderArray)>
-	   	<table width="100%" border="1" bgcolor="#ffffff">
-			<tr>
-				<td width="5%">Quantity</td>
-				<td width="30%">Title</td>
-				<td width="20%">Artist</td>
-				<td width="25%">Description</td>
-				<td width="5%" align="center">Art ID</td>
-				<td width="5%">Framing</td>
-				<td width="5%">Price</td>
-				<td width="5%">Delete</td>
-			</tr>
-			<cfoutput>
-				
-				<cfloop from="1" to="#arrayLen(session.orderArray)#" index="idx">
-					<tr>
-						<td>
-							<input type="Text" id="quantity_#idx#" name="quantity_#idx#" size="4" maxlength="4" value="#session.orderArray[idx][7]#" onkeyup="addQuantity('#idx#',this.value)" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
-						</td>
-						<td>
-							<input type="Hidden" name="title_#idx#" value="#session.orderArray[idx][2]#">
-							#session.orderArray[idx][2]#
-						</td>
-						<td>
-							<input type="Hidden" name="artist_#idx#" value="#session.orderArray[idx][3]#">
-							#session.orderArray[idx][3]#
-						</td>
-						<td>
-							<input type="Hidden" name="desc_#idx#" value="#session.orderArray[idx][4]#">
-							#session.orderArray[idx][4]#
-						</td>
-						<td align="center">
-							<input type="Hidden" name="modelno_#idx#" value="#session.orderArray[idx][5]#">
-							#session.orderArray[idx][5]#
-						</td>
-						<td align="center">
-							<input type="Hidden" name="framing_#idx#" value="#session.orderArray[idx][8]#">
-							<cfif session.orderArray[idx][8] EQ 1>YES</cfif>
-						</td>
-						<td align="right">
-							<input type="Text" id="price_#idx#" name="price_#idx#" value="<cfif NOT Len(Trim(session.orderArray[idx][6]))>0<cfelse>#session.orderArray[idx][6]#</cfif>" onkeyup="addPrice('#idx#',this.value)" />
-						</td>
-						<td align="center">
-							<a onclick="delArt('#idx#');return false;" style="cursor: pointer;"><img src="http://#server_name#/images/trash.gif" border="0" /></a>
-						</td>
-					</tr>
-				</cfloop>
-			</cfoutput>
-		</table>
+			<table width="100%" border="1" bgcolor="#ffffff">
+				<tr>
+					<td width="5%">Quantity</td>
+					<td width="30%">Title</td>
+					<td width="20%">Artist</td>
+					<td width="25%">Description</td>
+					<td width="5%" align="center">Art ID</td>
+					<td width="5%">Framing</td>
+					<td width="5%">Price</td>
+					<td width="5%">Delete</td>
+				</tr>
+				<cfoutput>
+					
+					<cfloop from="1" to="#arrayLen(session.orderArray)#" index="idx">
+						<tr>
+							<td>
+								<input type="Text" id="quantity_#idx#" name="quantity_#idx#" size="4" maxlength="4" value="#session.orderArray[idx][7]#" onkeyup="addQuantity('#idx#',this.value)" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+							</td>
+							<td>
+								<input type="Hidden" name="title_#idx#" value="#session.orderArray[idx][2]#">
+								#session.orderArray[idx][2]#
+							</td>
+							<td>
+								<input type="Hidden" name="artist_#idx#" value="#session.orderArray[idx][3]#">
+								#session.orderArray[idx][3]#
+							</td>
+							<td>
+								<input type="Hidden" name="desc_#idx#" value="#session.orderArray[idx][4]#">
+								#session.orderArray[idx][4]#
+							</td>
+							<td align="center">
+								<input type="Hidden" name="modelno_#idx#" value="#session.orderArray[idx][5]#">
+								#session.orderArray[idx][5]#
+							</td>
+							<td align="center">
+								<input type="Hidden" name="framing_#idx#" value="#session.orderArray[idx][8]#">
+								<cfif session.orderArray[idx][8] EQ 1>YES</cfif>
+							</td>
+							<td align="right">
+								<input type="Text" id="price_#idx#" name="price_#idx#" value="<cfif NOT Len(Trim(session.orderArray[idx][6]))>0<cfelse>#session.orderArray[idx][6]#</cfif>" onkeyup="addPrice('#idx#',this.value)" />
+							</td>
+							<td align="center">
+								<a onclick="delArt('#idx#');return false;" style="cursor: pointer;"><img src="http://#server_name#/images/trash.gif" border="0" /></a>
+							</td>
+						</tr>
+					</cfloop>
+				</cfoutput>
+			</table>
 		</cfif>
 	</cfsavecontent>
 
@@ -1305,7 +1305,7 @@
 
 
 	   	<cfquery name="qListings" datasource="#application.dsource#">
-	      	SELECT CONVERT(CHAR(9),datestamp,6) as listingDate,*
+	      	SELECT CONVERT(CHAR(9),P.datestamp,6) as listingDate,*
     		FROM products P
 			INNER JOIN users U on P.fk_users = U.pk_users
     		WHERE P.fk_users is not null
@@ -1318,17 +1318,17 @@
 			</cfif>
 			<cfif IsDefined('arguments.timeframe') and len(trim(arguments.timeframe))>
 				<cfif arguments.timeframe eq 'week'>
-					AND datestamp >  #dateadd('ww',-1,now())#
+					AND P.datestamp >  #dateadd('ww',-1,now())#
 				<cfelseif arguments.timeframe eq 'month'>
-					AND datestamp >  #dateadd('m',-1,now())#
+					AND P.datestamp >  #dateadd('m',-1,now())#
 				<cfelseif arguments.timeframe eq 'twomonths'>
-					AND datestamp >  #dateadd('m',-2,now())#
+					AND P.datestamp >  #dateadd('m',-2,now())#
 				</cfif>
 			</cfif>
 	      	<cfif gridsortcolumn neq ''>
 	      		ORDER BY #gridsortcolumn# #gridsortdirection#
 			<cfelse>
-				ORDER BY datestamp desc
+				ORDER BY P.datestamp desc
 	      	</cfif>
 	   	</cfquery>
 		
@@ -1662,8 +1662,7 @@
 		<cfif isDefined('arguments.toPrice') AND arguments.toPrice neq ''>
 			<cfset arguments.toPrice 	= rereplace(arguments.toPrice, "[^0-9|.]", "", "all")>
 		</cfif>
-
-		<!--- <cfdump var="#arguments#" abort="true"> --->
+		
 
         <cfif isDefined('arguments.groups') AND arguments.groups GT 0>
 			
@@ -1818,16 +1817,16 @@
 					AND manufacturer like '#arguments.alphaChar#%'
 				</cfif>
 				<cfif isDefined('arguments.artType') AND arguments.artType neq ''>
-					AND artType like '#arguments.artType#%'
+					AND artType like '%#arguments.artType#%'
 				</cfif>
 				<cfif isDefined('arguments.artTypee') AND arguments.artTypee neq ''>
-					AND artTypee like '#arguments.artTypee#%'
+					AND artTypee like '%#arguments.artTypee#%'
 				</cfif>
 				<cfif isDefined('arguments.artSize') AND arguments.artSize neq ''>
-					AND artSize like '#arguments.artSize#%'
+					AND artSize like '%#arguments.artSize#%'
 				</cfif>
 				<cfif isDefined('arguments.artSubject') AND arguments.artSubject neq ''>
-					AND artSubject like '#arguments.artSubject#%'
+					AND artSubject like '%#arguments.artSubject#%'
 				</cfif>
 				<cfif isDefined('arguments.alphaChar') AND arguments.alphaChar neq ''>
 					ORDER BY manufacturer
@@ -1856,7 +1855,8 @@
             <cfdump var="#form#" abort="true">
         </cfif> --->
         
-        <cfif isDefined('form.updatedRowRecord') and form.updatedRowRecord neq '' >
+        <cfif isDefined('form.updatedRowRecord') and form.updatedRowRecord neq '' >			
+
             <cfset this_keyval = form.updatedRowRecord>
 			
             <cfquery name="update" datasource="#application.dsource#">
@@ -1959,6 +1959,18 @@
 				
                 WHERE uid = #this_keyval#
             </cfquery>
+
+			<cfset moduleName = 'Mass Update'>
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Update'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
 
          <cfelse>
 
@@ -2075,6 +2087,18 @@
     
             </cfloop>
 
+			<cfset moduleName = 'Mass Update'>
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Update All'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
+
         </cfif>
 
 		
@@ -2131,7 +2155,7 @@
 
         <cfset var returnStruct = structNew() />
 
-		<!--- <cfdump var="#arguments#" abort="true"> --->
+
 
 		<cfset qImages = '' />
 
@@ -2333,138 +2357,6 @@
         </cfif>
 
 	</cffunction>
-
-
-<!--- /////////////  FOR Bulk  ///////////////// --->
-
-
-
-<cffunction name="getListingsForBulk" access="remote" returntype="query">
-
-    <cfargument name="sellerId" required="no" type="string" default="">
-    <cfargument name="modelno" required="no" type="string" default="">
-    <cfargument name="title" required="no" type="string" default="">
-    <cfargument name="artist" required="no" type="string" default="">
-    <cfargument name="exclude_artist" required="no" type="string" default="">
-    <cfargument name="medium" required="no" type="string" default="">
-    <cfargument name="year" required="no" type="string" default="">
-    <cfargument name="height" required="no" type="string" default="">
-    <cfargument name="width" required="no" type="string" default="">
-    <cfargument name="description" required="no" type="string" default="">
-    <cfargument name="fromPrice" required="no" type="string" default="">
-    <cfargument name="toPrice" required="no" type="string" default="">
-    <cfargument name="fromDate" required="no" type="string" default="">
-    <cfargument name="toDate" required="no" type="string" default="">
-    <cfargument name="fromLastEdit" required="no" type="string" default="">
-    <cfargument name="toLastEdit" required="no" type="string" default="">
-    <cfargument name="gallery_only" required="no" type="string" default="">
-    <cfargument name="onSale" required="no" type="string" default="">
-    <cfargument name="trump" required="no" type="string" default="">
-    <cfargument name="auction" required="no" type="string" default="">
-    <cfargument name="active" required="no" type="string" default="">
-    <cfargument name="searchArtist" required="no" type="string" default="">
-    <cfargument name="priceOrder" required="no" type="string" default="">
-
-    <cfset var qListings='' />
-
-    <!--- <cfif arguments.searchArtist NEQ '' >
-        <cfdump var="#arguments.searchArtist#" abort="true">
-    </cfif> --->
-    
-
-    <cfif isDefined('arguments.fromPrice') AND arguments.fromPrice neq ''>
-        <cfset arguments.fromPrice 	= rereplace(arguments.fromPrice, "[^0-9|.]", "", "all")>
-    </cfif>
-    <cfif isDefined('arguments.toPrice') AND arguments.toPrice neq ''>
-        <cfset arguments.toPrice 	= rereplace(arguments.toPrice, "[^0-9|.]", "", "all")>
-    </cfif>
-
-       <cfquery name="qListings" datasource="#application.dsource#">
-          SELECT CONVERT(CHAR(9),datestamp,6) as listingDate,*
-          FROM products P
-        LEFT OUTER JOIN users U on P.fk_users = U.pk_users
-        WHERE active = 1
-        <cfif isDefined('arguments.modelno') AND arguments.modelno neq ''>
-              AND modelno like '#arguments.modelno#%'
-          </cfif>
-        <cfif isDefined('arguments.title') AND arguments.title neq ''>
-              AND name like '#arguments.title#%'
-          </cfif>
-        <cfif isDefined('arguments.artist') AND arguments.artist neq ''>
-              AND manufacturer like '#arguments.artist#%'
-          </cfif>
-        <cfif isDefined('arguments.exclude_artist') AND arguments.exclude_artist neq ''>
-              AND manufacturer <> '#arguments.exclude_artist#'
-          </cfif>
-        <cfif isDefined('arguments.medium') AND arguments.medium neq ''>
-              AND path = '#arguments.medium#'
-          </cfif>
-        <cfif isDefined('arguments.year') AND arguments.year neq ''>
-              AND year = '#arguments.year#'
-          </cfif>
-        <cfif isDefined('arguments.height') and len(trim(arguments.height))>
-            AND (patindex('%x%',size) > 1 AND substring(size,1,patindex('%x%',size)-1) like '#arguments.height#')
-        </cfif>
-        <cfif isDefined('arguments.width') and len(trim(arguments.width))>
-            AND (patindex('%x%',size) > 1 AND replace(substring(size,patindex('%x%',size)+1,10),' ','') like '#arguments.width#%')
-        </cfif>
-        <cfif isDefined('arguments.description') AND arguments.description neq ''>
-              AND caption like '%#arguments.description#%'
-          </cfif>
-        <cfif isDefined('arguments.fromPrice') AND arguments.fromPrice neq ''>
-            AND gallery_price >= #arguments.fromPrice#
-        </cfif>
-        <cfif isDefined('arguments.toPrice') AND arguments.toPrice neq ''>
-            AND gallery_price <= #arguments.toPrice#
-        </cfif>
-        <cfif isDefined('arguments.fromDate') AND arguments.fromDate neq ''>
-            AND datestamp >= '#dateFormat(arguments.fromDate)#'
-        </cfif>
-        <cfif isDefined('arguments.toDate') AND arguments.toDate neq ''>
-            AND datestamp <= '#dateFormat(arguments.toDate)#'
-        </cfif>
-        <cfif isDefined('arguments.fromLastedit') AND arguments.fromLastedit neq ''>
-            AND lastedit >= '#dateFormat(arguments.fromLastedit)#'
-        </cfif>
-        <cfif isDefined('arguments.toLastedit') AND arguments.toLastedit neq ''>
-            AND lastedit <= '#dateFormat(arguments.toLastedit)#'
-        </cfif>
-        <cfif isDefined('arguments.gallery_only') AND arguments.gallery_only EQ 1>
-            AND fk_users is null
-        </cfif>
-        <cfif isDefined('arguments.sellerId') and len(trim(arguments.sellerId))>
-            <cfif arguments.sellerId eq 0>
-                 AND fk_users is not null
-            <cfelseif arguments.sellerId gt 0>
-                AND fk_users = #arguments.sellerId#
-            </cfif>
-        </cfif>
-        <cfif isDefined('arguments.onSale') AND arguments.onSale EQ 1>
-            AND closeout = 1
-        </cfif>
-        <cfif isDefined('arguments.trump') AND arguments.trump EQ 2>
-            AND location = 2
-        </cfif>
-        <cfif isDefined('arguments.auction') AND arguments.auction EQ 1>
-            AND auction = 1
-        </cfif>
-        <cfif isDefined('arguments.searchArtist') AND arguments.searchArtist NEQ ''>
-            AND manufacturer like '#arguments.searchArtist#%'
-        </cfif>
-        <cfif isDefined('arguments.priceOrder') AND arguments.priceOrder NEQ ''>
-            ORDER BY gallery_price  #arguments.priceOrder#
-            <cfelse>
-                ORDER BY name
-        </cfif>
-              
-       </cfquery>
-
-       <cfreturn qListings />
-
-</cffunction>
-
-
-
 
 
 </cfcomponent>

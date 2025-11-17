@@ -57,12 +57,9 @@
 									<p>Gallery Art <br>20633 Biscayne Blvd Suite C2<br> Aventura, FL 33180 </p>
 									<ul>
 										<li><a href="tel:305.932.6166">305.932.6166</a></li>
-										<li><a href="305.439.7422">305.439.7422 (Text) </a></li>
+										<li><a href="##">305.439.7422 (Text) </a></li>
 										<li><a href="/contact-us">info@gallart.com</a></li>
-									</ul>
-
-									
-
+									</ul>									
 								</div>
 							</div>
 						</div>
@@ -82,9 +79,9 @@
 									<p class="mb-3">Subscribe to receive our newsletter and notifications about new arrivals.</p>
 									<div class="footer__newsletter">
 										<form method="POST" onsubmit="return validateFormForNewsletter()">
-											<input type="email" id="footerEmail" size="15" maxsize="15" maxlength="20" name="footerEmail"  placeholder="Enter Your Email">
+											<input type="email" name="footerEmail" id="footerEmail" size="20" maxsize="20" maxlength="30"  placeholder="Enter Your Email">
 											<span class="error-message" id="footerEmailError"></span>
-											<button type="submit" class="footer__newsletter-btn" name="commit" aria-label="Subscribe">
+											<button type="submit" class="footer__newsletter-btn" name="commit" id="newsletterBtn" aria-label="Subscribe">
 												<i class="fa fa-envelope"></i>
 												<span class="footer__newsletter-btn-label">
 													Subscribe
@@ -183,6 +180,8 @@
 
 				const email = document.getElementById('footerEmail').value.trim();
 
+				const submitBtn = document.getElementById('newsletterBtn');
+
 				if (!email) {
 					document.getElementById('footerEmailError').textContent = 'Please enter your email address.';
 					isValid = false;
@@ -190,6 +189,13 @@
 					document.getElementById('footerEmailError').textContent = 'Please enter a valid email address.';
 					isValid = false;
 				}
+
+					if (isValid) {
+						// Disable button to prevent multiple submit clicks
+						submitBtn.disabled = true;
+						submitBtn.style.opacity = "0.6"; // optional UI effect
+						// submitBtn.textContent = "Please wait...";
+					}
 
 				return isValid;
 				
@@ -211,7 +217,7 @@
 		
 	</footer>
 
-	<cfif isDefined('form.footerEmail') and form.footerEmail neq ''>
+	<cfif isDefined('form.footerEmail') and form.footerEmail neq '' AND len(trim(form.footerEmail))>
 		<cfset email = trim(FORM.footerEmail)>
 		<cfset ipAddress = cgi.HTTP_X_FORWARDED_FOR>
 		<cfset createdAt = now()>
@@ -243,11 +249,24 @@
 							<cfqueryparam value="#ipAddress#" cfsqltype="cf_sql_varchar">
 							)
 				</cfquery>
+				
+				<cfset moduleName = 'Footer NewsLetter'>
+				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+				<cfset date = now()>				
+				<cfset action = 'Insert'>
+
+				<cfquery name="addLog" datasource="#application.dsource#" >
+					INSERT INTO logs 
+						( moduleName, ipAddress, date, action)
+						VALUES
+						( '#moduleName#', '#ipAddress#', #date#, '#action#')
+				</cfquery>
+
 			 	<cfset session.email = email>
 					<cfoutput>
 						<script>
 							alert('Your Email is Submitted');
-							window.location.href = '/';
+							// window.location.href = '/';
 						</script>
 					</cfoutput>
 				<cfelse>
@@ -255,7 +274,7 @@
 					<cfoutput>
 						<script>
 							alert('You are already subscribed.');
-							window.location.href = '/';
+							// window.location.href = '/';
 						</script>
 					</cfoutput>
 			</cfif>
@@ -266,10 +285,7 @@
 					// window.location.href = '#script_name#';
 				</script>
 			</cfoutput>
-		</cfif>
-
-		
-		
+		</cfif>				
 	
 		<!--- <cfelse>
 			<cfoutput>

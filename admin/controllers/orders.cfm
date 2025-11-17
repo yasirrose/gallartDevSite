@@ -12,7 +12,7 @@
 	<cfdefaultcase>
 		<cfinclude template="../views/layout.top.cfm" />
 
-		<cfset fieldList = "assignedTo,customerId,leadId,PhoneNumber,PhoneType,Consultant,Company,lname,fname,AddressType,Address1,City,State,Country,Zip,Address1_Outside,City_Outside,State_Outside,Zip_Outside,website,Email,Payment_Method,CardNumber,cardexpm,cardexpy,authcode,DriversLicense,tobeshipped,special_instructions,origin,estimate" />
+		<cfset fieldList = "assignedTo,customerId,leadId,PhoneNumber,PhoneType,Consultant,Company,lname,fname,AddressType,Address1,City,State,Country,Zip,State_Outside,website,Email,Payment_Method,CardNumber,cardexpm,cardexpy,authcode,DriversLicense,tobeshipped,special_instructions,origin,estimate" />
 
 		<cfloop list="#fieldList#" index="idx">
 			<cfif structKeyExists(session,'invoiceInfo')  AND structKeyExists(session.invoiceInfo, idx)>
@@ -185,7 +185,7 @@
 	<cfcase value="newOrder">
 		<cfinclude template="../views/layout.top.cfm" />
 
-		<cfset fieldList = "assignedTo,customerId,leadId,PhoneNumber,PhoneType,Consultant,Company,lname,fname,AddressType,Address1,City,State,Country,Zip,Address1_Outside,City_Outside,State_Outside,Zip_Outside,website,Email,Payment_Method,CardNumber,cardexpm,cardexpy,authcode,DriversLicense,tobeshipped,special_instructions,origin,estimate" />
+		<cfset fieldList = "assignedTo,customerId,leadId,PhoneNumber,PhoneType,Consultant,Company,lname,fname,AddressType,Address1,City,State,Country,Zip,State_Outside,website,Email,Payment_Method,CardNumber,cardexpm,cardexpy,authcode,DriversLicense,tobeshipped,special_instructions,origin,estimate" />
 		<cfloop list="#fieldList#" index="idx">
 			<cfset "form.#idx#" = "" />
 		</cfloop>

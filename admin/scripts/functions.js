@@ -96,10 +96,11 @@ function getCustomer(customerId) {
 			document.orderForm.AddressType.value = "Outside";
 
 			// Fill Outside USA fields
-			document.orderForm.Address1_Outside.value = strCustomer['ADDRESS1'] || "";
-			document.orderForm.City_Outside.value     = strCustomer['CITY'] || "";
-			document.orderForm.State_Outside.value    = strCustomer['STATE'] || "";
-			document.orderForm.Zip_Outside.value      = strCustomer['ZIP'] || "";
+			// document.orderForm.Address1_Outside.value = strCustomer['ADDRESS1'] || "";
+			// document.orderForm.City_Outside.value     = strCustomer['CITY'] || "";
+			// document.orderForm.Zip_Outside.value      = strCustomer['ZIP'] || "";
+
+			document.orderForm.State_Outside.value    = strCustomer['STATE'] || "";			
 			document.orderForm.Country.value          = strCustomer['COUNTRY'] || "";
 
 			// Clear USA fields
@@ -112,17 +113,19 @@ function getCustomer(customerId) {
 			document.orderForm.AddressType.value = "USA";
 
 			// Fill USA fields
-			document.orderForm.Address1.value = strCustomer['ADDRESS1'] || "";
-			document.orderForm.City.value     = strCustomer['CITY'] || "";
-			document.orderForm.State.value    = strCustomer['STATE'] || "";
-			document.orderForm.Zip.value      = strCustomer['ZIP'] || "";
+			// document.orderForm.Address1.value = strCustomer['ADDRESS1'] || "";
+			// document.orderForm.City.value     = strCustomer['CITY'] || "";
+			// document.orderForm.Zip.value      = strCustomer['ZIP'] || "";
+
+			document.orderForm.State.value    = strCustomer['STATE'] || "";			
 			document.orderForm.Country.value  = strCustomer['COUNTRY'] || "";
 
 			// Clear Outside fields
-			document.orderForm.Address1_Outside.value = "";
-			document.orderForm.City_Outside.value     = "";
+			// document.orderForm.Address1_Outside.value = "";
+			// document.orderForm.City_Outside.value     = "";
+			// document.orderForm.Zip_Outside.value      = "";
 			document.orderForm.State_Outside.value    = "";
-			document.orderForm.Zip_Outside.value      = "";
+			
 		}
 
 		// Call toggle function to show relevant section
@@ -232,33 +235,40 @@ function getContact(email) {
 			document.orderForm.AddressType.value = "Outside";
 
 			// Fill Outside USA fields
-			document.orderForm.Address1_Outside.value = strContact['ADDRESS'] || "";
-			document.orderForm.City_Outside.value     = strContact['CITY'] || "";
-			document.orderForm.State_Outside.value    = strContact['STATE'] || "";
-			document.orderForm.Zip_Outside.value      = strContact['ZIP'] || "";
+			// document.orderForm.Address1_Outside.value = strContact['ADDRESS'] || "";
+			// document.orderForm.City_Outside.value     = strContact['CITY'] || "";
+			// document.orderForm.Zip_Outside.value      = strContact['ZIP'] || "";
+
+			document.orderForm.State_Outside.value    = strContact['STATE'] || "";			
 			document.orderForm.Country.value          = strContact['COUNTRY'] || "";
 
 			// Clear USA fields
-			document.orderForm.Address1.value = "";
-			document.orderForm.City.value     = "";
+
+			// document.orderForm.Address1.value = "";
+			// document.orderForm.City.value     = "";
+			// document.orderForm.Zip.value      = "";
+
 			document.orderForm.State.value    = "";
-			document.orderForm.Zip.value      = "";
+			
 
 		} else {
 			document.orderForm.AddressType.value = "USA";
 
 			// Fill USA fields
-			document.orderForm.Address1.value = strContact['ADDRESS1'] || "";
-			document.orderForm.City.value     = strContact['CITY'] || "";
-			document.orderForm.State.value    = strContact['STATE'] || "";
-			document.orderForm.Zip.value      = strContact['ZIP'] || "";
+			// document.orderForm.Address1.value = strContact['ADDRESS1'] || "";
+			// document.orderForm.City.value     = strContact['CITY'] || "";
+			// document.orderForm.Zip.value      = strContact['ZIP'] || "";
+
+			document.orderForm.State.value    = strContact['STATE'] || "";			
 			document.orderForm.Country.value  = strContact['COUNTRY'] || "";
 
 			// Clear Outside fields
-			document.orderForm.Address1_Outside.value = "";
-			document.orderForm.City_Outside.value     = "";
+			// document.orderForm.Address1_Outside.value = "";
+			// document.orderForm.City_Outside.value     = "";
+			// document.orderForm.Zip_Outside.value      = "";
+
 			document.orderForm.State_Outside.value    = "";
-			document.orderForm.Zip_Outside.value      = "";
+			
 		}
 
 		// Call toggle function to show relevant section
@@ -542,12 +552,15 @@ function validateLeadForm() {
 
     // Regex for (123) 456-7890 format
     let phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
-
-    if (!phonePattern.test(phoneInput)) {
-        alert("Please enter phone number in format: (123) 456-7890");
-        document.getElementById("PhoneNumber").focus();
-        return false;
-    }
+	
+	if(phoneInput !== '') {
+		if (!phonePattern.test(phoneInput)) {
+			alert("Please enter phone number in format: (123) 456-7890");
+			document.getElementById("PhoneNumber").focus();
+			return false;
+		}
+	}
+    
 
     return true; // valid
 }
@@ -616,11 +629,14 @@ function validateForm() {
     // Regex for (123) 456-7890 format
     let phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
 
-    if (!phonePattern.test(phoneInput)) {
-        alert("Please enter phone number in format: (123) 456-7890");
-        document.getElementById("PhoneNumber").focus();
-        return false;
-    }
+	if(phoneInput !=='') {
+		if (!phonePattern.test(phoneInput)) {
+			alert("Please enter phone number in format: (123) 456-7890");
+			document.getElementById("PhoneNumber").focus();
+			return false;
+		}
+	}
+    
 
 	  // Only validate card number when payment method is one that needs validation
     if (cardRules[selectedCardType]) {

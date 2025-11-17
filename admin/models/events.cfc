@@ -58,37 +58,46 @@
 		<cfargument name="event_date" type="string" default="">
 		<cfargument name="event_location" type="string" default="">
 		<cfargument name="isCurrent" type="string" default="">
-		
-		
-	    
+			    
 	    <cfset var success = true />
-		
-		
+				
 	    	<cftry>
 	    
 				<cfif arguments.pk_event_registration_title eq ''>
 					
 					<cfquery name="addRegistrationTitle" datasource="#application.dsource#"> 
-					INSERT into event_registration_title
-						(	
-							event_title,
-							event_date,
-							event_location,
-							isCurrent
-						)
+						INSERT into event_registration_title
+							(	
+								event_title,
+								event_date,
+								event_location,
+								isCurrent
+							)
 						values
-						(
-							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_title#">,
-							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_date#">,
-							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_location#">,
-							<cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.isCurrent),DE('1'),DE('0'))#">
-						)
+							(
+								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_title#">,
+								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_date#">,
+								<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_location#">,
+								<cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.isCurrent),DE('1'),DE('0'))#">
+							)
 						SELECT @@identity as uid 
 					</cfquery>
 			
 					<cfset thisId =  addRegistrationTitle.uid />
+
+					<cfset moduleName = 'Manage Event'>
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Insert'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#moduleName#', '#ipAddress#', #date#, '#action#')
+					</cfquery>
 				
-				<cfelse>
+				 <cfelse>
 				
 					<cfquery name="editRegistrationTitle" datasource="#application.dsource#"> 
 						UPDATE event_registration_title SET 
@@ -97,6 +106,18 @@
 							event_location = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.event_location#">,
 							isCurrent = <cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.isCurrent),DE('1'),DE('0'))#">
 						WHERE pk_event_registration_title = #arguments.pk_event_registration_title#
+					</cfquery>
+
+					<cfset moduleName = 'Manage Event'>
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Update'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#moduleName#', '#ipAddress#', #date#, '#action#')
 					</cfquery>
 					
 					<cfset thisId =  arguments.pk_event_registration_title />
@@ -127,12 +148,26 @@
 		
 		<cftry>
 	
-		<cfquery name="deleteRegistrationTitle" datasource="#application.dsource#"> 
-           	DELETE from event_registration_title
-            WHERE pk_event_registration_title = #arguments.pk_event_registration_title#
-        </cfquery>
+			<cfquery name="deleteRegistrationTitle" datasource="#application.dsource#"> 
+				DELETE from event_registration_title
+				WHERE pk_event_registration_title = #arguments.pk_event_registration_title#
+			</cfquery>
+
+			<cfset moduleName = 'Manage Event'>
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
 		
-		<cfcatch type="any"><cfset success = false /></cfcatch>
+			<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
 		</cftry>
 	
 		<cfreturn success />

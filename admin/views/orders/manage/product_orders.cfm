@@ -631,14 +631,14 @@ function popupWinEmail(url) {
 									<cfinput type="text" name="customer_otherphone" id="customer_otherphone"  bind="{data.customer_otherphone}" size="35" class="displayInput">
 								</td>
 							</tr> --->
-							<tr>
+							<!--- <tr>
 								<td style="font-size: 10px;">
 									Fax:
 								</td>
 								<td>
 									<cfinput type="text" name="customer_fax" id="customer_fax"  bind="{data.customer_fax}" size="35" class="displayInput" maxlength="35">
 								</td>
-							</tr>
+							</tr> --->
 							<tr>
 								<td style="font-size: 10px;">
 									Consultant:

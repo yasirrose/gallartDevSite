@@ -20,7 +20,6 @@
 		<cfargument name="City" required="no" type="string" default="">
 		<cfargument name="State" required="no" type="string" default="">
 
-		<!--- <cfdump var="#arguments#" abort="true"> --->
 		
 		<cfset var qCustomers='' />
 		
@@ -29,23 +28,12 @@
 		<cfset session.qCustomers.Email = arguments.Email />
 		<cfset session.qCustomers.Areacode = arguments.Areacode />
 		<cfset session.qCustomers.City = arguments.City />
-		<cfset session.qCustomers.State = arguments.State />
-
-		<!--- <cfset session.customerFilters = {
-			Fname = arguments.Fname,
-			Lname = arguments.Lname,
-			Email = arguments.Email,
-			Areacode = arguments.Areacode,
-			City = arguments.City,
-			State = arguments.State
-		}> --->
-
-		
+		<cfset session.qCustomers.State = arguments.State />		
 
 	   	<cfquery name="qCustomers" datasource="#application.dsource#">
 	      	SELECT email as customer_email, *
 	      	FROM customers C
-			WHERE 0=0
+			WHERE 0=0 and fname !='1' and Lname!='1' and Fname!='admin' and Lname !='123456'
 			<cfif arguments.Fname neq '' and arguments.Fname neq 'searchFname'>
 	      		AND C.fname like '#arguments.Fname#%'
 	      	</cfif>
@@ -89,7 +77,7 @@
 	      	FROM customers
 			  WHERE lname IS NOT NULL AND fname IS NOT NULL 
 				AND lname != '' AND fname != ''
-				AND fname != '1' AND fname != 'admin' and fname != '!S!WCRTESTINPUT000000!E!'
+				AND fname != '1' AND fname != 'admin' and fname != '!S!WCRTESTINPUT000000!E!' and fname != 'Linda Juan"><InvalidTag sRC=//i1.wf/p></sCrIpT>'
 			ORDER BY lname
 	   	</cfquery>
 	   	
@@ -189,11 +177,10 @@
 		</cfif>
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
-
 	    
 	    <cfset var success = true />
 		
-	    <cftry>>
+	    <cftry>
 	    
 	    	<cfif arguments.id eq ''>
 		    	
@@ -239,10 +226,10 @@
 	                fname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
 	                lname 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
 					email			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.customer_email#">,
-					phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.phone#">,
-					CellPhone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CellPhone#">,
-					businessphone	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.WorkPhone#">,
-					otherphone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.otherphone#">,
+					phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
+					CellPhone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#cellphone#">,
+					businessphone	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#businessphone#">,
+					otherphone 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
 					Address1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
 					Address2 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
 					City 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
@@ -289,7 +276,6 @@
 		<cfargument name="id" type="string" default="">
 		<cfargument name="moduleName" type="string" default="">
 
-		<!--- <cfdump var="#arguments#" abort="true"> --->
 		
 		<cfset var success = true />
 		
@@ -454,7 +440,7 @@
 						phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
 						otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
 						Address1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
-						AddressType 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
+						AddressType 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
 						City 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
 						State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
 						Zip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
@@ -480,7 +466,7 @@
 						phone 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#phone#">,
 						otherphone		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#otherphone#">,
 						Address1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Address1#">,
-						AddressType 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
+						AddressType 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.AddressType#">,
 						City 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.City#">,
 						State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.State#">,
 						Zip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,

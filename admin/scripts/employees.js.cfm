@@ -73,11 +73,7 @@ function doEdit(type) {
 			return false;
 		}
 
-		if (email === '') {
-			toastr.error('Email is required.');
-			document.getElementById('emp_email').focus();
-			return false;
-		} else {
+		if (!email === '') {			
 			// Simple email format check using regex
 			var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 			if (!emailPattern.test(email)) {
@@ -91,7 +87,8 @@ function doEdit(type) {
 			toastr.error('Password is required.');
 			document.getElementById('password').focus();
 			return false;
-		} else {
+		} 
+		<!--- else {
 			
 			var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 			if (!passwordPattern.test(password)) {
@@ -99,15 +96,15 @@ function doEdit(type) {
 				document.getElementById('password').focus();
 				return false;
 			}
-		}
-
+		} --->
+		
 		editBtn.disabled = true;
 		deleteBtn.disabled = true;
 
         var result = edit.editEmployeeFromForm(); 
 
         if (result) {
-		console.log(result);
+		console.log(result);		
             
 			toastr.options = {
 				"closeButton": true,
@@ -136,7 +133,10 @@ function doEdit(type) {
 			}, 5000);
 
         } else {
-            toastr.error('Your Password is already exist. Please change your password');
+            alert('Your Password is already exist. Please change your password');
+
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;				
         }
     }
    else if (type == 'delete'){
@@ -179,8 +179,16 @@ function doEdit(type) {
 				alert( 'There was a problem in the processing.')
 			}
     }
-	document.getElementById('edit').value = 'Edit';
-	document.getElementById('delete').style.display = '';
+	<!--- document.getElementById('edit').value = 'Edit';
+	document.getElementById('delete').style.display = ''; --->
+
+	if (document.getElementById('pk_employees').value === '') {
+		document.getElementById('edit').value = 'Add';
+		document.getElementById('delete').style.display = 'none';
+	} else{
+		document.getElementById('edit').value = 'Edit';
+		document.getElementById('delete').style.display = ''; 
+	}
 }
 
 // clear all fields when new is clicked
