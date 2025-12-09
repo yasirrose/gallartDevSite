@@ -27,7 +27,7 @@
 	      	SELECT pk_users,fname,lname,email as seller_email,phone,cellPhone,businessPhone,otherphone,website,password
 	      	FROM users U
 			LEFT OUTER JOIN products P on U.pk_users = P.fk_users
-			WHERE 0=0
+			WHERE 0=0 and pk_users NOT BETWEEN 29662 AND 30649 and pk_users NOT BETWEEN 15398 and 29264 and pk_users NOT BETWEEN 29423 and 29660 and pk_users NOT BETWEEN 15121 and 29395 and pk_users NOT BETWEEN 14793 and 29419
 			<cfif arguments.Lname neq '' and arguments.Lname neq 'searchLname'>
 	      		AND U.lname like '#arguments.Lname#%'
 	      	</cfif>
@@ -174,7 +174,8 @@
 							cellphone,
 							businessphone,
 							otherphone,
-							password
+							password,
+							datestamp
 						)
 						values
 						(
@@ -185,7 +186,8 @@
 							'#cellphone#',
 							'#businessphone#',
 							'#otherphone#',
-							'#arguments.password#'
+							'#arguments.password#',
+							<cfqueryparam value="#now()#" cfsqltype="CF_SQL_TIMESTAMP" maxlength="100">
 						)
 						SELECT @@identity as newId
 					</cfquery>
@@ -214,7 +216,8 @@
 						cellphone = '#cellphone#',
 						businessphone = '#businessphone#',
 						otherphone = '#otherphone#',
-						password = '#arguments.password#'
+						password = '#arguments.password#',
+						datestamp = <cfqueryparam value="#now()#" cfsqltype="CF_SQL_TIMESTAMP" maxlength="100">
 						WHERE pk_users = '#arguments.pk_users#'
 					</cfquery>
 
@@ -289,7 +292,7 @@
 
 		   <cfquery name="qUsers" datasource="#application.dsource#">
 		      SELECT *
-		      FROM users where fname != 'CXU0VLNWVHP8HBNQQ1MZ0UXC http://google.com/245'
+		      FROM users where fname != 'CXU0VLNWVHP8HBNQQ1MZ0UXC http://google.com/245' and pk_users NOT BETWEEN 29662 AND 30649 and pk_users NOT BETWEEN 15398 and 29264 and pk_users NOT BETWEEN 29423 and 29660 and pk_users NOT BETWEEN 15121 and 29395 and pk_users NOT BETWEEN 14793 and 29419
 		      <cfif gridsortcolumn neq "" or gridsortdirection neq ""> 
 		      order by #gridsortcolumn# #gridsortdirection#
 		      </cfif>
@@ -347,22 +350,22 @@
 		  WHERE roles like '%#arguments.role#%'		
 	   </cfquery>
 	   <cfreturn qUsers/>
-	 </cffunction>
+	</cffunction>
 	 
 	 
-	 <cffunction name="getUsersListings" access="remote" returntype="query">
+	<cffunction name="getUsersListings" access="remote" returntype="query">
 	
 		<cfset var qUsers='' />
 
 		   <cfquery name="qUsers" datasource="#application.dsource#">
 		      SELECT lname +', '+ fname  as full_seller_name,*
-		      FROM users WHERE fname is not null and fname !='' and lname is not null and lname !='' and fname !='?????' and fname !='88952634' and fname != 'CXU0VLNWVHP8HBNQQ1MZ0UXC http://google.com/245' 
+		      FROM users WHERE fname is not null and fname !='' and lname is not null and lname !='' and fname !='?????' and fname !='88952634' and fname != 'CXU0VLNWVHP8HBNQQ1MZ0UXC http://google.com/245' and pk_users NOT BETWEEN 29662 AND 30649 and pk_users NOT BETWEEN 15398 and 29264 and pk_users NOT BETWEEN 29423 and 29660 and pk_users NOT BETWEEN 15121 and 29395 and pk_users NOT BETWEEN 14793 and 29419
 		      order by lname, fname
 		   </cfquery>
 	   
    		<cfreturn qUsers />
 	
-   </cffunction>
+    </cffunction>
 	 
 
 	

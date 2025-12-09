@@ -490,12 +490,26 @@
 		
 	   	<cfquery name="qLeads" datasource="#application.dsource#">
         	SELECT * from leads
-            WHERE fk_employees = '#arguments.EmployeeId#'
+            WHERE fk_employees = '#arguments.EmployeeId#' and isdeleted is null 
       	</cfquery>
         
         <cfreturn qLeads />
         
   	</cffunction>
+
+	<cffunction name="searchLeadsByName" access="remote" returntype="string">
+		<cfargument name="cfautosuggestvalue" type="string">
+
+          	<cfquery name="qListings" datasource="#application.dsource#">
+				SELECT top 200 name FROM leads
+				WHERE name <> ''
+				AND upper(name) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+				ORDER BY name
+	       	</cfquery>
+	
+		<cfreturn valueList(qListings.name) />
+		
+	</cffunction>
 
 	<cffunction name="searchLeadsByAddress" access="remote" returntype="string">
 		<cfargument name="cfautosuggestvalue" type="string">

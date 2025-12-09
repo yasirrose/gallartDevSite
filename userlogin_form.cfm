@@ -1,3 +1,5 @@
+<cfparam name="url.redirect" default="">
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
@@ -43,20 +45,27 @@
                     ( '#moduleName#', '#ipAddress#', #date#, '#action#', #session.sellerinfo.pk_users#)
             </cfquery>
             
-            <cfset url_string = "overView" />
+           <cfset url_string = "overView">
+
+           <cfif structKeyExists(form, "redirect") AND len(trim(form.redirect))>
+                <!--- Only allow item pages to redirect back --->
+                <cfif findNoCase("/artist/", form.redirect)>
+                    <cfset url_string = form.redirect>
+                </cfif>
+            </cfif>
     
             <cfset result = {
                 "success": true,
                 "redirectURL": url_string
             }>
-        <cfelse>
+         <cfelse>
             <cfset result = {
                 "success": false,
                 "errorMessage": "Email or Password is Invalid. Please try again."
             }>
         </cfif>
 
-    <cfelse>
+     <cfelse>
         <cfset result = {
             "success": false,
             "errorMessage": "reCAPTCHA verification failed. Please try again."
@@ -79,6 +88,7 @@
 		</div>
 		<div class="seller-login">
 			<form id="loginForm" method="post">
+                <input type="hidden" name="redirect" value="<cfoutput>#url.redirect#</cfoutput>">
 				<div class="input-form">
 					<div class="input-field">
 						<label><strong>Email Address: <span style="color: #ff0000;">* </span></strong></label>
@@ -191,6 +201,7 @@
             formData.append('email', email_login);
             formData.append('password', password);
             formData.append('g-recaptcha-response', recaptchaResponse);
+            formData.append('redirect', document.querySelector('[name="redirect"]').value);
 
             // Send an AJAX request
             fetch('user_login_page.cfm', {

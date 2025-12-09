@@ -165,32 +165,44 @@
 
 <!--- temp - pop server --->
 
-<cffunction name="popEmail" access="remote" output="false">
+	<cffunction name="popEmail" access="remote" output="false">
 
-	<cfargument name="page" required="yes">
-   	<cfargument name="pageSize" required="yes">
-   	<cfargument name="gridsortcolumn" required="yes">
-   	<cfargument name="gridsortdirection" required="yes">
-<!--- 6598 to 10317 --->
-	<cfpop 
-	  server = "#application.email_server#"
-	  username = "info@onlinegalleryart.us"
-	  password = "#application.email_password#"
-	  action = "getHeaderOnly"
-	  name = "popmail"
-	  timeout = "60"
-	  startRow = "6598"
-	  generateUniqueFilenames = "no"
-	  maxrows="100"
-	  >
-	  
-	<cfquery name="qEmail" dbtype="query">
-		SELECT * FROM popmail
-	</cfquery>
-	  
-	 <cfreturn queryconvertforgrid(qEmail,page,pagesize)/>
+		<cfargument name="page" required="yes">
+		<cfargument name="pageSize" required="yes">
+		<cfargument name="gridsortcolumn" required="yes">
+		<cfargument name="gridsortdirection" required="yes">
+		<!--- 6598 to 10317 --->
+		<!--- <cfpop 
+		server = "#application.email_server#"
+		username = "info@onlinegalleryart.us"
+		password = "#application.email_password#"
+		action = "getHeaderOnly"
+		name = "popmail"
+		timeout = "60"
+		startRow = "6598"
+		generateUniqueFilenames = "no"
+		maxrows="100"
+		> --->
+
+		<cfpop 
+				server="pop.gmail.com"
+				username="Sales@GallArt.com"
+				password="ylzwtvepstcsammm"
+				action="getHeaderOnly"
+				port="995"
+				secure="yes"
+				name="popmail"
+				timeout="60"
+				maxrows="100"
+			>
+		
+			<cfquery name="qEmail" dbtype="query">
+				SELECT * FROM popmail
+			</cfquery>
+		
+		<cfreturn queryconvertforgrid(qEmail,page,pagesize)/>
   
- </cffunction>
+ 	</cffunction>
 
 
  <cffunction name="getNewsletter" access="remote" output="false">

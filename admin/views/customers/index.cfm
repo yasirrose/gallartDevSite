@@ -91,7 +91,7 @@
 							</tr> --->
 							<tr>
 								<td colspan="3" align="center">
-									<input type="Reset">
+									<input type="Reset" onclick="setTimeout(function(){location.reload();},100);">
 									<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" style="margin-top:6px;"/>
 									<!--- <input type="Button" value="Create Excel File" onclick="document.getElementById('createXls').src='views/exports/create_customer_xls.cfm'"> --->
 									<input type="Button" value="Create Excel File" onclick="exportCustomers(this)">

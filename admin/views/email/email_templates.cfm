@@ -15,16 +15,16 @@
 	<tr>
 		<td valign="top" width="300">
 			<cfform name="gridForm">
-			<table cellspacing="0" cellpadding="1" border="0" width="100%">
-				<tr>
-					<td>
-						<div id="aboveGrid" style="width: 502px;"></div>
-						<cfgrid format="html" name="emailTemplateGrid" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.email.getEmailTemplates({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection})">
-						    <cfgridcolumn name="email_name" header="Email Title" width="500">
-						</cfgrid>
-					</td>
-				</tr>
-			</table>
+				<table cellspacing="0" cellpadding="1" border="0" width="100%">
+					<tr>
+						<td>
+							<div id="aboveGrid" style="width: 502px;"></div>
+							<cfgrid format="html" name="emailTemplateGrid" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.email.getEmailTemplates({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection})">
+								<cfgridcolumn name="email_name" header="Email Title" width="500">
+							</cfgrid>
+						</td>
+					</tr>
+				</table>
 			</cfform>
 		</td>
 	</tr>

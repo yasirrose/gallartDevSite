@@ -75,59 +75,65 @@ function latestGridChange(thisId) {
 	  var frm = document.forms["latestEditForm"];
       var edit = new admin.models.art();
       edit.setForm("latestEditForm");
-	  if (frm.active[0].checked == true){
-		  var mailer = new admin.models.mailer();
-		  var sender = 'info@gallart.com';
-		  var recipient = document.getElementById('seller_email').value;
-		  var subject = 'Your listing was accepted';
-		  var body = 
-		  'Dear ' + document.getElementById('fname').value + 
-		  ' ' + document.getElementById('lname').value + ',<br><br>' +
-		  'Your listing, ' + 
-		  document.getElementById('name').value +
-		  ' by \"' + document.getElementById('manufacturer').value +
-		  '\", was accepted by www.gallart.com and is now viewable on the website.<br><br>' +
-		  'Thank you,<br> WWW.GALLART.COM';
-		  mailer.sendMail(sender,recipient,subject,body)
-      }
-	  
-      if (type == 'edit'){
-
-		editBtn.disabled = true;
-		deleteBtn.disabled = true;
-      		
-       if ( edit.editListingsFromForm()) {
-           ColdFusion.Grid.refresh('data',true);
-		   //populateFirstRow();
-		   alert( 'Listing successfully edited.')
-
-		   setTimeout(function () {
-				editBtn.disabled = false;
-				deleteBtn.disabled = false;
-			}, 5000);
-       } 
-       else { alert( 'There was a problem in the processing.')}
-        }
-     else {
-
-		if (!confirm('Delete -- ARE YOU SURE? ')) {
-			return false; 
+		if (frm.active[0].checked == true){
+			var mailer = new admin.models.mailer();
+			var sender = 'info@gallart.com';
+			var recipient = document.getElementById('seller_email').value;
+			var subject = 'Your listing was accepted';
+			var body = 
+			'Dear ' + document.getElementById('fname').value + 
+			' ' + document.getElementById('lname').value + ',<br><br>' +
+			'Your listing, ' + 
+			document.getElementById('name').value +
+			' by \"' + document.getElementById('manufacturer').value +
+			'\", was accepted by www.gallart.com and is now viewable on the website.<br><br>' +
+			'Thank you,<br> WWW.GALLART.COM';
+			mailer.sendMail(sender,recipient,subject,body)
 		}
+	  
+    	if (type == 'edit'){
 
-		editBtn.disabled = true;
-		deleteBtn.disabled = true;
+			editBtn.disabled = true;
+			deleteBtn.disabled = true;
+      		
+			if ( edit.editListingsFromForm()) {
+				ColdFusion.Grid.refresh('data',true);
+				//populateFirstRow();
+				alert( 'Listing successfully edited.')
+
+				setTimeout(function () {
+					editBtn.disabled = false;
+					deleteBtn.disabled = false;
+				}, 5000);
+			} 
+       		else
+				{ 
+					alert( 'There was a problem in the processing.')
+				}
+    	}
+     	else {
+
+			if (!confirm('Delete -- ARE YOU SURE? ')) {
+				return false; 
+			}
+
+			editBtn.disabled = true;
+			deleteBtn.disabled = true;
      	
-     	if ( edit.deleteListing()) {
-           ColdFusion.Grid.refresh('data',true);
-		   //populateFirstRow();
- 			alert( 'Listing successfully Deleted.')
-		   setTimeout(function () {
-				editBtn.disabled = false;
-				deleteBtn.disabled = false;
-			}, 5000);
-       } 
-       else { alert( 'There was a problem in the processing.')}
-        }
+			if ( edit.deleteListing()) {
+				ColdFusion.Grid.refresh('data',true);
+				//populateFirstRow();
+				alert( 'Listing successfully Deleted.')
+				setTimeout(function () {
+					editBtn.disabled = false;
+					deleteBtn.disabled = false;
+				}, 5000);
+			} 
+       		else 
+			{ 
+				alert( 'There was a problem in the processing.')
+			}
+    	}
         
 	document.getElementById('edit').value = 'Edit';
   	document.getElementById('delete').style.display = '';

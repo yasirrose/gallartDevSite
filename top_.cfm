@@ -7,17 +7,17 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 </cfoutput> --->
 <script language="JavaScript">
-function helpWin(url) {
-	w = 350;  // width
-	h = 75;  // height
-	var features =	'scrollbars=no, toolbar=no, status=no, menubar=no ' +
-					',resizable=no, location=no, directories=no ' +
-					',left=' + ((screen.width-w)/2) +
-					',top='  + ((screen.height-h)/2) +
-					',width=' + w + ',height=' + h;
+	function helpWin(url) {
+		w = 350;  // width
+		h = 75;  // height
+		var features =	'scrollbars=no, toolbar=no, status=no, menubar=no ' +
+						',resizable=no, location=no, directories=no ' +
+						',left=' + ((screen.width-w)/2) +
+						',top='  + ((screen.height-h)/2) +
+						',width=' + w + ',height=' + h;
 
-	myWin =	window.open(url,'WinName',features);
-}
+		myWin =	window.open(url,'WinName',features);
+	}
 </script>
 <div id="top">
 	<div class="top-conteiner">
@@ -49,8 +49,23 @@ function helpWin(url) {
 			<div class="mailto">
 				<div class="mailto-text">
 					<div class="resigter">
+						
+						<cfif listLast(CGI.SCRIPT_NAME, "/") EQ "item.cfm" AND structKeyExists(URL, "artist") AND structKeyExists(URL, "slug")>
+
+							<!--- Build SEO URL manually --->
+							<cfset redirectURL = "/artist/#url.artist#/#url.slug#">
+
+						<cfelse>
+							<cfset redirectURL = CGI.SCRIPT_NAME &
+								( len(CGI.QUERY_STRING) ? "?" & CGI.QUERY_STRING : "" )>
+						</cfif>
+
 						<ul>
-							<li><a href="/login"><i class="far fa-user"></i></a></li>
+							<li>
+								<a href="/login?redirect=<cfoutput>#urlEncodedFormat(redirectURL)#</cfoutput>">
+									<i class="far fa-user"></i>
+								</a>
+							</li>
 							<li><a href="/view-cart"><i class="fas fa-shopping-cart"></i></a></li>
 						</ul>
 					</div>
@@ -90,21 +105,21 @@ function helpWin(url) {
 	</div>
 </div>
 <script>
-  document.getElementById('searchForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent default submission
+	document.getElementById('searchForm').addEventListener('submit', function(e) {
+	e.preventDefault(); // Prevent default submission
 
-    // const keyword = document.getElementById('keywords').value.trim().replace(/[<>"'&]/g, '').replace(/\s+/g, '+');
-    // const keyword = document.getElementById('keywords').value.replace(/\s+/g, '%2B');
+	// const keyword = document.getElementById('keywords').value.trim().replace(/[<>"'&]/g, '').replace(/\s+/g, '+');
+	// const keyword = document.getElementById('keywords').value.replace(/\s+/g, '%2B');
 
-    const rawInput = document.getElementById('keywords').value;
+	const rawInput = document.getElementById('keywords').value;
 	const keyword = encodeURIComponent(rawInput).replace(/%20/g, '%2B');
 
-    if (keyword !== '') {
-      // Redirect using clean URL
-      const encodedKeyword = encodeURIComponent(keyword);
-      window.location.href = '/artists/search/' + encodedKeyword;
-    }
-  });
+	if (keyword !== '') {
+		// Redirect using clean URL
+		const encodedKeyword = encodeURIComponent(keyword);
+		window.location.href = '/artists/search/' + encodedKeyword;
+	}
+	});
   
 </script>
 

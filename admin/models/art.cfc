@@ -54,17 +54,17 @@
 		
 
 	   	<cfquery name="qListings" datasource="#application.dsource#">
-	      	SELECT CONVERT(CHAR(9),P.datestamp,6) as listingDate,CONVERT(CHAR(9),lastedit,6) as lasteditDate,'<a href="http://gallart.com/img/'+CAST(uid AS varchar(50))+'.jpg" target="_blank"><img src="http://gallart.com/img/thumbnails/'+CAST(uid AS varchar(50))+'.jpg" border="0" height="50" />' as 'Thumbnail',
+	      	SELECT CONVERT(CHAR(9),P.datestamp,6) as listingDate,CONVERT(CHAR(9),lastedit,6) as lasteditDate,'<a href="http://23.20.226.157/img/'+CAST(uid AS varchar(50))+'.jpg" target="_blank"><img src="http://23.20.226.157/img/thumbnails/'+CAST(uid AS varchar(50))+'.jpg" border="0" height="50" />' as 'Thumbnail',
 			UPPER(U.lname)+', '+UPPER(U.fname) as full_seller_name, p.promotion,  
 			CASE WHEN active = '0' THEN 'Inactive' ELSE 'Active' END AS Status,*
 	      	FROM products P
 			LEFT OUTER JOIN users U on P.fk_users = U.pk_users
-			WHERE 0=0 and ( P.fk_users IS NULL OR U.pk_users IS NOT NULL)
+			WHERE 0=0 and ( P.fk_users IS NULL OR U.pk_users IS NOT NULL) 
 			<cfif isDefined('arguments.modelno') AND arguments.modelno neq ''>
 	      		AND modelno like '#arguments.modelno#%'
 	      	</cfif>
 			<cfif isDefined('arguments.name') AND arguments.name neq ''>
-	      		AND name like '#arguments.name#%'
+	      		AND name like <cfqueryparam value="#arguments.name#%" cfsqltype="cf_sql_varchar">
 	      	</cfif>
 			<cfif isDefined('arguments.manufacturer') AND arguments.manufacturer neq ''>
 				<cfset decodedmanufacturer = URLDecode(arguments.manufacturer)>
@@ -114,8 +114,7 @@
 			</cfif>
 
 			<cfif isDefined('arguments.promotion') and arguments.promotion EQ 'on,'>				
-					AND promotion = 1
-								
+					AND promotion = 1								
 			</cfif>
 
 			-- <cfif isDefined('arguments.onSale') AND arguments.onSale EQ 1>
@@ -188,7 +187,7 @@
 
 	<!--- /////////////  EDIT FROM SEPARATE FORM //////////////// --->
 
-	<cffunction name="editListingsFromForm" access="remote" output="false" returntype="boolean">
+	<cffunction name="editListingsFromForm" access="remote" output="false" returntype="struct">
 	    <cfargument name="uid" type="numeric" default="0">
 	    <cfargument name="NAME" type="string" default="">
 		<cfargument name="MANUFACTURER" type="string" default="">
@@ -228,7 +227,7 @@
         <!---<cfargument name="addImage" type="string" default="">--->
 
 
-	    <cfset var success = true />
+	    <!--- <cfset var success = true /> --->
 
 			<cfset arguments.RETAIL_PRICE 	= rereplace(arguments.RETAIL_PRICE, "[^0-9|.]", "", "all")>
 			<cfset arguments.GALLERY_PRICE 	= rereplace(arguments.GALLERY_PRICE, "[^0-9|.]", "", "all")>
@@ -240,302 +239,310 @@
 			<cfif NOT len(arguments.SPECIAL_PRICE)><cfset arguments.SPECIAL_PRICE = 0 /></cfif>
 			<cfif NOT len(arguments.LOCATION_PRICE)><cfset arguments.LOCATION_PRICE = 0 /></cfif>
 
-	    	<cfif arguments.uid EQ 0>
+			 <cfset var result = { success = true, message = "" }>
 
-		    	<cfquery name="addListing" datasource="#application.dsource#">
-	               INSERT into products
-					(
-						NAME,
-						MANUFACTURER,
-						PATH,
-						MODELNO,
-						MODELNO_NUMERIC,
-						YEAR,
-						SIZE,
-						EDITION,
-						RETAIL_PRICE,
-						GALLERY_PRICE
-						<cfif arguments.SPECIAL_PRICE LT arguments.RETAIL_PRICE and arguments.SPECIAL_PRICE LT arguments.GALLERY_PRICE>
-							,SPECIAL_PRICE
-						</cfif>,
-						
-						CLOSEOUT,
-						LOW_ESTIMATE,
-						HIGH_ESTIMATE,
-						QUANTITY,
-						CAPTION,
-						ACTIVE,
-						FRONTSHOW,
-						FAMILY,
-						SLIDESHOW,
-						LASTEDIT,
-						LOCATION,
-						LOCATION_PRICE,
-						LOCATION_FLOOR,
-						LOCATION_WALL,
-						LOCATION_NOTES,
-						AUCTION,
-						ARTTYPE,
-						artTypee,
-						artSubject,
-						artSize,
-						promotion,
-						emp_id
-						
-					)
-					values
-					(
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MANUFACTURER#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PATH#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NEWMODELNO#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NEWMODELNO_NUMERIC#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.YEAR#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EDITION#">,
-						<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.RETAIL_PRICE NEQ '', DE(arguments.RETAIL_PRICE), DE('0'))#">,
-						<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.GALLERY_PRICE NEQ '', DE(arguments.GALLERY_PRICE), DE('0'))#">
-						<cfif arguments.SPECIAL_PRICE LT arguments.RETAIL_PRICE and arguments.SPECIAL_PRICE LT arguments.GALLERY_PRICE>
-							,<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.SPECIAL_PRICE NEQ '', DE(arguments.SPECIAL_PRICE), DE('0'))#">
-						</cfif>,
-						
-						<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.CLOSEOUT),DE(arguments.CLOSEOUT),DE(0))#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOW_ESTIMATE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.HIGH_ESTIMATE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.QUANTITY#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CAPTION#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ACTIVE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FRONTSHOW#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FAMILY#">,
-						<cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.SLIDESHOW),DE(arguments.SLIDESHOW),DE(0))#">,
-						<cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION#">,
-						<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.LOCATION_PRICE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_FLOOR#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_WALL#">,
-						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.LOCATION_NOTES#">,
-						<cfqueryparam cfsqltype="CF_SQL_TINYINT"value="#iif(len(arguments.AUCTION),DE(arguments.AUCTION),DE(0))#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTTYPE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artTypee#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
-						<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">,
-						<cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#session.userinfo.pk_employees#">
-					)
-					SELECT @@identity as newId
-	            </cfquery>
+			<cftry>
+				
+				<cfif arguments.uid EQ 0>
 
-				<cfset thisId = addListing.newId />
+					<cfquery name="addListing" datasource="#application.dsource#">
+					INSERT into products
+						(
+							NAME,
+							MANUFACTURER,
+							PATH,
+							MODELNO,
+							MODELNO_NUMERIC,
+							YEAR,
+							SIZE,
+							EDITION,
+							RETAIL_PRICE,
+							GALLERY_PRICE
+							<cfif arguments.SPECIAL_PRICE LT arguments.RETAIL_PRICE and arguments.SPECIAL_PRICE LT arguments.GALLERY_PRICE>
+								,SPECIAL_PRICE
+							</cfif>,
+							
+							CLOSEOUT,
+							LOW_ESTIMATE,
+							HIGH_ESTIMATE,
+							QUANTITY,
+							CAPTION,
+							ACTIVE,
+							FRONTSHOW,
+							FAMILY,
+							SLIDESHOW,
+							LASTEDIT,
+							LOCATION,
+							LOCATION_PRICE,
+							LOCATION_FLOOR,
+							LOCATION_WALL,
+							LOCATION_NOTES,
+							AUCTION,
+							ARTTYPE,
+							artTypee,
+							artSubject,
+							artSize,
+							promotion,
+							emp_id
+							
+						)
+						values
+						(
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MANUFACTURER#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PATH#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NEWMODELNO#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NEWMODELNO_NUMERIC#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.YEAR#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EDITION#">,
+							<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.RETAIL_PRICE NEQ '', DE(arguments.RETAIL_PRICE), DE('0'))#">,
+							<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.GALLERY_PRICE NEQ '', DE(arguments.GALLERY_PRICE), DE('0'))#">
+							<cfif arguments.SPECIAL_PRICE LT arguments.RETAIL_PRICE and arguments.SPECIAL_PRICE LT arguments.GALLERY_PRICE>
+								,<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.SPECIAL_PRICE NEQ '', DE(arguments.SPECIAL_PRICE), DE('0'))#">
+							</cfif>,
+							
+							<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.CLOSEOUT),DE(arguments.CLOSEOUT),DE(0))#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOW_ESTIMATE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.HIGH_ESTIMATE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.QUANTITY#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CAPTION#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ACTIVE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FRONTSHOW#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FAMILY#">,
+							<cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.SLIDESHOW),DE(arguments.SLIDESHOW),DE(0))#">,
+							<cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION#">,
+							<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.LOCATION_PRICE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_FLOOR#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_WALL#">,
+							<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.LOCATION_NOTES#">,
+							<cfqueryparam cfsqltype="CF_SQL_TINYINT"value="#iif(len(arguments.AUCTION),DE(arguments.AUCTION),DE(0))#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTTYPE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artTypee#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
+							<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">,
+							<cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#session.userinfo.pk_employees#">
+						)
+						SELECT @@identity as newId
+					</cfquery>
 
-				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
-				<cfset date = now()>				
-				<cfset action = 'Insert'>
+					<cfset thisId = addListing.newId />
 
-				<cfquery name="addLog" datasource="#application.dsource#" >
-					INSERT INTO logs 
-						( moduleName, ipAddress, date, action, sellerArtwork)
-						VALUES
-						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #thisId#)
-				</cfquery>
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Insert'>
 
-			 <cfelse>
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action, sellerArtwork)
+							VALUES
+							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #thisId#)
+					</cfquery>
 
-				<cfquery name="editListing" datasource="#application.dsource#">
-	                UPDATE products SET
-		                NAME 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
-						MANUFACTURER 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MANUFACTURER#">,
-						PATH 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PATH#">,
-						YEAR 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.YEAR#">,
-						SIZE 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
-						EDITION			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EDITION#">,
-						RETAIL_PRICE 	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.RETAIL_PRICE NEQ '', DE(arguments.RETAIL_PRICE), DE('0'))#">,
-						GALLERY_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.GALLERY_PRICE NEQ '', DE(arguments.GALLERY_PRICE), DE('0'))#">,
+			 	 <cfelse>
 
-						<cfif arguments.SPECIAL_PRICE LT arguments.RETAIL_PRICE and arguments.SPECIAL_PRICE LT arguments.GALLERY_PRICE>
-							SPECIAL_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.SPECIAL_PRICE NEQ '', DE(arguments.SPECIAL_PRICE), DE('0'))#">,
-						</cfif>
-						
-						CLOSEOUT		= <cfqueryparam cfsqltype="CF_SQL_BIT"value="#iif(len(arguments.CLOSEOUT),DE(arguments.CLOSEOUT),DE(0))#">,
-						LOW_ESTIMATE 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOW_ESTIMATE#">,
-						HIGH_ESTIMATE 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.HIGH_ESTIMATE#">,
-						QUANTITY 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.QUANTITY#">,
-						CAPTION 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CAPTION#">,
-						ACTIVE 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ACTIVE#">,
-						FRONTSHOW 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FRONTSHOW#">,
-						FAMILY 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FAMILY#">,
-						SLIDESHOW		= <cfqueryparam cfsqltype="CF_SQL_BIT"value="#iif(len(arguments.SLIDESHOW),DE(arguments.SLIDESHOW),DE(0))#">,
-						LASTEDIT		= <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">,
-						LOCATION		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION#">,
-						LOCATION_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.LOCATION_PRICE#">,
-						LOCATION_FLOOR	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_FLOOR#">,
-						LOCATION_WALL	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_WALL#">,
-						LOCATION_NOTES	= <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.LOCATION_NOTES#">,
-						AUCTION		= <cfqueryparam cfsqltype="CF_SQL_TINYINT"value="#iif(len(arguments.AUCTION),DE(arguments.AUCTION),DE(0))#">,
-						ARTTYPE     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTTYPE#">,
-						artTypee     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artTypee#">,
-						artSubject     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
-						artSize     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
-						promotion     = <cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">,
-						emp_id     = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#session.userinfo.pk_employees#">
-						<cfif isDefined('form.deactivated') and form.deactivated EQ 1 AND form.active EQ 1>
-							,ACTIVE_DATE = #now()#
-						</cfif>
-	                WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.uid#">
-	            </cfquery>
+					<cfquery name="editListing" datasource="#application.dsource#">
+						UPDATE products SET
+							NAME 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
+							MANUFACTURER 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MANUFACTURER#">,
+							PATH 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PATH#">,
+							YEAR 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.YEAR#">,
+							SIZE 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
+							EDITION			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EDITION#">,
+							RETAIL_PRICE 	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.RETAIL_PRICE NEQ '', DE(arguments.RETAIL_PRICE), DE('0'))#">,
+							GALLERY_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.GALLERY_PRICE NEQ '', DE(arguments.GALLERY_PRICE), DE('0'))#">,
 
-				<cfset thisId = arguments.uid />
+							<cfif arguments.SPECIAL_PRICE LT arguments.RETAIL_PRICE and arguments.SPECIAL_PRICE LT arguments.GALLERY_PRICE>
+								SPECIAL_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.SPECIAL_PRICE NEQ '', DE(arguments.SPECIAL_PRICE), DE('0'))#">,
+							</cfif>
+							
+							CLOSEOUT		= <cfqueryparam cfsqltype="CF_SQL_BIT"value="#iif(len(arguments.CLOSEOUT),DE(arguments.CLOSEOUT),DE(0))#">,
+							LOW_ESTIMATE 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOW_ESTIMATE#">,
+							HIGH_ESTIMATE 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.HIGH_ESTIMATE#">,
+							QUANTITY 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.QUANTITY#">,
+							CAPTION 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CAPTION#">,
+							ACTIVE 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ACTIVE#">,
+							FRONTSHOW 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FRONTSHOW#">,
+							FAMILY 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FAMILY#">,
+							SLIDESHOW		= <cfqueryparam cfsqltype="CF_SQL_BIT"value="#iif(len(arguments.SLIDESHOW),DE(arguments.SLIDESHOW),DE(0))#">,
+							LASTEDIT		= <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">,
+							LOCATION		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION#">,
+							LOCATION_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.LOCATION_PRICE#">,
+							LOCATION_FLOOR	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_FLOOR#">,
+							LOCATION_WALL	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_WALL#">,
+							LOCATION_NOTES	= <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.LOCATION_NOTES#">,
+							AUCTION		= <cfqueryparam cfsqltype="CF_SQL_TINYINT"value="#iif(len(arguments.AUCTION),DE(arguments.AUCTION),DE(0))#">,
+							ARTTYPE     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTTYPE#">,
+							artTypee     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artTypee#">,
+							artSubject     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
+							artSize     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
+							promotion     = <cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">,
+							emp_id     = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#session.userinfo.pk_employees#">
+							<cfif isDefined('form.deactivated') and form.deactivated EQ 1 AND form.active EQ 1>
+								,ACTIVE_DATE = #now()#
+							</cfif>
+						WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.uid#">
+					</cfquery>
 
-				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
-				<cfset date = now()>				
-				<cfset action = 'Update'>
+					<cfset thisId = arguments.uid />
 
-				<cfquery name="addLog" datasource="#application.dsource#" >
-					INSERT INTO logs 
-						( moduleName, ipAddress, date, action, sellerArtwork)
-						VALUES
-						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #thisId#)
-				</cfquery>
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Update'>
 
-			</cfif>
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action, sellerArtwork)
+							VALUES
+							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #thisId#)
+					</cfquery>
 
-			<cfif len(arguments.thisImage)>
+				</cfif>
 
-                <cffile action="upload" nameconflict="overwrite" filefield="thisImage" destination="#application.uploaddir#" result="fileupload">
+				<cfif len(arguments.thisImage)>
 
-				<cfset fileExt = lcase(fileupload.clientFileExt)>
+					<cffile action="upload" nameconflict="overwrite" filefield="thisImage" destination="#application.uploaddir#" result="fileupload">
 
-                <cfif fileupload.fileWasSaved AND fileExt EQ "jpg">
+					<cfset fileExt = lcase(fileupload.clientFileExt)>
 
-					<cffile 
-						action="rename" 
-						source="#fileupload.serverDirectory#/#fileupload.serverFile#" 
-						destination="#fileupload.serverDirectory#/#thisId#.jpg">
+                	<cfif fileupload.fileWasSaved AND fileExt EQ "jpg">
 
-                    <cfimage
-                        action="read"
-                        source="#application.uploaddir#/#thisId#.jpg"
-                        name="oImage"
-                    />
+						<cffile 
+							action="rename" 
+							source="#fileupload.serverDirectory#/#fileupload.serverFile#" 
+							destination="#fileupload.serverDirectory#/#thisId#.jpg">
 
-                    <cfimage
-                        action="resize"
-                        source="#oImage#"
-                        width="100"
-                        height=""
-                        name="oImageSmall"
-                    />
+						<cfimage
+							action="read"
+							source="#application.uploaddir#/#thisId#.jpg"
+							name="oImage"
+						/>
 
-                    <cfimage
-                        action="WRITE"
-                        source="#oImageSmall#"
-                        destination="#application.uploaddir#/thumbnails/#thisId#.jpg"
-                        overwrite="true"
-                    />
+						<cfimage
+							action="resize"
+							source="#oImage#"
+							width="100"
+							height=""
+							name="oImageSmall"
+						/>
 
-					<cfelse>
+						<cfimage
+							action="WRITE"
+							source="#oImageSmall#"
+							destination="#application.uploaddir#/thumbnails/#thisId#.jpg"
+							overwrite="true"
+						/>
+
+					 <cfelse>
 						<cffile action="delete" file="#fileupload.serverDirectory#/#fileupload.serverFile#">
 						<cfset session.ext = true>
 
-                </cfif>
+                	</cfif>
 
-			</cfif>
-
-            <!--- additional images --->
-            <cfset additionalImages = "" />
-            <cfset uploaddir = "#application.uploaddir#" />
-            <cfset addImageIdx = 1 />
-			<cfset validJPG = true /> 
-			<cfset uploadedImages = [] />
-
-            <cfif arguments.uid NEQ 0>
-
-            	<cfquery name="getAdditional" datasource="#application.dsource#">
-                	SELECT ADDITIONAL_IMAGES from products
-                    WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
-                </cfquery>
-                <cfif getAdditional.ADDITIONAL_IMAGES NEQ "">
-            		<cfset addImageIdx = listFirst(listLast(listLast(getAdditional.ADDITIONAL_IMAGES),'_'),'.') + 1 />
-            		<cfset additionalImages = getAdditional.ADDITIONAL_IMAGES />
-                </cfif>
-            </cfif>
-
-
-			<!--- <cfloop collection="#form#" item="idx">
-				<cfif left(idx,9) EQ "addImage_">
-					<cfset currImage = evaluate("form." & idx) />
-					
-					<!--- Check if the image is empty, null, or undefined --->
-					<cfif len(trim(currImage)) GT 0>
-						<cfset thisFilefield = idx />
-						<cfset thisImageId = "#thisId#_#addImageIdx#.jpg" />
-						<cfset additionalImages = listAppend(additionalImages,thisImageId) />
-						
-						<cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" 
-							destination="#uploaddir#/#thisImageId#" result="fileupload">
-						
-						<cfset addImageIdx = addImageIdx + 1 />
-					</cfif>
 				</cfif>
-			</cfloop> --->
 
-			<cfloop collection="#form#" item="idx">
-				<cfif left(idx,9) EQ "addImage_">
-					<cfset currImage = evaluate("form." & idx) />
-					<cfif len(trim(currImage)) GT 0>
-						<cffile 
-							action="upload" 
-							nameconflict="makeunique" 
-							filefield="#idx#" 
-							destination="#uploaddir#" 
-							result="fileuploadTemp" />
+				<!--- additional images --->
+				<cfset additionalImages = "" />
+				<cfset uploaddir = "#application.uploaddir#" />
+				<cfset addImageIdx = 1 />
+				<cfset validJPG = true /> 
+				<cfset uploadedImages = [] />
 
-						<cfset fileExt = lcase(listLast(fileuploadTemp.serverFile, "."))>
+				<cfif arguments.uid NEQ 0>
 
-						<cfif fileExt NEQ "jpg">
-							<!--- Not JPG? Set flag to false and delete file --->
-							<cfset validJPG = false />
-							<cffile action="delete" file="#fileuploadTemp.serverDirectory#/#fileuploadTemp.serverFile#">
-							<cfset session.ext = true>
-						<cfelse>
-							<!--- Store for saving if all files are JPG --->
+					<cfquery name="getAdditional" datasource="#application.dsource#">
+						SELECT ADDITIONAL_IMAGES from products
+						WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
+					</cfquery>
+					<cfif getAdditional.ADDITIONAL_IMAGES NEQ "">
+						<cfset addImageIdx = listFirst(listLast(listLast(getAdditional.ADDITIONAL_IMAGES),'_'),'.') + 1 />
+						<cfset additionalImages = getAdditional.ADDITIONAL_IMAGES />
+					</cfif>
+           	 	</cfif>
+
+				<!--- <cfloop collection="#form#" item="idx">
+					<cfif left(idx,9) EQ "addImage_">
+						<cfset currImage = evaluate("form." & idx) />
+						
+						<!--- Check if the image is empty, null, or undefined --->
+						<cfif len(trim(currImage)) GT 0>
+							<cfset thisFilefield = idx />
 							<cfset thisImageId = "#thisId#_#addImageIdx#.jpg" />
-							<cfset arrayAppend(uploadedImages, {
-								source = "#fileuploadTemp.serverDirectory#/#fileuploadTemp.serverFile#",
-								destination = "#uploaddir#/#thisImageId#",
-								imageId = thisImageId
-							}) />
-							<cfset addImageIdx++ />
-							<cfset structDelete(session, "ext")>
+							<cfset additionalImages = listAppend(additionalImages,thisImageId) />
+							
+							<cffile action="upload" nameconflict="overwrite" filefield="#thisFilefield#" 
+								destination="#uploaddir#/#thisImageId#" result="fileupload">
+							
+							<cfset addImageIdx = addImageIdx + 1 />
 						</cfif>
 					</cfif>
-				</cfif>
-			</cfloop>
-			
+				</cfloop> --->
 
-            <!--- <cfif additionalImages NEQ "">
-                <cfquery name="editListing" datasource="#application.dsource#">
-                    UPDATE products SET
-                        ADDITIONAL_IMAGES 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#additionalImages#">
-                    WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
-                </cfquery>
-           	</cfif> --->
+				<cfloop collection="#form#" item="idx">
+					<cfif left(idx,9) EQ "addImage_">
+						<cfset currImage = evaluate("form." & idx) />
+						<cfif len(trim(currImage)) GT 0>
+							<cffile 
+								action="upload" 
+								nameconflict="makeunique" 
+								filefield="#idx#" 
+								destination="#uploaddir#" 
+								result="fileuploadTemp" />
 
-			<cfif validJPG AND arrayLen(uploadedImages) GT 0>
-				<cfloop array="#uploadedImages#" index="imgData">
-					<cffile action="move" source="#imgData.source#" destination="#imgData.destination#" />
-					<cfset additionalImages = listAppend(additionalImages, imgData.imageId) />
+							<cfset fileExt = lcase(listLast(fileuploadTemp.serverFile, "."))>
+
+							<cfif fileExt NEQ "jpg">
+								<!--- Not JPG? Set flag to false and delete file --->
+								<cfset validJPG = false />
+								<cffile action="delete" file="#fileuploadTemp.serverDirectory#/#fileuploadTemp.serverFile#">
+								<cfset session.ext = true>
+							<cfelse>
+								<!--- Store for saving if all files are JPG --->
+								<cfset thisImageId = "#thisId#_#addImageIdx#.jpg" />
+								<cfset arrayAppend(uploadedImages, {
+									source = "#fileuploadTemp.serverDirectory#/#fileuploadTemp.serverFile#",
+									destination = "#uploaddir#/#thisImageId#",
+									imageId = thisImageId
+								}) />
+								<cfset addImageIdx++ />
+								<cfset structDelete(session, "ext")>
+							</cfif>
+						</cfif>
+					</cfif>
 				</cfloop>
 
-				<cfquery name="editListing" datasource="#application.dsource#">
-					UPDATE products SET
-						ADDITIONAL_IMAGES = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#additionalImages#">
-					WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
-				</cfquery>
-				<cfset structDelete(session, "ext")>
-			
-			</cfif>
+				<!--- <cfif additionalImages NEQ "">
+					<cfquery name="editListing" datasource="#application.dsource#">
+						UPDATE products SET
+							ADDITIONAL_IMAGES 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#additionalImages#">
+						WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
+					</cfquery>
+				</cfif> --->
 
-		<cfreturn success>
+				<cfif validJPG AND arrayLen(uploadedImages) GT 0>
+					<cfloop array="#uploadedImages#" index="imgData">
+						<cffile action="move" source="#imgData.source#" destination="#imgData.destination#" />
+						<cfset additionalImages = listAppend(additionalImages, imgData.imageId) />
+					</cfloop>
+
+					<cfquery name="editListing" datasource="#application.dsource#">
+						UPDATE products SET
+							ADDITIONAL_IMAGES = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#additionalImages#">
+						WHERE uid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#thisId#">
+					</cfquery>
+					<cfset structDelete(session, "ext")>
+				
+				</cfif>
+
+				<cfcatch>
+					<cfset result.success = false>
+            		<cfset result.message = cfcatch.detail>
+				</cfcatch>
+			</cftry>	
+
+		<cfreturn result>
 
 	</cffunction>
 
@@ -1455,7 +1462,7 @@
 		</cfif>
 
 	   	<cfquery name="qListings" datasource="#application.dsource#">
-	      	SELECT CONVERT(CHAR(9),datestamp,6) as listingDate,*
+	      	SELECT CONVERT(CHAR(9),P.datestamp,6) as listingDate,*
 	      	FROM products P
 			LEFT OUTER JOIN users U on P.fk_users = U.pk_users
 			WHERE active = 1
@@ -1493,10 +1500,10 @@
 				AND gallery_price <= #arguments.toPrice#
 			</cfif>
 			<cfif isDefined('arguments.fromDate') AND arguments.fromDate neq ''>
-				AND datestamp >= '#dateFormat(arguments.fromDate)#'
+				AND P.datestamp >= '#dateFormat(arguments.fromDate)#'
 			</cfif>
 			<cfif isDefined('arguments.toDate') AND arguments.toDate neq ''>
-				AND datestamp <= '#dateFormat(arguments.toDate)#'
+				AND P.datestamp <= '#dateFormat(arguments.toDate)#'
 			</cfif>
 			<cfif isDefined('arguments.fromLastedit') AND arguments.fromLastedit neq ''>
 				AND lastedit >= '#dateFormat(arguments.fromLastedit)#'
@@ -1662,11 +1669,10 @@
 		<cfif isDefined('arguments.toPrice') AND arguments.toPrice neq ''>
 			<cfset arguments.toPrice 	= rereplace(arguments.toPrice, "[^0-9|.]", "", "all")>
 		</cfif>
-		
 
         <cfif isDefined('arguments.groups') AND arguments.groups GT 0>
 			
-			<!--- <cfsavecontent variable="sql_where">
+			<cfsavecontent variable="sql_where">
 				<cfoutput>
 					active = 1
 	                AND fk_users is null
@@ -1690,40 +1696,7 @@
 				<cfprocparam type="In" dbvarname="@SqlOrderBy" value="manufacturer" cfsqltype="CF_SQL_VARCHAR">
 				<cfprocresult name="qListings" resultset="1">
 				<cfprocresult name="totalrecords" resultset="2">
-			</cfstoredproc> --->
-
-
-			<cfquery name="qListings" datasource="#application.dsource#">
-				SELECT *
-				FROM products
-				WHERE active = 1
-					AND fk_users IS NULL
-					<cfif isDefined('arguments.alphaChar') AND arguments.alphaChar neq ''>
-						AND manufacturer LIKE <cfqueryparam value="#arguments.alphaChar#%" cfsqltype="cf_sql_varchar">
-					</cfif>
-					<cfif isDefined('arguments.fromPrice') AND arguments.fromPrice neq ''>
-						AND gallery_price >= <cfqueryparam value="#arguments.fromPrice#" cfsqltype="cf_sql_numeric">
-					</cfif>
-					<cfif isDefined('arguments.toPrice') AND arguments.toPrice neq ''>
-						AND gallery_price <= <cfqueryparam value="#arguments.toPrice#" cfsqltype="cf_sql_numeric">
-					</cfif>
-				ORDER BY manufacturer
-				OFFSET <cfoutput>#(arguments.page - 1) * arguments.groups#</cfoutput> ROWS
-				FETCH NEXT <cfoutput>#arguments.groups#</cfoutput> ROWS ONLY
-			</cfquery>
-
-			<cfquery name="totalrecords" datasource="#application.dsource#">
-				SELECT COUNT(*) as countall
-				FROM products
-				WHERE active = 1
-					AND fk_users IS NULL
-					<cfif isDefined('arguments.alphaChar') AND arguments.alphaChar neq ''>
-						AND manufacturer LIKE <cfqueryparam value="#arguments.alphaChar#%" cfsqltype="cf_sql_varchar">
-					</cfif>
-			</cfquery>
-
-			<cfset totalrecords  = totalrecords.countall>
-
+			</cfstoredproc>
 			
 
          <cfelse>
@@ -1838,7 +1811,7 @@
 			<cfset totalrecords  = qListings.recordcount>
 
 		</cfif>
-
+		
 		<cfset returnStruct.qListings = qListings />
 		<cfset returnStruct.totalrecords = totalrecords />
 

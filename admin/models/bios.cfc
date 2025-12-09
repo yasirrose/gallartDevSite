@@ -70,6 +70,19 @@
 							<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.bio#">
 						)
 					</cfquery>
+					
+					<cfset moduleName = 'Bios Module'>
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Insert'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#moduleName#', '#ipAddress#', #date#, '#action#')
+					</cfquery>
+
 					<cfreturn "Bio Added">
 				 <cfelse>
 					<cfreturn "nodata">
@@ -85,6 +98,18 @@
 							artist =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.artist#">,
 							bio = <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.bio#">
 						WHERE pk_bios = <cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.pk_bios#" />
+					</cfquery>
+
+					<cfset moduleName = 'Bios Module'>
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Update'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#moduleName#', '#ipAddress#', #date#, '#action#')
 					</cfquery>
 
 					<cfreturn "Bio Updated">
@@ -110,6 +135,19 @@
 			DELETE  FROM bios
 			WHERE pk_bios = <cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.pk_bios#">
 		</cfquery>
+
+		<cfset moduleName = 'Bios Module'>
+		<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+		<cfset date = now()>				
+		<cfset action = 'Insert'>
+
+		<cfquery name="addLog" datasource="#application.dsource#" >
+			INSERT INTO logs 
+				( moduleName, ipAddress, date, action)
+				VALUES
+				( '#moduleName#', '#ipAddress#', #date#, '#action#')
+		</cfquery>
+
 		<cfreturn "Bio Deleted">
 		<cfcatch>
 			<cfreturn cfcatch.detail>

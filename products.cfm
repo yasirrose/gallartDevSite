@@ -1,6 +1,10 @@
 
 <!DOCTYPE html>
 <cfparam name="xss" default="">
+<cfparam name="url.man" default="">
+<cfparam name="url.keywords" default="">
+<cfset decodedKeyword = urlDecode(url.keywords)>
+<cfset url.keywords = decodedKeyword>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,10 +20,10 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-        <script language="JavaScript" src="./js/utils.js"></script>
+        <script language="JavaScript" src="/js/utils.js"></script>
     </cfoutput>
 
-    <link href="stylesheet_.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheet_.css" rel="stylesheet" type="text/css">
     <script type="text/javascript">
     
       var _gaq = _gaq || [];
@@ -59,7 +63,7 @@
         </cfquery>   
     </cfif> --->
 
-  <cfif isDefined('url.man')>
+  <cfif isDefined('url.man') AND len(trim(url.man)) GT 0>
     <!--- Split the name by comma and trim any extra whitespace --->
     <cfset nameParts = listToArray(url.man, ",")>
     
@@ -77,16 +81,21 @@
     <!--- Query to fetch the bio --->
     <cfquery name="getBio" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
         SELECT * FROM bios
-        WHERE artist = '#url.man#'
+        WHERE slug = '#url.man#'
+    </cfquery>
+    <cfquery name="getManufacturer" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+        SELECT DISTINCT TOP 1 manufacturer
+        FROM products
+        WHERE producturl = <cfqueryparam value="#url.man#" cfsqltype="cf_sql_varchar">
     </cfquery>
 </cfif>
 
 
 <cfquery name="getArtists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-    SELECT DISTINCT manufacturer from products
+    SELECT DISTINCT producturl from products
     WHERE active = 1
     AND fk_users is not null
-    ORDER by manufacturer 
+    ORDER by producturl 
 </cfquery>
 
 <cfquery name="getMedium" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -151,36 +160,38 @@
 
                                     <div aria-label="breadcrumb">
                                         <ol class="breadcrumb">
-                                          <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
+                                          <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
                                           <li class="breadcrumb-item active" aria-current="page">Products</li>
                                         </ol>
                                     </div>
 
 									<div class="bottom-content">
                                         
-                                        <cfif isDefined('url.keywords') >
+                                        <cfif isDefined('url.keywords')  AND len(trim(url.keywords)) GT 0>
                                             <h3> Results for <cfoutput>"#url.keywords#"</cfoutput> </h3>
                                         </cfif>
 
-                                        <cfif isDefined('url.Size') >
+                                        <cfif isDefined('url.Size') AND len(trim(url.Size)) GT 0 >
                                             <h3> Size:  <cfoutput>"#url.Size#"</cfoutput> </h3>
                                         </cfif>
 
-                                        <cfif isDefined('url.Subject') >
-                                            <h3> Subject: <cfoutput>"#url.Subject#"</cfoutput> </h3>
+                                         <cfif isDefined('url.Subject') AND len(trim(url.Subject)) GT 0>
+                                            <!--- <cfset subject = URLDecode(CGI.QUERY_STRING.Subject)> --->
+                                            <cfset subject = Replace(url.Subject, "-", "/", "ALL")>
+                                            <h3> Subject: <cfoutput>"#subject#"</cfoutput> </h3>
                                         </cfif>
 
-                                        <cfif isDefined('url.Style') >
+                                        <cfif isDefined('url.Style') AND len(trim(url.Style)) GT 0>
                                             <h3> Style: <cfoutput>"#url.Style#"</cfoutput> </h3>
                                         </cfif>
 
-                                        <cfif isDefined('url.Type') >
+                                        <cfif isDefined('url.Type') AND len(trim(url.Type)) GT 0>
                                             <h3> Type: <cfoutput>"#url.Type#"</cfoutput> </h3>
                                         </cfif>
 
                                         
 
-                                        <cfif isDefined('url.man')>
+                                        <cfif isDefined('url.man') AND len(trim(url.man)) GT 0>
                                             <!--- <cfquery name="getArtistName"  datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
                                                 SELECT manufacturer from products where manufacturer LIKE  '%#url.man#'
                                             </cfquery>
@@ -240,12 +251,23 @@
                                                         </div>
                                                 </div>
                                             <cfelse>
-                                                <h3 class="h3"> 
-                                                    <cfoutput>
-                                                        <cfset capitalize_artistNameeee = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
-                                                        #capitalize_artistNameeee#
-                                                    </cfoutput>
-                                                </h3>
+                                                 <cfif getManufacturer.recordCount NEQ 0>
+                                                    <h3 class="h3"> 
+                                                        <cfoutput>
+                                                            <cfset manufacturerName = getManufacturer.manufacturer>
+
+                                                            <!--- If there's a comma, swap the names --->
+                                                            <cfif find(',', manufacturerName)>
+                                                                <cfset manufacturerName = "#trim(listlast(manufacturerName, ','))# #trim(listfirst(manufacturerName, ','))#">
+                                                            </cfif>
+
+                                                            <!--- Convert to UPPERCASE --->
+                                                            <cfset manufacturerName = ucase(manufacturerName)>
+
+                                                            #manufacturerName#
+                                                        </cfoutput>
+                                                    </h3>
+                                                </cfif>
                                             </cfif>
                                         </cfif>
                                         <cfoutput>
@@ -425,140 +447,94 @@
                 loading = true;
                 $('#loading').show();
 
-                let currentUrl = window.location.href;
-                console.log(currentUrl);
+
 
                 let url = new URL(window.location.href);
                 let params = new URLSearchParams(url.search);
 
-                let Manufacturer = params.get('man'); // Retrieve 'man' value
-                if (Manufacturer) {
-                    Manufacturer = decodeURIComponent(Manufacturer);
+                               // Safely handle url.man
+                let Manufacturer = '<cfoutput>#isDefined("url.man") ? encodeForJavaScript(url.man) : ""#</cfoutput>';
+                let Size = '<cfoutput>#isDefined("url.Size") ? encodeForJavaScript(url.Size) : ""#</cfoutput>';
+                <cfset subjectValue = isDefined("url.Subject") ? Replace(url.Subject, "-", "/", "ALL") : "">
+                let Subject = '<cfoutput>#encodeForJavaScript(subjectValue)#</cfoutput>';
+                let Type = '<cfoutput>#isDefined("url.Type") ? encodeForJavaScript(url.Type) : ""#</cfoutput>';
+                let Style = '<cfoutput>#isDefined("url.Style") ? encodeForJavaScript(url.Style) : ""#</cfoutput>';
+                let Artist = '<cfoutput>#isDefined("url.adv_artist") ? encodeForJavaScript(url.adv_artist) : ""#</cfoutput>';
+                let title = '<cfoutput>#isDefined("url.adv_title") ? encodeForJavaScript(url.adv_title) : ""#</cfoutput>';
+                let year = '<cfoutput>#isDefined("url.adv_year") ? encodeForJavaScript(url.adv_year) : ""#</cfoutput>';
+                let path = '<cfoutput>#isDefined("url.adv_medium") ? encodeForJavaScript(url.adv_medium) : ""#</cfoutput>';
+                let desc_keyword = '<cfoutput>#isDefined("url.adv_desc_keyword") ? encodeForJavaScript(url.adv_desc_keyword) : ""#</cfoutput>';
+                let keywords = '<cfoutput>#isDefined("url.keywords") ? encodeForJavaScript(url.keywords) : ""#</cfoutput>';
+                let priceRange = '<cfoutput>#isDefined("url.adv_price_range") ? encodeForJavaScript(url.adv_price_range) : ""#</cfoutput>';
+                let priceOrder = document.getElementById('priceOrder') ? document.getElementById('priceOrder').value : '';
+                let artSubject = document.getElementById('artSubject') ? document.getElementById('artSubject').value : '';
+                let artType = document.getElementById('artType') ? document.getElementById('artType').value : '';
+                let artSize = document.getElementById('artSize') ? document.getElementById('artSize').value : '';
+                let artStyle = document.getElementById('artStyle') ? document.getElementById('artStyle').value : '';
+
+                // Build SEO-friendly URL with /artists
+                let ajaxUrl = '/artists';
+                let queryParams = [];
+                if (Manufacturer) ajaxUrl += `/artist/${encodeURIComponent(Manufacturer)}`;
+                if (keywords) ajaxUrl += `/search/${encodeURIComponent(keywords)}`;
+                if (artSize || Size) ajaxUrl += `/size/${encodeURIComponent(artSize || Size)}`;
+                if (artSubject || Subject) ajaxUrl += `/subject/${encodeURIComponent(artSubject || Subject)}`;
+                if (artStyle || Style) ajaxUrl += `/style/${encodeURIComponent(artStyle || Style)}`;
+                if (artType || Type) ajaxUrl += `/type/${encodeURIComponent(artType || Type)}`;
+                if (Artist) ajaxUrl += `/adv_artist/${encodeURIComponent(Artist)}`;
+                if (title) ajaxUrl += `/adv_title/${encodeURIComponent(title)}`;
+                if (year) ajaxUrl += `/adv_year/${encodeURIComponent(year)}`;
+                if (path) ajaxUrl += `/adv_medium/${encodeURIComponent(path)}`;
+                if (desc_keyword) ajaxUrl += `/adv_desc_keyword/${encodeURIComponent(desc_keyword)}`;
+                if (priceRange) ajaxUrl += `/adv_price_range/${encodeURIComponent(priceRange)}`;
+                if (priceOrder) queryParams.push(`priceOrder=${encodeURIComponent(priceOrder)}`);
+
+                if (queryParams.length > 0) {
+                    ajaxUrl += `?${queryParams.join('&')}`;
                 }
-                
-                // let Manufacturer = params.get('man');
-                let Size = params.get('Size');
-                let Subject = params.get('Subject');
-                let Type = params.get('Type');
-                let Style = params.get('Style');
-                // let Artist = params.get('artist');
-                let Artist = params.get('adv_artist');
-                let title = params.get('adv_title');
-                let year = params.get('adv_year');
-                let path = params.get('adv_medium');
-                let desc_keyword = params.get('adv_desc_keyword');
-                let keywords = params.get('keywords'); 
-
-                let artSubject = document.getElementById('artSubject').value;
-                let artType = document.getElementById('artType').value;
-                let artSize = document.getElementById('artSize').value;
-                let artStyle = document.getElementById('artStyle').value;
-                
-                let priceRange = params.get('adv_price_range');
-
-                console.log('Manufacturer:', Manufacturer);
-                console.log('keyword:', keywords);
-
-                if(priceRange){
-                    if(priceRange == 1){
-                        var a = '0';
-                        var b = '1000';
-                    }
-                    else if(priceRange == 2){
-                        var a = '1000';
-                        var b = '5000';
-                    }
-                    else if(priceRange == 3){
-                        var a = '5000';
-                        var b = '10000';
-                    }
-                    else if(priceRange == 4){
-                        var a = '10000';
-                        var b = '100000';
-                    }
-                }
-
-                // let keywords = document.getElementById('keywords').value;
-                let priceOrder = document.getElementById('priceOrder').value;
-
-                // if (artType) {
-                //     params.delete('Type'); // Remove the previous Size value from the URL
-                // }
-
-                let ajaxSize = artSize ? artSize : Size;
-                let ajaxSubject = artSubject ? artSubject : Subject;
-                let ajaxStyle = artStyle ? artStyle : Style;
-                let ajaxType = artType ? artType : Type;
-
-                if ( keywords || priceOrder ||  ajaxSubject || ajaxType|| ajaxSize|| ajaxStyle) {
-                    if (  priceOrder !==lastPriceOrder || keywords!==lastkeywords || ajaxSubject!=lastartSubject || ajaxType !=  lastartType || ajaxSize != lastartSize || ajaxStyle != lastartStyle) {
-                        
-                        page = 1; 
-                        
-                        $('#product-container').empty(); // Clear the product container for new results
-                        noMoreProducts = false; // Reset the no more products flag
-                        // lastArtist = Artist; // Update lastArtist to the new artist value
-                    //   lastpath = path; // Update lastArtist to the new artist value
-                        lastPriceOrder = priceOrder;
-                        lastkeywords = keywords;
-                        lastartSubject = ajaxSubject;
-                        lastartType = ajaxType;
-                        lastartSize = ajaxSize;
-                        lastartStyle = ajaxStyle;
-                    }
-                }
-
-                console.log('Manufacturer:', Manufacturer);
 
                 $.ajax({
-                    url: 'fetch_products.cfm',
+                    url: '/fetch_products.cfm',
                     type: 'GET',
                     data: {
-                        page: page,
+                         page: page,
                         man: Manufacturer,
-                        Size: ajaxSize,
-                        Title: title,
-                        Artist: Artist,
-                        priceOrder: priceOrder,
-                        Subject: ajaxSubject,
-                        Type: ajaxType,
-                        Style: ajaxStyle,
+                        Size: artSize || Size,
+                        Subject: artSubject || Subject,
+                        Type: artType || Type,
+                        Style: artStyle || Style,
+                        adv_artist: Artist,
+                        adv_title: title,
+                        adv_year: year,
+                        adv_medium: path,
+                        adv_desc_keyword: desc_keyword,
                         keywords: keywords,
-                        year: year,
-                        path: path,
-                        desc_keyword: desc_keyword,
-                        a: a,
-                        b: b
+                        adv_price_range: priceRange,
+                        priceOrder: priceOrder,
+                        a: priceRange ? (priceRange == 1 ? '0' : priceRange == 2 ? '1000' : priceRange == 3 ? '5000' : '10000') : '',
+                        b: priceRange ? (priceRange == 1 ? '1000' : priceRange == 2 ? '5000' : priceRange == 3 ? '10000' : '100000') : ''                    
                     },
                     success: function(data) {
                         if (data.trim() === '') {
                             noMoreProducts = true;
                             $('#loading').html('No more products').show();
-                            // toastr.warning('No more products');
-                            // $('#loading').hide();
-
                         } else if (data === previousData && page !== 1) {
-                            // Prevent loading duplicate data on scroll (ignore check for page 1)
                             noMoreProducts = true;
                             $('#loading').html('No more products').show();
-
-                        // toastr.warning('No more products');
-                        // $('#loading').hide();
-
                         } else {
                             if (page === 1) {
-                                $('#product-container').empty(); // On first page, replace content
+                                $('#product-container').empty();
                             }
-                            $('#product-container').append(data); // Append new data
+                            $('#product-container').append(data); 
                             previousData = data;
-                            page++; // Increment the page number for the next request
+                            page++; 
                             $('#loading').hide();
                         }
-                        loading = false; // Reset the loading flag
+                        loading = false; 
                             },
                         error: function() {
                     $('#loading').html('Error loading products').show();
-                    loading = false; // Reset the loading flag on error
+                    loading = false; 
                     }
                 });
             }

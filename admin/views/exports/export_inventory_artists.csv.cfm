@@ -12,7 +12,7 @@
         
                  <cfelse>
                 
-                    <form method="post" action="index.cfm?event=exports.artistsCsv" onsubmit="disableSubmit(this)">
+                    <form method="post" action="index.cfm?event=exports.artistsCsv" onsubmit="return validateAndDisable(this)">
                         <table>
                             <tr>
                                 <td valign="top">
@@ -53,6 +53,29 @@
     </table>
        
     <script>
+
+        function validateAndDisable(frm) {
+
+			// ----------- Validation -----------
+			var artists = frm.artists.value.trim();
+			// var checkboxes = frm.querySelectorAll("input[name='displayFields']:checked");
+
+			if (artists === "") {
+				alert("Please add artist.");
+				return false;
+			}
+
+			
+			// if (checkboxes.length === 0) {
+			// 	alert("Please check at least one field name.");
+			// 	return false;
+			// }
+
+			// ----------- If valid → disable button -----------
+			disableSubmit(frm);
+			return true; // submit form
+		}
+
         function disableSubmit(form) {
             const button = form.querySelector('input[type="submit"]');
             button.disabled = true;

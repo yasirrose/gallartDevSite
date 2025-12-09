@@ -23,6 +23,10 @@ function gridChange(thisId) {
   
 function doEdit(type) {
 
+	var title = document.getElementById('event_title').value.trim();
+	var date = document.getElementById('event_date').value.trim();
+	var location = document.getElementById('event_location').value.trim();
+
 	var editBtn = document.getElementById('edit');
 	var deleteBtn = document.getElementById('delete');
 
@@ -30,6 +34,24 @@ function doEdit(type) {
     edit.setForm("editForm");
     
     if (type == 'edit'){
+
+		if (title === '') {
+			toastr.error('Title is required.');
+			document.getElementById('event_title').focus();
+			return false;
+		}
+
+		if (date === '') {
+			toastr.error('Date is required.');
+			document.getElementById('event_date').focus();
+			return false;
+		}
+
+		if (location === '') {
+			toastr.error('Location is required.');
+			document.getElementById('event_location').focus();
+			return false;
+		}
 
 		editBtn.disabled = true;
 		deleteBtn.disabled = true;

@@ -13,7 +13,43 @@
 		</select>
 	</form> --->
 
-	<form method="POST" action="index.cfm?event=artists.processHighlightArtists" onsubmit="disableSubmitBtn(this);">
+	<script>
+   		// Allow maximum 10 selected artists
+		const MAX_ARTISTS = 10;
+
+		function limitArtistSelection() {
+			const checkboxes = document.querySelectorAll("input[type='checkbox'][name^='artist_']");
+			let newSelectedCount = 0;
+			let totalChecked = 0;
+
+			checkboxes.forEach(cb => {
+				if (cb.checked) {
+					totalChecked++; // Count all checked boxes
+				}
+
+				// Count only newly selected (not already saved)
+				if (cb.checked && !cb.hasAttribute("data-preselected")) {
+					newSelectedCount++;
+				}
+			});
+
+			// Stop empty form submission
+			if (totalChecked === 0) {
+				alert("Please select at least one artist before submitting.");
+				return false;
+			}
+
+			// Limit new selections to max 10
+			if (newSelectedCount > MAX_ARTISTS) {
+				alert("You can select a maximum of 10 new artists only.");
+				return false;
+			}
+
+        	return true;
+    	}
+	</script>
+
+	<form method="POST" action="index.cfm?event=artists.processHighlightArtists" onsubmit="return limitArtistSelection() && disableSubmitBtn(this);">
 
 		<table cellspacing="0" cellpadding="3" border="0" width="90%" bgcolor="##eeeeee" height="10">
 			<tr>
@@ -45,7 +81,7 @@
 									<cfloop query="thisQuery">
 										<tr>
 											<td>
-												<input type="Checkbox" name="artist_#HTMLEditFormat(manufacturer)#" value="#HTMLEditFormat(manufacturer)#" <cfif listfindnocase(valuelist(getHighlightedArtists.artist,'|'),manufacturer,'|')>checked</cfif>>#manufacturer#
+												<input type="Checkbox" name="artist_#HTMLEditFormat(manufacturer)#" value="#HTMLEditFormat(manufacturer)#" <cfif listfindnocase(valuelist(getHighlightedArtists.artist,'|'),manufacturer,'|')>checked data-preselected="true"</cfif>>#manufacturer#
 											</td>
 										</tr>
 										<cfif x IS column>

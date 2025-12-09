@@ -381,14 +381,14 @@
 
 															<div class="col-md-6">
 																<div class="input-field">
-																	<cfinput type="text" size=40 maxsize=50 maxLength="30" name="name" id="name" placeholder="Enter your Name*" value="#form.name#" >
+																	<cfinput type="text" size=40 maxsize=50 maxLength="30" name="name" id="name" placeholder="Enter your Name*" value="#form.name#" autosuggest="cfc:admin.models.leads.searchLeadsByName({cfautosuggestvalue})" maxResultsDisplay="10">
 																	<span class="error-message" id="nameError"></span>
 																</div>
 															</div>
 
 															<div class="col-md-6">
 																<div class="input-field">
-																	<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" value="#form.email#" >
+																	<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" value="#form.email#" autosuggest="cfc:admin.models.leads.searchLeadsByEmail({cfautosuggestvalue})" maxResultsDisplay="10" align="left" style="z-index:1000;" tabindex="0">
 																	<span class="error-message" id="emailError"></span>
 																</div>
 															</div>

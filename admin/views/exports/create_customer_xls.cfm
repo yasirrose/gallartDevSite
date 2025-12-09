@@ -1,6 +1,6 @@
 <cfquery name="getEmailList" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 	SELECT * FROM customers C
-	WHERE 0=0
+	WHERE 0=0 and fname !='1' and Lname!='1' and Fname!='admin' and Lname !='123456' and email NOT like '0%' and email NOT like '%0' and fname != '!S!WCRTESTINPUT000000!E!'
 	<cfif session.qCustomers.Fname neq ''>
 		AND C.fname like '#session.qCustomers.Fname#%'
 	</cfif>
@@ -38,6 +38,9 @@
 				<strong>Last Name</strong>
 			</td>
 			<td style="color: ##FFFFFF;" valign="top">
+				<strong>Name:</strong>
+			</td>
+			<td style="color: ##FFFFFF;" valign="top">
 				<strong>Email</strong>
 			</td>
 			<td style="color: ##FFFFFF;" valign="top">
@@ -54,29 +57,32 @@
 			</td>
 		</tr>
 		<cfloop query="getEmailList">
-		<tr>
-			<td valign="top">
-				#fname#
-			</td>
-			<td valign="top">
-				#lname#
-			</td>
-			<td valign="top">
-				#email#
-			</td>
-			<td valign="top">
-				#phone#
-			</td>
-			<td valign="top">
-				#businessphone#
-			</td>
-			<td valign="top">
-				#city#
-			</td>
-			<td valign="top">
-				#ucase(state)#
-			</td>
-		</tr>
+			<tr>
+				<td valign="top">
+					#fname#
+				</td>
+				<td valign="top">
+					#lname#
+				</td>
+				<td valign="top">
+					#name#
+				</td>
+				<td valign="top">
+					#email#
+				</td>
+				<td valign="top">
+					#phone#
+				</td>
+				<td valign="top">
+					#businessphone#
+				</td>
+				<td valign="top">
+					#city#
+				</td>
+				<td valign="top">
+					#ucase(state)#
+				</td>
+			</tr>
 		</cfloop>
 	</table>
 </cfoutput>

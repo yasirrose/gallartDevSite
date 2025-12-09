@@ -103,7 +103,9 @@
 				
 			</cfloop>
 		
-		<cfcatch type="any"><cfset success = false /></cfcatch>
+			<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
 		</cftry>
 		
 

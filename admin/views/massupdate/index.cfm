@@ -121,7 +121,7 @@
 												<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
 											</cfif>
 											</cfoutput>
-											</select>
+										</select>
 									</td>
 				
 								</tr>
@@ -339,7 +339,8 @@
 											<cfoutput query="getAllSellers">
 												<option value="#pk_users#">#full_seller_name#
 											
-										</cfoutput></select>
+											</cfoutput>
+										</select>
 									</td>
 				
 								</tr>

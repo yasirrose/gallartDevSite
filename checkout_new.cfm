@@ -354,7 +354,7 @@
 																<cfform action="checkout_new" Method="post">
 																	<table border="0" cellspacing="0" cellpadding="2" align="center" style="width: 100%; margin-bottom: 20px;">
 																		<tr class="row0">
-																			<td width="50%" height="20" style="color: ##ffffff;"><b>Name</b></td>
+																			<td width="40%" height="20" style="color: ##ffffff;"><b>Name</b></td>
 																			<td width="10%" align="center" style="color: ##ffffff;"><b>Qty</b></td>
 																			<td width="15%" align="Center" style="color: ##ffffff;"><b>Price</b></td>
 																			<td width="15%" align="Center" style="color: ##ffffff;"><b>Ext.</b></td>
@@ -374,14 +374,14 @@
 
 																					#qty#
 																				</td>
-																				<td align="right" valign="middle">
+																				<td align="center" valign="middle">
 																					#dollarformat(charge)#
 																				</td>
 																				<cfset ext = #charge# * #qty#>
-																				<td align="right" valign="middle">
+																				<td align="center" valign="middle">
 																					#dollarformat(Ext)#</td>
 																					<cfset subtotal = #subtotal# + #ext#>
-																					<td align="right" valign="middle">
+																					<td align="center" valign="middle">
 																						<!--- <input type="submit" class="Seemore" name="updateQty" value="Update"  onclick="document.getElementById('selected_pid').value='#uid#'"> --->
 																					</td>
 																			</tr>
@@ -458,7 +458,7 @@
 																				<label><span class="required">*</span><b>Address 1</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<cfinput type="text" name="BillAddress1" id="BillAddress1" size="35" maxlength="35">
+																				<cfinput type="text" name="BillAddress1" id="BillAddress1" size="35" maxlength="35" autosuggest="cfc:admin.models.customers.searchCustomerByAddress1({cfautosuggestvalue})" maxResultsDisplay="10">
 																				<span class="error-message" id="BillAddress1Error"></span>
 																			</div>
 																		</div>
@@ -471,7 +471,7 @@
 																				<label><span class="required">&nbsp;</span><b>Address 2</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<input type="text" name="BillAddress2" size="35" maxlength="35">
+																				<cfinput type="text" name="BillAddress2" size="35" maxlength="35" autosuggest="cfc:admin.models.customers.searchCustomerByAddress2({cfautosuggestvalue})" maxResultsDisplay="10">
 																			</div>
 																		</div>
 																	</div>														
@@ -483,12 +483,12 @@
 																			</div>
 																			<div class="col-md-5">
 
-																				<cfinput type="text" name="billcity" id="billcity" size="25" >
+																				<cfinput type="text" name="billcity" id="billcity" size="25" autosuggest="cfc:admin.models.customers.searchCustomerByCity({cfautosuggestvalue})" maxResultsDisplay="10">
 																				<span class="error-message" id="billcityError"></span>
 
 																			</div>
 																			<div class="col-md-5">
-																				<cfinput type="text" name="billzip" size="13" id="billzip" >
+																				<cfinput type="text" name="billzip" size="13" id="billzip" autosuggest="cfc:admin.models.customers.searchCustomerByZipCode({cfautosuggestvalue})" maxResultsDisplay="10">
 																				<span class="error-message" id="billzipError"></span>
 																			</div>
 																		</div>
@@ -527,7 +527,8 @@
 																			<div class="col-md-2">
 																				<label>
 																					<!--- <span class="required">*</span> --->
-																					<b>Country:</b></label>
+																					<b>Country:</b>
+																				</label>
 																			</div>
 																			<div class="col-md-10">
 																				<select name="billcountry" id="billcountry" class="select2">
@@ -681,7 +682,7 @@
 																				<label><span class="required">&nbsp;</span><b>Address 1</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<input type="text" name="shipAddress1" size="35">
+																				<cfinput type="text" name="shipAddress1" size="35" autosuggest="cfc:admin.models.customers.searchCustomerByShipAddress1({cfautosuggestvalue})" maxResultsDisplay="10">
 																			</div>
 																		</div>
 																	</div>
@@ -692,7 +693,7 @@
 																				<label><span class="required">&nbsp;</span><b>Address 2</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<input type="text" name="shipAddress2" size="35" maxlength="35">
+																				<cfinput type="text" name="shipAddress2" size="35" maxlength="35" autosuggest="cfc:admin.models.customers.searchCustomerByShipAddress2({cfautosuggestvalue})" maxResultsDisplay="10">
 																			</div>
 																		</div>
 																	</div>
@@ -703,10 +704,10 @@
 																				<label><span class="required">&nbsp;</span><b> City, Zip</b></label>
 																			</div>
 																			<div class="col-md-5">
-																				<input type="text" name="shipcity" size="25">
+																				<cfinput type="text" name="shipcity" size="25" autosuggest="cfc:admin.models.customers.searchCustomerByShipCity({cfautosuggestvalue})" maxResultsDisplay="10">
 																			</div>
 																			<div class="col-md-5">
-																				<input type="text" name="shipzip" size="13">
+																				<cfinput type="text" name="shipzip" size="13" autosuggest="cfc:admin.models.customers.searchCustomerByShipZipCode({cfautosuggestvalue})" maxResultsDisplay="10">
 																			</div>
 																		</div>
 																	</div>

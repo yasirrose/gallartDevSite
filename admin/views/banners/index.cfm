@@ -311,7 +311,7 @@
 								<input type="hidden" name="actionType" id="actionType" value="">
 								
 								<tr>
-									<td colspan="2">
+									<td colspan="2" style="display: flex;">
 										<cfif session.userinfo.sa EQ 1 OR session.userinfo.email EQ 'waseemgallart@gmail.com'>
 											<cfset buttonStyle = "">
 											<cfset deleteChecck = "1">
@@ -336,125 +336,142 @@
 					</td>
 				</tr>
 			</table>
-	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			setTimeout(function() {
-				// Assuming the bannerImage value is set as a hidden field or directly fetched
-				var bannerImage = document.getElementById('bannerImages').value;
+			<script>
+				document.addEventListener('DOMContentLoaded', function() {
+					setTimeout(function() {
+						// Assuming the bannerImage value is set as a hidden field or directly fetched
+						var bannerImage = document.getElementById('bannerImages').value;
 
-				if (bannerImage) {
-					document.getElementById('mainImg').src = "/images/banners/" + bannerImage;
-				} else {
-					console.log("Banner image value is not defined.");
+						if (bannerImage) {
+							document.getElementById('mainImg').src = "/images/banners/" + bannerImage;
+						} else {
+							console.log("Banner image value is not defined.");
+						}
+					}, 1000);
+				});
+				function doEdit(type) {
+					<!--- <cfdump var="#type#" abort=true> --->
+					var filterName = document.getElementById('bannerName').value.trim();
+					var filterType = document.getElementById('bannerType').value.trim();
+
+					
+					var edit = new admin.models.banners();
+
+					
+
+					if (type == 'edit'){
+							if (filterName === '' || filterType === '') {
+							alert('Please fill out all fields.');
+							return; 
+						}
+					}
+
+					edit.setForm("editForm");
+						if (type == 'edit'){
+					
+					}
+					else if (type == 'delete'){
+
+						if ( edit.deleteEmployee()) {
+							// ColdFusion.Grid.refresh('data', true);
+							toastr.success("Data is Deleted Successfully");
+						} 
+
+					else {
+						alert( 'There was a problem in the processing.')
+						}
+					}
+					document.getElementById('edit').value = 'Edit';
+					document.getElementById('delete').style.display = '';
 				}
-			}, 1000);
-		});
-		function doEdit(type) {
-			<!--- <cfdump var="#type#" abort=true> --->
-			var filterName = document.getElementById('bannerName').value.trim();
-			var filterType = document.getElementById('bannerType').value.trim();
 
-			
-			var edit = new admin.models.banners();
-
-			
-
-			if (type == 'edit'){
-					if (filterName === '' || filterType === '') {
-					alert('Please fill out all fields.');
-					return; 
+				function confirmDelete() {
+					if (confirm('DELETE -- ARE YOU SURE?')) {
+						doEdit('delete');
+						return true; // allow form submit or your custom logic
+					} else {
+						return false; // stop form submit if cancel pressed
+					}
 				}
-			}
 
-			edit.setForm("editForm");
-				if (type == 'edit'){
-			
-			}
-			else if (type == 'delete'){
+				function validateImage() {
+					var fileInput = document.getElementById('bannerImage');
+					var filePath = fileInput.value;
+					var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+					var errorElement = document.getElementById('fileError');
+					var maxSize = 300 * 1024;
 
-				if ( edit.deleteEmployee()) {
-					// ColdFusion.Grid.refresh('data', true);
-					toastr.success("Data is Deleted Successfully");
-				} 
+					if (!allowedExtensions.exec(filePath)) {
+						errorElement.innerHTML = 'Please upload a file with .jpg or .png extension only.';
+						fileInput.value = '';
+						return false;
+					} 
 
-			else {
-				alert( 'There was a problem in the processing.')
+					if(fileInput.files && fileInput.files[0].size > maxSize) {
+						errorElement.innerHTML = 'Please upload an image smaller than 300 KB.';
+						fileInput.value = '';
+						return false;
+					}
+					errorElement.innerHTML = '';
+					return true;
 				}
-			}
-			document.getElementById('edit').value = 'Edit';
-			document.getElementById('delete').style.display = '';
-		}
 
-		function confirmDelete() {
-			if (confirm('DELETE -- ARE YOU SURE?')) {
-				doEdit('delete');
-				return true; // allow form submit or your custom logic
-			} else {
-				return false; // stop form submit if cancel pressed
-			}
-		}
+				var formSubmitted = false;
 
-		function validateImage() {
-			var fileInput = document.getElementById('bannerImage');
-			var filePath = fileInput.value;
-			var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-			var errorElement = document.getElementById('fileError');
-			var maxSize = 300 * 1024;
+				function handleAction(btn, action) {
+					console.log('handleAction');
+					var form = btn.form || document.forms['editForm'];
+					if (!form) return false;
 
-			if (!allowedExtensions.exec(filePath)) {
-				errorElement.innerHTML = 'Please upload a file with .jpg or .png extension only.';
-				fileInput.value = '';
-				return false;
-			} 
+					// Run HTML5 validation first (if any required fields exist)
+					if (typeof form.checkValidity === 'function' && !form.checkValidity()) {
+						if (typeof form.reportValidity === 'function') form.reportValidity();
+						return false;
+					}
+					console.log('handleActionww');
+					// if (formSubmitted) return false;
+					// formSubmitted = true;
 
-			if(fileInput.files && fileInput.files[0].size > maxSize) {
-				errorElement.innerHTML = 'Please upload an image smaller than 300 KB.';
-				fileInput.value = '';
-				return false;
-			}
-			errorElement.innerHTML = '';
-			return true;
-		}
+					// Set hidden 'edit' field so CF receives the action (preserves existing server checks)
+					var editField = document.getElementById('actionType');
+					if (editField) editField.value = action;
 
-		var formSubmitted = false;
+					var bannerName = document.getElementById('bannerName').value.trim();
+					var bannerType = document.getElementById('bannerType').value.trim();
+					console.log('handleActionwww');
+					if(bannerName == ''){
+						alert('Please add Banner Name');
+						console.log('test1');
+						return false;
+					} else if(bannerType == ''){
+						alert('Please add Banner Type');
+						console.log('test2');
+						return false;
+					} else {
+						try {
+							btn.disabled = true;
+							btn.value = action + 'ing...';
+							console.log('test3');
+						} catch(e) {}
+					}
+					console.log('handleActionw');
+					// Disable & give feedback
+					
 
-		function handleAction(btn, action) {
-			var form = btn.form || document.forms['editForm'];
-			if (!form) return false;
+					// Disable all other buttons to prevent double-clicks
+					var elems = form.querySelectorAll('input[type=submit], input[type=button], button');
+					elems.forEach(function(el){ el.disabled = true; });
 
-			// Run HTML5 validation first (if any required fields exist)
-			if (typeof form.checkValidity === 'function' && !form.checkValidity()) {
-				if (typeof form.reportValidity === 'function') form.reportValidity();
-				return false;
-			}
+					// Small delay to ensure DOM updates, then submit the form programmatically
+					setTimeout(function(){
+						if (typeof form.requestSubmit === 'function') {
+							form.requestSubmit(); // better for HTML5 submit handling when available
+						} else {
+							form.submit();
+						}
+					}, 10);
 
-			if (formSubmitted) return false;
-			formSubmitted = true;
-
-			// Set hidden 'edit' field so CF receives the action (preserves existing server checks)
-			var editField = document.getElementById('actionType');
-			if (editField) editField.value = action;
-
-			// Disable & give feedback
-			try {
-				btn.disabled = true;
-				btn.value = action + 'ing...';
-			} catch(e) {}
-
-			// Disable all other buttons to prevent double-clicks
-			var elems = form.querySelectorAll('input[type=submit], input[type=button], button');
-			elems.forEach(function(el){ el.disabled = true; });
-
-			// Small delay to ensure DOM updates, then submit the form programmatically
-			setTimeout(function(){
-				if (typeof form.requestSubmit === 'function') {
-					form.requestSubmit(); // better for HTML5 submit handling when available
-				} else {
-					form.submit();
+					return false;
 				}
-			}, 10);
 
-			return false;
-		}
-
-	</script>
+			</script>

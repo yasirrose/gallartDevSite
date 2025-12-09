@@ -14,7 +14,7 @@
 				
 				 <cfelse>
 				
-					<form method="post" action="index.cfm?event=exports.selected" onsubmit="disableSubmit(this)">
+					<form method="post" action="index.cfm?event=exports.selected" onsubmit="return validateAndDisable(this)">
 						<input type="hidden" name="create" value="1"> 
 						<table cellspacing="0" cellpadding="0" border="0" width="100%">
 							<tr>
@@ -60,6 +60,24 @@
 	</table>
 	
 	 <script>
+
+		function validateAndDisable(frm) {
+
+			// ----------- Validation -----------
+			
+			var checkboxes = frm.querySelectorAll("input[name='displayFields']:checked");
+			
+			if (checkboxes.length === 0) {
+				alert("Please check at least one field name.");
+				return false;
+			}
+
+			// ----------- If valid → disable button -----------
+			disableSubmit(frm);
+			return true; // submit form
+		}
+
+		
         function disableSubmit(form) {
             const button = form.querySelector('input[type="submit"]');
             button.disabled = true;

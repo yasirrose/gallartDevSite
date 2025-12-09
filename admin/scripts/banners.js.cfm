@@ -16,6 +16,7 @@ function gridChangeFilter(thisId) {
 
 // populate edit form using row id
 function populateFormfilter(thisId){
+    console.log('testung');
     var edit = new admin.models.banners();
     var frm = document.forms["editForm"];
     var strEmployee = edit.getFilterdataFromID(thisId);
@@ -26,6 +27,9 @@ function populateFormfilter(thisId){
         frm.bannerType.value = strEmployee['bannerType'];
         frm.bannerImages.value = strEmployee['bannerImage'];
         document.getElementById('edit').value = 'Edit';
+        document.getElementById('Add').style.display = 'none';
+        document.getElementById('delete').style.display = 'block';
+        document.getElementById('edit').style.display = 'block';
         var deleteCheck = document.getElementById('deleteCheck').value;
         if(deleteCheck){
             document.getElementById('delete').style.display = '';
@@ -121,9 +125,11 @@ function showNew () {
     document.getElementById('bannerName').value = '';
     document.getElementById('bannerType').value = '';
     document.getElementById('bannerImages').value = '';
+    document.getElementById('bannerImagesUrl').value = '';
     document.getElementById('Add').style.display = 'block';
    	document.getElementById('delete').style.display = 'none';
    	document.getElementById('edit').style.display = 'none';
+    document.getElementById('active').options[0].selected = true;
    
 }
 function updateGrid() {

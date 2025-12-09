@@ -51,23 +51,14 @@ getKeywords = function(){
 	}
 
 
-	let isProcessing = false;
 
    function doEdit(type) {
 
 	
 		console.log('test type: ' + type)
-
-		 if (isProcessing) {
-				console.log("Request already in process…");
-				return false;
-			}
-    	isProcessing = true;
-
-		 document.getElementById('edit').disabled = true;
-		const deleteBtn = document.getElementById('delete');
-		if (deleteBtn) deleteBtn.disabled = true;
 	  
+		var editBtn = document.getElementById('edit');
+		var deleteBtn = document.getElementById('delete');
 
        var edit = new admin.models.leads();
 
@@ -127,6 +118,8 @@ getKeywords = function(){
 				}
 
 
+			editBtn.disabled = true;
+			deleteBtn.disabled = true;
 
 			if ( edit.editLeadFromForm()) {
 				document.getElementById('emailButton').style.display = 'block';
@@ -152,9 +145,19 @@ getKeywords = function(){
 				};
 
 				toastr.success('Record is updated Successfully'); 
+
+				setTimeout(function () {
+					editBtn.disabled = false;
+					deleteBtn.disabled = false;
+				}, 5000);
 			}
 			else { 
 				alert( 'There was a problem in the processing.')
+
+				setTimeout(function () {
+					editBtn.disabled = false;
+					deleteBtn.disabled = false;
+				}, 5000);
 			}
 	    }
 	     else if (type == 'delete'){
@@ -190,16 +193,16 @@ getKeywords = function(){
 	document.getElementById('edit').value = 'Edit';
    	document.getElementById('delete').style.display = '';
 
-	setTimeout(resetButtons, 1000); 
+	<!--- setTimeout(resetButtons, 1000);  --->
 
    }
 
-   function resetButtons() {
+   <!--- function resetButtons() {
 		isProcessing = false;
 		document.getElementById('edit').disabled = false;
 		const deleteBtn = document.getElementById('delete');
 		if (deleteBtn) deleteBtn.disabled = false;
-	}
+	} --->
 
    function showNew () {
    	document.getElementById('pk_leads').value = '';

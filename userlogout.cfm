@@ -6,10 +6,19 @@
 
 </cfif>
 <cfif structKeyExists(session,'sellerinfo') AND session.sellerinfo.login NEQ 0>
+
+	<cfif listLast(CGI.SCRIPT_NAME,"/") EQ "item.cfm" AND structKeyExists(URL,"artist") AND structKeyExists(URL,"slug")>
+
+        <cfset redirectURL = "/artist/#url.artist#/#url.slug#">
+    <cfelse>
+        <cfset redirectURL = "">
+    </cfif>
+
 	<cfoutput>
 		<div class="welcome-logout">
 			<cfform action="/logout" method="post">
-				<input type="Hidden" name="logout">
+				<input type="hidden" name="logout" value="1">
+                <input type="hidden" name="redirect" value="#redirectURL#">
 					<div class="logout-form">
 						<div class="main-heading">
 							<strong>Welcome: #session.sellerinfo.fname# #session.sellerinfo.lname#</strong>

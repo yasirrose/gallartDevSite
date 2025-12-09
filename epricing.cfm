@@ -303,7 +303,7 @@
 																				SELECT @@identity as uid
 																			</cfquery>
 																			<cfset customerId=insert_cust.uid />
-																		<cfelse>
+																		 <cfelse>
 																			<cfquery name="update_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 																				UPDATE customers SET
 																				EMAIL = '#EMAIL#'
@@ -406,69 +406,69 @@
 														 <cfelse>
 															<div class="form-section flex-form-section">
 																<cfform action="" method="post" name="frm1" onsubmit="return setFormActionAndValidate()">
-																		<div class="row top-row">
-																			<div class="col-lg-5 col-md-6 col-sm-12">
-																				<div class="img-sec">
-																					<!--- <img src="images/Gallery-Art-Map-V2.jpg" alt="image"> --->
+																	<div class="row top-row">
+																		<div class="col-lg-5 col-md-6 col-sm-12">
+																			<div class="img-sec">
+																				<!--- <img src="images/Gallery-Art-Map-V2.jpg" alt="image"> --->
 
-																					<cfif fileexists("http://#server_name#/img/thumbnails/#productInfo.uid#.jpg")> 
-																						<IMG SRC="/img/#productInfo.uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(productInfo.modelno)#" align="Center">
-																						<cfelse>
-																							
-																							<img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
-																					</cfif>
-
-																				</div>
-																			</div>
-																			<div class="col-lg-7 col-md-6 col-sm-12 border-left">
-																				<input type="hidden" name="submitted" value="1" />
-																				<input type="hidden" name="captcha_check" value="#form.captcha_check#" />
-																				<input type="hidden" name="pid" id="pid" value="#form.pid#" />
-																				<cfif FORM.captchaError EQ 1>
-																					<span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE
-																					EXACTLY AS YOU SEE THEM</span>
-																				</cfif>
-																				<cfif FORM.errorPhone EQ 1>
-																					<span style="color: ##ff0000; font-weight: bold;">
-																					#form.errorMsg#
-																					</span>
-																				</cfif>
-																				<div class="input-form">
-
-																					<cfif listlen(productinfo.manufacturer) gt 1>
-																						<cfset artist_name = "#listlast(productinfo.manufacturer)# #listfirst(productinfo.manufacturer)#" />
-																						<cfset artist_name_url = "#listlast(productinfo.manufacturer)#_#listfirst(productinfo.manufacturer)#" />
+																				<cfif fileexists("http://#server_name#/img/thumbnails/#productInfo.uid#.jpg")> 
+																					<IMG SRC="/img/#productInfo.uid#.jpg?x=randrange(1,99)"   width="100" BORDER="0" ALT="#trim(productInfo.modelno)#" align="Center">
 																					<cfelse>
-																						<cfset artist_name = productinfo.manufacturer />
-																						<cfset artist_name_url = productinfo.manufacturer />
-																					</cfif>
-																					
-																					<h2 class="title">
 																						
+																						<img src="http://#server_name#/img/thumbnails/noImage.jfif.jpeg">
+																				</cfif>
 
-																						<cfset words = ListToArray(productinfo.name, " ")>
-																						<cfset updatedName = "">
+																			</div>
+																		</div>
+																		<div class="col-lg-7 col-md-6 col-sm-12 border-left">
+																			<input type="hidden" name="submitted" value="1" />
+																			<input type="hidden" name="captcha_check" value="#form.captcha_check#" />
+																			<input type="hidden" name="pid" id="pid" value="#form.pid#" />
+																			<cfif FORM.captchaError EQ 1>
+																				<span style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE
+																				EXACTLY AS YOU SEE THEM</span>
+																			</cfif>
+																			<cfif FORM.errorPhone EQ 1>
+																				<span style="color: ##ff0000; font-weight: bold;">
+																				#form.errorMsg#
+																				</span>
+																			</cfif>
+																			<div class="input-form">
 
-																						<cfloop index="word" array="#words#">
-																							<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
+																				<cfif listlen(productinfo.manufacturer) gt 1>
+																					<cfset artist_name = "#listlast(productinfo.manufacturer)# #listfirst(productinfo.manufacturer)#" />
+																					<cfset artist_name_url = "#listlast(productinfo.manufacturer)#_#listfirst(productinfo.manufacturer)#" />
+																				<cfelse>
+																					<cfset artist_name = productinfo.manufacturer />
+																					<cfset artist_name_url = productinfo.manufacturer />
+																				</cfif>
+																				
+																				<h2 class="title">
+																					
 
-																							<cfif cleanWord EQ "FS">
-																								<!--- Preserve "FS" in uppercase --->
-																								<cfset updatedName = updatedName & " " & UCase(word)>
-																							<cfelse>
-																								<!--- Keep the original case of other words --->
-																								<cfset updatedName = updatedName & " " & word>
-																							</cfif>
-																						</cfloop>
+																					<cfset words = ListToArray(productinfo.name, " ")>
+																					<cfset updatedName = "">
 
-																						<cfset updatedName = Trim(updatedName)>
+																					<cfloop index="word" array="#words#">
+																						<cfset cleanWord = REReplace(word, "[^a-zA-Z]", "", "ALL")>
 
-																						<b>#artist_name# '#updatedName#' </b> - 
-																						<span>
-																							<!--- <cfif productinfo.retail_price gt 0 > --->
+																						<cfif cleanWord EQ "FS">
+																							<!--- Preserve "FS" in uppercase --->
+																							<cfset updatedName = updatedName & " " & UCase(word)>
+																						<cfelse>
+																							<!--- Keep the original case of other words --->
+																							<cfset updatedName = updatedName & " " & word>
+																						</cfif>
+																					</cfloop>
 
-																								
-																								<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
+																					<cfset updatedName = Trim(updatedName)>
+
+																					<b>#artist_name# '#updatedName#' </b> - 
+																					<span>
+																						<!--- <cfif productinfo.retail_price gt 0 > --->
+
+																							
+																							<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0>
 																								<cfif application.showSalePrice EQ 1>
 																									<!--- #DollarFormat(productinfo.special_price)#  &nbsp; --->
 																									<!--- <b> --->
@@ -481,85 +481,85 @@
 																										</cfif>	
 																									<!--- </b> --->
 																								</cfif>
-																								<cfelseif productinfo.gallery_price gt 0>
+																							 <cfelseif productinfo.gallery_price gt 0>
 																								#DollarFormat(productinfo.gallery_price)#  &nbsp;
 																								<!--- <b> #DollarFormat(productinfo.gallery_price)# </b> --->
-																								</cfif>
+																							</cfif>
 
 
-																								<cfset actualPrice = 0>
-																								<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and application.showSalePrice EQ 1>
-																									<cfset actualPrice = productinfo.special_price>
-																								<cfelseif productinfo.gallery_price gt 0>
-																									<cfset actualPrice = productinfo.gallery_price>
-																								</cfif>
+																							<cfset actualPrice = 0>
+																							<cfif productinfo.closeout eq 1 and productinfo.special_price gt 0 and application.showSalePrice EQ 1>
+																								<cfset actualPrice = productinfo.special_price>
+																							<cfelseif productinfo.gallery_price gt 0>
+																								<cfset actualPrice = productinfo.gallery_price>
+																							</cfif>
 
-																								<input type="hidden" id="actualPrice" value="#actualPrice#">
-										
-																							
-																							<!--- </cfif> --->
-
-
-																						</span> 
-																					</h2>
-																					<div class="row">																	
-																						<span style="color: ##ff0000;">* Required</span> <br><br>
-
-																						<div class="col-md-12">
-																							<div class="input-field">
-																								<cfinput type="text" size=40 maxsize=50 maxlength="30" placeholder="Enter your Name*" name="name" id="name" value="#form.name#" >
-																								<span class="error-message" id="nameError"></span>
-																							</div>
-																						</div>
-
-																						<div class="col-md-12">
-																							<div class="input-field">
-																								<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" id="email" value="#form.email#"  >
-																								<span class="error-message" id="emailError"></span>
-																							</div>
-																						</div>
+																							<input type="hidden" id="actualPrice" value="#actualPrice#">
+									
 																						
-																						<div class="col-md-12">
-																							<div class="input-field">
-																								<select name="phoneType" id="phoneType" class="form-control" style="width:100% !important;">
-																									<option value="Cell Phone">Cell Phone</option>
-																									<option value="Home Phone">Home Phone</option>
-																									<option value="Business Phone">Business Phone</option>
-																									<option value="OutsideUS">Outside US Phone</option>
-																								</select>
-																							</div>
-																						</div>
+																						<!--- </cfif> --->
 
-																						<div class="col-md-12">
-																							<div class="input-field">
-																								<cfinput type="text" size=40 maxlength="20" name="phone" placeholder="Enter your Phone Number" id="phone" value="#form.phone#" required="No">
-																								<span id="formatSign">(xxx) xxx-xxxx</span>
-																								<span class="error-message" id="phoneError"></span>
-																							</div>
-																						</div>																		
-																						
-																						<div class="col-md-12">
-																							<div class="input-field">
-																								<cfinput type="text" name="Offer" size="5" maxlength="6" id="Offer" message="Enter a Dollar amount, no $ or decimal." placeholder="Enter a Dollar amount, no $ or decimal.*" validate="integer" >
-																								<span class="error-message" id="OfferError"></span>
-																							</div>
+
+																					</span> 
+																				</h2>
+																				<div class="row">																	
+																					<span style="color: ##ff0000;">* Required</span> <br><br>
+
+																					<div class="col-md-12">
+																						<div class="input-field">
+																							<cfinput type="text" size=40 maxsize=50 maxlength="30" placeholder="Enter your Name*" name="name" id="name" value="#form.name#" >
+																							<span class="error-message" id="nameError"></span>
 																						</div>
+																					</div>
+
+																					<div class="col-md-12">
+																						<div class="input-field">
+																							<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" id="email" value="#form.email#"  >
+																							<span class="error-message" id="emailError"></span>
+																						</div>
+																					</div>
 																					
-																						<div class="input-field pt-3">
-																							<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
-																							<span class="error-message" id="m_recaptchaError"></span>
+																					<div class="col-md-12">
+																						<div class="input-field">
+																							<select name="phoneType" id="phoneType" class="form-control" style="width:100% !important;">
+																								<option value="Cell Phone">Cell Phone</option>
+																								<option value="Home Phone">Home Phone</option>
+																								<option value="Business Phone">Business Phone</option>
+																								<option value="OutsideUS">Outside US Phone</option>
+																							</select>
 																						</div>
+																					</div>
 
-																						<div class="col-md-12 mt-3">
-																							<div class="input-button">
-																								<button type="submit" class="SeeMore" id="submitBtn">Submit</button>
-																								<button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
-																							</div>
+																					<div class="col-md-12">
+																						<div class="input-field">
+																							<cfinput type="text" size=40 maxlength="20" name="phone" placeholder="Enter your Phone Number" id="phone" value="#form.phone#" required="No">
+																							<span id="formatSign">(xxx) xxx-xxxx</span>
+																							<span class="error-message" id="phoneError"></span>
+																						</div>
+																					</div>																		
+																					
+																					<div class="col-md-12">
+																						<div class="input-field">
+																							<cfinput type="text" name="Offer" size="5" maxlength="6" id="Offer" message="Enter a Dollar amount, no $ or decimal." placeholder="Enter a Dollar amount, no $ or decimal.*"  >
+																							<span class="error-message" id="OfferError"></span>
+																						</div>
+																					</div>
+																				
+																					<div class="input-field pt-3">
+																						<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+																						<span class="error-message" id="m_recaptchaError"></span>
+																					</div>
+
+																					<div class="col-md-12 mt-3">
+																						<div class="input-button">
+																							<button type="submit" class="SeeMore" id="submitBtn">Submit</button>
+																							<button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
 																						</div>
 																					</div>
 																				</div>
 																			</div>
-																		</div>														
+																		</div>
+																	</div>														
 																</cfform>
 															</div>
 														</cfif>
@@ -614,7 +614,8 @@
 			
 
 				const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
-				const integerRegex = /^[0-9]+$/; 
+				// const integerRegex = /^[0-9]+$/; 
+				const integerRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
 				const emailRegex = /\S+@\S+\.\S+/;
 
 				var recaptcha = grecaptcha.getResponse();

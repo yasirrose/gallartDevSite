@@ -37,7 +37,7 @@
 		<cfset selectedArtist = bio.artist>
 	</cfif>
 
-	<cfform name="frm" action="">
+	<cfform name="frm" action="" onsubmit="return validateBioForm();">
 		<input type="hidden" name="id" value="#url.id#" />
 
 		<table width="100%">
@@ -46,13 +46,14 @@
 					<td>
 						<!--- <cfdump var='#cgi#' label='cgi' expand=0 abort=0> --->
 						Artist: <select name="txtArtist">
+							<option value="">Please Select Artist</option>
 							<cfloop query="getAllGallartArtists">
 								<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#</option>
 							</cfloop>
 						</select>
 					</td>
 				</tr>
-			<cfelse>
+			 <cfelse>
 				<input type="hidden" name="txtArtist" value="#HTMLEditFormat(url.artist)#" />
 			</cfif>
 
@@ -77,4 +78,31 @@
 			</tr>
 		</table>
 	</cfform>
+
+	<script>
+		function validateBioForm() {
+			
+			if (window.CKEDITOR) {
+				for (var instance in CKEDITOR.instances) {
+					CKEDITOR.instances[instance].updateElement();
+				}
+			}
+
+			var artist = document.forms["frm"]["txtArtist"].value.trim();
+			var bio = document.forms["frm"]["txtBio"].value.trim();			
+
+			if(artist === ''){
+				alert("Please add title");
+				return false;
+			}
+
+			if(bio === ''){
+				alert("Please add Bio");
+				return false;
+			}
+			
+			return true; 
+		}
+	</script>
+
 </cfoutput>

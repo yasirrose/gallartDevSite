@@ -19,16 +19,16 @@
 
 		// this function is to change the negative value into paranthesis
 		function formatAsDollars(amount) {
-		// Convert to number
-		var num = parseFloat(amount);
+			// Convert to number
+			var num = parseFloat(amount);
 
-		// Check if negative
-		if (num < 0) {
-			return "($" + Math.abs(num).toFixed(2) + ")";
-		} else {
-			return "$" + num.toFixed(2);
+			// Check if negative
+			if (num < 0) {
+				return "($" + Math.abs(num).toFixed(2) + ")";
+			} else {
+				return "$" + num.toFixed(2);
+			}
 		}
-	}
 
 		var amountSale = #amountSale#;
 		console.log('test amount: ' + amountSale)

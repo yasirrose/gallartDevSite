@@ -76,17 +76,37 @@
 					editListingsFromForm = application.objectFactoryAdmin.getInstance('art').editListingsFromForm( argumentcollection = form );
 				</cfscript>
 				
-				<cfif editListingsFromForm EQ false>
+				<!--- <cfif editListingsFromForm EQ false>
 				
 					<script type="text/javascript">
 						alert('There was a problem with the processing.');
 					</script>
 				
+				</cfif> --->
+
+				<cfif NOT editListingsFromForm.success>
+					<!--- Show alert with DB message, then redirect via JS --->
+					<cfoutput>
+						<script type="text/javascript">
+							// Use JSStringFormat to safely escape the message for JS string
+							alert("#JSStringFormat(editListingsFromForm.message)#");
+							// After user dismisses alert, redirect back to edit form
+							window.location.href = "index.cfm?event=listings.loadEditForm&gridRefresh=1";
+						</script>
+					</cfoutput>
+				<cfelse>
+					<!--- Success: optionally show success message then redirect --->
+					<cfoutput>
+						<script type="text/javascript">
+							alert("Listing updated successfully.");
+							window.location.href = "index.cfm?event=listings.loadEditForm&gridRefresh=1";
+						</script>
+					</cfoutput>
 				</cfif>
 			
 			</cfif>
 			
-			<cflocation url="index.cfm?event=listings.loadEditForm&gridRefresh=1" addtoken="No">
+			<!--- <cflocation url="index.cfm?event=listings.loadEditForm&gridRefresh=1" addtoken="No"> --->
 		
 		</cfif>
 	
