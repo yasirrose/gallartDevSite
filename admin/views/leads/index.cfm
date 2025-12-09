@@ -228,7 +228,7 @@
 				Address:
 			</td>
 			<td>
-				<cfinput type="text" name="address" id="address" autosuggest="cfc:admin.models.leads.searchLeadsByAddress({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="30" size="30">
+				<cfinput type="text" name="address" id="address"  maxlength="30" size="30">
 			</td>
 		</tr>
 		<tr>
@@ -236,7 +236,7 @@
 				City:
 			</td>
 			<td>
-				<cfinput type="text" name="city" id="city" maxlength="30" size="30" autosuggest="cfc:admin.models.leads.searchLeadsByCity({cfautosuggestvalue})" maxResultsDisplay="10">
+				<cfinput type="text" name="city" id="city" maxlength="30" size="30" >
 			</td>
 		</tr>
 
@@ -288,7 +288,7 @@
 				Zip Code:
 			</td>
 			<td>
-				<cfinput type="text" name="zip" id="zip" size="30" maxlength="10" value="" autosuggest="cfc:admin.models.leads.searchLeadsByZipCode({cfautosuggestvalue})" maxResultsDisplay="10">
+				<cfinput type="text" name="zip" id="zip" size="30" maxlength="10" value="" >
 			</td>
 		</tr>
 

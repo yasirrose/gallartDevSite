@@ -141,7 +141,6 @@
 		<cfargument name="phoneType" type="string" default="">
 		<cfargument name="moduleName" type="string" default="">		
 
-
 		<cfif arguments.addressType EQ "USA">
 			<cfset finalState = arguments.state_dropdown>
 		<cfelseif arguments.addressType EQ "Outside">
@@ -175,8 +174,6 @@
 		<cfelse>
 			<cfset otherphone = "">
 		</cfif>
-
-		<!--- <cfdump var="#arguments#" abort="true"> --->
 	    
 	    <cfset var success = true />
 		

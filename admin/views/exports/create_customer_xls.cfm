@@ -26,8 +26,11 @@
 	</cfif>
 	ORDER BY lname, fname, email
 </cfquery>
+
+
 <cfcontent type="application/ms-excel" reset="Yes">
 <cfheader name="Content-Disposition" value="attachment; filename=""Gallart Customers #DateFormat(createodbcdate(now()))#.xls""">
+
 <cfoutput>
 	<table border="1" cellpadding="0" cellspacing="0">
 		<tr bgcolor="##000000">

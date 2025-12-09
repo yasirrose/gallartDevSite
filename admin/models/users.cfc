@@ -27,7 +27,14 @@
 	      	SELECT pk_users,fname,lname,email as seller_email,phone,cellPhone,businessPhone,otherphone,website,password
 	      	FROM users U
 			LEFT OUTER JOIN products P on U.pk_users = P.fk_users
-			WHERE 0=0 and pk_users NOT BETWEEN 29662 AND 30649 and pk_users NOT BETWEEN 15398 and 29264 and pk_users NOT BETWEEN 29423 and 29660 and pk_users NOT BETWEEN 15121 and 29395 and pk_users NOT BETWEEN 14793 and 29419
+			WHERE 0=0 
+			AND NOT (
+					pk_users BETWEEN 29662 AND 30649
+					OR pk_users BETWEEN 15398 AND 29264
+					OR pk_users BETWEEN 29423 AND 29660
+					OR pk_users BETWEEN 15121 AND 29395
+					OR pk_users BETWEEN 14793 AND 29419
+				)
 			<cfif arguments.Lname neq '' and arguments.Lname neq 'searchLname'>
 	      		AND U.lname like '#arguments.Lname#%'
 	      	</cfif>

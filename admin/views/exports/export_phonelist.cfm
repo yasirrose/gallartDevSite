@@ -6,11 +6,21 @@
 
 				<cfquery name="export_phonenumbers" dataSource="#dsource#" username="#uname#" password="#pword#">
 					<cfif form.table EQ "leads">
-						SELECT fname,lname,cellphone from leads where maillist = 1 and cellphone <> '' and cellphone is not null and isdeleted is null
+						SELECT fname,lname,cellphone, name from leads where maillist = 1 and cellphone <> '' and cellphone is not null and isdeleted is null
+						ORDER BY lname,fname
+					 <cfelseif form.table EQ 'users'>
+						SELECT fname,lname,cellphone, '' AS name from users where cellphone <> '' and cellphone is not null
+						AND NOT (
+							pk_users BETWEEN 29662 AND 30649
+							OR pk_users BETWEEN 15398 AND 29264
+							OR pk_users BETWEEN 29423 AND 29660
+							OR pk_users BETWEEN 15121 AND 29395
+							OR pk_users BETWEEN 14793 AND 29419
+						)
 						ORDER BY lname,fname
 					 <cfelse>
-						SELECT fname,lname,cellphone from #form.table# where cellphone <> '' and cellphone is not null
-						ORDER BY lname,fname
+							SELECT fname,lname,cellphone, name from #form.table# where cellphone <> '' and cellphone is not null and fname !='1' and Lname!='1' 
+							ORDER BY lname,fname
 					</cfif>
 				</cfquery>
 
@@ -19,9 +29,9 @@
 					<!--- Excel can only handle 66000 rows --->
 					Too many records
 				
-				 <cfelse>
+				 <cfelse>					
 				
-					<cffile action="write" file="#expandPath('.')#\data\export.csv" output="First Name,Last Name,Cellphone" addnewline="yes">
+					<cffile action="write" file="#expandPath('.')#\data\export.csv" output="First Name,Last Name, Name, Cellphone" addnewline="yes">
 				
 					<cfoutput>
 						<cfparam name="startrow" default="1">
@@ -42,7 +52,7 @@
 
 						<cfloop query="export_phonenumbers" startrow="#startrow#" endrow="#endrow#">
 					
-							<cffile action="append" file="#expandPath('.')#\data\export.csv" output="#TRIM(fname)#,#TRIM(lname)#,#TRIM(cellphone)#" addnewline="yes">
+							<cffile action="append" file="#expandPath('.')#\data\export.csv" output="#TRIM(fname)#,#TRIM(lname)#,#TRIM(name)#,#TRIM(cellphone)#" addnewline="yes">
 				
 						</cfloop>
 						<!--- Read the contents of the CSV file --->
@@ -61,16 +71,15 @@
 				
 			 <cfelse>
 				<cfquery name="leads" dataSource="#dsource#" username="#uname#" password="#pword#">
-					SELECT fname,lname,cellphone from leads where maillist = 1 and cellphone <> '' and cellphone is not null and isdeleted is null
+					SELECT fname,lname,cellphone, name from leads where maillist = 1 and cellphone <> '' and cellphone is not null and isdeleted is null
 				</cfquery>
 				<cfquery name="customers" dataSource="#dsource#" username="#uname#" password="#pword#">
-					SELECT fname,lname,cellphone from customers where cellphone <> '' and cellphone is not null and fname !='1' and Lname!='1'
+					SELECT fname,lname,cellphone, name from customers where cellphone <> '' and cellphone is not null and fname !='1' and Lname!='1'
 				</cfquery>
 				<cfquery name="sellers" datasource="#dsource#" username="#uname#" password="#pword#">
 					SELECT fname, lname, cellphone
 					FROM users
-					WHERE
-						cellphone IS NOT NULL
+					WHERE cellphone IS NOT NULL
 						AND cellphone <> ''
 						AND NOT (
 							pk_users BETWEEN 29662 AND 30649

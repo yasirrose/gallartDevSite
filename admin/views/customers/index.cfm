@@ -16,98 +16,98 @@
 				<tr>
 					<td valign="top" width="400">
 						<cfform name="gridForm">
-						<table cellspacing="0" cellpadding="1" border="0" width="100%">
-							<tr>
-								<td align="left">
-									<strong>First Name:</strong>
-									<cfinput name="searchFname" id="searchFname" size="30" maxlength="30"/>
-								</td>
-								<td align="left">
-									<strong>Last Name:</strong>
-									<cfinput name="searchLname" size="30" maxlength="30"/>
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td align="left">
-									<strong>Email:</strong>
-									<cfinput name="searchEmail" size="30" maxlength="30"/>
-								</td>
-								<td align="left">
-									<strong>Area Code:</strong>
-									<cfinput name="searchAreacode" size="30" maxlength="30"/>
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<!--- <tr>
-								<td align="right">
-									<strong>Email:</strong>
-								</td>
-								<td>
-									<cfinput name="searchEmail" size="30" maxlength="30"/>
+							<table cellspacing="0" cellpadding="1" border="0" width="100%">
+								<tr>
+									<td align="left">
+										<strong>First Name:</strong>
+										<cfinput name="searchFname" id="searchFname" size="30" maxlength="30"/>
+									</td>
+									<td align="left">
+										<strong>Last Name:</strong>
+										<cfinput name="searchLname" size="30" maxlength="30"/>
+									</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left">
+										<strong>Email:</strong>
+										<cfinput name="searchEmail" size="30" maxlength="30"/>
+									</td>
+									<td align="left">
+										<strong>Area Code:</strong>
+										<cfinput name="searchAreacode" size="30" maxlength="30"/>
+									</td>
+									<td>&nbsp;</td>
+								</tr>
+								<!--- <tr>
+									<td align="right">
+										<strong>Email:</strong>
+									</td>
+									<td>
+										<cfinput name="searchEmail" size="30" maxlength="30"/>
 
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td align="right">
-									<strong>Area Code:</strong>
-								</td>
-								<td>
-									<cfinput name="searchAreacode" size="30" maxlength="30"/>
+									</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="right">
+										<strong>Area Code:</strong>
+									</td>
+									<td>
+										<cfinput name="searchAreacode" size="30" maxlength="30"/>
 
-								</td>
-								<td>&nbsp;</td>
-							</tr> --->
-							<tr>
-								<td align="left">
-									<strong>City:</strong>
-									<cfinput name="searchCity" size="30" maxlength="30"/>
-								</td>
-								<td align="left">
-									<strong>State------------:</strong>
-									<select name="searchState">
-										<option value="">Please Select</option>
-										<cfoutput query="getStates">
-											<option value="#stateAbb#">#state#</option>
-										</cfoutput>
-									</select>
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<!--- <tr>
-								<td align="right">
-									<strong>State:</strong>
-								</td>
-								<td>
-									<select name="searchState">
-										<option value="">Please Select</option>
-										<cfoutput query="getStates">
-											<option value="#stateAbb#">#state#</option>
-										</cfoutput>
-									</select>
-								</td>
-								<td>&nbsp;</td>
-							</tr> --->
-							<tr>
-								<td colspan="3" align="center">
-									<input type="Reset" onclick="setTimeout(function(){location.reload();},100);">
-									<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" style="margin-top:6px;"/>
-									<!--- <input type="Button" value="Create Excel File" onclick="document.getElementById('createXls').src='views/exports/create_customer_xls.cfm'"> --->
-									<input type="Button" value="Create Excel File" onclick="exportCustomers(this)">
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td colspan="3">
-									<cfgrid format="html" name="data" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.customers.getCustomers({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchFname},{searchLname},{searchEmail},{searchAreacode},{searchCity},{searchState})">
-										<cfgridcolumn name="fname" header="First Name" width="100">
-										<cfgridcolumn name="lname" header="Last Name" width="100">
-										<cfgridcolumn name="customer_email" header="Email" width="175">
-									</cfgrid>
-								</td>
-							</tr>
-						</table>
+									</td>
+									<td>&nbsp;</td>
+								</tr> --->
+								<tr>
+									<td align="left">
+										<strong>City:</strong>
+										<cfinput name="searchCity" size="30" maxlength="30"/>
+									</td>
+									<td align="left">
+										<strong>State------------:</strong>
+										<select name="searchState">
+											<option value="">Please Select</option>
+											<cfoutput query="getStates">
+												<option value="#stateAbb#">#state#</option>
+											</cfoutput>
+										</select>
+									</td>
+									<td>&nbsp;</td>
+								</tr>
+								<!--- <tr>
+									<td align="right">
+										<strong>State:</strong>
+									</td>
+									<td>
+										<select name="searchState">
+											<option value="">Please Select</option>
+											<cfoutput query="getStates">
+												<option value="#stateAbb#">#state#</option>
+											</cfoutput>
+										</select>
+									</td>
+									<td>&nbsp;</td>
+								</tr> --->
+								<tr>
+									<td colspan="3" align="center">
+										<input type="Reset" onclick="setTimeout(function(){location.reload();},100);">
+										<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" style="margin-top:6px;"/>
+										<!--- <input type="Button" value="Create Excel File" onclick="document.getElementById('createXls').src='views/exports/create_customer_xls.cfm'"> --->
+										<input type="Button" value="Create Excel File" onclick="exportCustomers(this)">
+									</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td colspan="3">
+										<cfgrid format="html" name="data" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.customers.getCustomers({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchFname},{searchLname},{searchEmail},{searchAreacode},{searchCity},{searchState})">
+											<cfgridcolumn name="fname" header="First Name" width="100">
+											<cfgridcolumn name="lname" header="Last Name" width="100">
+											<cfgridcolumn name="customer_email" header="Email" width="175">
+										</cfgrid>
+									</td>
+								</tr>
+							</table>
 						</cfform>
 					</td>
 					<td valign="top">
@@ -397,88 +397,88 @@
 				</tr>
 			</table>
 
-<script>
-	function toggleStateField() {
-		var addressType = document.getElementById("Addresstype").value;
+	<script>
+		function toggleStateField() {
+			var addressType = document.getElementById("Addresstype").value;
 
-		if (addressType === "Outside") {
-			// Show text field, hide dropdown
-			document.getElementById("stateTextRow").style.display = "";
-			document.getElementById("stateDropdownRow").style.display = "none";
-		} else if (addressType === "USA") {
-			// Show dropdown, hide text field
-			document.getElementById("stateDropdownRow").style.display = "";
-			document.getElementById("stateTextRow").style.display = "none";
-		} else {
-			// Hide both if nothing selected
-			document.getElementById("stateTextRow").style.display = "none";
-			document.getElementById("stateDropdownRow").style.display = "none";
-		}
-	}
-
-	function exportCustomers(btn) {
-		// disable button
-		btn.disabled = true;
-		btn.value = "Exporting...";
-
-		// trigger export via iframe
-		document.getElementById('createXls').src = 'views/exports/create_customer_xls.cfm';
-
-		// re-enable after 5 seconds
-		setTimeout(function(){
-			btn.disabled = false;
-			btn.value = "Create Excel Sheet";
-		}, 5000);
-	}
-
-</script>
-
-<script>
-	/* ---------- global counter function ---------- */
-	function updateAdditionalDetailsCounter() {
-		var textarea = document.getElementById('comments');
-		var counter = document.getElementById('commentsCount');
-		var maxLength = 500;
-		if (!textarea || !counter) return;
-		var len = textarea.value ? textarea.value.length : 0;
-		counter.textContent = len + ' / ' + maxLength + ' characters';
-
-		// optional red warning
-		if (len > maxLength) {
-			counter.style.color = 'red';
-		} else {
-			counter.style.color = '';
-		}
-	}
-
-	/* ---------- run on page load and attach input handler ---------- */
-	document.addEventListener("DOMContentLoaded", function() {
-		const textarea = document.getElementById("comments");
-		const maxLength = 500;
-
-		textarea.addEventListener("input", function() {
-			if (this.value.length > maxLength) {
-				this.value = this.value.substring(0, maxLength); // trim extra text
+			if (addressType === "Outside") {
+				// Show text field, hide dropdown
+				document.getElementById("stateTextRow").style.display = "";
+				document.getElementById("stateDropdownRow").style.display = "none";
+			} else if (addressType === "USA") {
+				// Show dropdown, hide text field
+				document.getElementById("stateDropdownRow").style.display = "";
+				document.getElementById("stateTextRow").style.display = "none";
+			} else {
+				// Hide both if nothing selected
+				document.getElementById("stateTextRow").style.display = "none";
+				document.getElementById("stateDropdownRow").style.display = "none";
 			}
-			updateAdditionalDetailsCounter();
+		}
+
+		function exportCustomers(btn) {
+			// disable button
+			btn.disabled = true;
+			btn.value = "Exporting...";
+
+			// trigger export via iframe
+			document.getElementById('createXls').src = 'views/exports/create_customer_xls.cfm';
+
+			// re-enable after 5 seconds
+			setTimeout(function(){
+				btn.disabled = false;
+				btn.value = "Create Excel Sheet";
+			}, 5000);
+		}
+
+	</script>
+
+	<script>
+		/* ---------- global counter function ---------- */
+		function updateAdditionalDetailsCounter() {
+			var textarea = document.getElementById('comments');
+			var counter = document.getElementById('commentsCount');
+			var maxLength = 500;
+			if (!textarea || !counter) return;
+			var len = textarea.value ? textarea.value.length : 0;
+			counter.textContent = len + ' / ' + maxLength + ' characters';
+
+			// optional red warning
+			if (len > maxLength) {
+				counter.style.color = 'red';
+			} else {
+				counter.style.color = '';
+			}
+		}
+
+		/* ---------- run on page load and attach input handler ---------- */
+		document.addEventListener("DOMContentLoaded", function() {
+			const textarea = document.getElementById("comments");
+			const maxLength = 500;
+
+			textarea.addEventListener("input", function() {
+				if (this.value.length > maxLength) {
+					this.value = this.value.substring(0, maxLength); // trim extra text
+				}
+				updateAdditionalDetailsCounter();
+			});
 		});
-	});
-</script>
+	</script>
 
-<style>
-	.toast-center {
-		top: 50% !important;
-		left: 50% !important;
-		transform: translate(-50%, -50%) !important;
-		position: fixed !important;
-		z-index: 999999 !important;
-	}
+	<style>
+		.toast-center {
+			top: 50% !important;
+			left: 50% !important;
+			transform: translate(-50%, -50%) !important;
+			position: fixed !important;
+			z-index: 999999 !important;
+		}
 
-	#toast-container > .toast {
-		background-color: #ff4da6 !important;
-		color: white !important;
-	}
-</style>
+		#toast-container > .toast {
+			background-color: #ff4da6 !important;
+			color: white !important;
+		}
+	</style>
 
 <iframe id="createXls" src="" frameborder="0"></iframe>
 <!--- <cfset ajaxOnLoad("init")> --->
