@@ -1,15 +1,12 @@
 
-<cfcontent type="application/ms-excel" reset="Yes">
-<cfheader name="Content-Disposition" value="attachment; filename=""Gallart Inventory Listing #DateFormat(createodbcdate(now()))#.xls""">
+<cfcontent type="application/vnd.ms-excel; charset=utf-8" reset="Yes">
+<cfheader name="Content-Disposition" value="attachment; filename=""Gallart_Inventory_Listing #DateFormat(createodbcdate(now()))#.xls""">
 
 <cfoutput>
 
 	<cfif isDefined('url.displayFields') AND url.displayFields NEQ ''>
 		<table border="1" cellpadding="0" cellspacing="0">
 			<tr class="row0" bgcolor="##000000">
-				<td style="color: ##FFFFFF;">
-					<strong>UID</strong>
-				</td>
 				<td style="color: ##FFFFFF;">
 					<strong>Title</strong>
 				</td>
@@ -43,13 +40,18 @@
 						<strong>Sale Price</strong>
 					</td>
 				</cfif>
+				<cfif listFind(url.displayFields,'Trump')>
+					<td style="color: ##FFFFFF;">
+						<strong>Trump Price</strong>
+					</td>
+				</cfif>
 				<cfif listFind(url.displayFields,'Year')>
 					<td style="color: ##FFFFFF;">
 						<strong>Year</strong>
 					</td>
 				</cfif>
 				<cfif listFind(url.displayFields,'Size')>
-					<td style="color: ##FFFFFF;">
+					<td style="color: ##FFFFFF;"> 
 						<strong>Size</strong>
 					</td>
 				</cfif>
@@ -68,34 +70,21 @@
 						<strong>High Estimate</strong>
 					</td>
 				</cfif>
-				<cfif listFind(url.displayFields,'Desc')>
-					<td style="color: ##FFFFFF;">
-						<strong>Description</strong>
-					</td>
-				</cfif>
 				<cfif listFind(url.displayFields,'Thumbnail')>
 					<td style="color: ##FFFFFF;">
 						<strong>Thumbnail</strong>
 					</td>
 				</cfif>
-				<cfif listFind(url.displayFields,'Url')>
-					<td style="color: ##FFFFFF;">
-						<strong>URL</strong>
-					</td>
-				</cfif>
 			</tr>
-			<cfloop query="getExcelListingsBySelected">
+			<cfloop query="getExcelListingsByArtist">
 				<tr>
-					<td valign="top">
-						#uid#
-					</td>
 					<td valign="top">
 						#Name#
 					</td>
 					<cfif listFind(url.displayFields,'ModelNo')>
-					<td>
-						#modelno#
-					</td>
+						<td>
+							#modelno#
+						</td>
 					</cfif>
 					<cfif listFind(url.displayFields,'Artist')>
 						<td>
@@ -135,6 +124,15 @@
 							</cfif>	
 						</td>
 					</cfif>
+					<cfif listFind(url.displayFields,'Trump')>
+						<td valign="top" align="right">
+							<cfif not location_price eq 0>
+								#DollarFormat(location_price)#
+							<cfelse>
+								N/A
+							</cfif>	
+						</td>
+					</cfif>
 					<cfif listFind(url.displayFields,'Year')>
 						<td>
 							#year#
@@ -160,26 +158,77 @@
 							#high_estimate#
 						</td>
 					</cfif>
-					<cfif listFind(url.displayFields,'Desc')>
-						<td>
-							#caption#
-						</td>
-					</cfif>
 					<cfif listFind(url.displayFields,'Thumbnail')>
 						<td>
 							http://#server_name#/img/#uid#.jpg
 						</td>
 					</cfif>
-					<cfif listFind(url.displayFields,'Url')>
-						<cfset artist_name_url = "#listlast(manufacturer)#_#listfirst(manufacturer)#" />
-						<td>
-							<!--- http://#server_name#/item.cfm?pid=#trim(uid)#&artist=#ucase(manufacturer)#&artistname=#trim(artist_name_url)#&gallery=GALLART&title=#trim(replace(name,"'",''))# --->
-							https://#server_name#/artist/#urlencodedformat(trim(replace(producturl,"'","")) )#/#urlencodedformat(trim(slug))#
-							
-						</td>
-					</cfif>
 				</tr>
 			</cfloop>
 		</table>
-	</cfif>
+		
+		
+	 <cfelseif isDefined('url.artists') AND url.artists NEQ ''>
+
+		<table border="1" cellpadding="0" cellspacing="0">
+			<tr bgcolor="##000000">
+				<td style="color: ##FFFFFF;" valign="top">
+					<strong>Artist</strong>
+				</td>
+				<td style="color: ##FFFFFF;" valign="top">
+					<strong>Art ID</strong>
+				</td>
+				<td style="color: ##FFFFFF;" valign="top" width="350">
+					<strong>Title</strong>
+				</td>
+				<td style="color: ##FFFFFF;" valign="top">
+					<strong>Medium</strong>
+				</td>
+				<td style="color: ##FFFFFF;" valign="top">
+					<strong>Size</strong>
+				</td>
+				<td style="color: ##FFFFFF;" valign="top">
+					<strong>Gallery Price</strong>
+				</td>
+			</tr>
+			<cfloop query="getExcelListingsByArtist">
+				<tr>
+					<td valign="top">
+						#Manufacturer#
+					</td>
+					<td valign="top">
+						#modelno#
+					</td>
+					<td valign="top">
+						#Name#
+					</td>
+					<td valign="top">
+						#path#
+					</td>
+					<td valign="top">
+						#size#
+					</td>
+					<td valign="top" align="right">
+						<cfif not gallery_price eq 0>
+							#DollarFormat(gallery_price)#
+						<cfelse>
+							N/A
+						</cfif>
+					</td>
+				</tr>
+			</cfloop>
+		</table>
+					
+
+	</cfif>	
 </cfoutput>
+
+<!--- <cfcontent type="text/csv" reset="true">
+<cfheader name="Content-Disposition" value="attachment; filename=Gallart_Inventory_Listing_#DateFormat(now(), 'yyyymmdd')#.csv">
+
+<cfoutput>
+Title,Model Number,Artist
+<cfloop query="getExcelListingsByArtist">
+#Name#, #modelno#, #manufacturer#
+</cfloop>
+</cfoutput> --->

@@ -44,714 +44,711 @@
 <cfajaxproxy cfc="admin.models.leads" />
 
 	<table border="0" cellpadding="0" cellspacing="0" width="1000" height="100%">
-	<tr>
-		<td valign="top">
-			<table border = "0" width = "100%" cellpadding = "5" cellspacing = "0">
-				<tr>
-			    	<td colspan="2" style="font-size: 11px;"><strong>SEARCH BY:</strong></td>
-			  	</tr>
-				<tr>
-					<td valign="top" width="400">
-						<cfform name="gridForm">
-						<table cellspacing="0" cellpadding="1" border="0" width="100%">
-							<tr>
-								<td align="left">
-									<strong>First Name:</strong>
-									<br>
-									<cfinput name="searchFname" id="searchFname" size="30" />
-								</td>
-								<td align="left" style="font-size: 10px;">
-									<strong>Last Name:</strong>
-									<br>
-									<cfinput name="searchLname" size="30" />
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<!--- <tr>
-								<td align="right" style="font-size: 10px;">
-									<strong>Last Name:</strong>
-								</td>
-								<td>
-									<cfinput name="searchLname" size="30" />
-								</td>
-								<td>&nbsp;</td>
-							</tr> --->
-							<tr>
-								<td align="left" style="font-size: 10px;">
-									<strong>Email:</strong>
-									<br>
-									<cfinput name="searchEmail" size="30" />
-								</td>
-								<td align="left" style="font-size: 10px;">
-									<strong>Area Code:</strong>
-									<br>
-									<cfinput name="searchAreacode" size="30" />
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td align="left">
-									<strong>City:</strong>
-									<br>
-									<cfinput name="searchCity" size="30" />
-								</td>
-								<td align="left" style="font-size: 10px;">
-									<strong>State:</strong>
-									<br>
-									<select name="searchState">
-										<option value="">Please Select</option>
-										<cfoutput query="getStates">
-											<option value="#stateAbb#">#state#</option>
-										</cfoutput>
-									</select>
+		<tr>
+			<td valign="top">
+				<table border = "0" width = "100%" cellpadding = "5" cellspacing = "0">
+					<tr>
+						<td colspan="2" style="font-size: 11px;"><strong>SEARCH BY:</strong></td>
+					</tr>
+					<tr>
+						<td valign="top" width="400">
+							<cfform name="gridForm">
+								<table cellspacing="0" cellpadding="1" border="0" width="100%">
+									<tr>
+										<td align="left">
+											<strong>First Name:</strong>
+											<br>
+											<cfinput name="searchFname" id="searchFname" size="30" />
+										</td>
+										<td align="left" style="font-size: 10px;">
+											<strong>Last Name:</strong>
+											<br>
+											<cfinput name="searchLname" size="30" />
+										</td>
+										<td>&nbsp;</td>
+									</tr>
+									<!--- <tr>
+										<td align="right" style="font-size: 10px;">
+											<strong>Last Name:</strong>
+										</td>
+										<td>
+											<cfinput name="searchLname" size="30" />
+										</td>
+										<td>&nbsp;</td>
+									</tr> --->
+									<tr>
+										<td align="left" style="font-size: 10px;">
+											<strong>Email:</strong>
+											<br>
+											<cfinput name="searchEmail" size="30" />
+										</td>
+										<td align="left" style="font-size: 10px;">
+											<strong>Area Code:</strong>
+											<br>
+											<cfinput name="searchAreacode" size="30" />
+										</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td align="left">
+											<strong>City:</strong>
+											<br>
+											<cfinput name="searchCity" size="30" />
+										</td>
+										<td align="left" style="font-size: 10px;">
+											<strong>State:</strong>
+											<br>
+											<select name="searchState">
+												<option value="">Please Select</option>
+												<cfoutput query="getStates">
+													<option value="#stateAbb#">#state#</option>
+												</cfoutput>
+											</select>
 
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<!--- <tr>
-								<td align="right">
-									<strong>City:</strong>
-								</td>
-								<td>
-									<cfinput name="searchCity" size="30" />
+										</td>
+										<td>&nbsp;</td>
+									</tr>
+									<!--- <tr>
+										<td align="right">
+											<strong>City:</strong>
+										</td>
+										<td>
+											<cfinput name="searchCity" size="30" />
 
-								</td>
-								<td>&nbsp;</td>
-							</tr> --->
-							<!--- <tr>
-								<td align="right">
-									<strong>State:</strong>
-								</td>
-								<td>
-									<select name="searchState">
-										<option value="">Please Select</option>
-										<cfoutput query="getStates">
-											<option value="#stateAbb#">#state#</option>
-										</cfoutput>
-									</select>
-								</td>
-								<td>&nbsp;</td>
-							</tr> --->
-							<tr>
-								<td align="left" style="font-size: 10px;">
-									<strong>Employee:</strong>
-									<br>
-									<cfselect query="getEmployees" name="searchEmployeeId" display="emp_name" value="pk_employees" selected="#form.searchEmployeeId#" queryPosition="below">
-										<option value="">All</option>
-									</cfselect>
-								</td>
-								<td align="left" style="font-size: 10px;">
-									<strong>Comments entered:</strong>
-									<br>
-									<select name="searchComments">
-										<option value="">All</option>
-										<option value="1">Yes</option>
-										<option value="0">No</option>
-									</select>
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<!--- <tr>
-								<td align="right" style="font-size: 10px;">
-									<strong>Comments entered:</strong>
-								</td>
-								<td>
-									<select name="searchComments">
-										<option value="">All</option>
-										<option value="1">Yes</option>
-										<option value="0">No</option>
-									</select>
-								</td>
-								<td>&nbsp;</td>
-							</tr> --->
-							
-							<tr>
-								<td align="left" class="date-field" style="font-size: 10px;" nowrap>
-									<strong>Date from:</strong>
-									<br>
-									<cfinput name="searchFromDate" type="datefield" validate="date" size="10" />
-								</td>
-								<td align="left" class="date-field" style="font-size: 10px;" nowrap>
-									<strong>Date to:</strong>
-									<br>
-									<cfinput name="searchToDate" type="datefield" validate="date" size="10" />
-								</td>
-								<td>&nbsp;</td>
-							</tr>
+										</td>
+										<td>&nbsp;</td>
+									</tr> --->
+									<!--- <tr>
+										<td align="right">
+											<strong>State:</strong>
+										</td>
+										<td>
+											<select name="searchState">
+												<option value="">Please Select</option>
+												<cfoutput query="getStates">
+													<option value="#stateAbb#">#state#</option>
+												</cfoutput>
+											</select>
+										</td>
+										<td>&nbsp;</td>
+									</tr> --->
+									<tr>
+										<td align="left" style="font-size: 10px;">
+											<strong>Employee:</strong>
+											<br>
+											<cfselect query="getEmployees" name="searchEmployeeId" display="emp_name" value="pk_employees" selected="#form.searchEmployeeId#" queryPosition="below">
+												<option value="">All</option>
+											</cfselect>
+										</td>
+										<td align="left" style="font-size: 10px;">
+											<strong>Comments entered:</strong>
+											<br>
+											<select name="searchComments">
+												<option value="">All</option>
+												<option value="1">Yes</option>
+												<option value="0">No</option>
+											</select>
+										</td>
+										<td>&nbsp;</td>
+									</tr>
+									<!--- <tr>
+										<td align="right" style="font-size: 10px;">
+											<strong>Comments entered:</strong>
+										</td>
+										<td>
+											<select name="searchComments">
+												<option value="">All</option>
+												<option value="1">Yes</option>
+												<option value="0">No</option>
+											</select>
+										</td>
+										<td>&nbsp;</td>
+									</tr> --->
+									
+									<tr>
+										<td align="left" class="date-field" style="font-size: 10px;" nowrap>
+											<strong>Date from:</strong>
+											<br>
+											<cfinput name="searchFromDate" type="datefield" validate="date" size="10" />
+										</td>
+										<td align="left" class="date-field" style="font-size: 10px;" nowrap>
+											<strong>Date to:</strong>
+											<br>
+											<cfinput name="searchToDate" type="datefield" validate="date" size="10" />
+										</td>
+										<td>&nbsp;</td>
+									</tr>
 
-							<tr>
-								<td align="left" style="font-size: 10px;">
-									<strong>Keyword search:</strong><br>
-									(Searches artists, titles and notes)
-									<cfinput type="text" name="searchKeywords" size="30" />
-								</td>
-								<td>
-									<input type="Reset" onclick="setTimeout(function(){location.reload();},100);">
-									<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('leadGrid', false);" />
-								</td>
-								<td>&nbsp;</td>
-							</tr>
+									<tr>
+										<td align="left" style="font-size: 10px;">
+											<strong>Keyword search:</strong><br>
+											(Searches artists, titles and notes)
+											<cfinput type="text" name="searchKeywords" size="30" />
+										</td>
+										<td>
+											<input type="Reset" onclick="setTimeout(function(){location.reload();},100);">
+											<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('leadGrid', false);" />
+										</td>
+										<td>&nbsp;</td>
+									</tr>
 
-							<!--- <tr>
-								<td align="right" style="font-size: 10px;">
-									<strong>Date to:</strong>
-								</td>
-								<td nowrap>
-									<cfinput name="searchToDate" type="datefield" validate="date" size="10" />
-								</td>
-								<td>
-									<input type="Reset">
-									<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('leadGrid', false);" />
-								</td>
-							</tr> --->
-                            <tr>
-                            	<td colspan="3">
-                                	<input type="button" value="Export All Leads" onclick="exportLeads(this)" />
-									<!--- <input type="button" value="Export Filtered Leads" onclick="document.getElementById('createXls').src='views/exports/create_lead_xls.cfm'" /> --->
-									<input type="button" id="exportBtn" value="Export Filtered Leads" onclick="exportFilteredLeads(this)" />
-                                </td>
-                            </tr>
-							<tr>
-								<td colspan="3">
-									<cfgrid format="html" name="leadGrid" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.leads.getLeads({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchFname},{searchLname},{searchEmail},{searchAreacode},{searchCity},{searchState},{searchEmployeeId},{searchComments},{searchFromDate},{searchToDate},{searchKeywords})">
-									    <!--- <cfgridcolumn name="fname" header="First Name" width="80"> --->
-										<!--- <cfgridcolumn name="lname" header="Last Name" width="80"> --->
-										<cfgridcolumn name="user_name" header="Name" width="175">
-										<cfgridcolumn name="leadEmail" header="Email" width="175">
-										<cfgridcolumn name="leadDate" header="Date" width="80">
-											<cfgridcolumn name="pk_leads" header="ID" display="false" dataalign="center">
-									</cfgrid>
-								</td>
-							</tr>
-						</table>
-						</cfform>
-					</td>
-					<td valign="top">
+									<!--- <tr>
+										<td align="right" style="font-size: 10px;">
+											<strong>Date to:</strong>
+										</td>
+										<td nowrap>
+											<cfinput name="searchToDate" type="datefield" validate="date" size="10" />
+										</td>
+										<td>
+											<input type="Reset">
+											<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('leadGrid', false);" />
+										</td>
+									</tr> --->
+									<tr>
+										<td colspan="3">
+											<input type="button" value="Export All Leads" onclick="exportLeads(this)" />
+											<!--- <input type="button" value="Export Filtered Leads" onclick="document.getElementById('createXls').src='views/exports/create_lead_xls.cfm'" /> --->
+											<input type="button" id="exportBtn" value="Export Filtered Leads" onclick="exportFilteredLeads(this)" />
+										</td>
+									</tr>
+									<tr>
+										<td colspan="3">
+											<cfgrid format="html" name="leadGrid" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.leads.getLeads({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchFname},{searchLname},{searchEmail},{searchAreacode},{searchCity},{searchState},{searchEmployeeId},{searchComments},{searchFromDate},{searchToDate},{searchKeywords})">
+												<!--- <cfgridcolumn name="fname" header="First Name" width="80"> --->
+												<!--- <cfgridcolumn name="lname" header="Last Name" width="80"> --->
+												<cfgridcolumn name="user_name" header="Name" width="175">
+												<cfgridcolumn name="leadEmail" header="Email" width="175">
+												<cfgridcolumn name="leadDate" header="Date" width="80">
+													<cfgridcolumn name="pk_leads" header="ID" display="false" dataalign="center">
+											</cfgrid>
+										</td>
+									</tr>
+								</table>
+							</cfform>
+						</td>
+						<td valign="top">
 
-						<input type="button" value="New" onclick="showNew()"> <br><br>
-						<span style="color: #ff0000;"><b>* Required</b></span><br><br>
-						<cfform name="editForm">
-						<cfinput type="hidden" name="pk_leads" id="pk_leads" bind="{leadGrid.pk_leads}">
-						<cfinput type="hidden" name="fname" id="fname" bind="{leadGrid.fname}">
-						<cfinput type="hidden" name="lname" id="lname" bind="{leadGrid.lname}">
+							<input type="button" value="New" onclick="showNew()"> <br><br>
+							<span style="color: #ff0000;"><b>* Required</b></span><br><br>
+							<cfform name="editForm">
+								<cfinput type="hidden" name="pk_leads" id="pk_leads" bind="{leadGrid.pk_leads}">
+								<cfinput type="hidden" name="fname" id="fname" bind="{leadGrid.fname}">
+								<cfinput type="hidden" name="lname" id="lname" bind="{leadGrid.lname}">
 
-						<cfinput type="hidden" name="moduleName" id="moduleName" value="Lead Module">
+								<cfinput type="hidden" name="moduleName" id="moduleName" value="Lead Module">
 
-						<table border = "0" width = "550" cellpadding = "5" cellspacing = "0" class="editBox">
-							<cfif session.loggedin EQ true AND session.userinfo.sa EQ 1>
-							<tr>
-								<td width="150" class="title">
-									<strong>EMPLOYEE:</strong>
-								</td>
-								<td>
-									<cfoutput>
-									<select name="fk_employees" id="fk_employees" style="font-size: 8pt;">
-										<option value="0">Unassigned
-										<cfloop query="getEmployees">
-											<option value="#pk_employees#">#emp_lname#, #emp_fname#
-
-									</cfloop></select>
-									</cfoutput>
-									<span  id="empDisplay" style="display: none;"></span>
-								</td>
-							</tr>
-							<cfelse>
-							<tr>
-								<td width="150" class="title">
-									<strong>EMPLOYEE:</strong>
-								</td>
-								<td>
-									<span  id="empDisplay"></span>
-									<cfinput type="hidden" name="fk_employees" id="fk_employees" bind="{leadGrid.fk_employees}" >
-								</td>
-							</tr>
-							</cfif>
-							<!--- <tr>
-								<td width="100" style="font-size: 10px;">
-									First Name:
-								</td>
-								<td>
-									<cfinput type="text" name="fname" id="fname"  bind="{leadGrid.fname}" size="30">
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									Last Name:
-								</td>
-								<td>
-									<cfinput type="text" name="lname" id="lname"  bind="{leadGrid.lname}" size="30">
-								</td>
-							</tr> --->
-							<tr>
-								<td style="font-size: 10px;">
-									<b> Name*:</b>
-								</td>
-								<td>
-									<cfinput type="text" name="name" id="name"  bind="{leadGrid.user_name}" size="30" maxlength="30">
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									Email :
-								</td>
-								<td>
-									<cfinput type="text" name="leadEmail" id="leadEmail"  bind="{leadGrid.leadEmail}" size="30">
-									&nbsp;
-									<input type="Button" id="emailButton" value="Send Email To Lead" onclick="openLeadEmailWindow();" />
-								</td>
-							</tr>
-							<!--- <tr>
-								<td style="font-size: 10px;">
-									Cell Phone:
-								</td>
-								<td>
-									<cfinput type="text" name="cellphone" id="cellphone"  bind="{leadGrid.cellphone}" size="30" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the cell phone number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
-								</td>
-							</tr> --->
-							<!--- <tr>
-								<td style="font-size: 10px;">
-									Home Phone:
-								</td>
-								<td>
-									<cfinput type="text" name="phone" id="phone"  bind="{leadGrid.phone}" size="30" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the home phone number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
-								</td>
-							</tr> --->
-							<!--- <tr>
-								<td style="font-size: 10px;">
-									Business Phone:
-								</td>
-								<td>
-									<cfinput type="text" name="businessphone" id="businessphone"  bind="{leadGrid.businessphone}" size="30" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the business phone number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
-								</td>
-							</tr> --->
-
-							<tr>
-								<td style="font-size: 10px;">
-									Phone Type:
-								</td>
-								<td>
-									<select name="PhoneType" id="PhoneType">
-										<option value="Home Phone" >Home</option>
-										<option value="Cell Phone">Mobile</option>
-										<option value="Business Phone">Business</option>
-										<option value="OutsideUS">Outside US</option>
-									</select>
-								</td>
-							</tr>
-
-							<tr>
-								<td style="font-size: 10px;">
-									Phone Number:
-								</td>
-								<td>
-									<cfinput type="text" name="phoneNumber" id="phoneNumber" maxlength="20">
-									<span id="formatSign">(xxx) xxx-xxxx</span>
-								</td>
-							</tr>
-
-							<cfoutput>
-								<script>
-									document.addEventListener("DOMContentLoaded", function() {
-										const phoneInput = document.getElementById("phoneNumber");
-										const phoneType = document.getElementById("PhoneType");
-										const formatSign = document.getElementById("formatSign");
-
-										function toggleFormatSign() {
-											if (phoneType.value === "OutsideUS") {
-												formatSign.style.display = "none";
-											} else {
-												formatSign.style.display = "inline";
-											}
-										}
-
-										// run on load (in case form already has value)
-										toggleFormatSign();
-
-										// run on change
-										phoneType.addEventListener("change", toggleFormatSign);
-
-										phoneInput.addEventListener("input", function(e) {
-											// If type is OutsideUS → skip formatting
-											if (phoneType.value === "OutsideUS") {
-												return;
-											}
-
-											let value = e.target.value.replace(/\D/g, ""); // only digits
-											if (value.length > 10) value = value.substring(0, 10);
-
-											// Apply formatting as user types
-											if (value.length > 6) {
-												e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
-											} else if (value.length > 3) {
-												e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
-											} else if (value.length > 0) {
-												e.target.value = `(${value}`;
-											} else {
-												e.target.value = "";
-											}
-										});
-									});
-
-								</script>
-							</cfoutput>
-
-							<!--- <tr>
-								<td style="font-size: 10px;">
-									Phone Outside the US:
-								</td>
-								<td>
-									<cfinput type="text" name="otherphone" id="otherphone"  bind="{leadGrid.otherphone}" size="30">
-								</td>
-							</tr> --->
-
-							<tr>
-								<td style="font-size: 10px;">
-									Best Time To Call:
-								</td>
-								<td>
-									<cfinput type="text" name="besttime" id="besttime"  bind="{leadGrid.besttime}" size="30" maxlength="30">
-								</td>
-							</tr>
-
-							<tr>
-								<td style="font-size: 10px;">
-									Address Type:
-								</td>
-								<td>
-									<cfset Addtype = "USA,Outside" />
-									<cfoutput>
-										<select name="Addresstype" id="Addresstype" onchange="toggleStateField();">
-											<option value="">Please Select</option>
-											<cfloop list="#Addtype#" index="idx">
-												<option value="#idx#">#idx#</option>
-											</cfloop>
-										</select>
-									</cfoutput>
-								</td>
-							</tr>
-
-							
-
-						
-							<tr>
-								<td style="font-size: 10px;">
-									Address:
-								</td>
-								<td>
-									<cfinput type="text" name="address" id="address"  bind="{leadGrid.address}" size="30" maxlength="30">
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									City:
-								</td>
-								<td>
-									<cfinput type="text" name="city" id="city" bind="{leadGrid.city}" size="30" maxlength="30">
-								</td>
-							</tr>
-
-							<tr id="stateTextRow" style="display:none;">
-								<td style="font-size: 10px;">
-									State/Province
-								</td>
-								<td>
-									<cfinput type="text" name="State_Outside" id="State_Outside" maxlength="30" bind="{leadGrid.state}"> &nbsp;&nbsp;
-									<!--- Country &nbsp;&nbsp;
-									<cfinput type="text" name="country" id="country"  bind="{leadGrid.country}"> --->
-
-								</td>
-							</tr>
-
-							<tr id="stateDropdownRow" style="display:none;">
-								<td style="font-size: 10px;">
-									State:
-								</td>
-								<td>
-									<cfoutput>
-										<select name="state" id="state">
-											<option value="">Please Select</option>
-											<cfloop query="getStates">
-												<option value="#getStates.stateAbb#">#getStates.state#</option>
-											</cfloop>
-										</select>
-									</cfoutput>
-								</td>
-							</tr>
-
-							<!--- <tr>
-								<td style="font-size: 10px;">
-									State:
-								</td>
-								<td>
-									<cfinput type="text" name="state" id="state"  bind="{leadGrid.state}" size="30">
-								</td>
-							</tr> --->
-							
-							<tr>
-								<td style="font-size: 10px;">
-									Zip Code:
-								</td>
-								<td>
-									<cfinput type="text" name="zip" id="zip"  bind="{leadGrid.zip}" maxlength="10" size="30">
-								</td>
-							</tr>
-
-							<tr id="OutsideCountry" style="display:none;">
-								<td style="font-size: 10px;">
-									Country:
-								</td>
-								<td>
-									<cfinput type="text" name="country" id="country"  bind="{leadGrid.country}" maxlength="30" size="30">
-								</td>
-							</tr>
-
-							<tr>
-								<td style="font-size: 10px;">
-									Company:
-								</td>
-								<td>
-									<cfinput type="text" name="company" id="company"  bind="{leadGrid.company}" maxlength="30" size="30">
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;">
-									Website:
-								</td>
-								<td>
-									<cfinput type="text" name="website" id="website"  bind="{leadGrid.website}" maxlength="30" size="30">
-								</td>
-							</tr>
-							<tr>
-								<td valign="top" style="font-size: 10px;">
-									Artists:
-								</td>
-								<td>
-									<cftextarea name="theartists" id="artists" cols="40" rows="3" maxlength="100" bind="{leadGrid.artists}"></cftextarea>
-									<div id="artistsCount" class="mb-3">0 / 100 characters</div>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top" style="font-size: 10px;">
-									Titles:
-								</td>
-								<td>
-									<cftextarea name="titles" id="titles" cols="40" rows="3" maxlength="100" bind="{leadGrid.titles}"></cftextarea>
-									<div id="titlesCount" class="mb-3">0 / 100 characters</div> 
-								</td>
-							</tr>
-							<tr>
-								<td valign="top" style="font-size: 10px;">
-									Notes:
-								</td>
-								<td>
-									<cftextarea name="notes" id="notes" cols="40" rows="15" maxlength="500" bind="{leadGrid.notes}"></cftextarea>
-									<div id="notesCount" class="mb-3">0 / 500 characters</div>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top" style="font-size: 10px;">
-									Orign:
-								</td>
-								<td>
-									<cfset originValues = "WALK-IN,WEBSITE,PHONE,OTHER" />
-									<cfoutput>
-									<select name="origin" id="origin">
-										<option value="">Please Select</option>
-										<cfloop list="#originValues#" index="idx">
-											<option value="#idx#">#idx#</option>
-										</cfloop>
-									</select>
-									</cfoutput>
-								</td>
-							</tr>
-							<tr>
-								<td style="font-size: 10px;" valign="top">
-									Mail list:
-								</td>
-								<td>
-									<input type="Checkbox" name="maillist" id="maillist" value="1">
-									<input type="hidden" name="maillist" value="">
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
+								<table border = "0" width = "550" cellpadding = "5" cellspacing = "0" class="editBox">
 									<cfif session.loggedin EQ true AND session.userinfo.sa EQ 1>
-										<cfinput type="button" name="delete" id="delete" value="Delete" onclick="if (confirm('DELETE -- ARE YOU SURE?')){ doEdit('delete');}" />
+										<tr>
+											<td width="150" class="title">
+												<strong>EMPLOYEE:</strong>
+											</td>
+											<td>
+												<cfoutput>
+													<select name="fk_employees" id="fk_employees" style="font-size: 8pt;">
+														<option value="0">Unassigned
+														<cfloop query="getEmployees">
+															<option value="#pk_employees#">#emp_lname#, #emp_fname#
+														</cfloop>
+													</select>
+												</cfoutput>
+												<span  id="empDisplay" style="display: none;"></span>
+											</td>
+										</tr>
+									 <cfelse>
+										<tr>
+											<td width="150" class="title">
+												<strong>EMPLOYEE:</strong>
+											</td>
+											<td>
+												<span  id="empDisplay"></span>
+												<cfinput type="hidden" name="fk_employees" id="fk_employees" bind="{leadGrid.fk_employees}" >
+											</td>
+										</tr>
 									</cfif>
-								</td>
-							</tr>
-						</table>
-						</cfform>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
+									<!--- <tr>
+										<td width="100" style="font-size: 10px;">
+											First Name:
+										</td>
+										<td>
+											<cfinput type="text" name="fname" id="fname"  bind="{leadGrid.fname}" size="30">
+										</td>
+									</tr>
+									<tr>
+										<td style="font-size: 10px;">
+											Last Name:
+										</td>
+										<td>
+											<cfinput type="text" name="lname" id="lname"  bind="{leadGrid.lname}" size="30">
+										</td>
+									</tr> --->
+									<tr>
+										<td style="font-size: 10px;">
+											<b> Name*:</b>
+										</td>
+										<td>
+											<cfinput type="text" name="name" id="name"  bind="{leadGrid.user_name}" size="30" maxlength="30" autosuggest="cfc:admin.models.leads.searchLeadsByName({cfautosuggestvalue})" maxResultsDisplay="10">
+										</td>
+									</tr>
+									<tr>
+										<td style="font-size: 10px;">
+											Email :
+										</td>
+										<td>
+											<cfinput type="text" name="leadEmail" id="leadEmail"  bind="{leadGrid.leadEmail}" size="30" autosuggest="cfc:admin.models.leads.searchLeadsByEmail({cfautosuggestvalue})" maxResultsDisplay="10">
+											&nbsp;
+											<input type="Button" id="emailButton" value="Send Email To Lead" onclick="openLeadEmailWindow();" />
+										</td>
+									</tr>
+									<!--- <tr>
+										<td style="font-size: 10px;">
+											Cell Phone:
+										</td>
+										<td>
+											<cfinput type="text" name="cellphone" id="cellphone"  bind="{leadGrid.cellphone}" size="30" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the cell phone number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
+										</td>
+									</tr> --->
+									<!--- <tr>
+										<td style="font-size: 10px;">
+											Home Phone:
+										</td>
+										<td>
+											<cfinput type="text" name="phone" id="phone"  bind="{leadGrid.phone}" size="30" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the home phone number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
+										</td>
+									</tr> --->
+									<!--- <tr>
+										<td style="font-size: 10px;">
+											Business Phone:
+										</td>
+										<td>
+											<cfinput type="text" name="businessphone" id="businessphone"  bind="{leadGrid.businessphone}" size="30" validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999" message="Please enter the business phone number in the format (xxx) xxx-xxxx"> (xxx) xxx-xxxx
+										</td>
+									</tr> --->
 
+									<tr>
+										<td style="font-size: 10px;">
+											Phone Type:
+										</td>
+										<td>
+											<select name="PhoneType" id="PhoneType">
+												<option value="Home Phone" >Home</option>
+												<option value="Cell Phone">Mobile</option>
+												<option value="Business Phone">Business</option>
+												<option value="OutsideUS">Outside US</option>
+											</select>
+										</td>
+									</tr>
 
+									<tr>
+										<td style="font-size: 10px;">
+											Phone Number:
+										</td>
+										<td>
+											<cfinput type="text" name="phoneNumber" id="phoneNumber" maxlength="20">
+											<span id="formatSign">(xxx) xxx-xxxx</span>
+										</td>
+									</tr>
 
+									<cfoutput>
+										<script>
+											document.addEventListener("DOMContentLoaded", function() {
+												const phoneInput = document.getElementById("phoneNumber");
+												const phoneType = document.getElementById("PhoneType");
+												const formatSign = document.getElementById("formatSign");
 
-<div>
-<!--- <cfoutput>
-<form method="post" action="" name="assignLeadForm">
-	<input type="text" name="assignLeadId" id="assignLeadId">
-	<input type="text" name="assignEmpId" id="assignEmpId" value="#session.userinfo.pk_employees#">
-</form>
-</cfoutput> --->
-<cfwindow name="leadEmailWindow" center="true" modal="true" resizable="false" closable="true" title="Send Email To Lead" width="650" height="550" headerStyle="background-color:##dd3a7d;">
+												function toggleFormatSign() {
+													if (phoneType.value === "OutsideUS") {
+														formatSign.style.display = "none";
+													} else {
+														formatSign.style.display = "inline";
+													}
+												}
 
-	<!--- <cfoutput>
+												// run on load (in case form already has value)
+												toggleFormatSign();
 
-	<table cellspacing="0" cellpadding="3" border="0" width="100%" bgcolor="##ffffff">
-		<cfform method="post" action="" name="emailLeadForm"  onsubmit="submitLeadEmailInfo(); return false;">
-		<input type="hidden" name="sender" id="sender" value="#session.userinfo.email#">
-		<input type="hidden" name="senderFname" id="senderFname" value="#session.userinfo.fname#">
-		<input type="hidden" name="senderLname" id="senderLname" value="#session.userinfo.lname#">
-		<input type="hidden" name="currEmpId" id="currEmpId" value="#session.userinfo.pk_employees#">
-		<input type="hidden" name="recipient" id="recipient">
-		<input type="hidden" name="salutation" id="salutation" />
-		<input type="hidden" name="closer" id="closer" />
-		<!--<input type="hidden" name="body" id="body">-->
-		<tr>
-			<td style="font-family: Arial; font-size: 12px; width: 75px;">
-				Subject:&nbsp;&nbsp;
-			</td>
-			<td>
-				<input type="Text" name="subject" value="Gallart - Response To Your Inquiry" size="50">
+												// run on change
+												phoneType.addEventListener("change", toggleFormatSign);
+
+												phoneInput.addEventListener("input", function(e) {
+													// If type is OutsideUS → skip formatting
+													if (phoneType.value === "OutsideUS") {
+														return;
+													}
+
+													let value = e.target.value.replace(/\D/g, ""); // only digits
+													if (value.length > 10) value = value.substring(0, 10);
+
+													// Apply formatting as user types
+													if (value.length > 6) {
+														e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+													} else if (value.length > 3) {
+														e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+													} else if (value.length > 0) {
+														e.target.value = `(${value}`;
+													} else {
+														e.target.value = "";
+													}
+												});
+											});
+
+										</script>
+									</cfoutput>
+
+									<!--- <tr>
+										<td style="font-size: 10px;">
+											Phone Outside the US:
+										</td>
+										<td>
+											<cfinput type="text" name="otherphone" id="otherphone"  bind="{leadGrid.otherphone}" size="30">
+										</td>
+									</tr> --->
+
+									<tr>
+										<td style="font-size: 10px;">
+											Best Time To Call:
+										</td>
+										<td>
+											<cfinput type="text" name="besttime" id="besttime"  bind="{leadGrid.besttime}" size="30" maxlength="30">
+										</td>
+									</tr>
+
+									<tr>
+										<td style="font-size: 10px;">
+											Address Type:
+										</td>
+										<td>
+											<cfset Addtype = "USA,Outside" />
+											<cfoutput>
+												<select name="Addresstype" id="Addresstype" onchange="toggleStateField();">
+													<option value="">Please Select</option>
+													<cfloop list="#Addtype#" index="idx">
+														<option value="#idx#">#idx#</option>
+													</cfloop>
+												</select>
+											</cfoutput>
+										</td>
+									</tr>
+
+									
+
+								
+									<tr>
+										<td style="font-size: 10px;">
+											Address:
+										</td>
+										<td>
+											<cfinput type="text" name="address" id="address"  bind="{leadGrid.address}" autosuggest="cfc:admin.models.leads.searchLeadsByAddress({cfautosuggestvalue})" maxResultsDisplay="10" size="30" maxlength="30">
+										</td>
+									</tr>
+									<tr>
+										<td style="font-size: 10px;">
+											City:
+										</td>
+										<td>
+											<cfinput type="text" name="city" id="city" autosuggest="cfc:admin.models.leads.searchLeadsByCity({cfautosuggestvalue})" maxResultsDisplay="10" bind="{leadGrid.city}" size="30" maxlength="30">
+										</td>
+									</tr>
+
+									<tr id="stateTextRow" style="display:none;">
+										<td style="font-size: 10px;">
+											State/Province
+										</td>
+										<td>
+											<cfinput type="text" name="State_Outside" id="State_Outside" maxlength="30" bind="{leadGrid.state}"> &nbsp;&nbsp;
+											<!--- Country &nbsp;&nbsp;
+											<cfinput type="text" name="country" id="country"  bind="{leadGrid.country}"> --->
+
+										</td>
+									</tr>
+
+									<tr id="stateDropdownRow" style="display:none;">
+										<td style="font-size: 10px;">
+											State:
+										</td>
+										<td>
+											<cfoutput>
+												<select name="state" id="state">
+													<option value="">Please Select</option>
+													<cfloop query="getStates">
+														<option value="#getStates.stateAbb#">#getStates.state#</option>
+													</cfloop>
+												</select>
+											</cfoutput>
+										</td>
+									</tr>
+
+									<!--- <tr>
+										<td style="font-size: 10px;">
+											State:
+										</td>
+										<td>
+											<cfinput type="text" name="state" id="state"  bind="{leadGrid.state}" size="30">
+										</td>
+									</tr> --->
+									
+									<tr>
+										<td style="font-size: 10px;">
+											Zip Code:
+										</td>
+										<td>
+											<cfinput type="text" name="zip" id="zip"  bind="{leadGrid.zip}" maxlength="10" size="30">
+										</td>
+									</tr>
+
+									<tr id="OutsideCountry" style="display:none;">
+										<td style="font-size: 10px;">
+											Country:
+										</td>
+										<td>
+											<cfinput type="text" name="country" id="country"  bind="{leadGrid.country}" maxlength="30" size="30">
+										</td>
+									</tr>
+
+									<tr>
+										<td style="font-size: 10px;">
+											Company:
+										</td>
+										<td>
+											<cfinput type="text" name="company" id="company"  bind="{leadGrid.company}" maxlength="30" size="30">
+										</td>
+									</tr>
+									<tr>
+										<td style="font-size: 10px;">
+											Website:
+										</td>
+										<td>
+											<cfinput type="text" name="website" id="website"  bind="{leadGrid.website}" maxlength="30" size="30">
+										</td>
+									</tr>
+									<tr>
+										<td valign="top" style="font-size: 10px;">
+											Artists:
+										</td>
+										<td>
+											<cftextarea name="theartists" id="artists" cols="40" rows="3" maxlength="100" bind="{leadGrid.artists}"></cftextarea>
+											<div id="artistsCount" class="mb-3">0 / 100 characters</div>
+										</td>
+									</tr>
+									<tr>
+										<td valign="top" style="font-size: 10px;">
+											Titles:
+										</td>
+										<td>
+											<cftextarea name="titles" id="titles" cols="40" rows="3" maxlength="100" bind="{leadGrid.titles}"></cftextarea>
+											<div id="titlesCount" class="mb-3">0 / 100 characters</div> 
+										</td>
+									</tr>
+									<tr>
+										<td valign="top" style="font-size: 10px;">
+											Notes:
+										</td>
+										<td>
+											<cftextarea name="notes" id="notes" cols="40" rows="15" maxlength="500" bind="{leadGrid.notes}"></cftextarea>
+											<div id="notesCount" class="mb-3">0 / 500 characters</div>
+										</td>
+									</tr>
+									<tr>
+										<td valign="top" style="font-size: 10px;">
+											Orign:
+										</td>
+										<td>
+											<cfset originValues = "WALK-IN,WEBSITE,PHONE,OTHER" />
+											<cfoutput>
+											<select name="origin" id="origin">
+												<option value="">Please Select</option>
+												<cfloop list="#originValues#" index="idx">
+													<option value="#idx#">#idx#</option>
+												</cfloop>
+											</select>
+											</cfoutput>
+										</td>
+									</tr>
+									<tr>
+										<td style="font-size: 10px;" valign="top">
+											Mail list:
+										</td>
+										<td>
+											<input type="Checkbox" name="maillist" id="maillist" value="1">
+											<input type="hidden" name="maillist" value="">
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">
+											<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
+											<cfif session.loggedin EQ true AND session.userinfo.sa EQ 1>
+												<cfinput type="button" name="delete" id="delete" value="Delete" onclick="if (confirm('DELETE -- ARE YOU SURE?')){ doEdit('delete');}" />
+											</cfif>
+										</td>
+									</tr>
+								</table>
+							</cfform>
+						</td>
+					</tr>
+				</table>
 			</td>
 		</tr>
-		<tr>
-			<td colspan="2">
-				<!--<textarea name="bodyContent" id="bodyContent" cols="65" rows="12" onkeyup="compileBody( this.value );"></textarea>-->
-				<cftextarea name="body" id="body" height="300" width="600" richtext="yes" toolbar="Basic" />
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="font-family: Arial; font-size: 12px;">
-				Sincerely,<br><br>
-				#session.userinfo.fname# #session.userinfo.lname#<br>
-				Gallery Art<br>
-				20633 Biscayne Blvd<br>
-				Aventura FL 33180<br>
-				305 932 6166 gallery<br>
-				305 937 2125 fax<br>
-
-			</td>
-		</tr>
-		<tr>
-			<td align="center" colspan="2" style="font-family: Arial; font-size: 11px;">
-				<input type="Submit" value="SEND EMAIL" />
-			</td>
-		</tr>
-		</cfform>
 	</table>
 
-	</cfoutput> --->
-</cfwindow>
-<cfwindow name="alreadyAssignedWindow" center="true" modal="true" resizable="false" closable="true" title="Already Assigned" width="600" height="400" headerStyle="background-color:##dd3a7d;">
+	<div>
+		<!--- <cfoutput>
+		<form method="post" action="" name="assignLeadForm">
+			<input type="text" name="assignLeadId" id="assignLeadId">
+			<input type="text" name="assignEmpId" id="assignEmpId" value="#session.userinfo.pk_employees#">
+		</form>
+		</cfoutput> --->
+		<cfwindow name="leadEmailWindow" center="true" modal="true" resizable="false" closable="true" title="Send Email To Lead" width="650" height="550" headerStyle="background-color:##dd3a7d;">
 
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">
-			<tr>
-				<td id="assignedTo" style="padding: 25px; font-size: 12px; font-weight: bold;">ALREADY ASSIGNED</td>
-			</tr>
-		</table>
+			<!--- <cfoutput>
 
-</cfwindow>
-</div>
+			<table cellspacing="0" cellpadding="3" border="0" width="100%" bgcolor="##ffffff">
+				<cfform method="post" action="" name="emailLeadForm"  onsubmit="submitLeadEmailInfo(); return false;">
+				<input type="hidden" name="sender" id="sender" value="#session.userinfo.email#">
+				<input type="hidden" name="senderFname" id="senderFname" value="#session.userinfo.fname#">
+				<input type="hidden" name="senderLname" id="senderLname" value="#session.userinfo.lname#">
+				<input type="hidden" name="currEmpId" id="currEmpId" value="#session.userinfo.pk_employees#">
+				<input type="hidden" name="recipient" id="recipient">
+				<input type="hidden" name="salutation" id="salutation" />
+				<input type="hidden" name="closer" id="closer" />
+				<!--<input type="hidden" name="body" id="body">-->
+				<tr>
+					<td style="font-family: Arial; font-size: 12px; width: 75px;">
+						Subject:&nbsp;&nbsp;
+					</td>
+					<td>
+						<input type="Text" name="subject" value="Gallart - Response To Your Inquiry" size="50">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<!--<textarea name="bodyContent" id="bodyContent" cols="65" rows="12" onkeyup="compileBody( this.value );"></textarea>-->
+						<cftextarea name="body" id="body" height="300" width="600" richtext="yes" toolbar="Basic" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="font-family: Arial; font-size: 12px;">
+						Sincerely,<br><br>
+						#session.userinfo.fname# #session.userinfo.lname#<br>
+						Gallery Art<br>
+						20633 Biscayne Blvd<br>
+						Aventura FL 33180<br>
+						305 932 6166 gallery<br>
+						305 937 2125 fax<br>
 
-<style>
-	.toast-center {
-		top: 50% !important;
-		left: 50% !important;
-		transform: translate(-50%, -50%) !important;
-		position: fixed !important;
-		z-index: 999999 !important;
-	}
+					</td>
+				</tr>
+				<tr>
+					<td align="center" colspan="2" style="font-family: Arial; font-size: 11px;">
+						<input type="Submit" value="SEND EMAIL" />
+					</td>
+				</tr>
+				</cfform>
+			</table>
 
-	#toast-container > .toast {
-		background-color: #ff4da6 !important;
-		color: white !important;
-	}
+			</cfoutput> --->
+		</cfwindow>
+		<cfwindow name="alreadyAssignedWindow" center="true" modal="true" resizable="false" closable="true" title="Already Assigned" width="600" height="400" headerStyle="background-color:##dd3a7d;">
 
-	.date-field div {
-		float: none !important;
-		width: max-content;
-		display: inline-block;
-	}
-	.date-field input.datefieldinput {
-		padding-right: 18px;
-		max-width: 178px;
-	}
+				<table cellspacing="0" cellpadding="0" border="0" width="100%">
+					<tr>
+						<td id="assignedTo" style="padding: 25px; font-size: 12px; font-weight: bold;">ALREADY ASSIGNED</td>
+					</tr>
+				</table>
 
-	.date-field div#searchFromDategridForm_cf_buttondiv, .date-field div#searchToDategridForm_cf_buttondiv {
-		position: absolute;
-		top: 2px;
-		right: 2px;
-		padding: 0 !important;
-	}
+		</cfwindow>
+	</div>
 
-</style>
-
-<script>
-	function toggleStateField() {
-		var addressType = document.getElementById("Addresstype").value;
-
-		if (addressType === "Outside") {
-			// Show text field, hide dropdown
-			document.getElementById("stateTextRow").style.display = "";
-			document.getElementById("OutsideCountry").style.display = "";
-			document.getElementById("stateDropdownRow").style.display = "none";
-		} else if (addressType === "USA") {
-			// Show dropdown, hide text field
-			document.getElementById("stateDropdownRow").style.display = "";
-			document.getElementById("OutsideCountry").style.display = "none";
-			document.getElementById("stateTextRow").style.display = "none";			
-		} else {
-			// Hide both if nothing selected
-			document.getElementById("stateTextRow").style.display = "none";			
-			document.getElementById("stateDropdownRow").style.display = "none";
-			document.getElementById("OutsideCountry").style.display = "none";
+	<style>
+		.toast-center {
+			top: 50% !important;
+			left: 50% !important;
+			transform: translate(-50%, -50%) !important;
+			position: fixed !important;
+			z-index: 999999 !important;
 		}
-	}
-</script> 
 
-<script>
-	function setupCharCounter(textareaId, counterId, maxLength) {
-		const textarea = document.getElementById(textareaId);
-		const counter = document.getElementById(counterId);
+		#toast-container > .toast {
+			background-color: #ff4da6 !important;
+			color: white !important;
+		}
 
-		if (!textarea || !counter) return;
+		.date-field div {
+			float: none !important;
+			width: max-content;
+			display: inline-block;
+		}
+		.date-field input.datefieldinput {
+			padding-right: 18px;
+			max-width: 178px;
+		}
 
-		function updateCount() {
-			let currentLength = textarea.value.length;
+		.date-field div#searchFromDategridForm_cf_buttondiv, .date-field div#searchToDategridForm_cf_buttondiv {
+			position: absolute;
+			top: 2px;
+			right: 2px;
+			padding: 0 !important;
+		}
 
-			// Agar limit cross ho gayi to cut kar do
-			if (currentLength > maxLength) {
-				textarea.value = textarea.value.substring(0, maxLength);
-				currentLength = maxLength;
+	</style>
+
+	<script>
+		function toggleStateField() {
+			var addressType = document.getElementById("Addresstype").value;
+
+			if (addressType === "Outside") {
+				// Show text field, hide dropdown
+				document.getElementById("stateTextRow").style.display = "";
+				document.getElementById("OutsideCountry").style.display = "";
+				document.getElementById("stateDropdownRow").style.display = "none";
+			} else if (addressType === "USA") {
+				// Show dropdown, hide text field
+				document.getElementById("stateDropdownRow").style.display = "";
+				document.getElementById("OutsideCountry").style.display = "none";
+				document.getElementById("stateTextRow").style.display = "none";			
+			} else {
+				// Hide both if nothing selected
+				document.getElementById("stateTextRow").style.display = "none";			
+				document.getElementById("stateDropdownRow").style.display = "none";
+				document.getElementById("OutsideCountry").style.display = "none";
+			}
+		}
+	</script> 
+
+	<script>
+		function setupCharCounter(textareaId, counterId, maxLength) {
+			const textarea = document.getElementById(textareaId);
+			const counter = document.getElementById(counterId);
+
+			if (!textarea || !counter) return;
+
+			function updateCount() {
+				let currentLength = textarea.value.length;
+
+				// Agar limit cross ho gayi to cut kar do
+				if (currentLength > maxLength) {
+					textarea.value = textarea.value.substring(0, maxLength);
+					currentLength = maxLength;
+				}
+
+				counter.textContent = `${currentLength} / ${maxLength} characters`;
 			}
 
-			counter.textContent = `${currentLength} / ${maxLength} characters`;
+			// Initial call
+			updateCount();
+
+			// Update on typing/paste
+			textarea.addEventListener("input", updateCount);
+
+			return updateCount;
 		}
 
-		// Initial call
-		updateCount();
-
-		// Update on typing/paste
-		textarea.addEventListener("input", updateCount);
-
-		return updateCount;
-	}
-
-	// Initialize counters on page load
-	document.addEventListener("DOMContentLoaded", function() {
-		window.updateArtists = setupCharCounter("artists", "artistsCount", 100);
-		window.updateTitles  = setupCharCounter("titles", "titlesCount", 100);
-		window.updateNotes   = setupCharCounter("notes", "notesCount", 500);
-	});
-</script>
+		// Initialize counters on page load
+		document.addEventListener("DOMContentLoaded", function() {
+			window.updateArtists = setupCharCounter("artists", "artistsCount", 100);
+			window.updateTitles  = setupCharCounter("titles", "titlesCount", 100);
+			window.updateNotes   = setupCharCounter("notes", "notesCount", 500);
+		});
+	</script>
 
 
 
