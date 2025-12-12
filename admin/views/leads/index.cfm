@@ -27,7 +27,7 @@
 <cfform action="index.cfm?event=leads.insertLead" id="leadForm" name="leadForm">
 	<cfinput type="hidden" name="pk_leads" id="pk_leads" value="">
 	<!--- <cfinput type="hidden" name="fk_employees" id="fk_employees" value="#session.userinfo.pk_employees#"> --->
-	<cfinput type="hidden" name="moduleName" id="moduleName" value="New Order Form">
+	<cfinput type="hidden" name="moduleName" id="moduleName" value="New Lead Form">
 
 	<table border = "0" width = "600" cellpadding = "5" cellspacing = "5" bgcolor="eeeeee">
 		<tr>
@@ -228,7 +228,7 @@
 				Address:
 			</td>
 			<td>
-				<cfinput type="text" name="address" id="address"  maxlength="30" size="30">
+				<cfinput type="text" name="address" id="address" autosuggest="cfc:admin.models.leads.searchLeadsByAddress({cfautosuggestvalue})" maxlength="30" size="30">
 			</td>
 		</tr>
 		<tr>
@@ -236,7 +236,7 @@
 				City:
 			</td>
 			<td>
-				<cfinput type="text" name="city" id="city" maxlength="30" size="30" >
+				<cfinput type="text" name="city" id="city" autosuggest="cfc:admin.models.leads.searchLeadsByCity({cfautosuggestvalue})" maxlength="30" size="30" >
 			</td>
 		</tr>
 

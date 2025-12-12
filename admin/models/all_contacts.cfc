@@ -198,12 +198,18 @@
 		      	SELECT lname + '|' + CAST(pk_users AS varchar(50)) + '|' + 'U' as contactInfo
 		      	FROM users U
 				WHERE U.lname <> ''
-					AND upper(U.lname) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+					AND upper(U.lname) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%') and NOT (
+					pk_users BETWEEN 29662 AND 30649
+					OR pk_users BETWEEN 15398 AND 29264
+					OR pk_users BETWEEN 29423 AND 29660
+					OR pk_users BETWEEN 15121 AND 29395
+					OR pk_users BETWEEN 14793 AND 29419
+				)
 				UNION ALL
 				SELECT lname + '|' + CAST(pk_leads AS varchar(50)) + '|' + 'L' as contactInfo
 				FROM leads L
 				WHERE L.lname <> ''
-					AND upper(L.lname) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+					AND upper(L.lname) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%') and isdeleted is null 
 				UNION ALL
 				SELECT lname + '|' + CAST(entrynumber AS varchar(50)) + '|' + 'G' as contactInfo
 				FROM guests G
@@ -213,7 +219,7 @@
 				SELECT lname + '|' + CAST(id AS varchar(50)) + '|' + 'C' as contactInfo
 				FROM customers C
 				WHERE C.lname <> ''
-					AND upper(C.lname) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+					AND upper(C.lname) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%') and fname !='1' and Lname!='1' and Fname!='admin' and Lname !='123456' and email NOT like '0%' and email NOT like '%0' and fname != '!S!WCRTESTINPUT000000!E!'
 				UNION ALL
 				SELECT emp_lname + '|' + CAST(pk_employees AS varchar(50)) + '|' + 'E' as contactInfo
 				FROM employees E
@@ -283,12 +289,18 @@
 		      	SELECT email + '|' + CAST(pk_users AS varchar(50)) + '|' + 'U' as contactInfo
 		      	FROM users U
 				WHERE U.email <> ''
-					AND upper(U.email) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+					AND upper(U.email) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%') and NOT (
+					pk_users BETWEEN 29662 AND 30649
+					OR pk_users BETWEEN 15398 AND 29264
+					OR pk_users BETWEEN 29423 AND 29660
+					OR pk_users BETWEEN 15121 AND 29395
+					OR pk_users BETWEEN 14793 AND 29419
+				)
 				UNION ALL
 				SELECT email + '|' + CAST(pk_leads AS varchar(50)) + '|' + 'L' as contactInfo
 				FROM leads L
 				WHERE L.email <> ''
-					AND upper(L.email) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+					AND upper(L.email) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%') and isdeleted is null 
 				UNION ALL
 				SELECT email + '|' + CAST(entrynumber AS varchar(50)) + '|' + 'G' as contactInfo
 				FROM guests G
@@ -298,7 +310,7 @@
 				SELECT email + '|' + CAST(id AS varchar(50)) + '|' + 'C' as contactInfo
 				FROM customers C
 				WHERE C.email <> ''
-					AND upper(C.email) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+					AND upper(C.email) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%') and fname !='1' and Lname!='1' and Fname!='admin' and Lname !='123456' and email NOT like '0%' and email NOT like '%0' and fname != '!S!WCRTESTINPUT000000!E!'
 				UNION ALL
 				SELECT emp_email + '|' + CAST(pk_employees AS varchar(50)) + '|' + 'E' as contactInfo
 				FROM employees E
@@ -328,9 +340,7 @@
            	SELECT lname,fname,email,phone,'' as address,'' as city,'' as state,'' as country,'' as zip,cellphone,businessphone,website,otherphone, '' as addressType
 		      	FROM users U
 				WHERE U.email = '#arguments.email#'
-				UNION
-
-				
+				UNION				
 
 				SELECT lname,fname,email,phone,address,city,state,country,zip,cellphone,businessphone,website,otherphone,addressType
 				FROM leads L

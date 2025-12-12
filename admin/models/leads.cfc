@@ -15,7 +15,7 @@
 			<cfquery name="qLeads" datasource="#application.dsource#"> 
 				SELECT lname + ',	' + fname AS full_lead_name, pk_leads 
 				FROM leads 
-				WHERE fname != '' AND lname != '' and fname Is not null and lname is not null and fname !='*' and lname!='*' and fname !='?' and lname !='????????' and isdeleted is null
+				WHERE fname != '' AND lname != '' and fname Is not null and lname is not null and fname !='*' and lname!='*' and fname !='?' and lname !='????????' and isdeleted is null and fname != 'Holla See more exposed pics with me by clicking here https://femalyssex.page.link/2hqA'
 				GROUP BY EMAIL, pk_leads, lname, fname 
 				ORDER BY lname;
 			</cfquery>
