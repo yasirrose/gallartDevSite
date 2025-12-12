@@ -61,7 +61,7 @@
 				
 				</cfif>
 			
-			<cfelse>
+			 <cfelse>
             
             	<cfif cgi.content_length GT fileSizeLimit>
         
@@ -84,7 +84,7 @@
 				
 				</cfif> --->
 
-				<cfif NOT editListingsFromForm.success>
+				<!--- <cfif NOT editListingsFromForm.success>
 					<!--- Show alert with DB message, then redirect via JS --->
 					<cfoutput>
 						<script type="text/javascript">
@@ -102,11 +102,12 @@
 							window.location.href = "index.cfm?event=listings.loadEditForm&gridRefresh=1";
 						</script>
 					</cfoutput>
-				</cfif>
+				</cfif> --->
 			
 			</cfif>
 			
 			<!--- <cflocation url="index.cfm?event=listings.loadEditForm&gridRefresh=1" addtoken="No"> --->
+			<!--- <cflocation url="index.cfm?event=listings.loadEditForm&gridRefresh=1&status=#editListingsFromForm#" addtoken="No"> --->
 		
 		</cfif>
 	

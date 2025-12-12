@@ -1,3 +1,4 @@
+<cfajaxproxy cfc="admin.models.art" >
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -79,12 +80,14 @@
 
 
 			function validEntries(frm) {
+				// alert('test: ' + frm.size.value)
+				
 				if(frm.uid.value == ''){
 					frm.uid.value = 0;
 				}
-				console.log(frm.uid.value)
+				// console.log(frm.uid.value)
 				if(frm.name.value == ''){
-					alert('You must select a Name.');
+					alert('You must add a Name.');
 					frm.name.focus();
 					return false;
 				}
@@ -99,7 +102,7 @@
 					return false;
 				}
 				if(frm.quantity.value == ''){
-					alert('You must select a Quantity.');
+					alert('You must add a Quantity.');
 					frm.quantity.focus();
 					return false;
 				}
@@ -142,7 +145,7 @@
 			}
 		</script>
 
-		<cfform method="POST" action="/admin/index.cfm?event=listings.procListing" name="editForm" id="editForm"  enctype="multipart/form-data" onsubmit="return validEntries(document.editForm) && disableButtons(document.getElementById('editForm'));">
+		<cfform method="POST" action="/admin/index.cfm?event=listings.procListing" name="editForm" id="editForm"  enctype="multipart/form-data">
 			<cfinput type="hidden" name="uid" id="uid">
 			<cfinput type="hidden" name="moduleName" id="moduleName" value="Listing Module">
 			<table border = "0" width = "700" cellpadding = "3" cellspacing = "0" class="editBox">
@@ -163,6 +166,12 @@
 						<td colspan="2" valign="top" id="gridRefreshMsg"><span style="color: #ff0000;">LISTING EDIT SUCCESSFUL</span></td>
 					</tr>
 				</cfif>
+
+				
+
+				<!--- <cfif structKeyExists(url, "status") AND url.status EQ "false">
+					<script>alert('There was a problem with the processing.');</script>
+				</cfif> --->
 				<tr>
 					<td valign="top">
 						<table border = "0" width = "100%" cellpadding = "3" cellspacing = "0">
@@ -655,7 +664,7 @@
 						<table border = "0" width = "100%" cellpadding = "1" cellspacing = "0">
 							<tr>
 								<td colspan="2">
-									<cfinput type="submit" name="edit" id="edit" value="Edit" />
+									<cfinput type="button" name="edit" id="edit" value="Edit"  onclick="editListing();"/>
 									<cfinput type="submit" name="edit" id="delete" value="Delete" onclick="return confirm('DELETE -- ARE YOU SURE?')" />
 								</td>
 							</tr>
@@ -669,34 +678,80 @@
 		<div id="orderLink"></div>
 
 		<script>
-			function disableButtons(formEl) {
-				// ensure real form
-				if (!(formEl instanceof HTMLFormElement)) {
-					formEl = document.getElementById('editForm');
-				}
+			// function disableButtons(formEl) {
+			// 	// ensure real form
+			// 	if (!(formEl instanceof HTMLFormElement)) {
+			// 		formEl = document.getElementById('editForm');
+			// 	}
 
-				// hidden input add karo agar missing hai
-				let hiddenEdit = formEl.querySelector('input[name="hiddenEdit"]');
-				if (!hiddenEdit) {
-					hiddenEdit = document.createElement('input');
-					hiddenEdit.type = 'hidden';
-					hiddenEdit.name = 'hiddenEdit';
-					formEl.appendChild(hiddenEdit);
-				}
+			// 	// hidden input add karo agar missing hai
+			// 	let hiddenEdit = formEl.querySelector('input[name="hiddenEdit"]');
+			// 	if (!hiddenEdit) {
+			// 		hiddenEdit = document.createElement('input');
+			// 		hiddenEdit.type = 'hidden';
+			// 		hiddenEdit.name = 'hiddenEdit';
+			// 		formEl.appendChild(hiddenEdit);
+			// 	}
 
-				// saare submit buttons disable karo aur value copy karo
-				var buttons = formEl.querySelectorAll('input[type="submit"]');
-				buttons.forEach(function(btn){
-					if (btn.disabled !== true) {
-						// jo click hua uski value hidden me daal do
-						if (document.activeElement === btn) {
-							hiddenEdit.value = btn.value; // e.g. Edit or Delete
-						}
+			// 	// saare submit buttons disable karo aur value copy karo
+			// 	var buttons = formEl.querySelectorAll('input[type="submit"]');
+			// 	buttons.forEach(function(btn){
+			// 		if (btn.disabled !== true) {
+			// 			// jo click hua uski value hidden me daal do
+			// 			if (document.activeElement === btn) {
+			// 				hiddenEdit.value = btn.value; // e.g. Edit or Delete
+			// 			}
+			// 		}
+			// 		btn.disabled = true;
+			// 	});
+			// 	return true;
+			// }
+
+			function editListing() {
+				var form = document.getElementById("editForm");
+
+				var fileInput = form.querySelector('input[name="thisImage"]');
+
+				var fileSizeLimit = 2000000; 
+
+				if (fileInput && fileInput.files.length > 0) {
+					var file = fileInput.files[0];
+					if (file.size > fileSizeLimit) {
+						alert("Please limit your image file upload to 2MB.");
+						return false; // stop submission
 					}
-					btn.disabled = true;
+				}
+
+				if (!validEntries(form)) return false;
+    			// if (!disableButtons(form)) return false;
+
+
+				var formData = new FormData(form); // ✔ includes file
+
+				fetch("/admin/models/art.cfc?method=editListingsFromForm&returnformat=json", {
+					method: "POST",
+					body: formData
+				})
+				.then(res => res.json())
+				.then(data => {
+					// console.log('test: ' + data.SUCCESS)
+					// return false;
+					if (data == false) {
+						alert("There was a processing issue");
+						return;
+					}
+
+					alert("Updated successfully!");
+
+					// redirect after update
+					window.location = "index.cfm?event=listings.loadEditForm&gridRefresh=1";
+				})
+				.catch(err => {
+					console.error(err);
+					alert("Error occurred.");
 				});
-			return true;
-		}
+			}
+
 		</script>
 
 

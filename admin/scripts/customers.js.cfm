@@ -202,19 +202,20 @@ function doEdit(type) {
 		} 
      	else {
 			 alert( 'There was a problem in the processing.')
+			 editBtn.disabled = false;
+			deleteBtn.disabled = false;
 			}
-      }
+    }
    else if (type == 'delete'){
 
-	 if (!confirm('Delete -- ARE YOU SURE? ')) {
-        return false; 
-    }
+		if (!confirm('Delete -- ARE YOU SURE? ')) {
+			return false; 
+		}
 
-	editBtn.disabled = true;
-	deleteBtn.disabled = true;
+		editBtn.disabled = true;
+		deleteBtn.disabled = true;
 
-   	if ( edit.deleteCustomer()) {
-         
+		if ( edit.deleteCustomer()) {        
 
 			toastr.options = {
 				"closeButton": true,
@@ -240,8 +241,12 @@ function doEdit(type) {
 				editBtn.disabled = false;
 				deleteBtn.disabled = false;
 			}, 5000);
-     } 
-     else { alert( 'There was a problem in the processing.')}
+		} 
+    	else {
+			alert( 'There was a problem in the processing.')
+			editBtn.disabled = false;
+			deleteBtn.disabled = false;
+			}
       }
 	document.getElementById('edit').value = 'Edit';
 	document.getElementById('delete').style.display = '';

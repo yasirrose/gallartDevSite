@@ -187,7 +187,7 @@
 
 	<!--- /////////////  EDIT FROM SEPARATE FORM //////////////// --->
 
-	<cffunction name="editListingsFromForm" access="remote" output="false" returntype="struct">
+	<cffunction name="editListingsFromForm" access="remote" output="false" returntype="boolean">
 	    <cfargument name="uid" type="numeric" default="0">
 	    <cfargument name="NAME" type="string" default="">
 		<cfargument name="MANUFACTURER" type="string" default="">
@@ -226,8 +226,9 @@
 		<cfargument name="moduleName" type="string" default="">
         <!---<cfargument name="addImage" type="string" default="">--->
 
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 
-	    <!--- <cfset var success = true /> --->
+	    <cfset var success = true />
 
 			<cfset arguments.RETAIL_PRICE 	= rereplace(arguments.RETAIL_PRICE, "[^0-9|.]", "", "all")>
 			<cfset arguments.GALLERY_PRICE 	= rereplace(arguments.GALLERY_PRICE, "[^0-9|.]", "", "all")>
@@ -239,7 +240,7 @@
 			<cfif NOT len(arguments.SPECIAL_PRICE)><cfset arguments.SPECIAL_PRICE = 0 /></cfif>
 			<cfif NOT len(arguments.LOCATION_PRICE)><cfset arguments.LOCATION_PRICE = 0 /></cfif>
 
-			 <cfset var result = { success = true, message = "" }>
+			 <!--- <cfset var result = { success = true, message = "" }> --->
 
 			<cftry>
 				
@@ -537,12 +538,12 @@
 				</cfif>
 
 				<cfcatch>
-					<cfset result.success = false>
-            		<cfset result.message = cfcatch.detail>
+					<cfset success = false>
+            		<!--- <cfset result.message = cfcatch.detail> --->
 				</cfcatch>
 			</cftry>	
 
-		<cfreturn result>
+		<cfreturn success>
 
 	</cffunction>
 
