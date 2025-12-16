@@ -202,8 +202,8 @@ function doEdit(type) {
 		} 
      	else {
 			 alert( 'There was a problem in the processing.')
-			 editBtn.disabled = false;
-			deleteBtn.disabled = false;
+			 	editBtn.disabled = false;
+				deleteBtn.disabled = false;
 			}
     }
    else if (type == 'delete'){
@@ -242,7 +242,8 @@ function doEdit(type) {
 				deleteBtn.disabled = false;
 			}, 5000);
 		} 
-    	else {
+    	else 
+		{
 			alert( 'There was a problem in the processing.')
 			editBtn.disabled = false;
 			deleteBtn.disabled = false;

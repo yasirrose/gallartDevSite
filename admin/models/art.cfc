@@ -187,7 +187,7 @@
 
 	<!--- /////////////  EDIT FROM SEPARATE FORM //////////////// --->
 
-	<cffunction name="editListingsFromForm" access="remote" output="false" returntype="boolean">
+	<cffunction name="editListingsFromForm" access="remote" output="false" returntype="struct">
 	    <cfargument name="uid" type="numeric" default="0">
 	    <cfargument name="NAME" type="string" default="">
 		<cfargument name="MANUFACTURER" type="string" default="">
@@ -228,7 +228,7 @@
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
 
-	    <cfset var success = true />
+	    <!--- <cfset var success = true /> --->
 
 			<cfset arguments.RETAIL_PRICE 	= rereplace(arguments.RETAIL_PRICE, "[^0-9|.]", "", "all")>
 			<cfset arguments.GALLERY_PRICE 	= rereplace(arguments.GALLERY_PRICE, "[^0-9|.]", "", "all")>
@@ -240,7 +240,7 @@
 			<cfif NOT len(arguments.SPECIAL_PRICE)><cfset arguments.SPECIAL_PRICE = 0 /></cfif>
 			<cfif NOT len(arguments.LOCATION_PRICE)><cfset arguments.LOCATION_PRICE = 0 /></cfif>
 
-			 <!--- <cfset var result = { success = true, message = "" }> --->
+			 <cfset var result = { success = true, message = "" }>
 
 			<cftry>
 				
@@ -342,14 +342,17 @@
 							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #thisId#)
 					</cfquery>
 
+					<cfset result.success = true>
+    				<cfset result.message = "Listing added successfully.">
+
 			 	 <cfelse>
 
 					<cfquery name="editListing" datasource="#application.dsource#">
 						UPDATE products SET
 							NAME 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
 							MANUFACTURER 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MANUFACTURER#">,
-							PATH 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PATH#">,
-							YEAR 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.YEAR#">,
+							PATH 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PATH#">, 
+							YEAR 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.YEAR#">
 							SIZE 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
 							EDITION			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EDITION#">,
 							RETAIL_PRICE 	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.RETAIL_PRICE NEQ '', DE(arguments.RETAIL_PRICE), DE('0'))#">,
@@ -399,6 +402,9 @@
 							VALUES
 							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #thisId#)
 					</cfquery>
+
+					<cfset result.success = true>
+    				<cfset result.message = "Listing added successfully.">
 
 				</cfif>
 
@@ -538,12 +544,12 @@
 				</cfif>
 
 				<cfcatch>
-					<cfset success = false>
-            		<!--- <cfset result.message = cfcatch.detail> --->
+					<cfset result.success = false>
+            		<cfset result.message = cfcatch.message>
 				</cfcatch>
 			</cftry>	
 
-		<cfreturn success>
+		<cfreturn result>
 
 	</cffunction>
 

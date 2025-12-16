@@ -224,7 +224,7 @@
 				
 				</cfif>
 			
-			<cfelse>
+			 <cfelse>
 			
 				<cfscript>
 					editListingsFromForm = application.objectFactoryAdmin.getInstance('art').editListingsFromFormDev( argumentcollection = form );

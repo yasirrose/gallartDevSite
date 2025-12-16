@@ -229,10 +229,8 @@ function doEdit(type) {
 		else if (result === "error") {
 			alert('There was a problem while processing the request.');
 
-			setTimeout(function () {
 				editBtn.disabled = false;
 				deleteBtn.disabled = false;
-			}, 5000);
 		} 
 		else {
 			alert('Unexpected response received.');
@@ -279,6 +277,8 @@ function doEdit(type) {
      	} 
      	else { 
 			alert( 'There was a problem in the processing.')
+			editBtn.disabled = false;
+			deleteBtn.disabled = false;
 		}
     }
 

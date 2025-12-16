@@ -1,4 +1,5 @@
 <cfajaxproxy cfc="admin.models.art" >
+<!--- <cfajaxproxy bind="javascript:gridChange({data.id})"> --->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -13,6 +14,7 @@
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 			<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
 			<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+			<script type="text/javascript" src="/admin/scripts/listings.js.cfm" language="JavaScript"></script>
 		</cfoutput>
 
 		<script type="text/javascript">
@@ -167,11 +169,6 @@
 					</tr>
 				</cfif>
 
-				
-
-				<!--- <cfif structKeyExists(url, "status") AND url.status EQ "false">
-					<script>alert('There was a problem with the processing.');</script>
-				</cfif> --->
 				<tr>
 					<td valign="top">
 						<table border = "0" width = "100%" cellpadding = "3" cellspacing = "0">
@@ -208,7 +205,7 @@
 									</select>
 									<br><i>Select an artist from dropdown above,<br>
 									OR type in a new artist below:</i><br>
-									<input type="Text" name="manufacturer" value="" maxlength="40" size="35">
+									<input type="Text" name="manufacturer" id="manufacturer" value="" maxlength="40" size="35">
 								</td>
 							</tr>
 							<tr>
@@ -224,7 +221,7 @@
 									</select>
 									<br><i>Select existing medium from dropdown above, and edit if desired,<br>OR type in a new string.
 									Make sure subcategories (sub-mediums) are separated by colons, and that the entire string ends with a colon.</i>
-									<input type="Text" name="path" value="" maxlength="50" size="50">
+									<input type="Text" name="path" id="path" value="" maxlength="50" size="50">
 								</td>
 							</tr>
 							<tr>
@@ -664,7 +661,7 @@
 						<table border = "0" width = "100%" cellpadding = "1" cellspacing = "0">
 							<tr>
 								<td colspan="2">
-									<cfinput type="button" name="edit" id="edit" value="Edit"  onclick="editListing();"/>
+									<cfinput type="button" name="edit" id="edit" value="Edit"  onclick="doEdit('edit');"/>
 									<cfinput type="submit" name="edit" id="delete" value="Delete" onclick="return confirm('DELETE -- ARE YOU SURE?')" />
 								</td>
 							</tr>

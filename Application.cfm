@@ -1,6 +1,6 @@
 <!--- Global error handler --->
-<cferror type="exception" template="/errorHandler.cfm">
-<cferror type="request" template="/errorHandler.cfm">
+<!--- <cferror type="exception" template="/errorHandler.cfm">
+<cferror type="request" template="/errorHandler.cfm"> --->
 
 <cfapplication 
     name="galleryart"
