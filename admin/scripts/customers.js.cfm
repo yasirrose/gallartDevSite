@@ -171,8 +171,12 @@ function doEdit(type) {
 
 		editBtn.disabled = true;
 		deleteBtn.disabled = true;
+
+		var result = edit.editCustomerFromForm();
+
+		console.log('test cus: ' , result)
     		
-		if ( edit.editCustomerFromForm()) {			
+		if ( result.SUCCESS === true) {			
 
 				toastr.options = {
 					"closeButton": true,
@@ -192,7 +196,7 @@ function doEdit(type) {
 					"hideMethod": "fadeOut"
 				};
 
-			toastr.success('Data is Updated Successfully!');
+			toastr.success(result.MESSAGE);
 			ColdFusion.Grid.refresh('data',true);
 
 			setTimeout(function () {
@@ -201,10 +205,10 @@ function doEdit(type) {
 			}, 5000);
 		} 
      	else {
-			 alert( 'There was a problem in the processing.')
+			 alert(result.MESSAGE)
 			 	editBtn.disabled = false;
 				deleteBtn.disabled = false;
-			}
+			} 
     }
    else if (type == 'delete'){
 

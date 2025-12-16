@@ -110,7 +110,7 @@
 	
 	</cffunction>
 	
-	<cffunction name="editCustomerFromForm" access="remote" output="false" returntype="boolean">
+	<cffunction name="editCustomerFromForm" access="remote" output="false" returntype="struct">
 	    <cfargument name="id" type="string" default="">
 	    <cfargument name="fname" type="string" default="">
 	    <cfargument name="lname" type="string" default="">
@@ -175,7 +175,9 @@
 			<cfset otherphone = "">
 		</cfif>
 	    
-	    <cfset var success = true />
+	    <!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 		
 	    <cftry>
 	    
@@ -215,6 +217,9 @@
 						VALUES
 						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 				</cfquery>
+
+				<cfset result.success = true>
+    			<cfset result.message = "Customer added successfully.">
 			
 			 <cfelse>
 			
@@ -257,15 +262,20 @@
 						VALUES
 						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 				</cfquery>
+
+				<cfset result.success = true>
+    			<cfset result.message = "Customer Updated successfully.">
 				
 			</cfif>
 			
 	    	<cfcatch type="any">
-				<cfset success = false />
+				<!--- <cfset success = false /> --->
+				<cfset result.success = false>
+            	<cfset result.message = cfcatch.message>
 			</cfcatch>
 		</cftry>
 			
-		<cfreturn success> 
+		<cfreturn result> 
 	        
 	</cffunction>
 	

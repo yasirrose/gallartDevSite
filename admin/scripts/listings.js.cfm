@@ -444,7 +444,7 @@
 		ColdFusion.Grid.refresh('data',true);
 	}
 
-	function doEdit(type) {
+	<!--- function doEdit(type) {
 
 		var edit = new admin.models.art();
 		edit.setForm("editForm");
@@ -456,7 +456,7 @@
 		var quantity = document.getElementById('quantity').value.trim();
 		var size = document.getElementById('size').value.trim();
 		var pattern = /^[0-9]+(\.[0-9]+)*\s*[xX]\s*[0-9]+(\.[0-9]+)*(\s*[xX]\s*[0-9]+(\.[0-9]+)*)?$/;
-		var fileInput = document.getElementById('thisImage');
+		<!--- var fileInput = document.getElementById('thisImage'); --->
 		
 		var editBtn = document.getElementById('edit');
 		var deleteBtn = document.getElementById('delete');
@@ -502,7 +502,7 @@
 
 			
 
-			var fileSizeLimit = 1000000; 
+			<!--- var fileSizeLimit = 1000000; 
 
 			if (fileInput && fileInput.files.length > 0) {
 				var file = fileInput.files[0];
@@ -519,7 +519,7 @@
 					alert("Only JPG / JPEG images are allowed.");
 					return false;
 				}
-			}
+			} --->
 
 			editBtn.disabled = true;
 			deleteBtn.disabled = true;
@@ -576,7 +576,7 @@
 		
 		document.getElementById('edit').value = 'Edit';
 		document.getElementById('delete').style.display = '';
-	}
+	} --->
 
 
 	function showNew () {

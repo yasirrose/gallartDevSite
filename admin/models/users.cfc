@@ -154,7 +154,9 @@
 			<cfset otherphone = "">
 		</cfif>
 	    
-	    <cfset var response = 'success' />
+	    <!--- <cfset var response = 'success' /> --->
+
+		<cfset var result = { response = true, message = "" }>
 	    
 	    	<cftry>
 	    
@@ -167,8 +169,11 @@
 
 					<cfif checkEmail.recordCount GT 0>
 						<!--- Email already exists --->
-						<cfset response = "duplicate" />
-						<cfreturn response>
+						<!--- <cfset response = "duplicate" />
+						<cfreturn response> --->
+						<cfset result.success = false>
+						<cfset result.message = "Email already exists.">
+						<cfreturn result>
 					</cfif>
 					
 					<cfquery name="addUser" datasource="#application.dsource#"> 
@@ -210,7 +215,9 @@
 							VALUES
 							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #thisId#)
 					</cfquery>
-			
+
+					<cfset result.success = true>
+            		<cfset result.message = "Seller added  successfully.">
 				
 				<cfelse>
 				
@@ -238,16 +245,21 @@
 							VALUES
 							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', '#arguments.pk_users#')
 					</cfquery>
+
+					<cfset result.success = true>
+            		<cfset result.message = "Seller updated successfully.">
 				
 				</cfif>
 	    
 	    			
 				<cfcatch type="any">
-					<cfset response = 'error' />
+					<!--- <cfset response = 'error' /> --->
+					<cfset result.success = false>
+       				<cfset result.message = cfcatch.message>
 				</cfcatch>
 			</cftry>
 			
-		<cfreturn response> 
+		<cfreturn result> 
 	        
 	</cffunction>
 	

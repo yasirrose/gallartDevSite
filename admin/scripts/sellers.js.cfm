@@ -112,31 +112,19 @@ function doEdit(type) {
     
     if (type == 'edit'){
 
-		if (fname === '') {
-			toastr.error('First Name is required.');
-			document.getElementById('fname').focus();
-			return false;
-		}
+		const validateField = (value, id, message) => 
+		value === '' ? (toastr.error(message), document.getElementById(id).focus(), false) : true;
 
-		if (lname === '') {
-			toastr.error('Last Name is required.');
-			document.getElementById('lname').focus();
-			return false;
-		}
+		// Validate required fields
+		if (!validateField(fname, 'fname', 'First Name is required.')) return false;
+		if (!validateField(lname, 'lname', 'Last Name is required.')) return false;
 
-		if (email === '') {
-			toastr.error('Email is required.');
-			document.getElementById('seller_email').focus();
-			return false;
-		} else {
-			// Simple email format check using regex
-			var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailPattern.test(email)) {
-				toastr.error('Please enter a valid email address.');
-				document.getElementById('seller_email').focus();
-				return false;
-			}
-		}
+		// Email validation
+		if (!validateField(email, 'seller_email', 'Email is required.')) return false;
+
+		const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailPattern.test(email)) 
+			return (toastr.error('Please enter a valid email address.'), document.getElementById('seller_email').focus(), false); 
 
 		<!--- if (password === '') {
 			toastr.error('Password is required.');
@@ -167,9 +155,10 @@ function doEdit(type) {
     		
 		var result = edit.editUserFromForm();
 
-		<!--- console.log('test result: ' + result); --->
+		console.log('test result: ' , result);
+		
 
-			if (result === "success") {
+			if (result.SUCCESS === true) {
 
 				toastr.options = {
 				"closeButton": true,
@@ -189,7 +178,7 @@ function doEdit(type) {
 				"hideMethod": "fadeOut"
 			};
 
-			toastr.success('Record saved successfully.');
+			toastr.success(result.MESSAGE);
 			ColdFusion.Grid.refresh('data', true);
 
 			setTimeout(function () {
@@ -197,43 +186,11 @@ function doEdit(type) {
 				deleteBtn.disabled = false;
 			}, 5000);
 		} 
-		else if (result === "duplicate") {
-			
-			toastr.options = {
-				"closeButton": true,
-				"debug": false,
-				"newestOnTop": true,
-				"progressBar": true,
-				"positionClass": "toast-center",
-				"preventDuplicates": false,
-				"onclick": null,
-				"showDuration": "300",
-				"hideDuration": "1000",
-				"timeOut": "3000",
-				"extendedTimeOut": "1000",
-				"showEasing": "swing",
-				"hideEasing": "linear",
-				"showMethod": "fadeIn",
-				"hideMethod": "fadeOut"
-			};
-
-			alert('This email already exists. Please use a different email.');
-			
-			<!--- ColdFusion.Grid.refresh('data', true); --->
-
-			setTimeout(function () {
-				editBtn.disabled = false;
-				deleteBtn.disabled = false;
-			}, 5000);
-		} 
-		else if (result === "error") {
-			alert('There was a problem while processing the request.');
-
-				editBtn.disabled = false;
-				deleteBtn.disabled = false;
-		} 
+		
 		else {
-			alert('Unexpected response received.');
+			alert(result.MESSAGE);
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
 		}
       }
 	  

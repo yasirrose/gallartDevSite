@@ -1,5 +1,5 @@
 <cfajaxproxy cfc="admin.models.art" >
-<!--- <cfajaxproxy bind="javascript:gridChange({data.id})"> --->
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -14,7 +14,7 @@
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 			<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
 			<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
-			<script type="text/javascript" src="/admin/scripts/listings.js.cfm" language="JavaScript"></script>
+			
 		</cfoutput>
 
 		<script type="text/javascript">
@@ -661,8 +661,8 @@
 						<table border = "0" width = "100%" cellpadding = "1" cellspacing = "0">
 							<tr>
 								<td colspan="2">
-									<cfinput type="button" name="edit" id="edit" value="Edit"  onclick="doEdit('edit');"/>
-									<cfinput type="submit" name="edit" id="delete" value="Delete" onclick="return confirm('DELETE -- ARE YOU SURE?')" />
+									<cfinput type="button" name="edit" id="edit" value="Edit"  onclick="editListing();"/>
+									<cfinput type="button" name="edit" id="delete" value="Delete" onclick="doEdit('delete');" />
 								</td>
 							</tr>
 						</table>
@@ -675,34 +675,34 @@
 		<div id="orderLink"></div>
 
 		<script>
-			// function disableButtons(formEl) {
-			// 	// ensure real form
-			// 	if (!(formEl instanceof HTMLFormElement)) {
-			// 		formEl = document.getElementById('editForm');
-			// 	}
+			function disableButtons(formEl) {
+				// ensure real form
+				if (!(formEl instanceof HTMLFormElement)) {
+					formEl = document.getElementById('editForm');
+				}
 
-			// 	// hidden input add karo agar missing hai
-			// 	let hiddenEdit = formEl.querySelector('input[name="hiddenEdit"]');
-			// 	if (!hiddenEdit) {
-			// 		hiddenEdit = document.createElement('input');
-			// 		hiddenEdit.type = 'hidden';
-			// 		hiddenEdit.name = 'hiddenEdit';
-			// 		formEl.appendChild(hiddenEdit);
-			// 	}
+				// hidden input add karo agar missing hai
+				let hiddenEdit = formEl.querySelector('input[name="hiddenEdit"]');
+				if (!hiddenEdit) {
+					hiddenEdit = document.createElement('input');
+					hiddenEdit.type = 'hidden';
+					hiddenEdit.name = 'hiddenEdit';
+					formEl.appendChild(hiddenEdit);
+				}
 
-			// 	// saare submit buttons disable karo aur value copy karo
-			// 	var buttons = formEl.querySelectorAll('input[type="submit"]');
-			// 	buttons.forEach(function(btn){
-			// 		if (btn.disabled !== true) {
-			// 			// jo click hua uski value hidden me daal do
-			// 			if (document.activeElement === btn) {
-			// 				hiddenEdit.value = btn.value; // e.g. Edit or Delete
-			// 			}
-			// 		}
-			// 		btn.disabled = true;
-			// 	});
-			// 	return true;
-			// }
+				// saare submit buttons disable karo aur value copy karo
+				var buttons = formEl.querySelectorAll('input[type="submit"]');
+				buttons.forEach(function(btn){
+					if (btn.disabled !== true) {
+						// jo click hua uski value hidden me daal do
+						if (document.activeElement === btn) {
+							hiddenEdit.value = btn.value; // e.g. Edit or Delete
+						}
+					}
+					btn.disabled = true;
+				});
+				return true;
+			}
 
 			function editListing() {
 				var form = document.getElementById("editForm");
@@ -715,15 +715,15 @@
 					var file = fileInput.files[0];
 					if (file.size > fileSizeLimit) {
 						alert("Please limit your image file upload to 2MB.");
-						return false; // stop submission
+						return false; 
 					}
 				}
 
 				if (!validEntries(form)) return false;
-    			// if (!disableButtons(form)) return false;
+    			if (!disableButtons(form)) return false;
 
 
-				var formData = new FormData(form); // ✔ includes file
+				var formData = new FormData(form); 
 
 				fetch("/admin/models/art.cfc?method=editListingsFromForm&returnformat=json", {
 					method: "POST",
@@ -731,16 +731,16 @@
 				})
 				.then(res => res.json())
 				.then(data => {
-					// console.log('test: ' + data.SUCCESS)
-					// return false;
-					if (data == false) {
-						alert("There was a processing issue");
+					console.log('test: ' , data)
+					
+					if (data.SUCCESS == false) {
+						alert(data.MESSAGE);
 						return;
 					}
 
-					alert("Updated successfully!");
+					alert(data.MESSAGE);
 
-					// redirect after update
+					
 					window.location = "index.cfm?event=listings.loadEditForm&gridRefresh=1";
 				})
 				.catch(err => {

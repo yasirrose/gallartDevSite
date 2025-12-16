@@ -226,9 +226,15 @@
 		<cfargument name="moduleName" type="string" default="">
         <!---<cfargument name="addImage" type="string" default="">--->
 
+		<cfset cleanCloseout = listFirst(arguments.CLOSEOUT)>
+		<cfset cleanSLIDESHOW = listFirst(arguments.SLIDESHOW)>
+		<cfset cleanpromotion = listFirst(arguments.promotion)>
+		<cfset cleanAUCTION = listFirst(arguments.AUCTION)>
 		<!--- <cfdump var="#arguments#" abort="true"> --->
 
 	    <!--- <cfset var success = true /> --->
+
+		
 
 			<cfset arguments.RETAIL_PRICE 	= rereplace(arguments.RETAIL_PRICE, "[^0-9|.]", "", "all")>
 			<cfset arguments.GALLERY_PRICE 	= rereplace(arguments.GALLERY_PRICE, "[^0-9|.]", "", "all")>
@@ -242,6 +248,7 @@
 
 			 <cfset var result = { success = true, message = "" }>
 
+			 
 			<cftry>
 				
 				<cfif arguments.uid EQ 0>
@@ -303,7 +310,7 @@
 								,<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.SPECIAL_PRICE NEQ '', DE(arguments.SPECIAL_PRICE), DE('0'))#">
 							</cfif>,
 							
-							<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.CLOSEOUT),DE(arguments.CLOSEOUT),DE(0))#">,
+							<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(cleanCloseout),DE(cleanCloseout),DE(0))#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOW_ESTIMATE#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.HIGH_ESTIMATE#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.QUANTITY#">,
@@ -311,19 +318,19 @@
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ACTIVE#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FRONTSHOW#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FAMILY#">,
-							<cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(arguments.SLIDESHOW),DE(arguments.SLIDESHOW),DE(0))#">,
+							<cfqueryparam cfsqltype="CF_SQL_TINYINT" value="#iif(len(cleanSLIDESHOW),DE(cleanSLIDESHOW),DE(0))#">,
 							<cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION#">,
 							<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.LOCATION_PRICE#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_FLOOR#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_WALL#">,
 							<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.LOCATION_NOTES#">,
-							<cfqueryparam cfsqltype="CF_SQL_TINYINT"value="#iif(len(arguments.AUCTION),DE(arguments.AUCTION),DE(0))#">,
+							<cfqueryparam cfsqltype="CF_SQL_TINYINT"value="#iif(len(cleanAUCTION),DE(cleanAUCTION),DE(0))#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTTYPE#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artTypee#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
 							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
-							<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">,
+							<cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(cleanpromotion),DE(cleanpromotion),DE(0))#">,
 							<cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#session.userinfo.pk_employees#">
 						)
 						SELECT @@identity as newId
@@ -352,7 +359,7 @@
 							NAME 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NAME#">,
 							MANUFACTURER 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.MANUFACTURER#">,
 							PATH 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PATH#">, 
-							YEAR 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.YEAR#">
+							YEAR 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.YEAR#">,
 							SIZE 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SIZE#">,
 							EDITION			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EDITION#">,
 							RETAIL_PRICE 	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.RETAIL_PRICE NEQ '', DE(arguments.RETAIL_PRICE), DE('0'))#">,
@@ -362,7 +369,7 @@
 								SPECIAL_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#iif(arguments.SPECIAL_PRICE NEQ '', DE(arguments.SPECIAL_PRICE), DE('0'))#">,
 							</cfif>
 							
-							CLOSEOUT		= <cfqueryparam cfsqltype="CF_SQL_BIT"value="#iif(len(arguments.CLOSEOUT),DE(arguments.CLOSEOUT),DE(0))#">,
+							CLOSEOUT		= <cfqueryparam cfsqltype="CF_SQL_BIT"value="#iif(len(cleanCloseout),DE(cleanCloseout),DE(0))#">,
 							LOW_ESTIMATE 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOW_ESTIMATE#">,
 							HIGH_ESTIMATE 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.HIGH_ESTIMATE#">,
 							QUANTITY 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.QUANTITY#">,
@@ -370,19 +377,19 @@
 							ACTIVE 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ACTIVE#">,
 							FRONTSHOW 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FRONTSHOW#">,
 							FAMILY 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FAMILY#">,
-							SLIDESHOW		= <cfqueryparam cfsqltype="CF_SQL_BIT"value="#iif(len(arguments.SLIDESHOW),DE(arguments.SLIDESHOW),DE(0))#">,
+							SLIDESHOW		= <cfqueryparam cfsqltype="CF_SQL_BIT"value="#iif(len(cleanSLIDESHOW),DE(cleanSLIDESHOW),DE(0))#">,
 							LASTEDIT		= <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">,
 							LOCATION		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION#">,
 							LOCATION_PRICE	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.LOCATION_PRICE#">,
 							LOCATION_FLOOR	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_FLOOR#">,
 							LOCATION_WALL	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LOCATION_WALL#">,
 							LOCATION_NOTES	= <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.LOCATION_NOTES#">,
-							AUCTION		= <cfqueryparam cfsqltype="CF_SQL_TINYINT"value="#iif(len(arguments.AUCTION),DE(arguments.AUCTION),DE(0))#">,
+							AUCTION		= <cfqueryparam cfsqltype="CF_SQL_TINYINT"value="#iif(len(cleanAUCTION),DE(cleanAUCTION),DE(0))#">,
 							ARTTYPE     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ARTTYPE#">,
 							artTypee     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artTypee#">,
 							artSubject     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSubject#">,
 							artSize     = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.artSize#">,
-							promotion     = <cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(arguments.promotion),DE(arguments.promotion),DE(0))#">,
+							promotion     = <cfqueryparam cfsqltype="CF_SQL_BIT" value="#iif(len(cleanpromotion),DE(cleanpromotion),DE(0))#">,
 							emp_id     = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#session.userinfo.pk_employees#">
 							<cfif isDefined('form.deactivated') and form.deactivated EQ 1 AND form.active EQ 1>
 								,ACTIVE_DATE = #now()#
