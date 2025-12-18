@@ -68,7 +68,7 @@
 		
    	</cffunction>
 	
-	<cffunction name="editPurchasesConsignmentsFromForm" access="remote" output="false" returntype="boolean">
+	<cffunction name="editPurchasesConsignmentsFromForm" access="remote" output="false" returntype="struct">
 	    <cfargument name="pk_purchases_consignments" type="string" default="">
 	    <cfargument name="NAME" type="string" default="">
 	    <cfargument name="FNAME" type="string" default="">
@@ -83,7 +83,9 @@
 		<cfargument name="PHONETYPE" type="string" default="">
 		<cfargument name="moduleName" type="string" default="">
 	    
-	    <cfset var success = true />
+	    <!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 		
 	    <!--- <cfparam name="cffile.serverfile" default="" />
 		<cfif len(arguments.THISIMAGE)>
@@ -131,6 +133,9 @@
 							VALUES
 							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 					</cfquery>
+
+					<cfset result.success = true>
+    				<cfset result.message = "Record is added successfully.">
 			
 				
 				 <cfelse>
@@ -164,25 +169,32 @@
 							VALUES
 							( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 					</cfquery>
+
+					<cfset result.success = true>
+    				<cfset result.message = "Record is Updated successfully.">
 				
 				</cfif>
 	    
 	    			
 				<cfcatch type="any">
-					<cfset success = false />
+					<!--- <cfset success = false /> --->
+					<cfset result.success = false>
+            		<cfset result.message = cfcatch.detail>
 				</cfcatch>
 			</cftry>
 			
-		<cfreturn success> 
+		<cfreturn result> 
 	        
 	</cffunction>
 	
-	<cffunction name="deletePurchasesConsignments" access="remote">
+	<cffunction name="deletePurchasesConsignments" access="remote" returntype="struct">
 		<cfargument name="pk_purchases_consignments" type="string" default="">
 		<cfargument name="moduleName" type="string" default="">
 		
 		
-		<cfset var success = true />
+		<!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 		
 		<cftry>
 	
@@ -201,13 +213,19 @@
 					VALUES
 					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 			</cfquery>
+
+			<cfset result.success = true>
+    		<cfset result.message = "Record is Deleted successfully.">
 			
 			<cfcatch type="any">
-				<cfset success = false />
+				<!--- <cfset success = false /> --->
+
+				<cfset result.success = false>
+            	<cfset result.message = cfcatch.message>
 			</cfcatch>
 		</cftry>
 	
-		<cfreturn success />
+		<cfreturn result />
 	
 	</cffunction>
 	

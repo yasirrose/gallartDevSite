@@ -50,12 +50,16 @@ getKeywords = function(){
 	   return s;
 	}
 
-
+	function validateField(value, fieldId, message) {
+		if (value === '') {
+			alert(message);
+			document.getElementById(fieldId).focus();
+			return false;
+		}
+		return true;
+	}
 
    function doEdit(type) {
-
-	
-		console.log('test type: ' + type)
 	  
 		var editBtn = document.getElementById('edit');
 		var deleteBtn = document.getElementById('delete');
@@ -87,11 +91,13 @@ getKeywords = function(){
 				return false;
 			} --->
 
-			if (name === '') {
+			<!--- if (name === '') {
 				toastr.error('Name is required.');
 				document.getElementById('name').focus();
 				return false;
-			}
+			} --->
+
+			if (!validateField(name, 'name', 'You must add a name')) return false;
 
 			if (email === '') {
 				<!---toastr.error('Email is required.');
@@ -102,7 +108,7 @@ getKeywords = function(){
 				var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 				if (!emailPattern.test(email)) {
 					toastr.error('Please enter a valid email address.');
-					document.getElementById('seller_email').focus();
+					document.getElementById('leadEmail').focus();
 					return false;
 				}
 			}
@@ -121,7 +127,11 @@ getKeywords = function(){
 			editBtn.disabled = true;
 			deleteBtn.disabled = true;
 
-			if ( edit.editLeadFromForm()) {
+			var result = edit.editLeadFromForm();
+
+			<!--- console.log('test lead: ' , result) --->
+
+			if ( result.SUCCESS === true) {
 				document.getElementById('emailButton').style.display = 'block';
 				
 				ColdFusion.Grid.refresh('leadGrid',true);
@@ -144,7 +154,7 @@ getKeywords = function(){
 					"hideMethod": "fadeOut"
 				};
 
-				toastr.success('Record is updated Successfully'); 
+				toastr.success(result.MESSAGE); 
 
 				setTimeout(function () {
 					editBtn.disabled = false;
@@ -152,17 +162,19 @@ getKeywords = function(){
 				}, 5000);
 			}
 			else { 
-				alert( 'There was a problem in the processing.')
-
-				setTimeout(function () {
+				alert(result.MESSAGE)
+			
 					editBtn.disabled = false;
 					deleteBtn.disabled = false;
-				}, 5000);
+				
 			}
 	    }
 	     else if (type == 'delete'){
 			document.getElementById('notes').value = '';
-	     	if ( edit.deleteLead()) {
+
+			var result = edit.deleteLead();
+
+	     	if ( result.SUCCESS === true) {
 				
            		ColdFusion.Grid.refresh('leadGrid',true);
 
@@ -184,10 +196,10 @@ getKeywords = function(){
 					"hideMethod": "fadeOut"
 				};
 
-				toastr.success('Record is Deleted Successfully'); 
+				toastr.success(result.MESSAGE); 
         	}
 			else { 
-				alert( 'There was a problem in the processing.')
+				alert( result.MESSAGE)
 			}
 	    }
 	document.getElementById('edit').value = 'Edit';
@@ -205,42 +217,42 @@ getKeywords = function(){
 	} --->
 
    function showNew () {
-   	document.getElementById('pk_leads').value = '';
-	document.getElementById('fk_employees').value = '<cfoutput>#session.userinfo.pk_employees#</cfoutput>';
-   	document.getElementById('fname').value = '';
-   	document.getElementById('lname').value = '';
-   	document.getElementById('name').value = '';
-   	document.getElementById('leadEmail').value = '';
-	<!--- document.getElementById('cellphone').value = ''; --->
-	<!--- document.getElementById('phone').value = ''; --->
-	<!--- document.getElementById('otherphone').value = ''; --->
-	<!--- document.getElementById('businessphone').value = ''; --->
-	document.getElementById('phoneNumber').value = '';
-	document.getElementById('PhoneType').options[0].selected = true;
-	document.getElementById('besttime').value = '';
-	document.getElementById('address').value = '';
-	document.getElementById('city').value = '';
-	document.getElementById('state').value = '';
-	document.getElementById('country').value = '';
-	document.getElementById('zip').value = '';
-	document.getElementById('company').value = '';
-	document.getElementById('artists').value = '';
-	document.getElementById('titles').value = '';
-   	document.getElementById('notes').value = '';
-	document.getElementById('origin').options[0].selected = true;
-	document.getElementById('empDisplay').innerHTML = '<cfoutput>#session.userinfo.lname#</cfoutput>, <cfoutput>#session.userinfo.fname#</cfoutput>';
-	document.getElementById('emailButton').style.display = 'none';
-   	document.getElementById('edit').value = 'Add';
-   	document.getElementById('Addresstype').value = 'Add';
-   	document.getElementById('website').value = 'Add';
+		document.getElementById('pk_leads').value = '';
+		document.getElementById('fk_employees').value = '<cfoutput>#session.userinfo.pk_employees#</cfoutput>';
+		document.getElementById('fname').value = '';
+		document.getElementById('lname').value = '';
+		document.getElementById('name').value = '';
+		document.getElementById('leadEmail').value = '';
+		<!--- document.getElementById('cellphone').value = ''; --->
+		<!--- document.getElementById('phone').value = ''; --->
+		<!--- document.getElementById('otherphone').value = ''; --->
+		<!--- document.getElementById('businessphone').value = ''; --->
+		document.getElementById('phoneNumber').value = '';
+		document.getElementById('PhoneType').options[0].selected = true;
+		document.getElementById('besttime').value = '';
+		document.getElementById('address').value = '';
+		document.getElementById('city').value = '';
+		document.getElementById('state').value = '';
+		document.getElementById('country').value = '';
+		document.getElementById('zip').value = '';
+		document.getElementById('company').value = '';
+		document.getElementById('artists').value = '';
+		document.getElementById('titles').value = '';
+		document.getElementById('notes').value = '';
+		document.getElementById('origin').options[0].selected = true;
+		document.getElementById('empDisplay').innerHTML = '<cfoutput>#session.userinfo.lname#</cfoutput>, <cfoutput>#session.userinfo.fname#</cfoutput>';
+		document.getElementById('emailButton').style.display = 'none';
+		document.getElementById('edit').value = 'Add';
+		document.getElementById('Addresstype').value = 'Add';
+		document.getElementById('website').value = 'Add';
 
-	if (window.updateArtists) window.updateArtists();
-	if (window.updateTitles) window.updateTitles();
-	if (window.updateNotes) window.updateNotes();
+		if (window.updateArtists) window.updateArtists();
+		if (window.updateTitles) window.updateTitles();
+		if (window.updateNotes) window.updateNotes();
 
-	<cfif session.loggedin EQ true AND session.userinfo.sa EQ 1>
-   		document.getElementById('delete').style.display = 'none';
-	</cfif>
+		<cfif session.loggedin EQ true AND session.userinfo.sa EQ 1>
+			document.getElementById('delete').style.display = 'none';
+		</cfif>
     }
 
  function init(){
@@ -339,7 +351,7 @@ getKeywords = function(){
 	var lname = strLead.RESULTSET.DATA[0][5]; // LNAME
 	var name = strLead.RESULTSET.DATA[0][31]; // NAME
 
-	var phone = strLead.RESULTSET.DATA[0][7] //otherphone
+	<!--- var phone = strLead.RESULTSET.DATA[0][7] //otherphone
 	var cellphone = strLead.RESULTSET.DATA[0][8] //otherphone
 	var businessphone = strLead.RESULTSET.DATA[0][9] //otherphone
 	var otherphone = strLead.RESULTSET.DATA[0][26] //otherphone
@@ -364,7 +376,22 @@ getKeywords = function(){
     else {
         $("#phoneNumber").val("");
         $("#PhoneType").val(""); // default
-    }
+    } --->
+
+
+	const data = strLead.RESULTSET.DATA[0];
+
+	const phonePriority = [
+		{ value: data[8],  type: "Cell Phone" },
+		{ value: data[7],  type: "Home Phone" },
+		{ value: data[9],  type: "Business Phone" },
+		{ value: data[26], type: "OutsideUS" }
+	];
+
+	const selectedPhone = phonePriority.find(p => p.value && p.value.trim());
+
+	$("#phoneNumber").val(selectedPhone ? selectedPhone.value : "");
+	$("#PhoneType").val(selectedPhone ? selectedPhone.type : "");
 
 	var phoneType = document.getElementById('PhoneType').value
 	var formatSign = document.getElementById("formatSign");

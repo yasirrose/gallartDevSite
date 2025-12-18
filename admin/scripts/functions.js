@@ -598,7 +598,10 @@ function passwordResponseLead(s) {
 
 
 	if(trim(s)== "true") {
-		document.leadForm.submit();
+		// document.leadForm.submit();
+
+		ColdFusion.Ajax.submitForm('leadForm', 'models/leads.cfc?method=editLeadFromForm',leadSaveResponse);
+
 	} else {
 		alert('That\'s not a valid password. Please try again.');
 		return false;
@@ -609,6 +612,32 @@ function passwordResponseLead(s) {
     // return false;
 
 }
+
+function leadSaveResponse(res) {
+
+	// console.log('res: ', res)
+	// return false;
+
+    try {
+        var data = JSON.parse(res);
+
+		console.log('res: ', data)
+
+        if (data.SUCCESS) {
+            alert(data.MESSAGE);
+            document.getElementById('leadForm').reset();
+        } else {
+            alert("Error: " + data.MESSAGE);
+        }
+
+    } catch (e) {
+        alert("Unexpected server response.", e);
+    }
+
+    leadSubmitting = false;
+    document.getElementById('submitBtn').disabled = false;
+}
+
 
 
 function validateForm() {

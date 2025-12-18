@@ -140,9 +140,9 @@
 				return false;
 			}
 
-			
+			var result = edit.editPurchasesConsignmentsFromForm();
 				
-			if ( edit.editPurchasesConsignmentsFromForm()) {
+			if ( result.SUCCESS === true) {
 				ColdFusion.Grid.refresh('data',true);
 
 				toastr.options = {
@@ -163,17 +163,19 @@
 					"hideMethod": "fadeOut"
 				};
 
-				toastr.success('Record is updated Successfully'); 
+				toastr.success(result.MESSAGE); 
 			} 
 			else { 
-				alert( 'There was a problem in the processing.');
+				alert( result.MESSAGE);
 				 	
 			}
 
 		}
 		else if (type == 'delete') {
+
+			var result = edit.deletePurchasesConsignments();
 			
-			if ( edit.deletePurchasesConsignments()) {
+			if ( result.SUCCESS === true) {
 			ColdFusion.Grid.refresh('data',true);
 			
 			toastr.options = {
@@ -194,10 +196,10 @@
 				"hideMethod": "fadeOut"
 			};
 
-			toastr.success('Record is Deleted Successfully'); 
+			toastr.success(result.MESSAGE); 
 			} 
 			else { 
-				alert( 'There was a problem in the processing.');				
+				alert( result.MESSAGE);				
 			}
 
 		}

@@ -165,7 +165,7 @@
 		
 	</cffunction>
 	
-	<cffunction name="editLeadFromForm" access="remote" output="false" returntype="boolean">
+	<cffunction name="editLeadFromForm" access="remote" output="false" returntype="struct" returnformat="json">
 	    <cfargument name="pk_leads" type="string" default="">
 		<cfargument name="fk_employees" type="string" default="">
 	    <cfargument name="fname" type="string" default="">
@@ -195,6 +195,7 @@
 		<cfargument name="addressType" type="string" default="">
 		<cfargument name="State_Outside" type="string" default="">
 		<cfargument name="moduleName" type="string" default="">
+		
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
 
@@ -222,7 +223,9 @@
 			<cfset otherphone = "">
 		</cfif>
 	    
-	    <cfset var success = true />
+	    <!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 
 
 		<cfif arguments.addressType EQ "USA">
@@ -267,7 +270,7 @@
 	                )
 	                values
                 	(
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fk_employees#">,
+						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#session.userinfo.pk_employees#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.fname#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.lname#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.name#">,
@@ -303,7 +306,9 @@
 						VALUES
 						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 				</cfquery>
-		
+
+				<cfset result.success = true>
+    			<cfset result.message = "Record added successfully.">
 			
 			 <cfelse>
 
@@ -352,22 +357,29 @@
 						VALUES
 						( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 				</cfquery>
+
+				<cfset result.success = true>
+    			<cfset result.message = "Record Updated successfully.">
 			
 			</cfif>
 	    
 	    	<cfcatch type="any">
-				<cfdump var="#cfcatch#" abort="true">
+				<!--- <cfdump var="#cfcatch#" abort="true"> --->
+				<cfset result.success = false>
+            	<cfset result.message = cfcatch.message>
 			</cfcatch>
 		</cftry>
 			
-		<cfreturn success> 
+		<cfreturn result> 
 	        
 	</cffunction>
 	
-	<cffunction name="deleteLead" access="remote">
+	<cffunction name="deleteLead" access="remote" returntype="struct">
 		<cfargument name="pk_leads" type="string" default="">
 		
-		<cfset var success = true />
+		<!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 		
 		<cftry>
 	
@@ -387,13 +399,18 @@
 					VALUES
 					( '#moduleName#', '#ipAddress#', #date#, '#action#')
 			</cfquery>
-		
+
+			<cfset result.success = true>
+    		<cfset result.message = "Record is Deleted successfully.">
+
 			<cfcatch type="any">
-				<cfset success = false />
+				<!--- <cfset success = false /> --->
+				<cfset result.success = false>
+            	<cfset result.message = cfcatch.message>
 			</cfcatch>
 		</cftry>
 	
-		<cfreturn success />
+		<cfreturn result />
 	
 	</cffunction>
 	
