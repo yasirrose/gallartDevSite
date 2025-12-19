@@ -24,14 +24,14 @@ getTitle = function(){
 // unique to make offer module - shows seller email if not null 
 function gridChange(uid,customer_email,seller_email) {
 		document.getElementById('artImg').innerHTML = '<a href="http://<cfoutput>#server_name#</cfoutput>/img/'+uid+'.jpg" target="_blank"><img src="http://<cfoutput>#server_name#</cfoutput>/img/thumbnails/'+uid+'.jpg" border="0"></a>';
-		document.getElementById('emailLink').innerHTML = '<a href="mailto:'+customer_email+'" style="color: #000000; text-decoration: none;">[SEND EMAIL]</a>';
-		document.getElementById('mailLog').innerHTML = '<a href="##" onclick="openMailLogWindow(<cfoutput>#session.userinfo.pk_employees#</cfoutput>,4,' + uid + ',\'' + customer_email + '\');" style="color: #000000; text-decoration: none;">[VIEW EMAIL LOG]</a>';
+		document.getElementById('emailLink').innerHTML = '<a href="mailto:'+customer_email+'" style="color: black; text-decoration: none;">[SEND EMAIL]</a>';
+		document.getElementById('mailLog').innerHTML = '<a href="##" onclick="openMailLogWindow(<cfoutput>#session.userinfo.pk_employees#</cfoutput>,4,' + uid + ',\'' + customer_email + '\');" style="color: black; text-decoration: none;">[VIEW EMAIL LOG]</a>';
 		if(seller_email == 'null'){
 			document.getElementById('emailLinkSeller').innerHTML = '';
 			document.getElementById('displaySellerInfo').style.display = 'none';
 		}
 		else{
-			document.getElementById('emailLinkSeller').innerHTML = '<a href="mailto:'+seller_email+'" style="color: ##000000; text-decoration: none;">[SEND EMAIL]</a>';
+			document.getElementById('emailLinkSeller').innerHTML = '<a href="mailto:'+seller_email+'" style="color: black; text-decoration: none;">[SEND EMAIL]</a>';
 			document.getElementById('displaySellerInfo').style.display = 'block';
 		}
 		
@@ -44,8 +44,12 @@ function doEdit(type) {
     var edit = new admin.models.makeoffer();
 
      edit.setForm("editForm");
-    	
-    	if ( edit.deleteMakeoffer()) {
+	
+	 result = edit.deleteMakeoffer();
+
+	 console.log('test offer: ' , result)
+
+    	if ( result.SUCCESS === true) {
           ColdFusion.Grid.refresh('data',true);
 
 		  toastr.options = {
@@ -66,10 +70,10 @@ function doEdit(type) {
 			"hideMethod": "fadeOut"
 		};
 
-		toastr.success('Record is Deleted Successfully');
+		toastr.success(result.MESSAGE);
 
       } 
-      else { alert( 'There was a problem in the processing.')}
+      else { alert( result.MESSAGE)}
 
  	document.getElementById('delete').style.display = '';
 }

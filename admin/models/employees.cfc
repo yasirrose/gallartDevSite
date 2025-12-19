@@ -55,7 +55,7 @@
 	
    	</cffunction>
 	
-	<cffunction name="editEmployeeFromForm" access="remote" output="false" returntype="boolean">
+	<cffunction name="editEmployeeFromForm" access="remote" output="false" returntype="struct">
 	    <cfargument name="pk_employees" type="string" default="">
 	    <cfargument name="emp_fname" type="string" default="">
 	    <cfargument name="emp_lname" type="string" default="">
@@ -67,7 +67,9 @@
 		<cfargument name="commission_percent" type="numeric" default="">
 		<cfargument name="moduleName" type="string" default="">
 	    
-	    <cfset var success = true />
+	    <!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 		
 	    	<cftry>
 
@@ -80,8 +82,11 @@
 					<cfif arguments.pk_employees eq ''>
 
 						<cfif checkPassword.passwordCount GT 0>
-							<cfset success = false />
-						<cfelse>
+							<!--- <cfset success = false /> --->
+							<cfset result.success = false>
+    				    	<cfset result.message = "Your Password is already exist. Please change your password">
+							<cfreturn result>
+						 <cfelse>
 		    	
 							<cfquery name="addEmployee" datasource="#application.dsource#"> 
 								INSERT into employees
@@ -120,6 +125,9 @@
 									( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 							</cfquery>
 
+							<cfset result.success = true>
+    				    	<cfset result.message = "Record is added successfully.">
+
 						</cfif>
 
 					 <cfelse>
@@ -153,6 +161,9 @@
 								VALUES
 								( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 						</cfquery>
+
+						<cfset result.success = true>
+    				    <cfset result.message = "Record is Updated successfully.">
 					
 					</cfif>
 					
@@ -174,18 +185,22 @@
 					</cfif>					    	    	
 			
 				<cfcatch type="any">
-					<cfset success = false />
+					<!--- <cfset success = false /> --->
+					<cfset result.success = false>
+                    <cfset result.message = cfcatch.detail>
 				</cfcatch>
 			</cftry>
 			
-		<cfreturn success> 
+		<cfreturn result> 
 	        
 	</cffunction>
 	
-	<cffunction name="deleteEmployee" access="remote">
+	<cffunction name="deleteEmployee" access="remote" returntype="struct">
 		<cfargument name="pk_employees" type="string" default="">
 		
-		<cfset var success = true />
+		<!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 		
 		<cftry>
 	
@@ -209,13 +224,18 @@
 					VALUES
 					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 			</cfquery>
+
+			<cfset result.success = true>
+    		<cfset result.message = "Record is Deleted successfully.">
 		
 			<cfcatch type="any">
-				<cfset success = false />
+				<!--- <cfset success = false /> --->
+				<cfset result.success = false>
+                <cfset result.message = cfcatch.detail>
 			</cfcatch>
 		</cftry>
 	
-		<cfreturn success />
+		<cfreturn result />
 	
 	</cffunction>
 	

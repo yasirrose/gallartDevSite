@@ -61,11 +61,13 @@
    	</cffunction>
 	
 		
-	<cffunction name="deleteMakeoffer" access="remote">
+	<cffunction name="deleteMakeoffer" access="remote" returntype="struct">
 		<cfargument name="pk_makeoffer" type="string" default="">		
 		
-		<cfset var success = true />
+		<!--- <cfset var success = true /> --->
 		
+		<cfset var result = { success = true, message = "" }>
+
 		<cftry>
 	
 			<cfquery name="deleteGuest" datasource="#application.dsource#"> 
@@ -83,13 +85,18 @@
 					VALUES
 					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
 			</cfquery>
+
+			<cfset result.success = true>
+    		<cfset result.message = "Record is Deleted successfully.">
 		
 			<cfcatch type="any">
-				<cfset success = false />
+				<!--- <cfset success = false /> --->
+				<cfset result.success = false>
+            	<cfset result.message = cfcatch.message>
 			</cfcatch>
 		</cftry>
 	
-		<cfreturn success />
+		<cfreturn result />
 	
 	</cffunction>
 	

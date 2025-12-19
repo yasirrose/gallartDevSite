@@ -4,9 +4,11 @@
             <cfargument name="filterName" type="string" required="true">
             <cfargument name="filterType" type="string" required="true">
             
-            <cfset var result = structNew()>
+            <!--- <cfset var result = structNew()>
             <cfset result.success = false>
-            <cfset result.message = "">
+            <cfset result.message = ""> --->
+
+            <cfset var result = { success = true, message = "" }>
     
             <cftry>
                 <!-- Check if the filterName and filterType combination already exists -->
@@ -33,7 +35,7 @@
                                 <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.filterType#">
                             )
                         </cfquery>
-                        <cfset result.message = "Record added successfully.">
+                        
 
                         <cfset moduleName = 'Filter Option'>
                         <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
@@ -47,6 +49,9 @@
                                 ( '#moduleName#', '#ipAddress#', #date#, '#action#')
                         </cfquery>
 
+                        <cfset result.success = true>
+    				    <cfset result.message = "Record is added successfully.">
+
                     <cfelse>
                         <cfquery name="updateFilterData" datasource="#application.dsource#">
                             UPDATE filterOption SET 
@@ -54,7 +59,7 @@
                                 filterType = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.filterType#">
                             WHERE id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.id#">
                         </cfquery>
-                        <cfset result.message = "Record updated successfully.">
+                        
 
                         <cfset moduleName = 'Filter Option'>
                         <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
@@ -68,14 +73,18 @@
                                 ( '#moduleName#', '#ipAddress#', #date#, '#action#')
                         </cfquery>
 
+                        <cfset result.success = true>
+    				    <cfset result.message = "Record is Updated successfully.">
+
                     </cfif>
-                    <cfset result.success = true>
+                    
                 <cfelse>
+                    <cfset result.success = false>
                     <cfset result.message = "The combination of Filter Name and Filter Type already exists.">
                 </cfif>
                 <cfcatch type="any">
                     <cfset result.success = false>
-                    <cfset result.message = "An error occurred: #cfcatch.message#">
+                    <cfset result.message = cfcatch.detail>
                 </cfcatch>
             </cftry>
     
@@ -125,10 +134,12 @@
         <cfreturn success>
     </cffunction> --->
 
-    <cffunction name="deleteEmployee" access="remote" output="false" returntype="boolean">
+    <cffunction name="deleteEmployee" access="remote" output="false" returntype="struct">
         <cfargument name="id" type="string" required="true">
         
-        <cfset var success = true />
+        <!--- <cfset var success = true /> --->
+
+        <cfset var result = { success = true, message = "" }>
         
         <cftry>
             <!--- Check if the ID is provided --->
@@ -150,14 +161,19 @@
                         ( '#moduleName#', '#ipAddress#', #date#, '#action#')
                 </cfquery>
 
+                <cfset result.success = true>
+    		    <cfset result.message = "Record is Deleteddd successfully.">
+
             </cfif>
             <cfcatch type="any">
-                <cfset success = false />
+                <!--- <cfset success = false /> --->
+                <cfset result.success = false>
+            	<cfset result.message = cfcatch.detail>
             </cfcatch>
         </cftry>
         
         <!--- Returning true if the execution reaches this point --->
-        <cfreturn success>
+        <cfreturn result>
     </cffunction>
     
 

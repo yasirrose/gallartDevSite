@@ -58,10 +58,13 @@ function doEdit(type) {
     var editBtn = document.getElementById('edit');
 	var deleteBtn = document.getElementById('delete');
 
-    if (filterName === '' || filterType === '') {
+    <!--- if (filterName === '' || filterType === '') {
         alert('Please fill out all fields.');
         return; 
-    }
+    } --->
+
+    if (filterName === '' || filterType === '') return alert('Please fill out all fields.');
+
     var edit = new admin.models.filterOption();
 
     edit.setForm("editForm");
@@ -93,7 +96,9 @@ function doEdit(type) {
 		    deleteBtn.disabled = true;
 
             result = edit.addFilterRecord();
-            
+              
+            <!--- console.log('test update: ' , result) --->
+
             if (result.SUCCESS === true) {
 
                  alert(result.MESSAGE);
@@ -115,25 +120,35 @@ function doEdit(type) {
             }
     }
     else if (type == 'delete'){
-        if ( edit.deleteEmployee()) {
 
-            alert('Record is Deleted Successfully');
+         result = edit.deleteEmployee();
+
+         <!--- console.log('test delete: ' , result) --->
+
+        if ( result.SUCCESS === true) {
+
+            alert(result.MESSAGE);
             ColdFusion.Grid.refresh('data', true);
         } 
         else { 
-            alert( 'There was a problem in the processing.')
+            alert( result.MESSAGE)
         }
    }
     <!--- document.getElementById('edit').value = 'Edit';
     document.getElementById('delete').style.display = ''; --->
 
-    if (document.getElementById('id').value === '') {
+    <!--- if (document.getElementById('id').value === '') {
 		document.getElementById('edit').value = 'Add';
 		document.getElementById('delete').style.display = 'none';
 	} else{
 		document.getElementById('edit').value = 'Edit';
 		document.getElementById('delete').style.display = ''; 
-	}
+	} --->
+
+    const hasId = document.getElementById('id').value !== '';
+
+    document.getElementById('edit').value = hasId ? 'Edit' : 'Add';
+    document.getElementById('delete').style.display = hasId ? '' : 'none';
 }
 
 // clear all fields when new is clicked

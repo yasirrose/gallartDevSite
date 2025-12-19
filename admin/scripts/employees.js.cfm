@@ -103,8 +103,10 @@ function doEdit(type) {
 
         var result = edit.editEmployeeFromForm(); 
 
-        if (result) {
-		console.log(result);		
+		console.log('test emp: ',result);
+
+        if (result.SUCCESS == true) {
+				
             
 			toastr.options = {
 				"closeButton": true,
@@ -124,7 +126,7 @@ function doEdit(type) {
 				"hideMethod": "fadeOut"
 			};
 
-            toastr.success('Data is Updated Successfully!');
+            toastr.success(result.MESSAGE);
 			ColdFusion.Grid.refresh('data', true);
 
 			setTimeout(function () {
@@ -133,7 +135,7 @@ function doEdit(type) {
 			}, 5000);
 
         } else {
-            alert('Your Password is already exist. Please change your password');
+            alert(result.MESSAGE);
 
 				editBtn.disabled = false;
 				deleteBtn.disabled = false;				
@@ -147,7 +149,9 @@ function doEdit(type) {
 		editBtn.disabled = true;
 		deleteBtn.disabled = true;
 
-		if ( edit.deleteEmployee()) {
+		var result = edit.deleteEmployee(); 
+
+		if ( result.SUCCESS == true) {
 
 			toastr.options = {
 				"closeButton": true,
@@ -167,7 +171,7 @@ function doEdit(type) {
 				"hideMethod": "fadeOut"
 			};
 
-			toastr.success('Data is Deleted Successfully!');
+			toastr.success(result.MESSAGE);
 			ColdFusion.Grid.refresh('data',true);
 
 			setTimeout(function () {
@@ -176,25 +180,32 @@ function doEdit(type) {
 			}, 5000);
 		} 
 		else { 
-				alert( 'There was a problem in the processing.')
+				alert( result.MESSAGE)
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
 			}
     }
 	<!--- document.getElementById('edit').value = 'Edit';
 	document.getElementById('delete').style.display = ''; --->
 
-	if (document.getElementById('pk_employees').value === '') {
+	<!--- if (document.getElementById('pk_employees').value === '') {
 		document.getElementById('edit').value = 'Add';
 		document.getElementById('delete').style.display = 'none';
 	} else{
 		document.getElementById('edit').value = 'Edit';
 		document.getElementById('delete').style.display = ''; 
-	}
+	} --->
+
+	const hasId = document.getElementById('pk_employees').value !== '';
+
+    document.getElementById('edit').value = hasId ? 'Edit' : 'Add';
+    document.getElementById('delete').style.display = hasId ? '' : 'none';
 }
 
 // clear all fields when new is clicked
 
 function showNew () {
-   	document.getElementById('pk_employees').value = '';
+   	<!--- document.getElementById('pk_employees').value = '';
    	document.getElementById('emp_fname').value = '';
    	document.getElementById('emp_lname').value = '';
    	document.getElementById('emp_email').value = '';
@@ -206,6 +217,16 @@ function showNew () {
    	document.getElementById('delete').style.display = 'none';
 	for(i = 0; i < document.editForm.roles.length; i++){
 		document.editForm.roles[i].checked = false;
-	}
+	} --->
+
+	['pk_employees', 'emp_fname', 'emp_lname', 'emp_email', 'emp_phone', 'password']
+        .forEach(id => document.getElementById(id).value = '');
+
+		document.getElementById('edit').value = 'Add';
+    	document.getElementById('delete').style.display = 'none';
+
+		Array.from(document.editForm.roles).forEach(role => role.checked = false);
+
+
 }
 	
