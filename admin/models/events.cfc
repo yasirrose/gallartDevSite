@@ -52,14 +52,18 @@
    	</cffunction>
 	
 	
-	<cffunction name="editEventsFromForm" access="remote" output="false" returntype="boolean">
+	<cffunction name="editEventsFromForm" access="remote" output="false" returntype="struct">
 	    <cfargument name="pk_event_registration_title" type="string" default="">
 	    <cfargument name="event_title" type="string" default="">
 		<cfargument name="event_date" type="string" default="">
 		<cfargument name="event_location" type="string" default="">
 		<cfargument name="isCurrent" type="string" default="">
+
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 			    
-	    <cfset var success = true />
+	    <!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 				
 	    	<cftry>
 	    
@@ -96,6 +100,9 @@
 							VALUES
 							( '#moduleName#', '#ipAddress#', #date#, '#action#')
 					</cfquery>
+
+					<cfset result.success = true>
+    				<cfset result.message = "Record is added successfully.">
 				
 				 <cfelse>
 				
@@ -131,20 +138,27 @@
 					WHERE pk_event_registration_title <> #thisId#
 					</cfquery>
 				</cfif>
+
+				<cfset result.success = true>
+    			<cfset result.message = "Record is Updated successfully.">
 	    			
 				<cfcatch type="any">
-					<cfset success = false />
+					<!--- <cfset success = false /> --->
+					<cfset result.success = false>
+                    <cfset result.message = cfcatch.detail>
 				</cfcatch>
 			</cftry> 
 			
-		<cfreturn success> 
+		<cfreturn result> 
 	        
 	</cffunction>
 
-	<cffunction name="deleteEvent" access="remote">
+	<cffunction name="deleteEvent" access="remote" returntype="struct">
 		<cfargument name="pk_event_registration_title" type="string" default="">
 		
-		<cfset var success = true />
+		<!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 		
 		<cftry>
 	
@@ -164,13 +178,19 @@
 					VALUES
 					( '#moduleName#', '#ipAddress#', #date#, '#action#')
 			</cfquery>
+
+			<cfset result.success = true>
+    		<cfset result.message = "Record is Deleted successfully.">
 		
 			<cfcatch type="any">
-				<cfset success = false />
+				<!--- <cfset success = false /> --->
+				<cfset result.success = false>
+                <cfset result.message = cfcatch.detail>
+
 			</cfcatch>
 		</cftry>
 	
-		<cfreturn success />
+		<cfreturn result />
 	
 	</cffunction>
 	
@@ -244,7 +264,7 @@
    	</cffunction>
 	
 	
-	<cffunction name="editRegistrationsFromForm" access="remote" output="false" returntype="boolean">
+	<cffunction name="editRegistrationsFromForm" access="remote" output="false" returntype="struct">
 	    <cfargument name="pk_event_registration" type="string" default="">
 	    <cfargument name="LNAME" type="string" default="">
 		<cfargument name="FNAME" type="string" default="">
@@ -260,98 +280,154 @@
 		<cfargument name="OTHER_ARTIST" type="string" default="">
 		<cfargument name="NUMBER_PEOPLE" type="string" default="">
 
+		<!--- <cfdump var="#arguments#" abort="true"> --->
+
 	    
-	    <cfset var success = true />
+	    <!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 		
 	    	<cftry>
 	    
-	    	<cfif arguments.pk_event_registration eq ''>
-		    	
-		    	<cfquery name="addRegistration" datasource="#application.dsource#"> 
-	               INSERT into event_registration
-					(	
-						LNAME,
-						FNAME,
-						ADDRESS1,
-						ADDRESS2,
-						CITY,
-						STATE,
-						ZIP,
-						COUNTRY,
-						PRIMARY_PHONE,
-						SECONDARY_PHONE,
-						EMAIL,
-						ART_INTERESTED,
-						OTHER_ARTIST,
-						NUMBER_PEOPLE
-					)
-					values
-					(
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LNAME#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FNAME#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDRESS1#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDRESS2#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CITY#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.STATE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ZIP#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.COUNTRY#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PRIMARY_PHONE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SECONDARY_PHONE#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EMAIL#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ART_INTERESTED#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.OTHER_ARTIST#">,
-						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NUMBER_PEOPLE#">
-					)
-	            </cfquery>
-		
-			
-			<cfelse>
-			
-				<cfquery name="editRegistrations" datasource="#application.dsource#"> 
-	                UPDATE event_registration SET 
-		                LNAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LNAME#">,
-						FNAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FNAME#">,
-						ADDRESS1 = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDRESS1#">,
-						ADDRESS2 = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDRESS2#">,
-						CITY = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CITY#">,
-						STATE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.STATE#">,
-						ZIP = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ZIP#">,
-						COUNTRY = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.COUNTRY#">,
-						PRIMARY_PHONE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PRIMARY_PHONE#">,
-						SECONDARY_PHONE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SECONDARY_PHONE#">,
-						EMAIL = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EMAIL#">,
-						ART_INTERESTED = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ART_INTERESTED#">,
-						OTHER_ARTIST = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.OTHER_ARTIST#">,
-						NUMBER_PEOPLE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NUMBER_PEOPLE#">
-	                WHERE pk_event_registration = #arguments.pk_event_registration#
-	            </cfquery>
-			
-			</cfif>
+				<cfif arguments.pk_event_registration eq ''>
+					
+					<cfquery name="addRegistration" datasource="#application.dsource#"> 
+					INSERT into event_registration
+						(	
+							LNAME,
+							FNAME,
+							ADDRESS1,
+							ADDRESS2,
+							CITY,
+							STATE,
+							ZIP,
+							COUNTRY,
+							PRIMARY_PHONE,
+							SECONDARY_PHONE,
+							EMAIL,
+							ART_INTERESTED,
+							OTHER_ARTIST,
+							NUMBER_PEOPLE
+						)
+						values
+						(
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LNAME#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FNAME#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDRESS1#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDRESS2#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CITY#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.STATE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ZIP#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.COUNTRY#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PRIMARY_PHONE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SECONDARY_PHONE#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EMAIL#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ART_INTERESTED#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.OTHER_ARTIST#">,
+							<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NUMBER_PEOPLE#">
+						)
+					</cfquery>
+					
+					<cfset moduleName = 'Manage Event'>
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Add'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#moduleName#', '#ipAddress#', #date#, '#action#')
+					</cfquery>
+					
+					<cfset result.success = true>
+					<cfset result.message = "Record is Added successfully.">
+				
+				 <cfelse>
+				
+					<cfquery name="editRegistrations" datasource="#application.dsource#"> 
+						UPDATE event_registration SET 
+							LNAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.LNAME#">,
+							FNAME = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.FNAME#">,
+							ADDRESS1 = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDRESS1#">,
+							ADDRESS2 = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ADDRESS2#">,
+							CITY = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.CITY#">,
+							STATE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.STATE#">,
+							ZIP = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ZIP#">,
+							COUNTRY = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.COUNTRY#">,
+							PRIMARY_PHONE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.PRIMARY_PHONE#">,
+							SECONDARY_PHONE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.SECONDARY_PHONE#">,
+							EMAIL = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.EMAIL#">,
+							ART_INTERESTED = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.ART_INTERESTED#">,
+							OTHER_ARTIST = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.OTHER_ARTIST#">,
+							NUMBER_PEOPLE = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.NUMBER_PEOPLE#">
+						WHERE pk_event_registration = #arguments.pk_event_registration#
+					</cfquery>
+
+					<cfset moduleName = 'Manage Event'>
+					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+					<cfset date = now()>				
+					<cfset action = 'Update'>
+
+					<cfquery name="addLog" datasource="#application.dsource#" >
+						INSERT INTO logs 
+							( moduleName, ipAddress, date, action)
+							VALUES
+							( '#moduleName#', '#ipAddress#', #date#, '#action#')
+					</cfquery>
+					
+					<cfset result.success = true>
+					<cfset result.message = "Record is Updatedddd successfully.">
+				
+				</cfif>
 	    
 	    			
-			<cfcatch type="any"><cfset success = false /></cfcatch>
+				<cfcatch type="any">
+					<!--- <cfset success = false /> --->
+					<cfset result.success = false>
+					<cfset result.message = cfcatch.detail>
+				</cfcatch>
 			</cftry>
 			
-		<cfreturn success> 
+		<cfreturn result> 
 	        
 	</cffunction>
 	
-	<cffunction name="deleteRegistration" access="remote">
+	<cffunction name="deleteRegistration" access="remote" returntype="struct">
 		<cfargument name="pk_event_registration" type="string" default="">
 		
-		<cfset var success = true />
+		<!--- <cfset var success = true /> --->
 		
 		<cftry>
 	
-		<cfquery name="deleteRegistration" datasource="#application.dsource#"> 
-           	DELETE from event_registration
-            WHERE pk_event_registration = #arguments.pk_event_registration#
-        </cfquery>
+			<cfquery name="deleteRegistration" datasource="#application.dsource#"> 
+				DELETE from event_registration
+				WHERE pk_event_registration = #arguments.pk_event_registration#
+			</cfquery>
+
+			<cfset moduleName = 'Manage Event'>
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
+			
+			<cfset result.success = true>
+			<cfset result.message = "Record is Deleteddddd successfully.">
 		
-		<cfcatch type="any"><cfset success = false /></cfcatch>
+			<cfcatch type="any">
+				<!--- <cfset success = false /> --->
+				<cfset result.success = false>
+				<cfset result.message = cfcatch.detail>
+			</cfcatch>
 		</cftry>
 	
-		<cfreturn success />
+		<cfreturn result />
 	
 	</cffunction>
 	

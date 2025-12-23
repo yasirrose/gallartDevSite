@@ -35,28 +35,37 @@ function doEdit(type) {
     
     if (type == 'edit'){
 
-		if (title === '') {
+		const validateField = (value, id, message) => 
+		value === '' ? (toastr.error(message), document.getElementById(id).focus(), false) : true;
+
+		if (!validateField(title, 'event_title', 'Title is required.')) return false;
+		if (!validateField(date, 'event_date', 'Date is required.')) return false;
+		if (!validateField(location, 'event_location', 'Location is required.')) return false;
+
+		<!--- if (title === '') {
 			toastr.error('Title is required.');
 			document.getElementById('event_title').focus();
 			return false;
-		}
+		} --->
 
-		if (date === '') {
+		<!--- if (date === '') {
 			toastr.error('Date is required.');
 			document.getElementById('event_date').focus();
 			return false;
-		}
+		} --->
 
-		if (location === '') {
+		<!--- if (location === '') {
 			toastr.error('Location is required.');
 			document.getElementById('event_location').focus();
 			return false;
-		}
+		} --->
 
 		editBtn.disabled = true;
 		deleteBtn.disabled = true;
+
+		result = edit.editEventsFromForm();
     		
-		if ( edit.editEventsFromForm()) {
+		if ( result.SUCCESS === true) {
 
 				toastr.options = {
 					"closeButton": true,
@@ -77,7 +86,7 @@ function doEdit(type) {
 				};
 
 			ColdFusion.Grid.refresh('data',true);
-			toastr.success('Data is Added or Updated Successfully!'); 
+			toastr.success(result.MESSAGE); 
 
 			setTimeout(function () {
 				editBtn.disabled = false;
@@ -85,7 +94,9 @@ function doEdit(type) {
 			}, 5000);
 		} 
 		else { 
-			alert( 'There was a problem in the processing.')
+			alert( result.MESSAGE)
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
 		}
       }
    else {
@@ -97,7 +108,9 @@ function doEdit(type) {
 		editBtn.disabled = true;
 		deleteBtn.disabled = true;
 
-		if ( edit.deleteEvent()) {
+		result = edit.deleteEvent();
+
+		if ( result.SUCCESS === true) {
 
 			 toastr.options = {
 				"closeButton": true,
@@ -118,7 +131,7 @@ function doEdit(type) {
 			};
 
 			ColdFusion.Grid.refresh('data',true);
-			toastr.success('Record is Deleted Successfully'); 
+			toastr.success(result.MESSAGE); 
 		
 			setTimeout(function () {
 				editBtn.disabled = false;
@@ -127,7 +140,7 @@ function doEdit(type) {
 		} 
      	else 
 			{ 
-				alert( 'There was a problem in the processing.')
+				alert( result.MESSAGE)
 			}
       }
       

@@ -1,3 +1,4 @@
+//
 getLname = function(){
 	   var s = ColdFusion.getElementValue('searchLname');
 	   return s;
@@ -45,15 +46,35 @@ function doEdit(type) {
 	var editBtn = document.getElementById('edit');
 	var deleteBtn = document.getElementById('delete');
 
+	var fname = document.getElementById('fname').value;
+	var lname = document.getElementById('lname').value;
+	var email = document.getElementById('email').value;
+
     var edit = new admin.models.events();
     edit.setForm("editForm");
     
     if (type == 'edit'){
 
+		const validateField = (value, id, message) => 
+		value === '' ? (toastr.error(message), document.getElementById(id).focus(), false) : true;
+
+		// Validate required fields
+		if (!validateField(fname, 'fname', 'First Name is required.')) return false;
+		if (!validateField(lname, 'lname', 'Last Name is required.')) return false;
+
+		// Email validation
+		if (!validateField(email, 'email', 'Email is required.')) return false;
+
+		const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailPattern.test(email)) 
+			return (toastr.error('Please enter a valid email address.'), document.getElementById('email').focus(), false); 
+
 		editBtn.disabled = true;
 		deleteBtn.disabled = true;
+
+		result = edit.editRegistrationsFromForm();
     		
-     if ( edit.editEventsFromForm()) {
+		if ( result.SUCCESS === true) {
 
 			toastr.options = {
 				"closeButton": true,
@@ -73,18 +94,22 @@ function doEdit(type) {
 				"hideMethod": "fadeOut"
 			};
 
-         
-		 toastr.success('Data is Updated Successfully!');
-		 ColdFusion.Grid.refresh('data',true);
+			
+			toastr.success(result.MESSAGE);
+			ColdFusion.Grid.refresh('data',true);
 
-		 setTimeout(function () {
-			editBtn.disabled = false;
-			deleteBtn.disabled = false;
-		}, 5000);
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
 
-     } 
-     else { alert( 'There was a problem in the processing.')}
-      }
+		} 
+     	else { 
+			alert( result.MESSAGE)
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+		}
+    }
    else {
 	
 		if (!confirm('Delete -- ARE YOU SURE? ')) {
@@ -94,36 +119,40 @@ function doEdit(type) {
 		editBtn.disabled = true;
 		deleteBtn.disabled = true;
 
-   	if ( edit.deleteEvent()) {
+		if ( edit.deleteEvent()) {
 
-		toastr.options = {
-			"closeButton": true,
-			"debug": false,
-			"newestOnTop": true,
-			"progressBar": true,
-			"positionClass": "toast-center",
-			"preventDuplicates": false,
-			"onclick": null,
-			"showDuration": "300",
-			"hideDuration": "1000",
-			"timeOut": "3000",
-			"extendedTimeOut": "1000",
-			"showEasing": "swing",
-			"hideEasing": "linear",
-			"showMethod": "fadeIn",
-			"hideMethod": "fadeOut"
-		};
+			toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-center",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "3000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
 
-		 toastr.success('Record is Deleted Successfully'); 
-         ColdFusion.Grid.refresh('data',true);
+			toastr.success(result.MESSAGE); 
+			ColdFusion.Grid.refresh('data',true);
 
-		setTimeout(function () {
-			editBtn.disabled = false;
-			deleteBtn.disabled = false;
-		}, 5000);
-     } 
-     else { alert( 'There was a problem in the processing.')}
-      }
+			setTimeout(function () {
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+			}, 5000);
+		} 
+     	else { 
+			alert( result.MESSAGE)
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
+		}
+    }
       
 	document.getElementById('edit').value = 'Edit';
 	document.getElementById('delete').style.display = '';
