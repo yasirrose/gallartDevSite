@@ -3,29 +3,54 @@
 
 	email = new admin.models.email();
 
-	if( url.keyExists( 'id' ) ) {
-		emailTemplate = email.getEmailTemplate( url.id );
+	if (url.keyExists('id')) {
+		emailTemplate = email.getEmailTemplate(url.id);
 	}
 
-	if( form.keyExists( 'fieldnames' ) ) {
-		email.saveEmailTemplate(
-			pk_emailtemplate=form.id
-			,email_name=form.txtEmailName
-			,email_content=form.txtEmailContent
-		);
+	// Variables to store response
+	resultMessage = "";
+	success = false; // default is false
 
-		writeOutput( '
-			<script>
-				window.opener.location.reload();
-				window.close();
-			</script>
-		' );
+	if (structKeyExists(form, 'fieldnames')) {
+		try {
+			// Attempt to save email template
+			resultMessage = email.saveEmailTemplate(
+				pk_emailtemplate=form.id,
+				email_name=form.txtEmailName,
+				email_content=form.txtEmailContent
+			);
+			
+			// If saveEmailTemplate executes without throwing, success = true
+			// success = true;
+			if (listFindNoCase("EmailTemplate Added,EmailTemplate Updated", resultMessage)) {
+				success = true;
+			} else {
+				success = false;
+			}
+		} catch (any e) {
+			// If any error occurs, set success = false
+			resultMessage = e.message; // or e.detail
+			success = false;
+		}
 	}
 </cfscript>
 
+
 <cfoutput>
+
+	     <cfif len(resultMessage)>
+			<script>
+				alert("#JSStringFormat(resultMessage)#"); // show the actual error message
+				// Only close window if operation was successful
+				<cfif success>
+					window.opener.location.reload();
+					window.close();
+				</cfif>
+			</script>
+		</cfif>
 	<cfform name="frmEmailTemplate" onsubmit="return validateEmailForm()">
 		<input type="hidden" name="id" value="#url.id#" />
+		<input type="hidden" name="fieldnames" value="1">
 
 		<table width="100%">
 			<tr>

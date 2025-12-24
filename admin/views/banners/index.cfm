@@ -9,9 +9,9 @@
 
 
 		
-    <cfif isDefined('form.actionType') and form.actionType eq 'Add'>
+    <!--- <cfif isDefined('form.actionType') and form.actionType eq 'Add'>
         <cftry>    
-            <!--- Save banner details into the database --->
+            
             <cfquery name="qSaveData" datasource="#application.dsource#">
                 INSERT INTO banners (
                     bannerName,
@@ -41,7 +41,7 @@
 					( '#moduleName#', '#ipAddress#', #date#, '#action#')
 			</cfquery>
     
-            <!--- Upload Image and Save to Directory --->
+           
             <cfif len(form.bannerImage)>
 
 				<cfset path = "#application.ppath#/images/banners/" />
@@ -73,8 +73,7 @@
     
             <cfoutput>
                 <script>
-                    // alert('Data Added Successfully!');
-					// toastr.success('Data Updated Successfully');
+                 
 
 					<cfif structKeyExists(session, "ext") AND session.ext EQ true>
 						toastr.error("Invalid image format. Only JPG and PNG allowed.");
@@ -154,7 +153,7 @@
 	
 			<cfoutput>
 				<script>
-					// alert('Data Updateddd Successfully!');
+					
 
 					<cfif structKeyExists(session, "ext") AND session.ext EQ true>
 						toastr.error("Invalid image format. Only JPG and PNG allowed.");
@@ -162,7 +161,7 @@
 						toastr.success("Data Updated Successfully");
 					</cfif>
 
-					// toastr.success('Data Updated Successfully');
+					
 				</script>
 			</cfoutput>
 
@@ -174,7 +173,7 @@
 				<cfdump var="#cfcatch#" abort="true">
 			</cfcatch>
 		</cftry>
-	</cfif>
+	</cfif> --->
 
     
     
@@ -324,11 +323,13 @@
 										<cfinput type="hidden" value="#deleteChecck#" name="deleteCheck" id="deleteCheck" >
 										<!--- <cfinput type="submit" name="edit" id="Add" value="Add"  style="display:none;" />
 										<cfinput type="submit" name="edit" id="edit" value="Edit"  onclick="doEdit('edit');" style="#buttonStyle#" /> --->
+										
 
-										<cfinput type="button" name="add_btn" id="Add" value="Add" onclick="return handleAction(this,'Add');" style="display:none;" />
-										<cfinput type="button" name="edit_btn" id="edit" value="Edit" onclick="return handleAction(this,'Edit');" style="#buttonStyle#" />
-									
-										<cfinput type="submit" name="delete" id="delete" value="Delete" onclick="return confirmDelete();" style="#buttonStyle#" />
+										<!--- <cfinput type="button" name="add_btn" id="Add" value="Add" onclick="return handleAction(this,'Add');" style="display:none;" />
+										<cfinput type="button" name="edit_btn" id="edit" value="Edit" onclick="return handleAction(this,'Edit');" style="#buttonStyle#" /> --->
+											
+										<cfinput type="button" name="edit" id="edit" value="Edit"  onclick="editListing();"/>
+										<cfinput type="button" name="delete" id="delete" value="Delete" onclick="return confirmDelete();"  />
 									</td>			
 								</tr>
 							</table>
@@ -350,37 +351,46 @@
 					}, 1000);
 				});
 				function doEdit(type) {
-					<!--- <cfdump var="#type#" abort=true> --->
+
+					// Debug (use console.log instead of cfdump)
+					// console.log(type);
+
 					var filterName = document.getElementById('bannerName').value.trim();
 					var filterType = document.getElementById('bannerType').value.trim();
 
-					
 					var edit = new admin.models.banners();
-
-					
-
-					if (type == 'edit'){
-							if (filterName === '' || filterType === '') {
-							alert('Please fill out all fields.');
-							return; 
-						}
-					}
-
 					edit.setForm("editForm");
-						if (type == 'edit'){
-					
-					}
-					else if (type == 'delete'){
 
-						if ( edit.deleteEmployee()) {
-							// ColdFusion.Grid.refresh('data', true);
-							toastr.success("Data is Deleted Successfully");
-						} 
-
-					else {
-						alert( 'There was a problem in the processing.')
+					if (type === 'edit') {
+						if (filterName === '' || filterType === '') {
+							alert('Please fill out all fields.');
+							return;
 						}
+
+						
+						// call edit method here if required
+						// edit.updateEmployee();
+
+					} 
+					else if (type === 'delete') {
+
+						var result = edit.deleteEmployee();
+
+						console.log('test result' , result)
+						// return false;
+
+						if (result.SUCCESS === true) {
+							alert(result.MESSAGE);
+							ColdFusion.Grid.refresh('data', true);
+						} else {
+							alert(result.MESSAGE);
+						}
+
+					} 
+					else {
+						alert('There was a problem in the processing.');
 					}
+
 					document.getElementById('edit').value = 'Edit';
 					document.getElementById('delete').style.display = '';
 				}
@@ -416,62 +426,140 @@
 					return true;
 				}
 
-				var formSubmitted = false;
+				// var formSubmitted = false;
 
-				function handleAction(btn, action) {
-					console.log('handleAction');
-					var form = btn.form || document.forms['editForm'];
-					if (!form) return false;
+				// function handleAction(btn, action) {
+				// 	console.log('handleAction');
+				// 	var form = btn.form || document.forms['editForm'];
+				// 	if (!form) return false;
 
-					// Run HTML5 validation first (if any required fields exist)
-					if (typeof form.checkValidity === 'function' && !form.checkValidity()) {
-						if (typeof form.reportValidity === 'function') form.reportValidity();
-						return false;
-					}
-					console.log('handleActionww');
-					// if (formSubmitted) return false;
-					// formSubmitted = true;
+				// 	// Run HTML5 validation first (if any required fields exist)
+				// 	if (typeof form.checkValidity === 'function' && !form.checkValidity()) {
+				// 		if (typeof form.reportValidity === 'function') form.reportValidity();
+				// 		return false;
+				// 	}
+				// 	console.log('handleActionww');
+				// 	// if (formSubmitted) return false;
+				// 	// formSubmitted = true;
 
-					// Set hidden 'edit' field so CF receives the action (preserves existing server checks)
-					var editField = document.getElementById('actionType');
-					if (editField) editField.value = action;
+				// 	// Set hidden 'edit' field so CF receives the action (preserves existing server checks)
+				// 	var editField = document.getElementById('actionType');
+				// 	if (editField) editField.value = action;
+
+				// 	var bannerName = document.getElementById('bannerName').value.trim();
+				// 	var bannerType = document.getElementById('bannerType').value.trim();
+				// 	console.log('handleActionwww');
+				// 	if(bannerName == ''){
+				// 		alert('Please add Banner Name');
+				// 		console.log('test1');
+				// 		return false;
+				// 	} else if(bannerType == ''){
+				// 		alert('Please add Banner Type');
+				// 		console.log('test2');
+				// 		return false;
+				// 	} else {
+				// 		try {
+				// 			btn.disabled = true;
+				// 			btn.value = action + 'ing...';
+				// 			console.log('test3');
+				// 		} catch(e) {}
+				// 	}
+				// 	console.log('handleActionw');
+				// 	// Disable & give feedback
+					
+
+				// 	// Disable all other buttons to prevent double-clicks
+				// 	var elems = form.querySelectorAll('input[type=submit], input[type=button], button');
+				// 	elems.forEach(function(el){ el.disabled = true; });
+
+				// 	// Small delay to ensure DOM updates, then submit the form programmatically
+				// 	setTimeout(function(){
+				// 		if (typeof form.requestSubmit === 'function') {
+				// 			form.requestSubmit(); // better for HTML5 submit handling when available
+				// 		} else {
+				// 			form.submit();
+				// 		}
+				// 	}, 10);
+
+				// 	return false;
+				// }
+
+
+				function editListing() {
+					var form = document.getElementById("editForm");
 
 					var bannerName = document.getElementById('bannerName').value.trim();
 					var bannerType = document.getElementById('bannerType').value.trim();
-					console.log('handleActionwww');
-					if(bannerName == ''){
-						alert('Please add Banner Name');
-						console.log('test1');
-						return false;
-					} else if(bannerType == ''){
-						alert('Please add Banner Type');
-						console.log('test2');
-						return false;
-					} else {
-						try {
-							btn.disabled = true;
-							btn.value = action + 'ing...';
-							console.log('test3');
-						} catch(e) {}
-					}
-					console.log('handleActionw');
-					// Disable & give feedback
 					
 
-					// Disable all other buttons to prevent double-clicks
-					var elems = form.querySelectorAll('input[type=submit], input[type=button], button');
-					elems.forEach(function(el){ el.disabled = true; });
+					var fileInput = form.querySelector('input[name="bannerImage"]');
 
-					// Small delay to ensure DOM updates, then submit the form programmatically
-					setTimeout(function(){
-						if (typeof form.requestSubmit === 'function') {
-							form.requestSubmit(); // better for HTML5 submit handling when available
-						} else {
-							form.submit();
+					var fileSizeLimit = 2000000;
+					var allowedTypes = ['image/jpeg', 'image/png'];
+    				var allowedExtensions = ['jpg', 'jpeg', 'png']; 
+
+					if (fileInput && fileInput.files.length > 0) {
+						var file = fileInput.files[0];
+
+						// Check file size
+						if (file.size > fileSizeLimit) {
+							alert("Please limit your image file upload to 2MB.");
+							return false;
 						}
-					}, 10);
 
-					return false;
+						// Check MIME type
+						if (!allowedTypes.includes(file.type)) {
+							alert("Only JPG and PNG images are allowed.");
+							return false;
+						}
+
+						// Optional: extra safety check using file extension
+						var fileName = file.name.toLowerCase();
+						var fileExtension = fileName.split('.').pop();
+
+						if (!allowedExtensions.includes(fileExtension)) {
+							alert("Only JPG and PNG images are allowed.");
+							return false;
+						}
+					}
+
+					const validateField = (value, id, message) => 
+					value === '' ? (alert(message), document.getElementById(id).focus(), false) : true;
+
+					// Validate required fields
+					if (!validateField(bannerName, 'bannerName', 'Banner Name is required.')) return false;
+					if (!validateField(bannerType, 'bannerType', 'Banner Type is required.')) return false;
+
+					// if (!validEntries(form)) return false;
+					// if (!disableButtons(form)) return false;
+
+
+					var formData = new FormData(form); 
+
+					
+
+					fetch("/admin/models/banners.cfc?method=updateBanner&returnformat=json", {
+						method: "POST",
+						body: formData
+					})
+					.then(res => res.json())
+					.then(data => {
+						console.log('test: ' , data)
+						
+						if (data.SUCCESS == false) {
+							alert(data.MESSAGE);
+							return;
+						}
+
+						alert(data.MESSAGE);
+
+						
+						window.location = "index.cfm?event=banners";
+					})
+					.catch(err => {
+						console.error(err);
+						alert("Error occurred.", err);
+					});
 				}
 
 			</script>

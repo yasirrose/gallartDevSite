@@ -27,7 +27,7 @@ function populateFormfilter(thisId){
         frm.bannerType.value = strEmployee['bannerType'];
         frm.bannerImages.value = strEmployee['bannerImage'];
         document.getElementById('edit').value = 'Edit';
-        document.getElementById('Add').style.display = 'none';
+        <!--- document.getElementById('Add').style.display = 'none'; --->
         document.getElementById('delete').style.display = 'block';
         document.getElementById('edit').style.display = 'block';
         var deleteCheck = document.getElementById('deleteCheck').value;
@@ -126,9 +126,9 @@ function showNew () {
     document.getElementById('bannerType').value = '';
     document.getElementById('bannerImages').value = '';
     document.getElementById('bannerImagesUrl').value = '';
-    document.getElementById('Add').style.display = 'block';
+    document.getElementById('edit').value = 'Add';
    	document.getElementById('delete').style.display = 'none';
-   	document.getElementById('edit').style.display = 'none';
+   	<!--- document.getElementById('edit').style.display = 'none'; --->
     document.getElementById('active').options[0].selected = true;
    
 }
