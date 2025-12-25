@@ -47,86 +47,64 @@
 
    	</cffunction>
 
-	<cffunction name="saveBio" access="remote">
-        <cfargument name="pk_bios" type="numeric" required="true" default="0">
-        <cfargument name="artist" type="string" required="true">
-        <cfargument name="bio" type="string" required="true">
+	<cffunction name="saveBio" access="remote" returntype="struct" output="false">
+		<cfargument name="pk_bios" type="numeric" required="true">
+		<cfargument name="artist" type="string" required="true">
+		<cfargument name="bio" type="string" required="true">
 
-		
+		<cfset var result = { success=false, message="" }>
 
-        <cftry>
-			<cfif arguments.pk_bios EQ "0">
+		<cftry>
 
-				<cfif arguments.artist neq '' and arguments.bio neq ''>
-					<cfquery datasource="#application.dsource#">
-						INSERT INTO bios
-						(
-							artist,
-							bio
-						)
-						VALUES
-						(
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.artist#">,
-							<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.bio#">
-						)
-					</cfquery>
-					
-					<cfset moduleName = 'Bios Module'>
-					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
-					<cfset date = now()>				
-					<cfset action = 'Insert'>
+			<cfif arguments.pk_bios EQ 0>
 
-					<cfquery name="addLog" datasource="#application.dsource#" >
-						INSERT INTO logs 
-							( moduleName, ipAddress, date, action)
-							VALUES
-							( '#moduleName#', '#ipAddress#', #date#, '#action#')
-					</cfquery>
-
-					<cfreturn "Bio Added">
-				 <cfelse>
-					<cfreturn "nodata">
-				</cfif>	
-
-                
-
-            <cfelse>
-
-				<cfif arguments.bio neq ''>
-					<cfquery datasource="#application.dsource#">
-						UPDATE bios SET
-							artist =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.artist#">,
-							bio = <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.bio#">
-						WHERE pk_bios = <cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.pk_bios#" />
-					</cfquery>
-
-					<cfset moduleName = 'Bios Module'>
-					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
-					<cfset date = now()>				
-					<cfset action = 'Update'>
-
-					<cfquery name="addLog" datasource="#application.dsource#" >
-						INSERT INTO logs 
-							( moduleName, ipAddress, date, action)
-							VALUES
-							( '#moduleName#', '#ipAddress#', #date#, '#action#')
-					</cfquery>
-
-					<cfreturn "Bio Updated">
-
-					<cfelse>
-						<cfreturn "nodata">
+				<cfif arguments.artist EQ "" OR arguments.bio EQ "">
+					<cfset result.message = "Please select the artist or add Bio">
+					<cfreturn result>
 				</cfif>
 
-                 
-            </cfif>
+				<cfquery datasource="#application.dsource#">
+					INSERT INTO bios (artist, bio)
+					VALUES (
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.artist#">,
+						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.bio#">
+					)
+				</cfquery>
 
-            <cfcatch>
-                <cfreturn cfcatch.detail>
-            </cfcatch>
-        </cftry>
+				<cfset result.success = true>
+				<cfset result.message = "Bio Added">
+				<cfreturn result>
 
-</cffunction>
+			<cfelse>
+
+				<cfif arguments.bio EQ "">
+					<cfset result.message = "Bio cannot be empty">
+					<cfreturn result>
+				</cfif>
+
+				<cfquery datasource="#application.dsource#">
+					UPDATE bios
+					SET
+						artist = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.artist#">,
+						bio    = <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.bio#">
+					WHERE pk_bios = <cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.pk_bios#">
+				</cfquery>
+
+				<cfset result.success = true>
+				<cfset result.message = "Bio Updated">
+				<cfreturn result>
+
+			</cfif>
+
+			<cfcatch>
+				<cfset result.success = false>
+				<cfset result.message = cfcatch.detail>
+				<cfreturn result>
+			</cfcatch>
+
+		</cftry>
+	</cffunction>
+
 
 <cffunction name="deleteBio" access="remote">
 	<cfargument name="pk_bios" required="true" type="string">

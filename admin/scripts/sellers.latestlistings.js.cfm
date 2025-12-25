@@ -95,11 +95,13 @@ function latestGridChange(thisId) {
 
 			editBtn.disabled = true;
 			deleteBtn.disabled = true;
+
+			var result = edit.editListingsFromForm();
       		
-			if ( edit.editListingsFromForm()) {
+			if ( result.SUCCESS == true) {
 				ColdFusion.Grid.refresh('data',true);
 				//populateFirstRow();
-				alert( 'Listing successfully edited.')
+				alert(result.MESSAGE)
 
 				setTimeout(function () {
 					editBtn.disabled = false;
@@ -108,7 +110,9 @@ function latestGridChange(thisId) {
 			} 
        		else
 				{ 
-					alert( 'There was a problem in the processing.')
+					alert( result.MESSAGE)
+					editBtn.disabled = false;
+					deleteBtn.disabled = false;
 				}
     	}
      	else {
@@ -119,11 +123,13 @@ function latestGridChange(thisId) {
 
 			editBtn.disabled = true;
 			deleteBtn.disabled = true;
+
+			var result = edit.deleteListing();
      	
-			if ( edit.deleteListing()) {
+			if ( result.SUCCESS == true) {
 				ColdFusion.Grid.refresh('data',true);
 				//populateFirstRow();
-				alert( 'Listing successfully Deleted.')
+				alert( result.MESSAGE)
 				setTimeout(function () {
 					editBtn.disabled = false;
 					deleteBtn.disabled = false;
@@ -131,7 +137,9 @@ function latestGridChange(thisId) {
 			} 
        		else 
 			{ 
-				alert( 'There was a problem in the processing.')
+				alert( result.MESSAGE)
+					editBtn.disabled = false;
+					deleteBtn.disabled = false;
 			}
     	}
         

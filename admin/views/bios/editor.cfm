@@ -7,32 +7,50 @@
 		bio = record.getBio( url.id );
 	}
 
-	if( form.keyExists( 'fieldnames' ) ) {
-		result =record.saveBio(
-			pk_bios=form.id
-			,artist=form.txtArtist
-			,bio=form.txtBio
+	if ( form.keyExists( 'fieldnames' ) ) {
+
+		result = record.saveBio(
+			pk_bios = form.id,
+			artist  = form.txtArtist,
+			bio     = form.txtBio
 		);
 
-		if (result EQ "exists") {
-            writeOutput("<script>alert('Artist already exists!');</script>");
-        } else if (result EQ "nodata") {
-			writeOutput("<script>alert('Please select the artist or add Bio');</script>");
-		} else if (result EQ "Bio Added") {
-            writeOutput("<script>alert('Bio added successfully'); window.opener.location.reload(); window.close();</script>");
-        } else if (result EQ "Bio Updated") {
-            writeOutput("<script>alert('Bio updated successfully'); window.opener.location.reload(); window.close();</script>");
-        } else {
-            writeOutput("<script>alert('Error: #result#');</script>");
-        }
+		if ( result.success ) {
+			writeOutput("
+				<script>
+					alert('#JSStringFormat(result.message)#');
+					window.opener.location.reload();
+					window.close();
+				</script>
+			");
+		} else {
+			writeOutput("
+				<script>
+					alert('Error: #JSStringFormat(result.message)#');
+				</script>
+			");
+		}
 	}
 </cfscript>
 
 <cfoutput>
 
-	<cfset selectedArtist = "">
+	<!--- <cfset selectedArtist = "">
 	<cfif structKeyExists(url, "artist")>
 		<cfset selectedArtist = url.artist>
+	<cfelseif structKeyExists(bio, "artist")>
+		<cfset selectedArtist = bio.artist>
+	</cfif> --->
+
+	<cfset selectedArtist = "">
+
+	<cfif structKeyExists(form, "txtArtist")>
+		<!--- error case: user ka typed data --->
+		<cfset selectedArtist = form.txtArtist>
+
+	<cfelseif structKeyExists(url, "artist")>
+		<cfset selectedArtist = url.artist>
+
 	<cfelseif structKeyExists(bio, "artist")>
 		<cfset selectedArtist = bio.artist>
 	</cfif>
@@ -70,7 +88,14 @@
 
 			<tr>
 				<td colspan="2">
-					<cftextarea name="txtBio" id="txtBio" width="725" height="525" richtext="yes" toolbar="Basic">#bio.bio#</cftextarea>
+					<cftextarea name="txtBio" id="txtBio" width="725" height="525" richtext="yes" toolbar="Basic">
+						<!--- #bio.bio# --->
+						<cfif structKeyExists(form, "txtBio")>
+							#form.txtBio#
+						<cfelse>
+							#bio.bio#
+						</cfif>
+					</cftextarea>
 				</td>
 			</tr>
 			<tr>
@@ -96,10 +121,10 @@
 				return false;
 			}
 
-			if(bio === ''){
-				alert("Please add Bio");
-				return false;
-			}
+			// if(bio === ''){
+			// 	alert("Please add Bio");
+			// 	return false;
+			// }
 			
 			return true; 
 		}

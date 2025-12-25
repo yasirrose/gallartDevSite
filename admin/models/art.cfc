@@ -411,7 +411,7 @@
 					</cfquery>
 
 					<cfset result.success = true>
-    				<cfset result.message = "Listing added successfully.">
+    				<cfset result.message = "Listing Updated successfully.">
 
 				</cfif>
 
@@ -855,13 +855,15 @@
         </cfswitch>
     </cffunction>
 
-	<cffunction name="deleteListing" access="remote">
+	<cffunction name="deleteListing" access="remote" returntype="struct">
 		<cfargument name="uid" type="string" default="">
 		<cfargument name="moduleName" type="string" default="">
 
 		<cfset deleteID = arguments.uid>
 
-		<cfset var success = true />
+		<!--- <cfset var success = true /> --->
+
+		<cfset var result = { success = true, message = "" }>
 
 		<cftry>
 
@@ -870,7 +872,11 @@
 	            WHERE uid = #arguments.uid#
 	        </cfquery>
 
-            <cffile action="delete" file="#application.uploaddir#/#arguments.uid#.jpg">
+            <!--- <cffile action="delete" file="#application.uploaddir#/#arguments.uid#.jpg"> --->
+
+			<cfif fileExists("#application.uploaddir#/#arguments.uid#.jpg")>
+				<cffile action="delete" file="#application.uploaddir#/#arguments.uid#.jpg">
+			</cfif>
 
 			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
 			<cfset date = now()>				
@@ -883,12 +889,17 @@
 					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#', #deleteID#)
 			</cfquery>
 
+			<cfset result.success = true>
+    		<cfset result.message = "Listing Deleted successfully.">
+
 			<cfcatch type="any">
-				<cfset success = false />
+				<!--- <cfset success = false /> --->
+				<cfset result.success = false>
+            	<cfset result.message = cfcatch.message>
 			</cfcatch>
 		</cftry>
 
-		<cfreturn success />
+		<cfreturn result />
 
 	</cffunction>
 

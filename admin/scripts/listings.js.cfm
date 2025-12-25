@@ -444,7 +444,7 @@
 		ColdFusion.Grid.refresh('data',true);
 	}
 
-	<!--- function doEdit(type) {
+	function doEdit(type) {
 
 		var edit = new admin.models.art();
 		edit.setForm("editForm");
@@ -555,12 +555,18 @@
 			}
 		}
 		else {
+
+			if (!confirm('Delete -- ARE YOU SURE? ')) {
+				return false; 
+			}
 			
-			if ( edit.deleteListing()) {
+			var response = edit.deleteListing();
+
+			if ( response.SUCCESS == true) {
 				<!--- ColdFusion.Grid.refresh('data',true); --->
 				//populateFirstRow();
 
-				alert( 'Listing Deleted Successfully.')
+				alert( response.MESSAGE)
 
 				if (window.parent &&
 					window.parent.ColdFusion &&
@@ -570,13 +576,15 @@
 				}
 			} 
 			else { 
-				alert( 'There was a problem in the processing.')
+				alert( response.MESSAGE)
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
 			}
 		}
 		
 		document.getElementById('edit').value = 'Edit';
 		document.getElementById('delete').style.display = '';
-	} --->
+	}
 
 
 	function showNew () {
