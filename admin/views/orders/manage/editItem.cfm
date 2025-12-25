@@ -16,6 +16,7 @@
 
 	function saveEditResponse( s ) {
 		if( trim( s )== 'true' ) {
+			// alert(s)
 			window.opener.location.reload();
 			window.close();
 		} else {
@@ -90,11 +91,14 @@
 		<tr>
 			<td>Price:</td>
 			<td>
-				$<input type="number" min="0" step="0.01" name="price" id="price" size="10" value="#order['ITEM_PRICE']#" message="Please enter a numeric value for the price with no dollar sign.">
+				$<input type="number" min="-9999" step="0.01" name="price" id="price" size="10" value="#order['ITEM_PRICE']#" message="Please enter a numeric value for the price with no dollar sign.">
+				<input type="Submit" value="EDIT" />
+				<input type="Button" value="Close" onclick="window.close();">
+
 			</td>
 		</tr>
 
-		<tr>
+		<!--- <tr>
 			<td align="center" colspan="2" style="font-family: Arial; font-size: 11px;">
 				<input type="Submit" value="EDIT" />
 			</td>
@@ -103,7 +107,7 @@
 			<td align="center" colspan="2" style="padding-top: 10px;">
 				<input type="Button" value="Close" onclick="window.close();" style="font-size: 10px;">
 			</td>
-		</tr>
+		</tr> --->
 	</cfform>
 </table>
 </cfoutput>

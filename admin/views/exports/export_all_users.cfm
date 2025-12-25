@@ -1,19 +1,21 @@
 <table border="0" cellpadding="0" cellspacing="0" width="90%">
 	<tr>
 		<td><br>
+			
+		<cftry>
 			<cfif isDefined('form.create')>
-				
+					
 				<CFQUERY name="export_contacts" dataSource="#dsource#" username="#uname#" password="#pword#">
-					SELECT fname,lname,email from leads where maillist = 1 and email <> '' 
+					SELECT fname,lname, email from leads where maillist = 1 and email <> '' 
 					and fname != '' AND lname != '' and fname Is not null and lname is not null and fname !='*' and lname!='*' and fname !='?' and lname !='????????' and isdeleted is null
 					UNION
 					
-					SELECT fname,lname,email from customers where email <> ''
+					SELECT fname,lname, email from customers where email <> ''
 					and fname !='1' and Lname!='1' and Fname!='admin' and Lname !='123456' and email NOT like '0%' and email NOT like '%0' and fname != '!S!WCRTESTINPUT000000!E!'
 					
 					UNION 
 					
-					SELECT fname,lname,email from users where email <> ''
+					SELECT fname,lname, email from users where email <> ''
 					AND NOT (
 							pk_users BETWEEN 29662 AND 30649
 							OR pk_users BETWEEN 15398 AND 29264
@@ -30,7 +32,7 @@
 					
 					Too many records
 				
-				 <cfelse>
+					<cfelse>
 					
 
 					<!--- <cfdump var="#export_contacts.recordCount#" abort="true"> --->
@@ -70,3 +72,16 @@
 				</cfoutput>
 
 			</cfif>	
+
+			<cfcatch type="any">
+
+				<cfoutput>
+					<script>
+						alert("Export failed:\n#JSStringFormat(cfcatch.message)#");
+						window.location = "index.cfm?event=exports.allUsers";
+					</script>
+				</cfoutput>			
+
+			</cfcatch>
+
+		</cftry>

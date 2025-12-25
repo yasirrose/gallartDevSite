@@ -43,15 +43,34 @@
 	    <cfargument name="pk_pages" type="numeric" default="0">
 	    <cfargument name="page_content" type="string" default="">
 
-	    <cfset var success = "Page Updated" />
+	    <!--- <cfset var success = "Page Updated" /> --->
 
-		<cfquery name="editPage" datasource="#application.dsource#">
+		<cfset var result = { success=false, message="" }>
+
+		<cftry>
+
+			<cfquery name="editPage" datasource="#application.dsource#">
                UPDATE pages SET
                page_content 	= <cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.page_content#">
                WHERE pk_pages	= <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_pages#">
-           </cfquery>
+           	</cfquery>
 
-		<cfreturn success>
+			<cfset result.success = true>
+			<cfset result.message = "Content Updated">
+			<cfreturn result>
+
+			<cfcatch>
+				<cfset result.success = false>
+				<cfset result.message = cfcatch.detail>
+				<cfreturn result>
+			</cfcatch>
+
+		</cftry>
+			
+
+			
+
+		<!--- <cfreturn success> --->
 
 	</cffunction>
 

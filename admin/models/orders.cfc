@@ -772,7 +772,8 @@
 					</cfif>
 	                CardNumber 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.CardNumber#">,
 					CardExpiry 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.CardExpiry#">,
-					amountSale 	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#parseDollarFormat(form.amountSaleDisplay)#">,
+					amountSale = <cfqueryparam  cfsqltype="CF_SQL_MONEY" value="#parseMoney(form.amountSaleDisplay)#">,
+
 					tax 		= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#parseDollarFormat(form.taxDisplay)#">,
 					shipcost 	= <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#parseDollarFormat(form.shipCostDisplay)#">,
 					shipMethod 	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.shipMethod#">,
@@ -834,6 +835,30 @@
 		<cfreturn success>
 
 	</cffunction>
+
+
+	<cffunction name="parseMoney" access="private" returntype="numeric" output="false">
+		<cfargument name="val" type="string" required="true">
+
+		<cfset var amount = trim(arguments.val)>
+
+		<!--- Remove $ and commas --->
+		<cfset amount = replace(amount, "$", "", "all")>
+		<cfset amount = replace(amount, ",", "", "all")>
+
+		<!--- Handle (80.00) negative format --->
+		<cfif reFind("^\(.*\)$", amount)>
+			<cfset amount = "-" & replace(replace(amount, "(", "", "all"), ")", "", "all")>
+		</cfif>
+
+		<!--- Fallback safety --->
+		<cfif NOT isNumeric(amount)>
+			<cfreturn 0>
+		</cfif>
+
+		<cfreturn val(amount)>
+	</cffunction>
+
 
 
 	<cffunction name="deleteOrder" access="remote">

@@ -1,4 +1,5 @@
 	
+	//
 		getLname = function(){
 		   var s = ColdFusion.getElementValue('searchLname');
 		   return s;
