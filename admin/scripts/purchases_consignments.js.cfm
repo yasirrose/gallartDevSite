@@ -108,6 +108,9 @@
 	
 
 	function doEdit(type) {
+
+		var editBtn = document.getElementById('edit');
+	  	var deleteBtn = document.getElementById('delete');
 		
 		var edit = new admin.models.purchases_consignments();
 		edit.setForm("editForm");
@@ -140,6 +143,9 @@
 				return false;
 			}
 
+			editBtn.disabled = true;
+			deleteBtn.disabled = true;
+
 			var result = edit.editPurchasesConsignmentsFromForm();
 				
 			if ( result.SUCCESS === true) {
@@ -163,15 +169,29 @@
 					"hideMethod": "fadeOut"
 				};
 
-				toastr.success(result.MESSAGE); 
+				toastr.success(result.MESSAGE);
+
+				setTimeout(function () {
+					editBtn.disabled = false;
+					deleteBtn.disabled = false;
+				}, 5000); 
 			} 
 			else { 
 				alert( result.MESSAGE);
+				editBtn.disabled = false;
+				deleteBtn.disabled = false;
 				 	
 			}
 
 		}
 		else if (type == 'delete') {
+
+			if (!confirm('Delete -- ARE YOU SURE? ')) {
+				return false; 
+			}
+
+			editBtn.disabled = true;
+			deleteBtn.disabled = true;
 
 			var result = edit.deletePurchasesConsignments();
 			
@@ -196,7 +216,12 @@
 				"hideMethod": "fadeOut"
 			};
 
-			toastr.success(result.MESSAGE); 
+			toastr.success(result.MESSAGE);
+			
+				setTimeout(function () {
+					editBtn.disabled = false;
+					deleteBtn.disabled = false;
+				}, 5000); 
 			} 
 			else { 
 				alert( result.MESSAGE);				

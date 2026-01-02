@@ -13,6 +13,8 @@
 	<cfparam name="form.captchaError" default="0">
 	<cfparam name="form.errorMsg" default="">
 	<cfparam name="form.errorPhone" default="0">
+	<cfparam name="form.errorGeneral" default="0">
+	<cfparam name="success" default="false">
 	<cfparam name="url.pid" default="0">
 	<cfparam name="form.pid" default="#url.pid#">
 	<cfparam name="FORM.captcha" type="string" default="" />
@@ -73,6 +75,9 @@
 		  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 		  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 	   </cfoutput>
+	   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+	   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 	   <SCRIPT LANGUAGE="JavaScript">
 		  function popUpWin(urlPage) {
 			  var features = 'scrollbars=yes, toolbar=no, status=no, menubar=no,' +
@@ -224,63 +229,38 @@
 																</cfoutput>
 															 <cfelse>
 																
-
-																<cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
-																	<cfset phone = form.phone>
-																<cfelse>
-																	<cfset phone = "">
-																</cfif>
-
-																<cfif len(trim(form.phone)) AND form.phoneType EQ "Cell Phone">
-																	<cfset cellphone = form.phone>
-																<cfelse>
-																	<cfset cellphone = "">
-																</cfif>
-
-																<cfif len(trim(form.phone)) AND form.phoneType EQ "Business Phone">
-																	<cfset businessphone = form.phone>
-																<cfelse>
-																	<cfset businessphone = "">
-																</cfif>
-
-																<cfif len(trim(form.phone)) AND form.phoneType EQ "OutsideUS">
-																	<cfset otherphone = form.phone>
-																<cfelse>
-																	<cfset otherphone = "">
-																</cfif>
-
-																<cfif form.name neq ''  and form.Offer neq '' >
-																	<cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-																		SELECT * from customers where (email = '#trim(email)#')
-																	</cfquery>
-
-																	<cfif form.email eq ''>
-
-																		<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-																			INSERT into customers
-																			(
-																				NAME,
-																				PHONE,
-																				cellphone,
-																				businessphone,
-																				otherphone,
-																				EMAIL
-																			)
-																			VALUES
-																			(
-																				'#form.NAME#',
-																				'#phone#',
-																				'#cellphone#',
-																				'#businessphone#',
-																				'#otherphone#',
-																				'#form.EMAIL#'
-																			)
-																			SELECT @@identity as uid 
-																		</cfquery>
-																		<cfset customerId=insert_cust.uid />
-
+																<cftry>
+																	<cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
+																		<cfset phone = form.phone>
 																	<cfelse>
-																		<cfif not find_cust.recordcount>
+																		<cfset phone = "">
+																	</cfif>
+
+																	<cfif len(trim(form.phone)) AND form.phoneType EQ "Cell Phone">
+																		<cfset cellphone = form.phone>
+																	<cfelse>
+																		<cfset cellphone = "">
+																	</cfif>
+
+																	<cfif len(trim(form.phone)) AND form.phoneType EQ "Business Phone">
+																		<cfset businessphone = form.phone>
+																	<cfelse>
+																		<cfset businessphone = "">
+																	</cfif>
+
+																	<cfif len(trim(form.phone)) AND form.phoneType EQ "OutsideUS">
+																		<cfset otherphone = form.phone>
+																	<cfelse>
+																		<cfset otherphone = "">
+																	</cfif>
+
+																	<cfif form.name neq ''  and form.Offer neq '' >
+																		<cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																			SELECT * from customers where (email = '#trim(email)#')
+																		</cfquery>
+
+																		<cfif form.email eq ''>
+
 																			<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 																				INSERT into customers
 																				(
@@ -303,109 +283,198 @@
 																				SELECT @@identity as uid
 																			</cfquery>
 																			<cfset customerId=insert_cust.uid />
-																		 <cfelse>
-																			<cfquery name="update_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-																				UPDATE customers SET
-																				EMAIL = '#EMAIL#'
-																				<cfif form.phone NEQ "">
-																				,PHONE = '#phone#'
-																				</cfif>
-																				<cfif form.otherphone NEQ "">
-																				,OTHERPHONE = '#otherphone#'
-																				</cfif>
-																				WHERE id = #find_cust.id#
-																			</cfquery>
-																			<cfset customerId=find_cust.id />
+
+																		<cfelse>
+																			<cfif not find_cust.recordcount>
+																				<cfquery name="insert_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																					INSERT into customers
+																					(
+																						NAME,
+																						PHONE,
+																						cellphone,
+																						businessphone,
+																						otherphone,
+																						EMAIL
+																					)
+																					VALUES
+																					(
+																						'#form.NAME#',
+																						'#phone#',
+																						'#cellphone#',
+																						'#businessphone#',
+																						'#otherphone#',
+																						'#form.EMAIL#'
+																					)
+																					SELECT @@identity as uid
+																				</cfquery>
+																				<cfset customerId=insert_cust.uid />
+																			<cfelse>
+																				<cfquery name="update_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																					UPDATE customers SET
+																					EMAIL = '#EMAIL#'
+																					<cfif form.phone NEQ "">
+																					,PHONE = '#phone#'
+																					</cfif>
+																					<cfif form.otherphone NEQ "">
+																					,OTHERPHONE = '#otherphone#'
+																					</cfif>
+																					WHERE id = #find_cust.id#
+																				</cfquery>
+																				<cfset customerId=find_cust.id />
+																			</cfif>
+
 																		</cfif>
+																		<cfquery datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																			INSERT into makeoffer
+																			(
+																				fk_customers,
+																				fk_products,
+																				offer,
+																				makeoffer_phone,
+																				best_time
+																			)
+																			VALUES
+																			(
+																				#customerId#,
+																				#productinfo.uid#,
+																				'#form.Offer#',
+																				'#form.phone#',
+																				'#form.best_time#'
+																				)
+																		</cfquery>
+
+																		<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+																		<cfset date = now()>
+																		<cfset moduleName = 'Make Offer'>
+																		<cfset action = 'Insert'>
+
+																		<cfquery name="addLog" datasource="#application.dsource#" >
+																			INSERT INTO logs
+																				( moduleName, ipAddress, date, action)
+																				VALUES
+																				( '#moduleName#', '#ipAddress#', #date#, '#action#')
+																		</cfquery>
+
+																		<!--- <cftry> --->
+
+																			<cfmail
+																				server="#application.mailserver#"
+																				username="#application.mailserver_un#"
+																				password="#application.mailserver_pw#"
+																				to="tldz.dev12@gmail.com"
+																				from="sales@gallart.com"
+																				subject="GallArt.com <> We Buy & Sell Fine Art <> Make An Offer"
+																				port="587" type="HTML"
+																				>
+																					<font style="font-size: 10pt; font-family: Arial;">
+																						The following user made an offer on the piece below:
+																						<br><br>
+																						<!--- Name: #form.FNAME# #form.LNAME#<br> --->
+																						Name: #form.NAME#<br>
+																						Email Address: #form.Email#<br>
+																						Phone: #form.phone#<br>
+																						<cfif form.best_time NEQ "">
+																							Best time to call: #form.best_time#<br>
+																						</cfif>
+																						Offer: $#form.Offer#<br>
+																						Artist: #ucase(productinfo.manufacturer)#<br>
+																						Title: #productinfo.name#<br>
+																						Art ID: #productinfo.modelno#<br>
+																						Retail Price: #dollarFormat(productinfo.retail_price)#<br>
+																						Gallery Price: #dollarFormat(productinfo.gallery_price)#<br>
+																						<!--- removed for make offer 5/6/15 --->
+																						<!--- Sale Price: #dollarFormat(productinfo.sale_price)# --->
+																						<cfif productinfo.fk_users GT 1>
+																							<br>
+																							Seller: #productinfo.fname# #productinfo.lname#<br>
+																							Seller Email: #productinfo.email#<br>
+																							Seller Phone: #productinfo.phone#
+																						</cfif>
+																						<br><br>
+																					</font>
+																			</cfmail>
+
+																			<!--- <script>
+																				$(document).ready(function() {
+																					toastr.options = {
+																						'closeButton': true,
+																						'debug': false,
+																						'newestOnTop': false,
+																						'progressBar': true,
+																						'positionClass': 'toast-center-center',
+																						'preventDuplicates': false,
+																						'showDuration': '1000',
+																						'hideDuration': '1000',
+																						'timeOut': '5000',
+																						'extendedTimeOut': '1000',
+																						'showEasing': 'swing',
+																						'hideEasing': 'linear',
+																						'showMethod': 'fadeIn',
+																						'hideMethod': 'fadeOut',
+																					}
+																					toastr.success('Your Record is added successfully.');
+																				});
+
+
+																			</script>
+
+																			<style>
+																				/* Force center positioning */
+																				##toast-container.toast-center-center {
+																					top: 40% !important;
+																					left: 50% !important;
+																					transform: translate(-50%, -50%) !important;
+																					position: fixed !important;
+																					margin: 0 auto;
+																				}
+
+																				/* Custom pink + white */
+																				##toast-container > .toast-success {
+																					background-color: ##ff4da6 !important;
+																					color: white !important;
+																					font-weight: bold;
+																				}
+																			</style> --->
+
+																			<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">
+																				THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY
+																				<br><br>
+																				<a href="/" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">
+																					CLICK HERE
+																				</a> TO MAKE ANOTHER OFFER
+																			</span>
+
+																			<cfset success = true />
+
+																			<!--- <cfcatch>
+																				<!--- <cfdump var="#cfcatch#" abort="true"> --->
+																				<cfoutput>
+																					<script language="JavaScript">
+																						alert('#cfcatch.detail#');
+																					</script>
+																				</cfoutput>
+																			</cfcatch>
+																		</cftry>																	 --->
 
 																	</cfif>
-																	<cfquery datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-																		INSERT into makeoffer
-																		(
-																			fk_customers,
-																			fk_products,
-																			offer,
-																			makeoffer_phone,
-																			best_time
-																		)
-																		VALUES
-																		(
-																			#customerId#,
-																			#productinfo.uid#,
-																			'#form.Offer#',
-																			'#form.phone#',
-																			'#form.best_time#'
-																			)
-																	</cfquery>
 
-																	<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
-																	<cfset date = now()>
-																	<cfset moduleName = 'Make Offer'>
-																	<cfset action = 'Insert'>
+																	<cfcatch type="any">
+																		<!--- <cfdump var="#cfcatch.detail#" abort="true"> --->
+																		<cfoutput>
+																			<script language="JavaScript">
+																				alert('Error occurred: #JSStringFormat(cfcatch.detail)#');
+																			</script>
+																		</cfoutput>
+																	</cfcatch>
+																	
+																</cftry>
+																																
 
-																	<cfquery name="addLog" datasource="#application.dsource#" >
-																		INSERT INTO logs 
-																			( moduleName, ipAddress, date, action)
-																			VALUES
-																			( '#moduleName#', '#ipAddress#', #date#, '#action#')
-																	</cfquery>
-
-																	<cftry>
-
-																		<cfmail 
-																			server="#application.mailserver#" 
-																			username="#application.mailserver_un#"
-																			password="#application.mailserver_pw#" 
-																			to="tldz.dev12@gmail.com"   
-																			from="sales@gallart.com" 
-																			subject="GallArt.com <> We Buy & Sell Fine Art <> Make An Offer" 
-																			port="587" type="HTML"
-																			>
-																				<font style="font-size: 10pt; font-family: Arial;">
-																					The following user made an offer on the piece below:
-																					<br><br>
-																					<!--- Name: #form.FNAME# #form.LNAME#<br> --->
-																					Name: #form.NAME#<br>
-																					Email Address: #form.Email#<br>
-																					Phone: #form.phone#<br>
-																					<cfif form.best_time NEQ "">
-																						Best time to call: #form.best_time#<br>
-																					</cfif>
-																					Offer: $#form.Offer#<br>
-																					Artist: #ucase(productinfo.manufacturer)#<br>
-																					Title: #productinfo.name#<br>
-																					Art ID: #productinfo.modelno#<br>
-																					Retail Price: #dollarFormat(productinfo.retail_price)#<br>
-																					Gallery Price: #dollarFormat(productinfo.gallery_price)#<br>
-																					<!--- removed for make offer 5/6/15 --->
-																					<!--- Sale Price: #dollarFormat(productinfo.sale_price)# --->
-																					<cfif productinfo.fk_users GT 1>
-																						<br>
-																						Seller: #productinfo.fname# #productinfo.lname#<br>
-																						Seller Email: #productinfo.email#<br>
-																						Seller Phone: #productinfo.phone#
-																					</cfif>
-																					<br><br>
-																				</font>
-																		</cfmail>
-
-																		<cfcatch>
-																			<cfdump var="#cfcatch#" abort="true">
-																		</cfcatch>
-																	</cftry>
-															
-																	<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">
-																		THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY
-																		<br><br>
-																		<a href="/" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">
-																			CLICK HERE
-																		</a> TO MAKE ANOTHER OFFER
-																	</span>
-																</cfif>
 															</cfif>
-														 <cfelse>
+														</cfif>
+														<cfif not success>
 															<div class="form-section flex-form-section">
-																<cfform action="" method="post" name="frm1" onsubmit="return setFormActionAndValidate()">
+																<cfform action="" method="post" name="frm1" onsubmit="return setFormActionAndValidate(event)">
 																	<div class="row top-row">
 																		<div class="col-lg-5 col-md-6 col-sm-12">
 																			<div class="img-sec">
@@ -563,6 +632,7 @@
 																</cfform>
 															</div>
 														</cfif>
+														
 													</cfoutput>
 												</cfif>		
 											</div>
@@ -589,12 +659,12 @@
 
 	   <script>
 
-			function setFormActionAndValidate() {
+			function setFormActionAndValidate(event) {
 				var pid = document.getElementById('pid').value.trim();
 
 				console.log('test pid: '+ pid);
 				document.getElementById('frm1').action = '/epricing/' + pid;
-				return validateEpricingForm();
+				return validateEpricingForm(event);
 			}
 
 			function validateEpricingForm(e) {

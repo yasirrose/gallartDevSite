@@ -12,9 +12,13 @@
       <cfparam name="form.businessphone" default="">
       <cfparam name="form.otherphone" default="">
       <cfparam name="form.website" default="">
+      <cfparam name="form.password" default="">
+      <cfparam name="form.password2" default="">
       <cfparam name="form.captchaError" default="0">
       <cfparam name="form.errorMsg" default="">
       <cfparam name="form.errorPhone" default="0">
+      <cfparam name="form.emailTaken" default="0">
+      <cfparam name="form.passwordMismatch" default="0">
       <cfparam name="FORM.captcha"	type="string"	default=""	/>
       <cfparam name="FORM.captcha_check"	type="string" default="" />
       <cftry>
@@ -26,6 +30,7 @@
       <!--- Set a flag to see if this user is a bot or not. --->
       <cfset blnIsBot = true />
       <cfset phoneError = false />
+      <cfset hasError = false />
       <!--- Check to see if the form has been submitted. --->
       <cfif FORM.submitted>
          <cfset errorMsg = "" />
@@ -158,96 +163,96 @@
                                     <div class="bottom-content">
                                        <div class="user-registrations quotes-page contact-page" style="max-width: 100%;">
                                           <!--- Check for a bot. --->
-                                          <cfif FORM.submitted>
+                                           <!--- <cfdump var="#form#" abort="true"> --->
+                                          <!--- <cfif not FORM.submitted or hasError> --->
+                                            
+                                             <cftry>
+                                                <cfif FORM.submitted>
 
-                                             <cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
-                                             <cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
-                                                <cfhttpparam type="formField" name="secret" value="#apikey#">
-                                                <cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
-                                                <cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
-                                             </cfhttp> 
-                                             <cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
-                                             <!--- <cfdump var="#captchaResponse#" abort="true"> --->
-                                             <cfif phoneError>
-                                                <cfoutput>
-                                                   <!--- <cfdump var="testing 1" abort="true"> --->
-                                                   <script language="JavaScript">
-                                                      document.errorFrm.fname.value = '#form.fname#'
-                                                      document.errorFrm.lname.value = '#form.lname#'
-                                                      document.errorFrm.email.value = '#form.email#'
-                                                      document.errorFrm.cellphone.value = '#form.cellphone#'
-                                                      document.errorFrm.phone.value = '#form.phone#'
-                                                      document.errorFrm.phone.value = '#form.phoneType#'
-                                                      document.errorFrm.businessphone.value = '#form.businessphone#'
-                                                      document.errorFrm.otherphone.value = '#form.otherphone#'
-                                                      document.errorFrm.website.value = '#form.website#'
-                                                      document.errorFrm.errorMsg.value = '#errorMsg#'
-                                                      document.errorFrm.errorPhone.value = '1'
-                                                      document.errorFrm.submit();
-                                                   </script>
-                                                </cfoutput>
-                                              <cfelseif captchaResponse.success NEQ 'YES'>
-                                                <cfoutput>
-                                                   <!--- <cfdump var="testing 2" abort="true"> --->
-                                                   <script language="JavaScript">
-                                                      document.errorFrm.fname.value = '#form.fname#'
-                                                      document.errorFrm.lname.value = '#form.lname#'
-                                                      document.errorFrm.email.value = '#form.email#'
-                                                      document.errorFrm.cellphone.value = '#form.cellphone#'
-                                                      document.errorFrm.phone.value = '#form.phone#'
-                                                      document.errorFrm.phone.value = '#form.phoneType#'
-                                                      document.errorFrm.businessphone.value = '#form.businessphone#'
-                                                      document.errorFrm.otherphone.value = '#form.otherphone#'
-                                                      document.errorFrm.website.value = '#form.website#'
-                                                      document.errorFrm.errorMsg.value = '#errorMsg#'
-                                                      document.errorFrm.captchaError.value = '1'
-                                                      document.errorFrm.submit();
-                                                   </script>
-                                                </cfoutput>
-                                              <cfelse>
-                                                <cfquery name="CheckDups" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                                                   select pk_users from users where email =  
-                                                   <cfqueryparam value="#trim(form.email)#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-                                                </cfquery>
-                                                <cfif CheckDups.recordcount gt 0>
-                                                   <script language="JavaScript">
-                                                      alert('The email you selected is taken. If you are already a member please log in.');
-                                                      history.go(-1);
-                                                   </script>
-                                                   <cfabort>
-                                                </cfif>
-                                                <cfif form.password neq form.password2>
-                                                   <script language="JavaScript">
-                                                      alert('Password missmatch. Please retype your password.');
-                                                      history.go(-1);
-                                                   </script>
-                                                   <cfabort>
-                                                </cfif>
-                                                <!--- <cfdump var="testing 3" abort="true"> --->
+                                                   <cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+                                                   <cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+                                                      <cfhttpparam type="formField" name="secret" value="#apikey#">
+                                                      <cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+                                                      <cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+                                                   </cfhttp>
+                                                   <cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+                                                   <!--- <cfdump var="#captchaResponse#" abort="true"> --->
+                                                   <cfif phoneError>
+                                                      <cfoutput>
+                                                         <!--- <cfdump var="testing 1" abort="true"> --->
+                                                         <script language="JavaScript">
+                                                            document.errorFrm.fname.value = '#form.fname#'
+                                                            document.errorFrm.lname.value = '#form.lname#'
+                                                            document.errorFrm.email.value = '#form.email#'
+                                                            document.errorFrm.cellphone.value = '#form.cellphone#'
+                                                            document.errorFrm.phone.value = '#form.phone#'
+                                                            document.errorFrm.phone.value = '#form.phoneType#'
+                                                            document.errorFrm.businessphone.value = '#form.businessphone#'
+                                                            document.errorFrm.otherphone.value = '#form.otherphone#'
+                                                            document.errorFrm.website.value = '#form.website#'
+                                                            document.errorFrm.errorMsg.value = '#errorMsg#'
+                                                            document.errorFrm.errorPhone.value = '1'
+                                                            document.errorFrm.submit();
+                                                         </script>
+                                                      </cfoutput>
+                                                   <cfelseif captchaResponse.success NEQ 'YES'>
+                                                      <cfoutput>
+                                                         <!--- <cfdump var="testing 2" abort="true"> --->
+                                                         <script language="JavaScript">
+                                                            document.errorFrm.fname.value = '#form.fname#'
+                                                            document.errorFrm.lname.value = '#form.lname#'
+                                                            document.errorFrm.email.value = '#form.email#'
+                                                            document.errorFrm.cellphone.value = '#form.cellphone#'
+                                                            document.errorFrm.phone.value = '#form.phone#'
+                                                            document.errorFrm.phone.value = '#form.phoneType#'
+                                                            document.errorFrm.businessphone.value = '#form.businessphone#'
+                                                            document.errorFrm.otherphone.value = '#form.otherphone#'
+                                                            document.errorFrm.website.value = '#form.website#'
+                                                            document.errorFrm.errorMsg.value = '#errorMsg#'
+                                                            document.errorFrm.captchaError.value = '1'
+                                                            document.errorFrm.submit();
+                                                         </script>
+                                                      </cfoutput>
+                                                   <cfelse>
+                                                      <cfquery name="CheckDups" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                                                         select pk_users from users where email =
+                                                         <cfqueryparam value="#trim(form.email)#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+                                                      </cfquery>
+                                                   <cfif CheckDups.recordcount gt 0>
+                                                         <cfset form.emailTaken = 1>
+                                                      </cfif>
+                                                      <cfif form.password neq form.password2>
+                                                         <script language="JavaScript">
+                                                            alert('Password missmatch. Please retype your password.');
+                                                            history.go(-1);
+                                                         </script>
+                                                         <cfabort>
+                                                      </cfif>
+                                                      <!--- <cfdump var="testing 3" abort="true"> --->
 
-                                                <cfif len(trim(form.cellphone)) AND form.phoneType EQ "Home Phone">
-                                                   <cfset phone = form.cellphone>
-                                                <cfelse>
-                                                   <cfset phone = "">
-                                                </cfif>
+                                                      <cfif len(trim(form.cellphone)) AND form.phoneType EQ "Home Phone">
+                                                         <cfset phone = form.cellphone>
+                                                      <cfelse>
+                                                         <cfset phone = "">
+                                                      </cfif>
 
-                                                <cfif len(trim(form.cellphone)) AND form.phoneType EQ "Cell Phone">
-                                                   <cfset cellphone = form.cellphone>
-                                                <cfelse>
-                                                   <cfset cellphone = "">
-                                                </cfif>
+                                                      <cfif len(trim(form.cellphone)) AND form.phoneType EQ "Cell Phone">
+                                                         <cfset cellphone = form.cellphone>
+                                                      <cfelse>
+                                                         <cfset cellphone = "">
+                                                      </cfif>
 
-                                                <cfif len(trim(form.cellphone)) AND form.phoneType EQ "Business Phone">
-                                                   <cfset businessphone = form.cellphone>
-                                                <cfelse>
-                                                   <cfset businessphone = "">
-                                                </cfif>
+                                                      <cfif len(trim(form.cellphone)) AND form.phoneType EQ "Business Phone">
+                                                         <cfset businessphone = form.cellphone>
+                                                      <cfelse>
+                                                         <cfset businessphone = "">
+                                                      </cfif>
 
-                                                <cfif len(trim(form.cellphone)) AND form.phoneType EQ "OutsideUS">
-                                                   <cfset otherphone = form.cellphone>
-                                                <cfelse>
-                                                   <cfset otherphone = "">
-                                                </cfif>
+                                                      <cfif len(trim(form.cellphone)) AND form.phoneType EQ "OutsideUS">
+                                                         <cfset otherphone = form.cellphone>
+                                                      <cfelse>
+                                                         <cfset otherphone = "">
+                                                      </cfif>
 
                                                 <cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq ''  >
                                                    <cflock name="insertuser" timeout="10">
@@ -293,38 +298,38 @@
                                                       <cfset date = now()>
                                                       <cfset moduleName = 'Register'>
                                                       <cfset action = 'Insert'>
-                                                      
+
                                                       <cfquery name="addLog" datasource="#application.dsource#" >
-                                                         INSERT INTO logs 
+                                                         INSERT INTO logs
                                                             ( moduleName, ipAddress, date, action, sellerUser)
                                                             VALUES
                                                             ( '#moduleName#', '#ipAddress#', #date#, '#action#', #session.sellerinfo.pk_users#)
                                                       </cfquery>
 
                                                    </cflock>
-                                                   <cfmail 
-                                                         server="#servername#" 
+                                                   <cfmail
+                                                         server="#servername#"
                                                          username="onli16@onlinegalleryart.com"
-                                                         password="re3objec" 
-                                                         to="#emailsupport#" 
-                                                         cc="#emailsupportcc#" 
-                                                         from="#form.email#" 
-                                                         subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller" 
+                                                         password="re3objec"
+                                                         to="#emailsupport#"
+                                                         cc="#emailsupportcc#"
+                                                         from="#form.email#"
+                                                         subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller"
                                                          type="HTML"
                                                          >
                                                       <font style="font-size: 10pt; font-family: Arial;">
                                                       <strong>
-                                                         #session.sellerinfo.fname# #session.sellerinfo.lname#</strong> 
+                                                         #session.sellerinfo.fname# #session.sellerinfo.lname#</strong>
                                                          registered as a new Member on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
                                                       <br><br>
                                                    </cfmail>
-                                                   <cfmail 
-                                                         server="#servername#" 
+                                                   <cfmail
+                                                         server="#servername#"
                                                          username="onli16@onlinegalleryart.com"
-                                                         password="re3objec" 
-                                                         to="#form.email#" 
-                                                         from="onli16@onlinegalleryart.com" 
-                                                         subject="Gallery Art - Welcome New Member" 
+                                                         password="re3objec"
+                                                         to="#form.email#"
+                                                         from="onli16@onlinegalleryart.com"
+                                                         subject="Gallery Art - Welcome New Member"
                                                          type="HTML"
                                                          >
                                                       <font style="font-size: 10pt; font-family: Arial;">
@@ -353,19 +358,27 @@
                                                             'hideEasing': 'linear',
                                                             'showMethod': 'fadeIn',
                                                             'hideMethod': 'fadeOut',
-                                                         }
-                                                      });
-                                                      
-                                                      toastr.success('Your Record is added successfully.');
-                                                   </script>
-                                                   <cflocation url="/overView" addtoken="No">
-                                                 <cfelse>
-                                                   <cfoutput>
-                                                      <p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
-                                                   </cfoutput>
+                                                               }
+                                                            });
+
+                                                            toastr.success('Your Record is added successfully.');
+                                                         </script>
+                                                         <cflocation url="/overView" addtoken="No">
+                                                      <cfelse>
+                                                         <cfthrow message="Error: Your data is not added. Please fill out all required fields before submitting the form.">
+                                                      </cfif>
+                                                   </cfif>
                                                 </cfif>
-                                             </cfif>
-                                           <cfelse>
+                                                <cfcatch>
+                                                   <cfset hasError = true>
+                                                   <cfoutput>
+                                                      <script>
+                                                         alert('Error occurred: #JSStringFormat(cfcatch.detail)#');
+                                                      </script>
+                                                   </cfoutput>
+                                                   
+                                                </cfcatch>
+                                             </cftry>
                                              <cfoutput>
                                                 <div class="user-content form-sectiom">
                                                    <h3>Create an Account</h3>
@@ -378,6 +391,9 @@
                                                       <span style="color: ##ff0000; font-weight: bold;">
                                                       #form.errorMsg#
                                                       </span><br><br>
+                                                   </cfif>
+                                                   <cfif FORM.emailTaken>
+                                                      <span style="color: ##ff0000; font-weight: bold;">The email you selected is taken. If you are already a member please log in.</span><br><br>
                                                    </cfif>
                                                    <!--- onsubmit="return validateSellerForm()" --->
                                                    <div class="form-style">
@@ -469,7 +485,7 @@
                                                 </div>
                                              </cfoutput>
                                           </div>
-                                          </cfif>
+                                          <!--- </cfif> --->
                                        </div>
                                     </div>
                                  </div>
@@ -488,7 +504,19 @@
          <cfinclude template="frmxss.cfm">
          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
          <script>
-         
+            document.addEventListener("DOMContentLoaded", function() {
+               const emailTakenError = document.querySelector('span[style*="color: #ff0000"][style*="font-weight: bold"]');
+               if (emailTakenError && emailTakenError.textContent.includes('The email you selected is taken')) {
+                  const submitBtn = document.getElementById('S_submitbtn');
+                  submitBtn.disabled = true;
+                  submitBtn.textContent = "Processing...";
+                  setTimeout(function() {
+                     submitBtn.disabled = false;
+                     submitBtn.textContent = "Create an account";
+                  }, 3000); // Enable after 3 seconds
+               }
+            });
+
             function validateSellerForm(){
                // alert('test');
                document.querySelectorAll('.error-message').forEach(error => error.textContent = '');

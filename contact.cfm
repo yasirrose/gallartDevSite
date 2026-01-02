@@ -1,21 +1,23 @@
 <!--- Kill extra output. --->
 <cfsilent>
-	<cfparam name="form.fname" default="">
-	<cfparam name="form.lname" default="">
+	<!--- <cfparam name="form.fname" default=""> --->
+	<!--- <cfparam name="form.lname" default=""> --->
 	<cfparam name="form.name" default="">
 	<cfparam name="form.comments" default="">
 	<cfparam name="form.email" default="">
 	<cfparam name="form.phone" default="">
 	<cfparam name="form.phoneType" default="">
-	<cfparam name="form.otherphone" default="">
+	<!--- <cfparam name="form.otherphone" default=""> --->
 	<cfparam name="form.list" default="">
 	<cfparam name="form.captchaError" default="0">
 	<cfparam name="form.errorMsg" default="">
 	<cfparam name="form.errorPhone" default="0">
+	<cfparam name="form.processingError" default="0">
+	<cfparam name="success" default="false">
 
-	<cfparam name="FORM.captcha"	type="string"	default=""	/>
+	<!--- <cfparam name="FORM.captcha"	type="string"	default=""	/> --->
 
-	<cfparam name="FORM.captcha_check"	type="string" default="" />
+	<!--- <cfparam name="FORM.captcha_check"	type="string" default="" /> --->
 
 	<cftry>
 	   <cfparam name="FORM.submitted"	type="numeric"	default="0"	/>
@@ -25,7 +27,7 @@
 	   </cfcatch>
 	</cftry>
 
-	<!--- Set a flag to see if this user is a bot or not. --->
+	<!--- <!--- Set a flag to see if this user is a bot or not. --->
 	<cfset blnIsBot = true />
 	<cfset phoneError = false />
 
@@ -38,10 +40,10 @@
 			<cfset errorMsg = "Please enter your phone number in the format (xxx) xxx-xxxx <br/>" />
 		</cfif> --->
 
-	<cfif errorMsg NEQ "">
+	<!--- <cfif errorMsg NEQ "">
 	   <cfset phoneError = true />
 
-	   <cfelse>
+	   <cfelse> --->
 
 	   <cftry>
 
@@ -78,7 +80,9 @@
 		arrValidChars[ 2 ] 
 	) />
 
-	<cfset FORM.captcha_check = Encrypt( strCaptcha,"gallart-is-the-best", "CFMX_COMPAT", "HEX" ) />
+	<cfset FORM.captcha_check = Encrypt( strCaptcha,"gallart-is-the-best", "CFMX_COMPAT", "HEX" ) /> ---> --->
+
+	<cfset phoneError = false />
 
  </cfsilent>
 
@@ -130,7 +134,7 @@
 	</head>
 	<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	   <div class="main-container registration-page">
-		  <cfoutput>
+		  <!--- <cfoutput>
 			 <form method="post" action="#script_name#" name="errorFrm">
 				<input type="Hidden" name="fname">
 				<input type="Hidden" name="lname">
@@ -142,8 +146,9 @@
 				<input type="Hidden" name="errorMsg">
 				<input type="Hidden" name="captchaError" value="0">
 				<input type="Hidden" name="errorPhone" value="0">
+				<input type="Hidden" name="processingError" value="0">
 			 </form>
-		  </cfoutput>
+		  </cfoutput> --->
 		  <div id="Table_01">
 			 <div class="header-section">
 				<div class="top-header">
@@ -184,52 +189,27 @@
 
 											<cfset apikey="6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
 
-											<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
-												<cfhttpparam type="formField" name="secret" value="#apikey#">
-												<cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
-												<cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
-											</cfhttp>
-													
-											<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+											<cftry>
+												<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post">
+													<cfhttpparam type="formField" name="secret" value="#apikey#">
+													<cfhttpparam type="formField" name="response" value="#FORM['g-recaptcha-response']#">
+													<cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+												</cfhttp>
+
+												<cfset captchaResponse = DeserializeJSON(cfhttp.FileContent)>
+												<cfcatch>
+													<cfset captchaResponse = {success: false}>
+												</cfcatch>
+											</cftry>
 
 										   <!--- Check for a bot. --->
-										   <cfif phoneError>
-											  <cfoutput>
-												 <script language="JavaScript">
-													document.errorFrm.fname.value = '#form.fname#'
-													document.errorFrm.lname.value = '#form.lname#'
-													document.errorFrm.name.value = '#form.name#'
-													document.errorFrm.email.value = '#form.email#'
-													document.errorFrm.phone.value = '#form.phone#'
-													document.errorFrm.phone.value = '#form.phoneType#'
-													document.errorFrm.otherphone.value = '#form.otherphone#'
-													document.errorFrm.comments.value = '#form.comments#'
-													document.errorFrm.errorMsg.value = '#errorMsg#'
-													document.errorFrm.errorPhone.value = '1'
-													document.errorFrm.submit();
-												 </script>
-											  </cfoutput>
-											  <cfelseif captchaResponse.success NEQ 'YES'>
-											  <cfoutput>
-												 <script language="JavaScript">
-													document.errorFrm.fname.value = '#form.fname#'
-													document.errorFrm.lname.value = '#form.lname#'
-													document.errorFrm.name.value = '#form.name#'
-													document.errorFrm.email.value = '#form.email#'
-													document.errorFrm.phone.value = '#form.phone#'
-													document.errorFrm.phone.value = '#form.phoneType#'
-													document.errorFrm.otherphone.value = '#form.otherphone#'
-													document.errorFrm.comments.value = '#form.comments#'
-													document.errorFrm.errorMsg.value = '#errorMsg#'
-													document.errorFrm.captchaError.value = '1'
-													document.errorFrm.submit();
-												 </script>
-											  </cfoutput>
+										   <cfif NOT captchaResponse.success>
+											  <cfset FORM.captchaError = 1 />
 
 											  <cfelse>
 
 												<cftry>
-													
+
 													<cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
 														<cfset phone = form.phone>
 													<cfelse>
@@ -258,109 +238,121 @@
 													<cfset date = now()>
 													<cfset moduleName = 'contact'>
 													<cfset action = 'Insert'>
-													
+
 													<cfif form.name neq '' and form.email neq ''>
 														<cfquery name="addgLead" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 															insert into leads (name, notes, email, phone,cellphone, businessphone, otherphone, maillist)
 															values('#form.name#', '#form.comments#', '#form.email#', '#phone#', '#cellphone#', '#businessphone#', '#otherphone#', '#form.list#')
-														</cfquery>													
+														</cfquery>
 
-															<script>
-																$(document).ready(function() {
-																	toastr.options = {
-																		'closeButton': true,
-																		'debug': false,
-																		'newestOnTop': false,
-																		'progressBar': true,
-																		'positionClass': 'toast-center-center',
-																		'preventDuplicates': false,
-																		'showDuration': '1000',
-																		'hideDuration': '1000',
-																		'timeOut': '5000',
-																		'extendedTimeOut': '1000',
-																		'showEasing': 'swing',
-																		'hideEasing': 'linear',
-																		'showMethod': 'fadeIn',
-																		'hideMethod': 'fadeOut',
-																	}
-																	toastr.success('Your Record is added successfully.');
-																});
+														<cfquery name="addLog" datasource="#application.dsource#" >
+															INSERT INTO logs
+																( moduleName, ipAddress, date, action)
+																VALUES
+																( '#moduleName#', '#ipAddress#', #date#, '#action#')
+														</cfquery>
 
-																
-															</script>
+														<cfmail
+															server="#servername#"
+															username="gallart@onlinegalleryart.com"
+															password="re3objeC!P"
+															to="#emailsupport#"
+															cc="#emailsupportcc#"
+															from="#form.email#"
+															subject="GallArt.com <> Buying & Selling Fine Art <> Contact Form"
+															type="HTML"
+															>
+															<font style="font-size: 10pt; font-family: Arial;">
+															Client Information:
+															<br><br>
+															<!--- Name: #form.fname# #form.lname#<br> --->
+															Name: #form.name#<br>
+															Email Address: #form.email#<br>
+															Phone: #form.phone#<br>
+															Phone Outside the US: #otherphone#<br>
+															Comments: #form.comments#<br>
+															<br><br>
+															</font>
+														</cfmail>
 
-															<style>
-																/* Force center positioning */
-																#toast-container.toast-center-center {
-																	top: 40% !important;
-																	left: 50% !important;
-																	transform: translate(-50%, -50%) !important;
-																	position: fixed !important;
-																	margin: 0 auto;
+														<script>
+															$(document).ready(function() {
+																toastr.options = {
+																	'closeButton': true,
+																	'debug': false,
+																	'newestOnTop': false,
+																	'progressBar': true,
+																	'positionClass': 'toast-center-center',
+																	'preventDuplicates': false,
+																	'showDuration': '1000',
+																	'hideDuration': '1000',
+																	'timeOut': '5000',
+																	'extendedTimeOut': '1000',
+																	'showEasing': 'swing',
+																	'hideEasing': 'linear',
+																	'showMethod': 'fadeIn',
+																	'hideMethod': 'fadeOut',
 																}
+																toastr.success('Your Record is added successfully.');
+															});
 
-																/* Custom pink + white */
-																#toast-container > .toast-success {
-																	background-color: #ff4da6 !important;
-																	color: #fff !important;
-																	font-weight: bold;
-																}
-															</style>
+															
+														</script>
 
-															<cfquery name="addLog" datasource="#application.dsource#" >
-																INSERT INTO logs 
-																	( moduleName, ipAddress, date, action)
-																	VALUES
-																	( '#moduleName#', '#ipAddress#', #date#, '#action#')
-															</cfquery>
-																								  
-															<cfmail 
-																server="#servername#" 
-																username="gallart@onlinegalleryart.com"
-																password="re3objeC!P" 
-																to="#emailsupport#" 
-																cc="#emailsupportcc#"  
-																from="#form.email#" 
-																subject="GallArt.com <> Buying & Selling Fine Art <> Contact Form" 
-																type="HTML"
-																>
-																<font style="font-size: 10pt; font-family: Arial;">
-																Client Information:
-																<br><br>
-																<!--- Name: #form.fname# #form.lname#<br> --->
-																Name: #form.name#<br>
-																Email Address: #form.email#<br>
-																Phone: #form.phone#<br>
-																Phone Outside the US: #form.otherphone#<br>
-																Comments: #form.comments#<br>
-																<br><br>
-																</font>
-															</cfmail>
+														<style>
+															/* Force center positioning */
+															#toast-container.toast-center-center {
+																top: 40% !important;
+																left: 50% !important;
+																transform: translate(-50%, -50%) !important;
+																position: fixed !important;
+																margin: 0 auto;
+															}
 
-															<p>
-																<b>
-																	Thank you 
-																	<!--- <cfoutput>#form.fname# #form.lname#</cfoutput> --->
-																	<cfoutput>#form.name# </cfoutput>
-																	. <br><br> Your Email has been sent to the respective personnel. <br><br>   We hope that your visit has been a pleasant experience so far.
-																</b>
-															</p>
+															/* Custom pink + white */
+															#toast-container > .toast-success {
+																background-color: #ff4da6 !important;
+																color: #fff !important;
+																font-weight: bold;
+															}
+														</style>
+
+														<cfset success = true />
+
+														<p>
+															<b>
+																Thank you 
+																<!--- <cfoutput>#form.fname# #form.lname#</cfoutput> --->
+																<cfoutput>#form.name# </cfoutput>
+																. <br><br> Your Email has been sent to the respective personnel. <br><br>   We hope that your visit has been a pleasant experience so far.
+															</b>
+														</p>
+
+
+
 													 <cfelse>
 														<cfoutput>
 															<p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
 														</cfoutput>
 													</cfif>
 													<cfcatch type="Any">
-														Sorry - we have encountered a processing error.  Please try again.
-														<cfabort>
+														<cfset FORM.processingError = 1 />
+														<cfset FORM.errorMsg = 'We have encountered a processing error. Please try again.' />
+														<cfoutput>
+															<script language="JavaScript">
+																alert('Error occurred: #JSStringFormat(cfcatch.detail)#');
+															</script>
+														</cfoutput>
 													</cfcatch>
+														
 												</cftry>
 										   </cfif>
-										 <cfelse>
+										</cfif>
+										<cfif not success>
 											<cfoutput>
 												<CFFORM ACTION="/contact-us" METHOD="POST" name="guestFrm" onsubmit="return validateForm(event)">
 													<input type="hidden" name="submitted" value="1" />
-													<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
+													<!--- <input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" /> --->
 													<div class="top-heading">
 														<h3>CONTACT US</h3>
 													</div>
@@ -372,23 +364,28 @@
 														#form.errorMsg#
 														</p>
 													</cfif>
+													<cfif FORM.processingError EQ 1>
+														<p style="color: ##ff0000; font-weight: bold;">
+														#form.errorMsg#
+														</p>
+													</cfif>
 													<p>Please contact us using the form below:</p>
 
 													<span style="color: ##ff0000;">* Required</span><br><br>
 
 													<div class="input-form">
-														<div class="row">															
+														<div class="row">
 
 															<div class="col-md-6">
 																<div class="input-field">
-																	<cfinput type="text" size=40 maxsize=50 maxLength="30" name="name" id="name" placeholder="Enter your Name*" value="#form.name#" autosuggest="cfc:admin.models.leads.searchLeadsByName({cfautosuggestvalue})" maxResultsDisplay="10">
+																	<cfinput type="text" size=40 maxsize=50 maxLength="30" name="name" id="name" placeholder="Enter your Name*" value="#form.name#" >
 																	<span class="error-message" id="nameError"></span>
 																</div>
 															</div>
 
 															<div class="col-md-6">
 																<div class="input-field">
-																	<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" value="#form.email#" autosuggest="cfc:admin.models.leads.searchLeadsByEmail({cfautosuggestvalue})" maxResultsDisplay="10" align="left" style="z-index:1000;" tabindex="0">
+																	<cfinput type="text" size=40 maxsize=50 maxlength="30" name="email" placeholder="Enter your Email Address*" value="#form.email#" >
 																	<span class="error-message" id="emailError"></span>
 																</div>
 															</div>
@@ -408,13 +405,13 @@
 																<div class="input-field">
 																	<cfinput type="text" size=40 maxsize=50 maxLength="20" name="phone" placeholder="Enter your Phone Number" value="#form.phone#" >
 																	<span id="formatSign">(xxx) xxx-xxxx</span>
-																	<span class="error-message" id="phoneError"></span>
+																	<span class="error-message" id="phoneNumerError"></span>
 																</div>
 															</div>
 
 														</div>
 														<div class="input-field">
-														
+
 															<TEXTAREA NAME="comments" id="comments" maxlength="500" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
 														 	<div id="charCount" class="mb-3">0 / 500 characters</div>
 														</div>
@@ -438,8 +435,8 @@
 													</div>
 												</CFFORM>
 											</cfoutput>
-									 	</div>
-									 </cfif>	
+										</cfif>
+									</div>
 								  </div>
 							   </div>
 							</div>
@@ -503,14 +500,14 @@
 
 
 			if (!phone) {
-				document.getElementById('phoneError').textContent = 'Please enter a valid phone number ';
+				document.getElementById('phoneNumerError').textContent = 'Please enter a valid phone number ';
 				isValid = false;
 			}
 
 			if(phoneType){
 				if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
 					if (phone && !phoneRegex.test(phone)) {
-						document.getElementById('phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+						document.getElementById('phoneNumerError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
 						document.getElementById('phone').focus();
 						isValid = false;
 					}

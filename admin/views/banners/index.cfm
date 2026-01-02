@@ -11,7 +11,7 @@
 		
     <!--- <cfif isDefined('form.actionType') and form.actionType eq 'Add'>
         <cftry>    
-            
+			 <!--- Save banner details into the database --->            
             <cfquery name="qSaveData" datasource="#application.dsource#">
                 INSERT INTO banners (
                     bannerName,
@@ -41,7 +41,7 @@
 					( '#moduleName#', '#ipAddress#', #date#, '#action#')
 			</cfquery>
     
-           
+           <!--- Upload Image and Save to Directory --->
             <cfif len(form.bannerImage)>
 
 				<cfset path = "#application.ppath#/images/banners/" />
@@ -73,7 +73,8 @@
     
             <cfoutput>
                 <script>
-                 
+					// alert('Data Added Successfully!');
+					// toastr.success('Data Updated Successfully');                 
 
 					<cfif structKeyExists(session, "ext") AND session.ext EQ true>
 						toastr.error("Invalid image format. Only JPG and PNG allowed.");
@@ -153,7 +154,7 @@
 	
 			<cfoutput>
 				<script>
-					
+					// alert('Data Updateddd Successfully!');
 
 					<cfif structKeyExists(session, "ext") AND session.ext EQ true>
 						toastr.error("Invalid image format. Only JPG and PNG allowed.");
@@ -161,7 +162,7 @@
 						toastr.success("Data Updated Successfully");
 					</cfif>
 
-					
+					// toastr.success('Data Updated Successfully');
 				</script>
 			</cfoutput>
 

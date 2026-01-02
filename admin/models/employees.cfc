@@ -268,6 +268,7 @@
 			<cfset session.userinfo.lname = qEmployees.emp_lname />
 			<cfset session.userinfo.password = qEmployees.password />
 			<cfset session.userinfo.email = qEmployees.emp_email />
+			<cfset session.userinfo.emp_email = qEmployees.emp_email />
 			<cfset session.userinfo.roles = valueList(qEmployeeRoles.role) />
 			<cfset session.userinfo.sa = qEmployees.sa />
 		<cfelse>

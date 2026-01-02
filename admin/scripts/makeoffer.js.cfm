@@ -41,11 +41,19 @@ function gridChange(uid,customer_email,seller_email) {
 
 function doEdit(type) {
 
+	var deleteBtn = document.getElementById('delete');
+
     var edit = new admin.models.makeoffer();
 
      edit.setForm("editForm");
 	
-	 result = edit.deleteMakeoffer();
+
+	 <!--- editBtn.disabled = true; --->
+	if (!confirm('Delete -- ARE YOU SURE? ')) {
+		return false; 
+	}
+	deleteBtn.disabled = true;
+	result = edit.deleteMakeoffer();
 
 	 console.log('test offer: ' , result)
 
@@ -71,6 +79,11 @@ function doEdit(type) {
 		};
 
 		toastr.success(result.MESSAGE);
+
+		setTimeout(function () {
+			<!--- editBtn.disabled = false; --->
+			deleteBtn.disabled = false;
+		}, 5000);
 
       } 
       else { alert( result.MESSAGE)}

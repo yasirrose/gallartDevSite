@@ -463,7 +463,7 @@
           	<cfquery name="qListings" datasource="#application.dsource#">
 				SELECT top 200 fname + '   -   ' + email as fname_email FROM leads
 				WHERE fname <> ''
-				AND upper(fname) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+				AND upper(fname) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%') and isdeleted is null
 				ORDER BY fname
 	       	</cfquery>
 	
@@ -477,7 +477,7 @@
           	<cfquery name="qListings" datasource="#application.dsource#">
 				SELECT top 200 lname FROM leads
 				WHERE lname <> ''
-				AND upper(lname) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+				AND upper(lname) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%') and isdeleted is null
 				ORDER BY lname
 	       	</cfquery>
 	
@@ -491,7 +491,7 @@
           	<cfquery name="qListings" datasource="#application.dsource#">
 				SELECT top 200 email FROM leads
 				WHERE email <> ''
-				AND upper(email) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%')
+				AND upper(email) LIKE upper('#ARGUMENTS.cfautosuggestvalue#%') and isdeleted is null
 				ORDER BY email
 	       	</cfquery>
 

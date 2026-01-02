@@ -117,7 +117,7 @@
 		<cfset moduleName = 'Bios Module'>
 		<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
 		<cfset date = now()>				
-		<cfset action = 'Insert'>
+		<cfset action = 'deleted'>
 
 		<cfquery name="addLog" datasource="#application.dsource#" >
 			INSERT INTO logs 
