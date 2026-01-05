@@ -404,7 +404,7 @@
 															<div class="col-md-6">
 																<div class="input-field">
 																	<cfinput type="text" size=40 maxsize=50 maxLength="20" name="phone" placeholder="Enter your Phone Number" value="#form.phone#" >
-																	<span id="formatSign">(xxx) xxx-xxxx</span>
+																	<!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
 																	<span class="error-message" id="phoneNumerError"></span>
 																</div>
 															</div>
@@ -548,21 +548,21 @@
 			document.addEventListener("DOMContentLoaded", function() {
 				const phoneInput = document.getElementById("phone");
 				const phoneType = document.getElementById("phoneType");
-				const formatSign = document.getElementById("formatSign");
+				// const formatSign = document.getElementById("formatSign");
 
-				function toggleFormatSign() {
-					if (phoneType.value === "OutsideUS") {
-						formatSign.style.display = "none";
-					} else {
-						formatSign.style.display = "inline";
-					}
-				}
+				// function toggleFormatSign() {
+				// 	if (phoneType.value === "OutsideUS") {
+				// 		formatSign.style.display = "none";
+				// 	} else {
+				// 		formatSign.style.display = "inline";
+				// 	}
+				// }
 
-				// run on load (in case form already has value)
-				toggleFormatSign();
+				// // run on load (in case form already has value)
+				// toggleFormatSign();
 
 				// run on change
-				phoneType.addEventListener("change", toggleFormatSign);
+				// phoneType.addEventListener("change", toggleFormatSign);
 
 				phoneInput.addEventListener("input", function(e) {
 					// If type is OutsideUS → skip formatting

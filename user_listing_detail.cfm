@@ -75,61 +75,68 @@
                         <!--- </cfif>
                     </cfif> --->           
                             
-                        <cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                            INSERT INTO products 
-                            (
-                                fk_users,
-                                datestamp, 
-                                modelno, 
-                                modelno_numeric,
-                                code, 
-                                name, 
-                                retail_price,
-                                gallery_price,
-                                quantity, 
-                                orderable, 
-                                path, 
-                                options, 
-                                ship_weight, 
-                                Vendor, 
-                                manufacturer, 
-                                Active, 
-                                expressair, 
-                                shipinfo, 
-                                availablity, 
-                                caption,
-                                year,
-                                size,
-                                LASTEDIT
-                            )
-                            VALUES
-                            (
-                                #session.sellerinfo.pk_users#,
-                                '#datestamp#', 
-                                '#modelno#',
-                                #modelno_numeric_new#,
-                                '#form.Vendor#-#modelno#',
-                                '#form.name#', 
-                                #form.retail_price#, 
-                                #form.gallery_price#, 
-                                #tquantity#, 
-                                #orderable#, 
-                                '#category#', 
-                                '#form.options#', 
-                                #ship_weight#,
-                                '#form.Vendor#',
-                                '#form.manufacturer#', 
-                                '#form.active#',
-                                '#expressair#', 
-                                '#shipinfo#', 
-                                '#availablity#', 
-                                '#caption#',
-                                '#year#',
-                                '#size#',
-                                <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">
-                            )
-                            SELECT @@identity as uid 
-                        </cfquery>
+                        <cftry>
+                            <cfquery name="insertListing" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                                INSERT INTO products
+                                (
+                                    fk_users,
+                                    datestamp,
+                                    modelno,
+                                    modelno_numeric,
+                                    code,
+                                    name,
+                                    retail_price,
+                                    gallery_price,
+                                    quantity,
+                                    orderable,
+                                    path,
+                                    options,
+                                    ship_weight,
+                                    Vendor,
+                                    manufacturer,
+                                    Active,
+                                    expressair,
+                                    shipinfo,
+                                    availablity,
+                                    caption,
+                                    year,
+                                    size,
+                                    LASTEDIT
+                                )
+                                VALUES
+                                (
+                                    #session.sellerinfo.pk_users#,
+                                    '#datestamp#',
+                                    '#modelno#',
+                                    #modelno_numeric_new#,
+                                    '#form.Vendor#-#modelno#',
+                                    '#form.name#',
+                                    #form.retail_price#,
+                                    #form.gallery_price#,
+                                    #tquantity#,
+                                    #orderable#,
+                                    '#category#',
+                                    '#form.options#',
+                                    #ship_weight#,
+                                    '#form.Vendor#',
+                                    '#form.manufacturer#',
+                                    '#form.active#',
+                                    '#expressair#',
+                                    '#shipinfo#',
+                                    '#availablity#',
+                                    '#caption#',
+                                    '#year#',
+                                    '#size#',
+                                    <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">
+                                )
+                                SELECT @@identity as uid
+                            </cfquery>
+                            <cfcatch type="Any">
+                                <cfoutput><script>alert('#jsStringFormat(cfcatch.detail)#'); 
+                                window.location.href='/user_listing_detail';</script></cfoutput>
+                                <cfabort>
+                            </cfcatch>
+                        </cftry>
                         
                         <cfset thisId = insertListing.uid /> 
                         
@@ -261,32 +268,38 @@
                     <!--- </cfif>
                 </cfif> --->
 
-                <cfquery name="currentaction" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                    UPDATE products SET
-                        datestamp = '#datestamp#',
-                        name = '#form.name#', 
-                        orderable = #form.orderable#,
-                        quantity = #tquantity#,
-                        path = '#category#', 
-                        options = '#form.options#', 
-                        ship_weight = #ship_weight#, 
-                        Vendor = '#form.Vendor#',
-                        retail_price = #form.retail_price#,
-                        gallery_price = #form.gallery_price#,
-                        <cfif isDefined('Form.fileup') and Form.fileup is not "">
-                        imageURL = '#uploaddirweb#/#uid#.jpg', 
-                        </cfif>
-                        manufacturer = '#form.manufacturer#', 
-                        active = #form.active#,
-                        expressair = '#expressair#',
-                        shipinfo = '#shipinfo#',
-                        availablity = '#availablity#',
-                        caption = '#caption#',
-                        year = '#year#',
-                        size = '#size#',
-                        LASTEDIT = <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">
-                    WHERE uid = #form.uid#
-                </cfquery>
+                <cftry>
+                    <cfquery name="currentaction" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                        UPDATE products SET
+                            datestamp = '#datestamp#',
+                            name = '#form.name#',
+                            orderable = #form.orderable#,
+                            quantity = #tquantity#,
+                            path = '#category#',
+                            options = '#form.options#',
+                            ship_weight = #ship_weight#,
+                            Vendor = '#form.Vendor#',
+                            retail_price = #form.retail_price#,
+                            gallery_price = #form.gallery_price#,
+                            <cfif isDefined('Form.fileup') and Form.fileup is not "">
+                            imageURL = '#uploaddirweb#/#uid#.jpg',
+                            </cfif>
+                            manufacturer = '#form.manufacturer#',
+                            active = #form.active#,
+                            expressair = '#expressair#',
+                            shipinfo = '#shipinfo#',
+                            availablity = '#availablity#',
+                            caption = '#caption#',
+                            year = '#year#',
+                            size = '#size#',
+                            LASTEDIT = <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#createodbcdatetime(now())#">
+                        WHERE uid = #form.uid#
+                    </cfquery>
+                    <cfcatch type="Any">
+                        <cfoutput><script>alert('#jsStringFormat(cfcatch.detail)#'); window.location.href='/user_listing_detail/#form.uid#';</script></cfoutput>
+                        <cfabort>
+                    </cfcatch>
+                </cftry>
 
                 <!--- <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR> --->
                 <cfset date = now()>
@@ -405,10 +418,16 @@
 		</cftry>
         
         <cfset deleteID = form.uid>
-		
-		<cfquery name="currentaction" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-			DELETE products where uid = #form.uid#	
-		</cfquery>
+
+		<cftry>
+			<cfquery name="currentaction" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+				DELETE products where uid = #form.uid#
+			</cfquery>
+			<cfcatch type="Any">
+				<cfoutput><script>alert('#jsStringFormat(cfcatch.message)#'); window.location.href='/overView';</script></cfoutput>
+				<cfabort>
+			</cfcatch>
+		</cftry>
 
         <!--- <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR> --->
         <cfset date = now()>
@@ -416,11 +435,11 @@
         <cfset action = 'Delete'>
 
         <cfquery name="addLog" datasource="#application.dsource#" >
-            INSERT INTO logs 
+            INSERT INTO logs
                 ( moduleName, ipAddress, date, action, sellerUser, sellerArtwork)
                 VALUES
                 ( '#moduleName#', '#ipAddress#', #date#, '#action#', #session.sellerinfo.pk_users#, #deleteID#)
-        </cfquery>		
+        </cfquery>
 		<cflocation url="/overView" addtoken="No">
 	
 	</cfif>
@@ -457,6 +476,21 @@
         SELECT * FROM products
         WHERE 0=1
     </CFQUERY>
+</cfif>
+
+<!--- Create formValues struct starting with detail --->
+<cfset formValues = duplicate(detail)>
+
+<!--- If form submitted, override with form values for persistence --->
+<cfif isDefined('process') AND (ListFirst(form.process, ",") EQ "ADD" OR ListFirst(form.process, ",") EQ "UPDATE")>
+    <cfset formValues.name = form.name>
+    <cfset formValues.manufacturer = form.manufacturer>
+    <cfset formValues.year = form.year>
+    <cfset formValues.size = form.size>
+    <cfset formValues.path = form.category>
+    <cfset formValues.retail_price = form.retail_price>
+    <cfset formValues.gallery_price = form.gallery_price>
+    <cfset formValues.caption = form.caption>
 </cfif>
 
 <cfquery name="artists" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -687,9 +721,9 @@
                                                                         <option value="">Select here ...</option>
                                                                         <cfloop query="artists">
                                                                         <cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-                                                                        <option value="#HTMLEditFormat(manufacturer)#" <cfif HTMLEditFormat(manufacturer) is #HTMLEditFormat(detail.manufacturer)#>Selected</cfif>>#HTMLEditFormat(manufacturer)#
+                                                                        <option value="#HTMLEditFormat(manufacturer)#" <cfif HTMLEditFormat(manufacturer) is #HTMLEditFormat(formValues.manufacturer)#>Selected</cfif>>#HTMLEditFormat(manufacturer)#
                                                                         </cfif>
-                                                                        
+
                                                                         </cfloop>
                                                                     </select>
                                                                     <span class="error-message" id="artistviewError"></span>

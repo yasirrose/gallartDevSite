@@ -602,7 +602,7 @@
 																					<div class="col-md-12">
 																						<div class="input-field">
 																							<cfinput type="text" size=40 maxlength="20" name="phone" placeholder="Enter your Phone Number" id="phone" value="#form.phone#" required="No">
-																							<span id="formatSign">(xxx) xxx-xxxx</span>
+																							<!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
 																							<span class="error-message" id="phoneError"></span>
 																						</div>
 																					</div>																		
@@ -769,26 +769,26 @@
 			document.addEventListener("DOMContentLoaded", function() {
 				const phoneInput = document.getElementById("phone");
 				const phoneType = document.getElementById("phoneType");
-				const formatSign = document.getElementById("formatSign");
+				// const formatSign = document.getElementById("formatSign");
 
-				 if (!phoneInput || !phoneType || !formatSign) {
+				 if (!phoneInput || !phoneType ) {
 					// Elements not on this page → exit
 					return;
 				}
 
-				function toggleFormatSign() {
-					if (phoneType.value === "OutsideUS") {
-						formatSign.style.display = "none";
-					} else {
-						formatSign.style.display = "inline";
-					}
-				}
+				// function toggleFormatSign() {
+				// 	if (phoneType.value === "OutsideUS") {
+				// 		formatSign.style.display = "none";
+				// 	} else {
+				// 		formatSign.style.display = "inline";
+				// 	}
+				// }
 
-				// run on load (in case form already has value)
-				toggleFormatSign();
+				// // run on load (in case form already has value)
+				// toggleFormatSign();
 
-				// run on change
-				phoneType.addEventListener("change", toggleFormatSign);
+				// // run on change
+				// phoneType.addEventListener("change", toggleFormatSign);
 
 				phoneInput.addEventListener("input", function(e) {
 					// If type is OutsideUS → skip formatting

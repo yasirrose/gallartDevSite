@@ -17,8 +17,6 @@
       <cfparam name="form.captchaError" default="0">
       <cfparam name="form.errorMsg" default="">
       <cfparam name="form.errorPhone" default="0">
-      <cfparam name="form.emailTaken" default="0">
-      <cfparam name="form.passwordMismatch" default="0">
       <cfparam name="FORM.captcha"	type="string"	default=""	/>
       <cfparam name="FORM.captcha_check"	type="string" default="" />
       <cftry>
@@ -190,6 +188,8 @@
                                                             document.errorFrm.businessphone.value = '#form.businessphone#'
                                                             document.errorFrm.otherphone.value = '#form.otherphone#'
                                                             document.errorFrm.website.value = '#form.website#'
+                                                            // document.errorFrm.password.value = '#form.password#'
+                                                            // document.errorFrm.password2.value = '#form.password2#'
                                                             document.errorFrm.errorMsg.value = '#errorMsg#'
                                                             document.errorFrm.errorPhone.value = '1'
                                                             document.errorFrm.submit();
@@ -208,6 +208,8 @@
                                                             document.errorFrm.businessphone.value = '#form.businessphone#'
                                                             document.errorFrm.otherphone.value = '#form.otherphone#'
                                                             document.errorFrm.website.value = '#form.website#'
+                                                            // document.errorFrm.password.value = '#form.password#'
+                                                            // document.errorFrm.password2.value = '#form.password2#'
                                                             document.errorFrm.errorMsg.value = '#errorMsg#'
                                                             document.errorFrm.captchaError.value = '1'
                                                             document.errorFrm.submit();
@@ -218,8 +220,12 @@
                                                          select pk_users from users where email =
                                                          <cfqueryparam value="#trim(form.email)#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
                                                       </cfquery>
-                                                   <cfif CheckDups.recordcount gt 0>
-                                                         <cfset form.emailTaken = 1>
+                                                      <cfif CheckDups.recordcount gt 0>
+                                                         <script language="JavaScript">
+                                                            alert('The email you selected is taken. If you are already a member please log in.');
+                                                           history.back();
+                                                         </script>
+                                                         <cfabort>
                                                       </cfif>
                                                       <cfif form.password neq form.password2>
                                                          <script language="JavaScript">
@@ -391,10 +397,7 @@
                                                       <span style="color: ##ff0000; font-weight: bold;">
                                                       #form.errorMsg#
                                                       </span><br><br>
-                                                   </cfif>
-                                                   <cfif FORM.emailTaken>
-                                                      <span style="color: ##ff0000; font-weight: bold;">The email you selected is taken. If you are already a member please log in.</span><br><br>
-                                                   </cfif>
+                                                   </cfif>                                                   
                                                    <!--- onsubmit="return validateSellerForm()" --->
                                                    <div class="form-style">
                                                       <CFFORM ACTION="#script_name#" METHOD="POST"  id="submitSellerForm">
@@ -441,21 +444,21 @@
                                                                   <div class="input-field">
                                                                      <label><b>Phone Number:<span style="color: ##ff0000;">*</span></b></label>
                                                                      <cfinput type="text" name="cellphone" id="S_cellphone" maxlength="20" value="#form.cellphone#"   size="30">
-                                                                     <span id="formatSign">(xxx) xxx-xxxx</span>
+                                                                     <!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
                                                                      <span class="error-message" id="S_cellphoneError"></span>
                                                                   </div>
                                                                </div>
                                                                <div class="col-md-6">
                                                                   <div class="input-field">
                                                                      <label><b>Create a Password:<span style="color: ##ff0000;">*</span></b></label>
-                                                                     <cfinput type="password" name="password" maxlength="15" id="S_password" size="30" >
+                                                                     <cfinput type="password" name="password" maxlength="15" id="S_password"  size="30" >
                                                                      <span class="error-message" id="S_passwordError"></span>
                                                                   </div>
                                                                </div>
                                                                <div class="col-md-6">
                                                                   <div class="input-field">
                                                                      <label><b>Re-enter Password:<span style="color: ##ff0000;">*</span></b></label>
-                                                                     <cfinput type="password" name="password2" maxlength="15" id="S_password2" size="30" >
+                                                                     <cfinput type="password" name="password2" maxlength="15" id="S_password2"  size="30" >
                                                                      <span class="error-message" id="S_password2Error"></span>
                                                                   </div>
                                                                </div>
@@ -504,18 +507,6 @@
          <cfinclude template="frmxss.cfm">
          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
          <script>
-            document.addEventListener("DOMContentLoaded", function() {
-               const emailTakenError = document.querySelector('span[style*="color: #ff0000"][style*="font-weight: bold"]');
-               if (emailTakenError && emailTakenError.textContent.includes('The email you selected is taken')) {
-                  const submitBtn = document.getElementById('S_submitbtn');
-                  submitBtn.disabled = true;
-                  submitBtn.textContent = "Processing...";
-                  setTimeout(function() {
-                     submitBtn.disabled = false;
-                     submitBtn.textContent = "Create an account";
-                  }, 3000); // Enable after 3 seconds
-               }
-            });
 
             function validateSellerForm(){
                // alert('test');
@@ -536,8 +527,8 @@
 
                const S_submitBtn = document.getElementById('S_submitbtn');
 
-               S_submitBtn.disabled = true;
-               S_submitBtn.textContent = "Processing..."; 
+               // S_submitBtn.disabled = true;
+               // S_submitBtn.textContent = "Processing..."; 
 
                var recaptcha = grecaptcha.getResponse();
                console.log(recaptcha.length);
@@ -636,21 +627,21 @@
                document.addEventListener("DOMContentLoaded", function() {
                   const phoneInput = document.getElementById("S_cellphone");
                   const phoneType = document.getElementById("phoneType");
-                  const formatSign = document.getElementById("formatSign");
+                  // const formatSign = document.getElementById("formatSign");
 
-                  function toggleFormatSign() {
-                     if (phoneType.value === "OutsideUS") {
-                        formatSign.style.display = "none";
-                     } else {
-                        formatSign.style.display = "inline";
-                     }
-                  }
+                  // function toggleFormatSign() {
+                  //    if (phoneType.value === "OutsideUS") {
+                  //       formatSign.style.display = "none";
+                  //    } else {
+                  //       formatSign.style.display = "inline";
+                  //    }
+                  // }
 
-                  // run on load (in case form already has value)
-                  toggleFormatSign();
+                  // // run on load (in case form already has value)
+                  // toggleFormatSign();
 
-                  // run on change
-                  phoneType.addEventListener("change", toggleFormatSign);
+                  // // run on change
+                  // phoneType.addEventListener("change", toggleFormatSign);
 
                   phoneInput.addEventListener("input", function(e) {
                      // If type is OutsideUS → skip formatting
@@ -673,6 +664,16 @@
                      }
                   });
                });
+
+
+               document.addEventListener("pageshow", function () {
+                  const btn = document.getElementById('S_submitbtn');
+                  if (btn) {
+                     btn.disabled = false;
+                     btn.textContent = "Create an account";
+                  }
+               });
+
          </script>
 
          <style>
