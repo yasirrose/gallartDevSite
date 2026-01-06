@@ -17,6 +17,13 @@
       <cfparam name="form.captchaError" default="0">
       <cfparam name="form.errorMsg" default="">
       <cfparam name="form.errorPhone" default="0">
+      <cfparam name="form.errorEmail" default="0">
+      <cfparam name="form.errorPassword" default="0">
+      <cfparam name="form.errorGeneral" default="">
+      <cfparam name="url.errorEmail" default="0">
+      <cfif url.errorEmail EQ 1>
+         <cfset form.errorEmail = 1>
+      </cfif>
       <cfparam name="FORM.captcha"	type="string"	default=""	/>
       <cfparam name="FORM.captcha_check"	type="string" default="" />
       <cftry>
@@ -126,6 +133,7 @@
                   <input type="Hidden" name="errorMsg">
                   <!--- <input type="Hidden" name="captchaError" value="0"> --->
                   <input type="Hidden" name="errorPhone" value="0">
+                  <input type="Hidden" name="errorEmail" value="0">
                </form>
             </cfoutput>
             <div id="Table_01">
@@ -195,7 +203,7 @@
                                                             document.errorFrm.submit();
                                                          </script>
                                                       </cfoutput>
-                                                   <cfelseif captchaResponse.success NEQ 'YES'>
+                                                    <cfelseif captchaResponse.success NEQ 'YES'>
                                                       <cfoutput>
                                                          <!--- <cfdump var="testing 2" abort="true"> --->
                                                          <script language="JavaScript">
@@ -215,16 +223,26 @@
                                                             document.errorFrm.submit();
                                                          </script>
                                                       </cfoutput>
-                                                   <cfelse>
+                                                    <cfelse>
                                                       <cfquery name="CheckDups" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
                                                          select pk_users from users where email =
                                                          <cfqueryparam value="#trim(form.email)#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
                                                       </cfquery>
                                                       <cfif CheckDups.recordcount gt 0>
-                                                         <script language="JavaScript">
-                                                            alert('The email you selected is taken. If you are already a member please log in.');
-                                                           history.back();
-                                                         </script>
+                                                         <cfoutput>
+                                                            <script language="JavaScript">
+                                                               document.errorFrm.fname.value = '#form.fname#'
+                                                               document.errorFrm.lname.value = '#form.lname#'
+                                                               document.errorFrm.email.value = '#form.email#'
+                                                               document.errorFrm.cellphone.value = '#form.cellphone#'
+                                                               document.errorFrm.phone.value = '#form.phone#'
+                                                               document.errorFrm.businessphone.value = '#form.businessphone#'
+                                                               document.errorFrm.otherphone.value = '#form.otherphone#'
+                                                               document.errorFrm.website.value = '#form.website#'
+                                                               document.errorFrm.errorEmail.value = '1'
+                                                               document.errorFrm.submit();
+                                                            </script>
+                                                         </cfoutput>
                                                          <cfabort>
                                                       </cfif>
                                                       <cfif form.password neq form.password2>
@@ -260,7 +278,7 @@
                                                          <cfset otherphone = "">
                                                       </cfif>
 
-                                                <cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq ''  >
+                                                 <cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq ''  >
                                                    <cflock name="insertuser" timeout="10">
                                                       <!--- <cfdump var="test data" abort="true"> --->
                                                       <cfquery name="insertUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -397,7 +415,8 @@
                                                       <span style="color: ##ff0000; font-weight: bold;">
                                                       #form.errorMsg#
                                                       </span><br><br>
-                                                   </cfif>                                                   
+                                                   </cfif>
+
                                                    <!--- onsubmit="return validateSellerForm()" --->
                                                    <div class="form-style">
                                                       <CFFORM ACTION="#script_name#" METHOD="POST"  id="submitSellerForm">
@@ -506,6 +525,12 @@
          </tr>
          <cfinclude template="frmxss.cfm">
          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+         <cfif FORM.errorEmail EQ 1>
+            <script>
+               alert('The email you selected is taken. If you are already a member please log in.');
+            </script>
+         </cfif>
+
          <script>
 
             function validateSellerForm(){
@@ -527,8 +552,8 @@
 
                const S_submitBtn = document.getElementById('S_submitbtn');
 
-               // S_submitBtn.disabled = true;
-               // S_submitBtn.textContent = "Processing..."; 
+               S_submitBtn.disabled = true;
+               S_submitBtn.textContent = "Processing..."; 
 
                var recaptcha = grecaptcha.getResponse();
                console.log(recaptcha.length);

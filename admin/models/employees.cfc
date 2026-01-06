@@ -70,23 +70,61 @@
 	    <!--- <cfset var success = true /> --->
 
 		<cfset var result = { success = true, message = "" }>
+		<cfset var employeeId = "">
+		<cfset var action = "">
 		
 	    	<cftry>
 
-				<cfquery name="checkPassword" datasource="#application.dsource#">
-					SELECT COUNT(*) AS passwordCount FROM employees
-					WHERE password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">
-				</cfquery>
+				<cfif len(arguments.password)>
+					<cfif len(arguments.pk_employees)>
+						<!--- Get current password for this employee --->
+						<cfquery name="currentPasswordQry" datasource="#application.dsource#">
+							SELECT password
+							FROM employees
+							WHERE pk_employees = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_employees#">
+						</cfquery>
+
+						<!--- Only check for duplicates if password changed --->
+						<cfif currentPasswordQry.recordCount eq 0 OR arguments.password NEQ currentPasswordQry.password>
+							<cfquery name="checkPassword" datasource="#application.dsource#">
+								SELECT COUNT(*) AS passwordCount
+								FROM employees
+								WHERE password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">
+								AND pk_employees != <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_employees#">
+							</cfquery>
+
+							<cfif checkPassword.passwordCount GT 0>
+								<cfset result.success = false>
+								<cfset result.message = "This password already exists. Please choose a different password.">
+								<cfreturn result>
+							</cfif>
+						</cfif>
+
+					<cfelse>
+						<!--- New record: check password normally --->
+						<cfquery name="checkPassword" datasource="#application.dsource#">
+							SELECT COUNT(*) AS passwordCount
+							FROM employees
+							WHERE password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">
+						</cfquery>
+
+						<cfif checkPassword.passwordCount GT 0>
+							<cfset result.success = false>
+							<cfset result.message = "This password already exists. Please choose a different password.">
+							<cfreturn result>
+						</cfif>
+					</cfif>
+				</cfif>
 
 				
 					<cfif arguments.pk_employees eq ''>
 
-						<cfif checkPassword.passwordCount GT 0>
+						<!--- <cfif checkPassword.passwordCount GT 0>
 							<!--- <cfset success = false /> --->
 							<cfset result.success = false>
     				    	<cfset result.message = "Your Password is already exist. Please change your password">
 							<cfreturn result>
-						 <cfelse>
+						 <cfelse> --->
 		    	
 							<cfquery name="addEmployee" datasource="#application.dsource#"> 
 								INSERT into employees
@@ -128,7 +166,7 @@
 							<cfset result.success = true>
     				    	<cfset result.message = "Record is added successfully.">
 
-						</cfif>
+						<!--- </cfif> --->
 
 					 <cfelse>
 					
@@ -138,7 +176,7 @@
 							emp_lname = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_lname#">,
 							emp_email = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_email#">,
 							emp_phone = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_phone#">,
-							
+							password  = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">,
 							commission_minus  = <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.commission_minus#">,
 							commission_percent  = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.commission_percent#">
 							WHERE pk_employees = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_employees#">
