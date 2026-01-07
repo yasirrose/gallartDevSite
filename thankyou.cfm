@@ -90,11 +90,11 @@ table tr td * {
 												<cfif val is "y">
 												<!--- Find order --->
 												<cfquery name="get_items" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-												SELECT items.product_code as pid, items.quantity as qty, * FROM items
-												left join products on products.code =  items.product_code
-													WHERE items.order_id='#getuserinfo.orderid#' 
-													order by line_id
-													</cfquery>
+													SELECT items.product_code as pid, items.quantity as qty, * FROM items
+													left join products on products.code =  items.product_code
+														WHERE items.order_id='#getuserinfo.orderid#' and items.product_code != 'Tax'
+														order by line_id
+												</cfquery>
 													<cfquery name="get_order_info" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 												SELECT * FROM orders
 													WHERE orderid='#getuserinfo.orderid#'
@@ -260,7 +260,7 @@ table tr td * {
 																	<cfoutput>
 																		<tr>
 																			<td valign="top"><font size="1" face="arial, helvetica">#PID#</font></td>
-																			<td valign="top"><font size="1" face="arial, helvetica">#name#</font></td>
+																			<td valign="top"><font size="1" face="arial, helvetica">#title#</font></td>
 											
 																							
 																			<td  valign="top" align="center"><font size="1" face="arial, helvetica">#get_items.qty#</font></td>

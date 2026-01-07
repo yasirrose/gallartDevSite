@@ -241,6 +241,14 @@
 	    <cftry>
 	    	
 	    	<cfif arguments.pk_leads eq ''>
+
+				<cfif len(trim(arguments.artists))>
+					<cfset insertArtists = arguments.artists>
+				 <cfelseif len(trim(arguments.theartists))>
+					<cfset insertArtists = arguments.theartists>
+				 <cfelse>
+					<cfset insertArtists = "">
+				</cfif>
 		    	
 		    	<cfquery name="addLead" datasource="#application.dsource#"> 
 	                INSERT into leads
@@ -287,7 +295,7 @@
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.zip#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.company#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.website#">,
-						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.artists#">,
+						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#insertArtists#">,
 						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.titles#">,
 						<cfqueryparam cfsqltype="CF_SQL_LONGVARCHAR" value="#arguments.notes#">,
 						<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.origin#">,

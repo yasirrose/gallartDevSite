@@ -87,6 +87,14 @@ table tr td, table tr td * {
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <!--- Show current cart contents --->
 
+<!--- Check if this is an error redirect --->
+<cfif isDefined("url.error") and url.error eq 1 and isDefined("session.errorFormData")>
+	<!--- Populate form scope with stored data --->
+	<cfloop collection="#session.errorFormData#" item="key">
+		<cfset form[key] = session.errorFormData[key]>
+	</cfloop>
+</cfif>
+
 <cfquery name="contents" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 	select * from cart  where trackerid='#session.xss#'
 </cfquery>
@@ -109,32 +117,36 @@ table tr td, table tr td * {
 		<cfset Shipcountry = ''>
 	</cfif>
 
-	<!--- <cfdump var="#BILLSTATE#" abort="true">  --->
+	 
 
 <CFIF shipnamef GT 1>
-<CFSET shipnamef=#trim(shipnamef)#>
-<CFELSE>
-<CFSET shipnamef=#trim(billnamef)#>
+	<CFSET shipnamef=#trim(shipnamef)#>
+ <CFELSE>
+	<CFSET shipnamef=#trim(billnamef)#>
 </CFIF>
+
 <CFIF shipname GT 1>
-<CFSET shipname=#trim(shipname)#>
-<CFELSE>
-<CFSET shipname=#trim(billname)#>
+	<CFSET shipname=#trim(shipname)#>
+ <CFELSE>
+	<CFSET shipname=#trim(billname)#>
 </CFIF>
+
 <CFIF SHIPADDRESS1 GT 1>
-<CFSET SHIPADDRESS1=#trim(SHIPADDRESS1)#>
-<CFELSE>
-<CFSET SHIPADDRESS1=#trim(BILLADDRESS1)#>
+	<CFSET SHIPADDRESS1=#trim(SHIPADDRESS1)#>
+ <CFELSE>
+	<CFSET SHIPADDRESS1=#trim(BILLADDRESS1)#>
 </CFIF>
+
 <CFIF SHIPADDRESS2 GT 1>
-<CFSET SHIPADDRESS2=#trim(SHIPADDRESS2)#>
-<CFELSE>
-<CFSET SHIPADDRESS2=#trim(BILLADDRESS2)#>
+	<CFSET SHIPADDRESS2=#trim(SHIPADDRESS2)#>
+ <CFELSE>
+	<CFSET SHIPADDRESS2=#trim(BILLADDRESS2)#>
 </CFIF>
+
 <CFIF SHIPCITY GT 1>
-<CFSET SHIPCITY=#trim(SHIPCITY)#>
-<CFELSE>
-<CFSET SHIPCITY=#trim(BILLCITY)#>
+	<CFSET SHIPCITY=#trim(SHIPCITY)#>
+ <CFELSE>
+	<CFSET SHIPCITY=#trim(BILLCITY)#>
 </CFIF>
 
 <CFIF SHIPSTATE GT 1>
@@ -144,14 +156,15 @@ table tr td, table tr td * {
 </CFIF>
 
 <CFIF SHIPCOUNTRY GT 1>
-<CFSET SHIPCOUNTRY=#trim(SHIPCOUNTRY)#>
+	<CFSET SHIPCOUNTRY=#trim(SHIPCOUNTRY)#>
 <CFELSE>
-<CFSET SHIPCOUNTRY=#trim(BILLCOUNTRY)#>
+	<CFSET SHIPCOUNTRY=#trim(BILLCOUNTRY)#>
 </CFIF>
+
 <CFIF SHIPZIP GT 1>
-<CFSET SHIPZIP=#trim(SHIPZIP)#>
-<CFELSE>
-<CFSET SHIPZIP=#trim(BILLZIP)#>
+	<CFSET SHIPZIP=#trim(SHIPZIP)#>
+ <CFELSE>
+	<CFSET SHIPZIP=#trim(BILLZIP)#>
 </CFIF>
 
 <!--- <CFIF SHIPPHONE GT 1>
@@ -183,114 +196,131 @@ table tr td, table tr td * {
 			</div>
 		</div> 
 		<div class="main-content pb-4"> 
-			<div class="content-section">  
+			<div class="content-section">
+				<!--- Display error message if present --->
+				<cfif isDefined("url.error") and url.error eq 1 and isDefined("session.errorMessage")>
+					<!--- <div class="alert alert-danger" role="alert">
+						<strong>Error:</strong> <cfoutput>#session.errorMessage#</cfoutput>
+					</div> --->
+
+					<cfoutput>
+						<script language="JavaScript">
+							alert('Error occurred: #JSStringFormat(session.errorMessage)#');
+						</script>
+					</cfoutput>
+
+				</cfif>
+
 				<cfif contents.recordcount>
 					<!--- content starts --->
 
 					<div class="my-5">
 						<div class="table-cart-detail mt-4">
-						 <h5>	<strong>REVIEW YOUR ORDER:</strong></h5>
-						<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
-							<!-- <tr>
-								<td colspan="4" height="40">
-									
-								</td>
-							</tr> -->
-							<tr>
-								<td width="50%" height="20"><b>Name</b></td>
-								<td width="10%" align="center"><b>Qty</b></td>
-								<td width="15%" align="Center"><b>Price</b></td>
-								<td width="15%" align="Center"><b>Ext.</b></td>
-							</tr>
-							<Cfoutput query="contents">
-							<TR>
-							<cfquery name="get_name" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-								SELECT * from products where uid='#pid#'
-							</cfquery>
-								<td valign="top">
-									<a onMouseOver="javascript:popUpWin('#get_name.imageURL#')" onMouseOut="myWin.close();">
-										#get_name.name#
-									</a>
-								</td>
-								<td align="center" valign="middle">
-									#qty#
-								</td>
-								<td align="center" valign="middle">
-									#dollarformat(charge)#
-								</td>
-								<cfset ext = #charge# * #qty#>
-								<td align="center" valign="middle">
-									#dollarformat(Ext)#
-								</td>
-									<cfset subtotal = #subtotal# + #ext#>
-									
-							</tr>
-							
-							</cfoutput>
-							<!--- Calculate and Enter Taxes --->
-							<cfif #billstate# is #taxst#>
-								<cfset tax = (taxamount*0.01)*subtotal />
-							<cfelse>
-								<cfset tax = 0 />
-							</cfif>
-							<Cfset total = tax + insurance + subtotal />
-							<!--- <tr>
-								<td colspan="4">
-									<hr>
-								</td>
-							</tr> --->
-							<cfoutput>
-							<tr>
-								<td colspan="2">&nbsp;
-									
-								</td>
-								<td>
-									<b>Sub Total:</b>
-								</td>
-								<td align="right">
-									<b>#dollarformat(subtotal)#</b>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">&nbsp;
-									
-								</td>
-								<td>
-									<b>Tax:</b>
-								</td>
-								<td align="right">
-									<b>#dollarformat(tax)#</b>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">&nbsp;
-									
-								</td>
-								<td>
-									<b>Insurance:</b>
-								</td>
-								<td align="right">
-									<b>#dollarformat(insurance)#</b>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">&nbsp;
-									
-								</td>
-								<td>
-									<b>Total:</b>
-								</td>
-								<td align="right">
-									<b>#dollarformat(total)#</b>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="4" align="right" style="color: ##ff0000;">
-									We will contact you with the shipping cost.
-								</td>
-							</tr>
-							</cfoutput>
-						</table>
+							<h5>
+								<strong>REVIEW YOUR ORDER:</strong>
+							</h5>
+							<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
+								<!-- <tr>
+									<td colspan="4" height="40">
+										
+									</td>
+								</tr> -->
+								<tr>
+									<td width="50%" height="20"><b>Name</b></td>
+									<td width="10%" align="center"><b>Qty</b></td>
+									<td width="15%" align="Center"><b>Price</b></td>
+									<td width="15%" align="Center"><b>Ext.</b></td>
+								</tr>
+								<Cfoutput query="contents">
+									<tr>
+										<cfquery name="get_name" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+											SELECT * from products where uid='#pid#'
+										</cfquery>
+										
+										<td valign="top">
+											<a onMouseOver="javascript:popUpWin('#get_name.imageURL#')" onMouseOut="myWin.close();">
+												#get_name.name#
+											</a>
+										</td>
+										<td align="center" valign="middle">
+											#qty#
+										</td>
+										<td align="center" valign="middle">
+											#dollarformat(charge)#
+										</td>
+										<cfset ext = #charge# * #qty#>
+										<td align="center" valign="middle">
+											#dollarformat(Ext)#
+										</td>
+											<cfset subtotal = #subtotal# + #ext#>
+											
+									</tr>
+								
+								</cfoutput>
+								<!--- Calculate and Enter Taxes --->
+								<cfif #billstate# is #taxst#>
+									<cfset tax = (taxamount*0.01)*subtotal />
+								<cfelse>
+									<cfset tax = 0 />
+								</cfif>
+								<Cfset total = tax + insurance + subtotal />
+								<!--- <tr>
+									<td colspan="4">
+										<hr>
+									</td>
+								</tr> --->
+								<cfoutput>
+								<tr>
+									<td colspan="2">&nbsp;
+										
+									</td>
+									<td>
+										<b>Sub Total:</b>
+									</td>
+									<td align="right">
+										<b>#dollarformat(subtotal)#</b>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">&nbsp;
+										
+									</td>
+									<td>
+										<b>Tax:</b>
+									</td>
+									<td align="right">
+										<b>#dollarformat(tax)#</b>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">&nbsp;
+										
+									</td>
+									<td>
+										<b>Insurance:</b>
+									</td>
+									<td align="right">
+										<b>#dollarformat(insurance)#</b>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">&nbsp;
+										
+									</td>
+									<td>
+										<b>Total:</b>
+									</td>
+									<td align="right">
+										<b>#dollarformat(total)#</b>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="4" align="right" style="color: ##ff0000;">
+										We will contact you with the shipping cost.
+									</td>
+								</tr>
+								</cfoutput>
+							</table>
 						<cfoutput> 
 						</tr>
 					</table>
@@ -315,19 +345,19 @@ table tr td, table tr td * {
 								</li>
 
 								<li>
-									<b>Address Type,</b> #form.Addresstype#
+									<b>Address Type,</b> #form.AddressType#
 								</li>
 
 								<li>
 									<b> City, Zip</b>  #form.billcity#, #form.billzip#
 								</li>
 								<li>
-									<cfif form.addressType EQ 'Outside'>
+									<cfif form.AddressType EQ 'Outside'>
 										<b>State/Province ,Country:</b> #form.billstateText# ,#form.billcountry#
 									<cfelse>
 										<b>State: </b> #form.billstateDropdown#
 									</cfif>
-									
+
 								</li>
 								<!--- <li>
 									<b>Cell Phone</b> #form.cellphone# 
@@ -362,7 +392,7 @@ table tr td, table tr td * {
 								<li>
 									<b>Website</b> #form.website#
 								</li> 
-								</ul>
+							</ul>
 						</div>
 
 						<div class="billing-listing">
@@ -411,9 +441,9 @@ table tr td, table tr td * {
 								</td>
 							</tr> --->
 							</ul>
-						   </div>
+						</div>
 
-						   <div>
+						<div>
 							<div class="main-title mt-4 mb-4">
 								<h5>PAYMENT INFORMATION</h5>
 							</div> 
@@ -423,63 +453,63 @@ table tr td, table tr td * {
 							</cfquery>
 							
 							<ul> 
-							<li>
-								 <b>Card Type</b>  
-								<cfloop query="coptions">
-									<cfif cardcode eq form.cardtype>#showtype#</cfif>
-								</cfloop> 
-							</li>
-							<li>
-								 <b>Card Number</b>  
-									xxxx-xxxx-xxxx-#Right(form.cardnum,4)# 
-							</li>
-							<li>
-								 <b>CVC</b>  
-									#form.cardCVC# 
-							</li>
-							<li>
-								 <b>Expiration Date</b>  
-									#form.cardexpm#/#form.cardexpy# 
-							</li>
-							<!-- <li>
-								<td colspan="2">
-								<hr>
-								</td>
-							</li> -->
-							<li>
-								 <b>Special Instructions:</b> 
-							       #form.comments# 
-							</li>
+								<li>
+									<b>Card Type</b>  
+									<cfloop query="coptions">
+										<cfif cardcode eq form.cardtype>#showtype#</cfif>
+									</cfloop> 
+								</li>
+								<li>
+									<b>Card Number</b>  
+										xxxx-xxxx-xxxx-#Right(form.cardnum,4)# 
+								</li>
+								<li>
+									<b>CVC</b>  
+										#form.cardCVC# 
+								</li>
+								<li>
+									<b>Expiration Date</b>  
+										#form.cardexpm#/#form.cardexpy# 
+								</li>
+								<!-- <li>
+									<td colspan="2">
+									<hr>
+									</td>
+								</li> -->
+								<li>
+									<b>Special Instructions:</b> 
+									#form.comments# 
+								</li>
 							
-						</ul>
-						<form method="post" name="purcahseForm" action="/purchase" onsubmit="disableSubmitBtn()">
-							<input type="Hidden" name="shipMethod" value="#shipMethod#">
-							<input type="Hidden" name="origin" value="WEBSITE">
-							<cfloop collection="#form#" item="idx">
-								<input type="Hidden" name="#idx#" value="#evaluate('form.'&idx)#">
-							</cfloop>
+							</ul>
+							<form method="post" name="purcahseForm" action="/purchase" onsubmit="disableSubmitBtn()">
+								<input type="Hidden" name="shipMethod" value="#shipMethod#">
+								<input type="Hidden" name="origin" value="WEBSITE">
+								<cfloop collection="#form#" item="idx">
+									<input type="Hidden" name="#idx#" value="#evaluate('form.'&idx)#">
+								</cfloop>
 
-							<!--- <input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="Seemore">
-							<input type="submit" value="Purchase!" class="Seemore"><br><br>
-								<font face="verdana, arial" size="1">
-									<b>
-										Press PURCHASE only Once, or the transaction may fail
-									</b>
-								</font> ---> 
-								<div>
-									<div class="d-flex gap-3">
-										<input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="Seemore">
-										<input type="submit" value="Purchase!" id="submitBtn" class="Seemore">
+								<!--- <input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="Seemore">
+								<input type="submit" value="Purchase!" class="Seemore"><br><br>
+									<font face="verdana, arial" size="1">
+										<b>
+											Press PURCHASE only Once, or the transaction may fail
+										</b>
+									</font> ---> 
+									<div>
+										<div class="d-flex gap-3">
+											<input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="Seemore">
+											<input type="submit" value="Purchase!" id="submitBtn" class="Seemore">
+										</div> 
+										<font face="verdana, arial" size="1">
+											<b>
+												Press PURCHASE only Once, or the transaction may fail
+											</b>
+										</font>
 									</div> 
-								<font face="verdana, arial" size="1">
-									<b>
-										Press PURCHASE only Once, or the transaction may fail
-									</b>
-								</font>
-							</div> 
 							</form>
-						   </div>
 						</div>
+					</div>
 					 
 						
 						</div>
@@ -504,6 +534,12 @@ table tr td, table tr td * {
 
 </div>
 </div> 
+
+<!--- Clear session data after page processing --->
+<cfif isDefined("url.error") and url.error eq 1 and isDefined("session.errorFormData")>
+	<cfset structDelete(session, "errorFormData")>
+	<cfset structDelete(session, "errorMessage")>
+</cfif>
 
 <cfinclude template="frmxss.cfm">
 

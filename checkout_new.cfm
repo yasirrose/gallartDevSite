@@ -419,7 +419,7 @@
 																<div class="billing-info text-center">
 																	<strong>BILLING INFORMATION</strong>
 																</div>
-																<div class="input-form">
+																<div class="input-form responsive-input-form">
 																	<div class="input-field #this_row()#">
 																		<div class="row align-items-center">
 																			<div class="col-md-2"><label><span class="required">*</span><b>Name</b> <i>(First Last)</i></label></div>
@@ -548,7 +548,7 @@
 																			</div>
 																			<div class="col-md-5 relative">
 																				<cfinput type="text" name="phoneNumber" id="phoneNumber" size="25" maxlength="20">
-																				<span id="formatSign" class="absolute-field">(xxx) xxx-xxxx</span>
+																				<!--- <span id="formatSign" class="absolute-field">(xxx) xxx-xxxx</span> --->
 																				<span class="error-message" id="phoneNumberError"></span>
 																			</div>
 																			<div class="col-md-5">
@@ -642,7 +642,7 @@
 																	<label for="sameAddress">(Same Above Info)</label>
 																</div>
 
-																<div class="input-form">
+																<div class="input-form responsive-input-form">
 																	<div class="input-field #this_row()#">
 																		<div class="row align-items-center">
 																			<div class="col-md-2">
@@ -810,7 +810,7 @@
 																<div class="top-heading m-0 mt-3">
 																	<h4>PAYMENT INFORMATION</h4>
 																</div>
-																<div class="input-form">
+																<div class="input-form responsive-input-form">
 																	<div class="input-field #this_row()#">
 																		<div class="row align-items-center">
 																			<div class="col-md-2">
@@ -988,26 +988,26 @@
 			document.addEventListener("DOMContentLoaded", function() {
 				const phoneInput = document.getElementById("phoneNumber");
 				const phoneType = document.getElementById("phoneType");
-				const formatSign = document.getElementById("formatSign");
+				// const formatSign = document.getElementById("formatSign");
 
-				if (!phoneInput || !phoneType || !formatSign) {
+				if (!phoneInput || !phoneType ) {
 					// Elements not on this page → exit
 					return;
 				}
 
-				function toggleFormatSign() {
-					if (phoneType.value === "OutsideUS") {
-						formatSign.style.display = "none";
-					} else {
-						formatSign.style.display = "inline";
-					}
-				}
+				// function toggleFormatSign() {
+				// 	if (phoneType.value === "OutsideUS") {
+				// 		formatSign.style.display = "none";
+				// 	} else {
+				// 		formatSign.style.display = "inline";
+				// 	}
+				// }
 
 				// run on load (in case form already has value)
-				toggleFormatSign();
+				// toggleFormatSign();
 
 				// run on change
-				phoneType.addEventListener("change", toggleFormatSign);
+				// phoneType.addEventListener("change", toggleFormatSign);
 
 				phoneInput.addEventListener("input", function(e) {
 					// If type is OutsideUS → skip formatting
@@ -1136,6 +1136,34 @@
 				width: 100% !important;
 			}
 			/* Styleing of Select2 dropdown end */
+
+			.responsive-input-form .input-field div.autosuggest input {
+				width: 100% !important;
+				padding-right: 32px !important;
+			}
+			.responsive-input-form .input-field div.autosuggest {
+				width: 100%;
+				position: relative;
+			}
+			.responsive-input-form .input-field div.autosuggest div {
+				width: 100%;
+			}
+			.responsive-input-form .input-field div.autosuggest div.autosuggestcontainer {
+				top: 40px;
+			}
+			.responsive-input-form .input-field div.autosuggest #BillAddress1loadingicon, 
+			.responsive-input-form .input-field div.autosuggest #BillAddress2loadingicon,
+			.responsive-input-form .input-field div.autosuggest #billcityloadingicon,
+			.responsive-input-form .input-field div.autosuggest #billziploadingicon,
+			.responsive-input-form .input-field div.autosuggest #shipAddress1loadingicon,
+			.responsive-input-form .input-field div.autosuggest #shipAddress2loadingicon,
+			.responsive-input-form .input-field div.autosuggest #shipcityloadingicon,
+			.responsive-input-form .input-field div.autosuggest #shipziploadingicon {
+				position: absolute;
+				width: max-content;
+				right: 10px;
+				top: 10px;
+			}
 		</style>
 	
 

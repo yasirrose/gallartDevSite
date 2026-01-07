@@ -801,7 +801,7 @@
                                                                             <div class="file-upload-text"><strong>Browse File</strong></div>
                                                                             </label>
                                                                             <div class="file-upload-custom">
-                                                                                <input type="file" name="fileup" size="22" style="padding: 0;">
+                                                                                <input type="file" name="fileup" accept="image/jpeg,image/png" size="22" style="padding: 0;">
                                                                             </div>
                                                                             
                                                                         </div>
