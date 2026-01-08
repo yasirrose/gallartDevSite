@@ -1391,21 +1391,34 @@
 				var addImageIndex = 1;
 				$("#addImageButton").click(function () {
 					if ($(".additionalImage").length < 4) {
-						$("#addImageContainer").append(
-							"<div class='additionalImage'><div class='file-upload-wrapper sm-file-upload-wrapper'>" +
-							"<label for='file-upload' class='file-upload-label'>" +
-							"<div class='file-upload-icon'><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>" +
-							"<path d='M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z' />" +
-							"</svg></div><div class='file-upload-text'><strong>Browse Files</strong></div></label>" +
-							"<input type='File' name='addImage_" + addImageIndex + "' id='addImage_" + addImageIndex + "' />" +
-							"</div></div>"
-						);					
+						var newField = $(
+							"<div class='additionalImage' style='position: relative; margin-bottom:10px;'>" +
+								"<div class='file-upload-wrapper sm-file-upload-wrapper'>" +
+									"<label for='file-upload' class='file-upload-label'>" +
+										"<div class='file-upload-icon'><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>" +
+										"<path d='M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z' />" +
+										"</svg></div>" +
+										"<div class='file-upload-text'><strong>Browse Files</strong></div>" +
+									"</label>" +
+									"<input type='file' accept='image/jpeg,image/png' name='addImage_" + addImageIndex + "' id='addImage_" + addImageIndex + "' />" +
+								"</div>" +
+								// Close button
+								"<span class='removeImage' style='position:absolute; top:0; right:0; cursor:pointer; color:red; font-weight:bold; font-size:18px;'>&times;</span>" +
+							"</div>"
+						);
+
+						$("#addImageContainer").append(newField);
 						addImageIndex++;
 					} else {
 						if ($("#maxImageMessage").length === 0) {
 							$("#addImageContainer").after("<p id='maxImageMessage' style='color: red;'>You can upload a maximum of 4 images.</p>");
 						}
 					}
+				});
+
+				// Remove the input field when close button is clicked
+				$(document).on("click", ".removeImage", function () {
+					$(this).closest(".additionalImage").remove();
 				});
 
 
@@ -1778,6 +1791,18 @@
 				// run on change
 				// phoneType.addEventListener("change", toggleFormatSign);
 
+				phoneType.addEventListener("change", function() {
+					if (this.value === "OutsideUS") {
+						phoneInput.value = "+1"; 
+					} else {
+						
+						if (phoneInput.value.startsWith("+1")) {
+							phoneInput.value = "";
+						}
+					}
+				});
+
+
 				phoneInput.addEventListener("input", function(e) {
 					// If type is OutsideUS → skip formatting
 					if (phoneType.value === "OutsideUS") {
@@ -1818,6 +1843,18 @@
 
 				// run on change
 				// phoneType.addEventListener("change", toggleFormatSign);
+
+				phoneType.addEventListener("change", function() {
+					if (this.value === "OutsideUS") {
+						phoneInput.value = "+1"; 
+					} else {
+						
+						if (phoneInput.value.startsWith("+1")) {
+							phoneInput.value = "";
+						}
+					}
+				});
+
 
 				phoneInput.addEventListener("input", function(e) {
 					// If type is OutsideUS → skip formatting

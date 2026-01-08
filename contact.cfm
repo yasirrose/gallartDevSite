@@ -15,10 +15,6 @@
 	<cfparam name="form.processingError" default="0">
 	<cfparam name="success" default="false">
 
-	<!--- <cfparam name="FORM.captcha"	type="string"	default=""	/> --->
-
-	<!--- <cfparam name="FORM.captcha_check"	type="string" default="" /> --->
-
 	<cftry>
 	   <cfparam name="FORM.submitted"	type="numeric"	default="0"	/>
 
@@ -27,60 +23,6 @@
 	   </cfcatch>
 	</cftry>
 
-	<!--- <!--- Set a flag to see if this user is a bot or not. --->
-	<cfset blnIsBot = true />
-	<cfset phoneError = false />
-
-	<!--- Check to see if the form has been submitted. --->
-	<cfif FORM.submitted>
-
-	   <cfset errorMsg = "" />
-
-	   <!--- <cfif len(form.phone) AND NOT isValid("regex",form.phone,"^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$")>
-			<cfset errorMsg = "Please enter your phone number in the format (xxx) xxx-xxxx <br/>" />
-		</cfif> --->
-
-	<!--- <cfif errorMsg NEQ "">
-	   <cfset phoneError = true />
-
-	   <cfelse> --->
-
-	   <cftry>
-
-		  <!--- Decrypt the check value. --->
-		  <cfset strCaptcha = Decrypt( FORM.captcha_check, "gallart-is-the-best", "CFMX_COMPAT", "HEX"	) />
-
-		  <cfif (strCaptcha EQ FORM.captcha)>
-
-			 <cfset blnIsBot = false />
-
-		  </cfif>
-
-		  <cfcatch>
-
-			 <cfset blnIsBot = true />
-
-		  </cfcatch>
-	   </cftry>
-
-	</cfif>
-
-	</cfif>
-
-	<cfset arrValidChars = ListToArray(
-	"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z," &
-	"2,3,4,5,6,7,8,9"
-	) />
-
-	<!--- Now, shuffle the array. --->
-	<cfset CreateObject( "java", "java.util.Collections"	).Shuffle(	arrValidChars )	/>
-
-	<cfset strCaptcha = (
-		arrValidChars[ 1 ] &
-		arrValidChars[ 2 ] 
-	) />
-
-	<cfset FORM.captcha_check = Encrypt( strCaptcha,"gallart-is-the-best", "CFMX_COMPAT", "HEX" ) /> ---> --->
 
 	<cfset phoneError = false />
 
@@ -403,7 +345,7 @@
 
 															<div class="col-md-6">
 																<div class="input-field">
-																	<cfinput type="text" size=40 maxsize=50 maxLength="20" name="phone" placeholder="Enter your Phone Number" value="#form.phone#" >
+																	<cfinput type="text" size=40 maxsize=50 maxLength="20" name="phone" id="phone" placeholder="Enter your Phone Number*" value="#form.phone#" >
 																	<!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
 																	<span class="error-message" id="phoneNumerError"></span>
 																</div>
@@ -415,13 +357,6 @@
 															<TEXTAREA NAME="comments" id="comments" maxlength="500" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
 														 	<div id="charCount" class="mb-3">0 / 500 characters</div>
 														</div>
-
-														<!--- <div class="input-field">
-														<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier" fontsize="28"/>
-														<label><FONT color="000000"><b>Please enter the characters in the image above: <span style="color:##ff0000;">*</span></b></FONT></label>
-														<cfinput type="text" name="captcha" >
-														<span class="error-message" id="captchaError"></span>
-														</div> --->
 
 														<div class="input-field pt-3">
 															<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
@@ -459,37 +394,26 @@
 	   <script>
 		 function validateForm(e) {
 			let isValid = true;
-			
-			// Clear previous error messages
-			document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
-			
-			// Get form field values
+			document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
 			const name = document.getElementById('name').value.trim();
 			const email = document.getElementById('email').value.trim();
 			const phone = document.getElementById('phone').value.trim();
 			const phoneType = document.querySelector("[name='phoneType']").value;
-			// const captcha = document.getElementById('captcha').value.trim();
-
 			const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
-
 			const submitButton = document.getElementById('submitBtn');
+			const recaptcha = grecaptcha.getResponse();
 
-			var recaptcha = grecaptcha.getResponse();
-			console.log(recaptcha.length);
-			
-
-			if (recaptcha.length == 0) {
-				document.getElementById("recaptchaError").innerText = "Please confirm you are not a robot.";
+			if (!recaptcha) {
+				document.getElementById("recaptchaError").textContent = "Please confirm you are not a robot.";
 				isValid = false;
 			}
-						
 
 			if (!name) {
 				document.getElementById('nameError').textContent = 'Please enter your name.';
 				isValid = false;
 			}
-			
-			// Validate EMAIL
+
 			if (!email) {
 				document.getElementById('emailError').textContent = 'Please fill in your email address.';
 				isValid = false;
@@ -498,50 +422,23 @@
 				isValid = false;
 			}
 
-
 			if (!phone) {
-				document.getElementById('phoneNumerError').textContent = 'Please enter a valid phone number ';
+				document.getElementById('phoneNumerError').textContent = 'Please enter a valid phone number.';
+				isValid = false;
+			} else if (["Home Phone", "Cell Phone", "Business Phone"].includes(phoneType) && !phoneRegex.test(phone)) {
+				document.getElementById('phoneNumerError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx.';
+				document.getElementById('phone').focus();
 				isValid = false;
 			}
 
-			if(phoneType){
-				if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
-					if (phone && !phoneRegex.test(phone)) {
-						document.getElementById('phoneNumerError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
-						document.getElementById('phone').focus();
-						isValid = false;
-					}
-				}
-			}
+			if (!isValid) return false;
 
-			if (!isValid) {		
-				return false;
-			} else {
-				
-				submitButton.disabled = true;
-				submitButton.innerText = "Sending...";
-
-				// prevent default submit first
-				e.preventDefault();
-
-				// Now submit form manually after disabling button
-				setTimeout(() => {
-					document.forms['guestFrm'].submit();
-				}, 10);
-
-				return false; // stop default submit
-			}
-			
-			
-			
-			// Validate CAPTCHA
-			// if (!captcha) {
-			// 	document.getElementById('captchaError').textContent = 'Please enter the characters in the image.';
-			// 	isValid = false;
-			// }
-			
-			return isValid;
-         }
+			submitButton.disabled = true;
+			submitButton.textContent = "Sending...";
+			e.preventDefault();
+			setTimeout(() => document.forms['guestFrm'].submit(), 10);
+			return false;
+		 }
 	   </script>
 
 	    <script>
@@ -564,6 +461,17 @@
 				// run on change
 				// phoneType.addEventListener("change", toggleFormatSign);
 
+				phoneType.addEventListener("change", function() {
+					if (this.value === "OutsideUS") {
+						phoneInput.value = "+1"; 
+					} else {
+						
+						if (phoneInput.value.startsWith("+1")) {
+							phoneInput.value = "";
+						}
+					}
+				});
+
 				phoneInput.addEventListener("input", function(e) {
 					// If type is OutsideUS → skip formatting
 					if (phoneType.value === "OutsideUS") {
@@ -584,6 +492,8 @@
 						e.target.value = "";
 					}
 				});
+
+				
 			});
 
 		</script>

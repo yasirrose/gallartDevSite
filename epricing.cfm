@@ -660,87 +660,58 @@
 	   <script>
 
 			function setFormActionAndValidate(event) {
-				var pid = document.getElementById('pid').value.trim();
-
-				console.log('test pid: '+ pid);
-				document.getElementById('frm1').action = '/epricing/' + pid;
+				document.getElementById('frm1').action = '/epricing/' + document.getElementById('pid').value.trim();
 				return validateEpricingForm(event);
 			}
 
 			function validateEpricingForm(e) {
 				let isValid = true;
-			
-				// Clear previous error messages
-				document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
-				
-				
+
+				document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
 				const name = document.getElementById('name').value.trim();
-				const email = document.getElementById('email').value.trim();			
+				const email = document.getElementById('email').value.trim();
 				const phone = document.getElementById('phone').value.trim();
 				const phoneType = document.querySelector("[name='phoneType']").value;
 				const Offer = document.getElementById('Offer').value.trim();
-				const actualPrice = document.getElementById('actualPrice').value.trim();
+				const actualPrice = parseInt(document.getElementById('actualPrice').value.trim(), 10);
 				const submitButton = document.getElementById('submitBtn');
-			
 
 				const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
-				// const integerRegex = /^[0-9]+$/; 
 				const integerRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
 				const emailRegex = /\S+@\S+\.\S+/;
+				const recaptcha = grecaptcha.getResponse();
 
-				var recaptcha = grecaptcha.getResponse();
-				console.log(recaptcha.length);
+				console.log('test: ' + name)
 
-
-				if (recaptcha.length == 0) {
-					document.getElementById("m_recaptchaError").innerText = "Please confirm you are not a robot.";
+				if (!recaptcha) {
+					document.getElementById("m_recaptchaError").textContent = "Please confirm you are not a robot.";
 					isValid = false;
 				}
-								
 
 				if (!name) {
 					document.getElementById('nameError').textContent = 'Please enter your name.';
 					isValid = false;
 				}
-				
-				// Validate EMAIL
-				if (!email ) {
-					document.getElementById('emailError').textContent = 'Please enter an email address.';
+
+				if (!email || !emailRegex.test(email)) {
+					document.getElementById('emailError').textContent = !email ? 'Please enter an email address.' : 'Please enter a valid email address.';
 					isValid = false;
 				}
 
-				// If email is entered, validate format
-				if (email && !emailRegex.test(email)) {
-					document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+				if (["Home Phone", "Cell Phone", "Business Phone"].includes(phoneType) && !phoneRegex.test(phone)) {
+					document.getElementById('phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx.';
+					document.getElementById('phone').focus();
 					isValid = false;
 				}
 
-				if(phoneType){
-					if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
-						if (!phoneRegex.test(phone)) {
-							document.getElementById('phoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
-							document.getElementById('phone').focus();
-							isValid = false;
-						}
-					}
-				}
-
-				if (!Offer) {
-					document.getElementById('OfferError').textContent = 'Please make an offer - enter a dollar amount, no $ or decimal.';
-					isValid = false;
-				} else if (!integerRegex.test(Offer)) {
-					document.getElementById('OfferError').textContent = 'Please enter a dollar amount number (no decimals or special characters).';
-					isValid = false;
-				}  else if (parseInt(Offer, 10) === 0) {
-					document.getElementById('OfferError').textContent = 'Please enter an offer price greater than 0.';
-					isValid = false;
-				} else if (parseInt(Offer, 10) >= actualPrice) {
-					document.getElementById('OfferError').textContent = 'Offer price must be less than the sale or gallery price.';
+				const offerNum = parseFloat(Offer);
+				if (!Offer || !integerRegex.test(Offer) || offerNum <= 0 || offerNum >= actualPrice) {
+					document.getElementById('OfferError').textContent = !Offer ? 'Please make an offer - enter a dollar amount, no $ or decimal.' :
+						!integerRegex.test(Offer) ? 'Please enter a dollar amount number (no decimals or special characters).' :
+						offerNum <= 0 ? 'Please enter an offer price greater than 0.' : 'Offer price must be less than the sale or gallery price.';
 					isValid = false;
 				}
-			
-			
-
 
 				if (!isValid) {		
 					return false;
@@ -759,7 +730,6 @@
 
 					return false; // stop default submit
 				}
-			
 				return isValid;
 			}
 	   </script>
@@ -789,6 +759,18 @@
 
 				// // run on change
 				// phoneType.addEventListener("change", toggleFormatSign);
+
+				phoneType.addEventListener("change", function() {
+					if (this.value === "OutsideUS") {
+						phoneInput.value = "+1"; 
+					} else {
+						
+						if (phoneInput.value.startsWith("+1")) {
+							phoneInput.value = "";
+						}
+					}
+				});
+
 
 				phoneInput.addEventListener("input", function(e) {
 					// If type is OutsideUS → skip formatting

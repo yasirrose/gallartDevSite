@@ -1009,6 +1009,18 @@
 				// run on change
 				// phoneType.addEventListener("change", toggleFormatSign);
 
+				phoneType.addEventListener("change", function() {
+					if (this.value === "OutsideUS") {
+						phoneInput.value = "+1"; 
+					} else {
+						
+						if (phoneInput.value.startsWith("+1")) {
+							phoneInput.value = "";
+						}
+					}
+				});
+
+
 				phoneInput.addEventListener("input", function(e) {
 					// If type is OutsideUS → skip formatting
 					if (phoneType.value === "OutsideUS") {

@@ -199,7 +199,7 @@
 				<td>
 
 					<input type="text" name="PhoneNumber" id="PhoneNumber" maxlength="20"  size="20" value="#form.PhoneNumber#">
-					<span id="formatSign">(xxx) xxx-xxxx</span>
+					<!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
 				</td>
 			</tr>
 
@@ -209,21 +209,27 @@
 					document.addEventListener("DOMContentLoaded", function() {
 						const phoneInput = document.getElementById("PhoneNumber");
 						const phoneType = document.getElementById("PhoneType");
-						const formatSign = document.getElementById("formatSign");
+						// const formatSign = document.getElementById("formatSign");
 
-						function toggleFormatSign() {
-							if (phoneType.value === "OutsideUS") {
-								formatSign.style.display = "none";
-							} else {
-								formatSign.style.display = "inline";
-							}
-						}
+						// function toggleFormatSign() {
+						// 	if (phoneType.value === "OutsideUS") {
+						// 		formatSign.style.display = "none";
+						// 	} else {
+						// 		formatSign.style.display = "inline";
+						// 	}
+						// }
 
-						// run on load (in case form already has value)
-						toggleFormatSign();
+						// // run on load (in case form already has value)
+						// toggleFormatSign();
 
 						// run on change
-						phoneType.addEventListener("change", toggleFormatSign);
+						// phoneType.addEventListener("change", toggleFormatSign);
+
+						phoneType.addEventListener("change", function() {
+							if (this.value === "OutsideUS" && phoneInput.value === '') {
+								phoneInput.value = "+1"; 
+							} 
+						});
 
 						phoneInput.addEventListener("input", function(e) {
 							// If type is OutsideUS → skip formatting

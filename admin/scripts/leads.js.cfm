@@ -394,14 +394,14 @@ getKeywords = function(){
 	$("#PhoneType").val(selectedPhone ? selectedPhone.type : "");
 
 	var phoneType = document.getElementById('PhoneType').value
-	var formatSign = document.getElementById("formatSign");
+	<!--- var formatSign = document.getElementById("formatSign"); --->
 	
 
-	if (phoneType === "OutsideUS") {
+	<!--- if (phoneType === "OutsideUS") {
 		formatSign.style.display = "none";
 	} else {
 		formatSign.style.display = "inline";
-	}
+	} --->
 
 	
 	<!--- console.log('test1: ' + strLead.RESULTSET.DATA[0][9]); // businessphone
