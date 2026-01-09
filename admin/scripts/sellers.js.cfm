@@ -73,14 +73,14 @@ function gridChange(thisId) {
 
 	<!--- var td =  $("##PhoneType").val(); --->
 	var phoneType = document.getElementById('PhoneType').value
-	var formatSign = document.getElementById("formatSign");
+	<!--- var formatSign = document.getElementById("formatSign"); --->
 	
 
-	if (phoneType === "OutsideUS") {
+	<!--- if (phoneType === "OutsideUS") {
 		formatSign.style.display = "none";
 	} else {
 		formatSign.style.display = "inline";
-	}
+	} --->
 
 	<!--- console.log('test data: ' + td) --->
 
@@ -257,6 +257,7 @@ function showNew () {
    	document.getElementById('lname').value = '';
    	document.getElementById('seller_email').value = '';
 	<!--- document.getElementById('cellphone').value = ''; --->
+	document.getElementById('website').value = '';
 	document.getElementById('phoneNumber').value = '';
 	document.getElementById('PhoneType').options[0].selected = true;
 	document.getElementById('password').value = '';

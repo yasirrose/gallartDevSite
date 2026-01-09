@@ -127,31 +127,32 @@
 		<cfargument name="phone" type="string" default="">
 		<cfargument name="password" type="string" default="">
 		<cfargument name="moduleName" type="string" default="">
+		<cfargument name="website" type="string" default="">
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
+		<cfset phone = "">
+		<cfset cellphone = "">
+		<cfset businessphone = "">
+		<cfset otherphone = "">
 
-		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Home Phone">
-			<cfset phone = arguments.phoneNumber>
-		<cfelse>
-			<cfset phone = "">
-		</cfif>
+		<cfif len(trim(arguments.phoneNumber))>
+			<cfswitch expression="#arguments.phoneType#">
+				<cfcase value="Home Phone">
+					<cfset phone = arguments.phoneNumber>
+				</cfcase>
 
-		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Cell Phone">
-			<cfset Cellphone = arguments.phoneNumber>
-		<cfelse>
-			<cfset Cellphone = "">
-		</cfif>
+				<cfcase value="Cell Phone">
+					<cfset cellphone = arguments.phoneNumber>
+				</cfcase>
 
-		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Business Phone">
-			<cfset businessphone = arguments.phoneNumber>
-		<cfelse>
-			<cfset businessphone = "">
-		</cfif>
+				<cfcase value="Business Phone">
+					<cfset businessphone = arguments.phoneNumber>
+				</cfcase>
 
-		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "OutsideUS">
-			<cfset otherphone = arguments.phoneNumber>
-		<cfelse>
-			<cfset otherphone = "">
+				<cfcase value="OutsideUS">
+					<cfset otherphone = arguments.phoneNumber>
+				</cfcase>
+			</cfswitch>
 		</cfif>
 	    
 	    <!--- <cfset var response = 'success' /> --->
@@ -187,7 +188,8 @@
 							businessphone,
 							otherphone,
 							password,
-							datestamp
+							datestamp,
+							website
 						)
 						values
 						(
@@ -199,7 +201,8 @@
 							'#businessphone#',
 							'#otherphone#',
 							'#arguments.password#',
-							<cfqueryparam value="#now()#" cfsqltype="CF_SQL_TIMESTAMP" maxlength="100">
+							<cfqueryparam value="#now()#" cfsqltype="CF_SQL_TIMESTAMP" maxlength="100">,
+							'#arguments.website#'
 						)
 						SELECT @@identity as newId
 					</cfquery>
@@ -219,7 +222,23 @@
 					<cfset result.success = true>
             		<cfset result.message = "Seller added  successfully.">
 				
-				<cfelse>
+				 <cfelse>
+
+					<cfquery name="checkEmailUpdate" datasource="#application.dsource#">
+						SELECT pk_users 
+						FROM users
+						WHERE LOWER(email) = LOWER(
+							<cfqueryparam value="#arguments.seller_email#" cfsqltype="cf_sql_varchar">
+						)
+						AND pk_users <> 
+							<cfqueryparam value="#arguments.pk_users#" cfsqltype="cf_sql_varchar">
+					</cfquery>
+
+					<cfif checkEmailUpdate.recordCount GT 0>
+						<cfset result.success = false>
+						<cfset result.message = "Email already exists for another user.">
+						<cfreturn result>
+					</cfif>
 				
 					<cfquery name="editUser" datasource="#application.dsource#"> 
 						UPDATE users SET 
@@ -231,6 +250,7 @@
 						businessphone = '#businessphone#',
 						otherphone = '#otherphone#',
 						password = '#arguments.password#',
+						website = '#arguments.website#',
 						datestamp = <cfqueryparam value="#now()#" cfsqltype="CF_SQL_TIMESTAMP" maxlength="100">
 						WHERE pk_users = '#arguments.pk_users#'
 					</cfquery>
@@ -255,7 +275,7 @@
 				<cfcatch type="any">
 					<!--- <cfset response = 'error' /> --->
 					<cfset result.success = false>
-       				<cfset result.message = cfcatch.message>
+       				<cfset result.message = cfcatch.detail>
 				</cfcatch>
 			</cftry>
 			

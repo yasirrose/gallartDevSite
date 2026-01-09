@@ -693,22 +693,22 @@
                                                             </button>
 
 
-                                                               <cfif structKeyExists(session, 'sellerinfo')>
+                                                            <cfif structKeyExists(session, 'sellerinfo')>
 
-                                                                  <cfquery name="getwishList" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                                                                     SELECT * FROM Wishlist 
-                                                                     WHERE product_id = <cfqueryparam value="#pid#" cfsqltype="cf_sql_integer">
-                                                                     AND user_id = <cfqueryparam value="#session.sellerinfo.pk_users#" cfsqltype="cf_sql_integer">
-                                                                  </cfquery>
+                                                               <cfquery name="getwishList" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                                                                  SELECT * FROM Wishlist 
+                                                                  WHERE product_id = <cfqueryparam value="#pid#" cfsqltype="cf_sql_integer">
+                                                                  AND user_id = <cfqueryparam value="#session.sellerinfo.pk_users#" cfsqltype="cf_sql_integer">
+                                                               </cfquery>
 
-                                                                  <cfform action="" method="POST">
-                                                                     <cfoutput>
-                                                                        <input type="hidden" id="ProductID" name="ProductID" value="#pid#">
-                                                                        <input type="hidden" id="UserID" name="UserID" value="#session.sellerinfo.pk_users#">
-                                                                        <input type="hidden" id="addData" name="addData" value="AddWishlist">
-                                                                    </cfoutput>
+                                                               <cfform action="" method="POST">
+                                                                  <cfoutput>
+                                                                     <input type="hidden" id="ProductID" name="ProductID" value="#pid#">
+                                                                     <input type="hidden" id="UserID" name="UserID" value="#session.sellerinfo.pk_users#">
+                                                                     <input type="hidden" id="addData" name="addData" value="AddWishlist">
+                                                                  </cfoutput>
 
-                                                                    <cfif getwishList.recordCount GT 0 >
+                                                                  <cfif getwishList.recordCount GT 0 >
                                                                      <input type="hidden" id="wishlist_pk_id_#getwishList.pk_id#" name="wishlist_pk_id" value="#getwishList.pk_id#">
                                                                      <button type="button" class="flex-btn" id="addWishButton" onclick="deleteWishListRecord('#getwishList.pk_id#')">
                                                                         <i class="fa fa-heart" id="hearticon"  style="color:red !important;"></i>
@@ -717,7 +717,7 @@
                                                                         </span>
                                                                      </button>
 
-                                                                  <cfelse>
+                                                                     <cfelse>
                                                                      <button type="button" class="flex-btn" id="item_addWishButtonnn" onclick="addWishListRecord()">
                                                                         <i class="fa fa-heart" id="hearticon"  ></i>
                                                                         <span>
@@ -725,12 +725,12 @@
                                                                         </span>
                                                                      </button>
 
-                                                                    </cfif>
-                                                                     
-                                                                  </cfform>
-
+                                                                  </cfif>
                                                                   
-                                                            <cfelse>
+                                                               </cfform>
+
+                                                               
+                                                               <cfelse>
                                                                   <button type="button" class="flex-btn" id="addWishButtonNotLoggedIn">
                                                                      <i class="fa fa-heart"></i>
                                                                      <span>
@@ -870,19 +870,19 @@
                                                          </div>
 
                                                       <cfform action="/item.cfm?pid=#pid#" method="POST">
-                                                            <input type="hidden" name="process" value="Add">
-                                                            <cfif productinfo.closeout eq 1 and saleprice gt 0 and application.showSalePrice EQ 1>
+                                                         <input type="hidden" name="process" value="Add">
+                                                         <cfif productinfo.closeout eq 1 and saleprice gt 0 and application.showSalePrice EQ 1>
                                                             <input type="hidden" name="charge" value="#saleprice#">
-                                                            <cfelse>
+                                                          <cfelse>
                                                             <input type="hidden" name="charge" value="#productinfo.gallery_price#">
-                                                            </cfif>
+                                                         </cfif>
                                                          
                                                          <cfif productinfo.gallery_price neq 0 or (productinfo.closeout eq 1 and productinfo.special_price gt 0)>
-                                                         <input type="HIDDEN" name="qty" value="1">
-                                                         <div class="button-group">
-                                                            <button type="submit" class="cart-btn" ><b>Add to Cart</b></button>
-                                                            <a class="offer-btn" href="/epricing/#uid#"><b>Make An Offer</b></a>
-                                                         </div>
+                                                            <input type="HIDDEN" name="qty" value="1">
+                                                            <div class="button-group">
+                                                               <button type="submit" class="cart-btn" ><b>Add to Cart</b></button>
+                                                               <a class="offer-btn" href="/epricing/#uid#"><b>Make An Offer</b></a>
+                                                            </div>
                                                          
                                                          </cfif>
                                                       </cfform>
@@ -926,23 +926,23 @@
                                                                            document.errorFrm.submit();
                                                                         </script>
                                                                      </cfoutput>
-                                                                     <cfelseif captchaResponse.success NEQ 'YES'>
-                                                                     <cfoutput>
-                                                                        <!--- <cfdump var="testing 2" abort="true"> --->
-                                                                        <script language="JavaScript">
-                                                                           document.errorFrm.fname.value = '#form.fname#'
-                                                                           document.errorFrm.lname.value = '#form.lname#'
-                                                                           document.errorFrm.name.value = '#form.name#'
-                                                                           document.errorFrm.email.value = '#form.email#'
-                                                                           document.errorFrm.phone.value = '#form.phone#'
-                                                                           document.errorFrm.otherphone.value = '#form.otherphone#'
-                                                                           document.errorFrm.comments.value = '#form.comments#'
-                                                                           document.errorFrm.errorMsg.value = '#errorMsg#'
-                                                                           document.errorFrm.captchaError.value = '1'
-                                                                           document.errorFrm.submit();
-                                                                        </script>
-                                                                     </cfoutput>
-                                                                     <cfelse>
+                                                                   <cfelseif captchaResponse.success NEQ 'YES'>
+                                                                        <cfoutput>
+                                                                           <!--- <cfdump var="testing 2" abort="true"> --->
+                                                                           <script language="JavaScript">
+                                                                              document.errorFrm.fname.value = '#form.fname#'
+                                                                              document.errorFrm.lname.value = '#form.lname#'
+                                                                              document.errorFrm.name.value = '#form.name#'
+                                                                              document.errorFrm.email.value = '#form.email#'
+                                                                              document.errorFrm.phone.value = '#form.phone#'
+                                                                              document.errorFrm.otherphone.value = '#form.otherphone#'
+                                                                              document.errorFrm.comments.value = '#form.comments#'
+                                                                              document.errorFrm.errorMsg.value = '#errorMsg#'
+                                                                              document.errorFrm.captchaError.value = '1'
+                                                                              document.errorFrm.submit();
+                                                                           </script>
+                                                                        </cfoutput>
+                                                                   <cfelse>
                                                                      <cftry>
 
                                                                         <cfif len(trim(form.phone)) AND form.phoneType EQ "Home Phone">
@@ -987,7 +987,7 @@
                                                                                  VALUES
                                                                                  ( '#moduleName#', '#ipAddress#', #date#, '#action#')
                                                                            </cfquery>
-                                                                       
+                                                                     
                                                                            <cfmail 
                                                                                  server="#servername#" 
                                                                                  username="gallart@onlinegalleryart.com"
@@ -1008,96 +1008,96 @@
                                                                                  <br><br>
                                                                                  </font>
                                                                            </cfmail>
-                                                                        <p>
-                                                                           <b>
-                                                                              Thank you 
-                                                                              <!--- <cfoutput>#form.fname# #form.lname#</cfoutput> --->
-                                                                              <cfoutput>#form.name#</cfoutput>
-                                                                              . <br><br> Your Email has been sent to the respective personnel. <br><br>   We hope that your visit has been a pleasant experience so far.
-                                                                           </b>
-                                                                        </p>
-                                                                     <cfelse>
-                                                                        <cfoutput>
-                                                                           <p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
-                                                                        </cfoutput>
-                                                                     </cfif>
-
-                                                                     <cfcatch type="Any">
-                                                                        Sorry - we have encountered a processing error.  Please try again.
-                                                                        <cfabort>
-                                                                     </cfcatch>
-                                                                  </cftry>
-
-                                                                  </cfif>
-                                                                  <cfelse>
-                                                                  <cfoutput>
-                                                                     <CFFORM ACTION="#fullURL#" METHOD="POST" name="guestFrm" onsubmit="return validateForm(event)">
-                                                                        <input type="hidden" name="submitted" value="1" />
-                                                                        <input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
-                                                                        <div class="top-heading">
-                                                                          
-                                                                        </div>
-                                                                        <cfif FORM.captchaError>
-                                                                           <p style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</p>
-                                                                        </cfif>
-                                                                        <cfif FORM.errorPhone EQ 1>
-                                                                           <p style="color: ##ff0000; font-weight: bold;">
-                                                                              #form.errorMsg#
+                                                                           <p>
+                                                                              <b>
+                                                                                 Thank you 
+                                                                                 <!--- <cfoutput>#form.fname# #form.lname#</cfoutput> --->
+                                                                                 <cfoutput>#form.name#</cfoutput>
+                                                                                 . <br><br> Your Email has been sent to the respective personnel. <br><br>   We hope that your visit has been a pleasant experience so far.
+                                                                              </b>
                                                                            </p>
+                                                                        <cfelse>
+                                                                           <cfoutput>
+                                                                              <p style="color: red;">Error: Your data is not added. Please fill out all required fields before submitting the form.</p>
+                                                                           </cfoutput>
                                                                         </cfif>
-                                                                        <p>Please contact us using the form below: <br><br>
-                                                                           <span style="color: ##ff0000;">* Required</span></p>
-                                                                       
-                                                                        <div class="input-form">
+
+                                                                        <cfcatch type="Any">
+                                                                           Sorry - we have encountered a processing error.  Please try again.
+                                                                           <cfabort>
+                                                                        </cfcatch>
+                                                                     </cftry>
+
+                                                                   </cfif>
+                                                                   <cfelse>
+                                                                     <cfoutput>
+                                                                        <CFFORM ACTION="#fullURL#" METHOD="POST" name="guestFrm" onsubmit="return validateForm(event)">
+                                                                           <input type="hidden" name="submitted" value="1" />
+                                                                           <input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
+                                                                           <div class="top-heading">
+                                                                           
+                                                                           </div>
+                                                                           <cfif FORM.captchaError>
+                                                                              <p style="color: ##ff0000; font-weight: bold;">PLEASE ENTER THE CHARACTERS IN THE IMAGE EXACTLY AS YOU SEE THEM</p>
+                                                                           </cfif>
+                                                                           <cfif FORM.errorPhone EQ 1>
+                                                                              <p style="color: ##ff0000; font-weight: bold;">
+                                                                                 #form.errorMsg#
+                                                                              </p>
+                                                                           </cfif>
+                                                                           <p>Please contact us using the form below: <br><br>
+                                                                              <span style="color: ##ff0000;">* Required</span></p>
+                                                                        
+                                                                           <div class="input-form">
+                                                                              
+
+                                                                              <div class="input-field">
+                                                                              <cfinput type="text" name="name" maxLength="30" value="#form.name#" placeholder="Enter your Name*" id="name">
+                                                                                 <span class="error-message" id="nameError"></span>
+                                                                              </div>
+
+                                                                              <div class="input-field">
+                                                                              <cfinput type="text" name="email" maxLength="30" value="#form.email#" placeholder="Enter your Email Address*" id="email">
+                                                                                 
+                                                                                 <span class="error-message" id="emailError"></span>
+                                                                              </div>
+
+                                                                              <div class="input-field">
+                                                                                    <select name="phoneType" id="phoneType" >
+                                                                                       <option value="Cell Phone">Cell Phone</option>
+                                                                                       <option value="Home Phone">Home Phone</option>
+                                                                                       <option value="Business Phone">Business Phone</option>
+                                                                                       <option value="OutsideUS">Outside US Phone</option>
+                                                                                    </select>
+                                                                                    <span class="error-message" id="phoneTypeError"></span>
+                                                                              </div>
+
+                                                                              <div class="input-field">
+                                                                              <cfinput type="text" name="phone" maxLength="20" value="#form.phone#" required="No" placeholder="Enter your Phone Number" id="phone">
+                                                                                 <!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
+                                                                                 <span class="error-message" id="phoneError"></span>
+                                                                              </div>
+                                                                        
+                                                                              <div class="input-field">
+                                                                              
+                                                                                 <TEXTAREA NAME="comments" id="comments" maxLength="500" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
+                                                                                 <div id="charCount" class="mb-3">0 / 500 characters</div>
+                                                                              </div>
+
                                                                            
 
-                                                                           <div class="input-field">
-                                                                             <cfinput type="text" name="name" maxLength="30" value="#form.name#" placeholder="Enter your Name*" id="name">
-                                                                              <span class="error-message" id="nameError"></span>
-                                                                           </div>
+                                                                              <div class="input-field pt-3">
+                                                                                 <div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+                                                                                 <span class="error-message" id="recaptchaError"></span>
+                                                                              </div>
 
-                                                                           <div class="input-field">
-                                                                             <cfinput type="text" name="email" maxLength="30" value="#form.email#" placeholder="Enter your Email Address*" id="email">
-                                                                              
-                                                                              <span class="error-message" id="emailError"></span>
+                                                                              <div class="input-button">
+                                                                                 <button type="submit" class="SeeMore" id="submitBtn">Send</button>
+                                                                                 <button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
+                                                                              </div>
                                                                            </div>
-
-                                                                           <div class="input-field">
-                                                                                 <select name="phoneType" id="phoneType" >
-                                                                                    <option value="Cell Phone">Cell Phone</option>
-                                                                                    <option value="Home Phone">Home Phone</option>
-                                                                                    <option value="Business Phone">Business Phone</option>
-                                                                                    <option value="OutsideUS">Outside US Phone</option>
-                                                                                 </select>
-                                                                                 <span class="error-message" id="phoneTypeError"></span>
-                                                                           </div>
-
-                                                                           <div class="input-field">
-                                                                             <cfinput type="text" name="phone" maxLength="20" value="#form.phone#" required="No" placeholder="Enter your Phone Number" id="phone">
-                                                                              <span id="formatSign">(xxx) xxx-xxxx</span>
-                                                                              <span class="error-message" id="phoneError"></span>
-                                                                           </div>
-                                                                     
-                                                                           <div class="input-field">
-                                                                             
-                                                                              <TEXTAREA NAME="comments" id="comments" maxLength="500" ROWS=10 COLS=35 placeholder="Enter your Comments">#form.comments#</TEXTAREA>
-                                                                              <div id="charCount" class="mb-3">0 / 500 characters</div>
-                                                                           </div>
-
-                                                                          
-
-                                                                           <div class="input-field pt-3">
-                                                                              <div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
-                                                                              <span class="error-message" id="recaptchaError"></span>
-                                                                           </div>
-
-                                                                           <div class="input-button">
-                                                                              <button type="submit" class="SeeMore" id="submitBtn">Send</button>
-                                                                              <button type="reset" class="SeeMore" id="resetBtn-captcha">Reset</button>
-                                                                           </div>
-                                                                        </div>
-                                                                     </CFFORM>
-                                                                  </cfoutput>
+                                                                        </CFFORM>
+                                                                     </cfoutput>
                                                                </cfif>
                                                             </div>
                                                          </div>
@@ -1367,26 +1367,37 @@
 			document.addEventListener("DOMContentLoaded", function() {
 				const phoneInput = document.getElementById("phone");
 				const phoneType = document.getElementById("phoneType");
-				const formatSign = document.getElementById("formatSign");
+				// const formatSign = document.getElementById("formatSign");
 
-            if (!phoneInput || !phoneType || !formatSign) {
+            if (!phoneInput || !phoneType ) {
 					// Elements not on this page → exit
 					return;
 				}
 
-				function toggleFormatSign() {
-					if (phoneType.value === "OutsideUS") {
-						formatSign.style.display = "none";
-					} else {
-						formatSign.style.display = "inline";
-					}
-				}
+				// function toggleFormatSign() {
+				// 	if (phoneType.value === "OutsideUS") {
+				// 		formatSign.style.display = "none";
+				// 	} else {
+				// 		formatSign.style.display = "inline";
+				// 	}
+				// }
 
 				// run on load (in case form already has value)
-				toggleFormatSign();
+				// toggleFormatSign();
 
 				// run on change
-				phoneType.addEventListener("change", toggleFormatSign);
+				// phoneType.addEventListener("change", toggleFormatSign);
+
+            phoneType.addEventListener("change", function() {
+					if (this.value === "OutsideUS") {
+						phoneInput.value = "+1"; 
+					} else {
+						
+						if (phoneInput.value.startsWith("+1")) {
+							phoneInput.value = "";
+						}
+					}
+				});
 
 				phoneInput.addEventListener("input", function(e) {
 					// If type is OutsideUS → skip formatting

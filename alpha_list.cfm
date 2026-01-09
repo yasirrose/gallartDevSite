@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -12,11 +13,11 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -72,8 +73,8 @@
 
 										<div aria-label="breadcrumb">
 											<ol class="breadcrumb">
-											  <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;" >Home</a></li>
-											  <li class="breadcrumb-item active" aria-current="page">Alpha Search</li>
+											  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item active" aria-current="page">Home Artists</li>
 											</ol>
 										</div>
 
@@ -92,7 +93,7 @@
 																	<cfloop from="65" to="90" index="idx">
 																		<cfset currentLetter = chr(idx)>
 																		<div>
-																			<a href="alpha_list.cfm?man=#currentLetter#&xss=#xss#"
+																			<a href="/alpha_list/#currentLetter#"
 																				class="alpha <cfif currentLetter EQ url.man>active</cfif>">
 																				#currentLetter#
 																			</a>
@@ -106,7 +107,7 @@
 												</div>
 												<div class="searchalpha-listing">
 													<cfquery name="data" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-														SELECT distinct manufacturer,artist, LOWER(P.manufacturer) AS lower_manufacturer  
+														SELECT distinct manufacturer,artist,producturl, LOWER(P.manufacturer) AS lower_manufacturer  
 														FROM products P
 														LEFT OUTER JOIN highlighted_artists HL on P.manufacturer = HL.artist
 														WHERE manufacturer like '#man#%' 
@@ -134,7 +135,7 @@
 															<ul>
 																<cfoutput query="alpha_info">
 																	<li>
-																		<a href="products.cfm?man=#URLEncodedFormat(manufacturer)#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
+																		<a href="/artists/#URLEncodedFormat(producturl)#">
 
 																			<!--- <cfset capitalize_artistName = REReplace(manufacturer, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
 

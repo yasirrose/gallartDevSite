@@ -124,14 +124,14 @@ function gridChange(thisId) {
 
 	<!--- var td =  $("##PhoneType").val(); --->
 	var phoneType = document.getElementById('PhoneType').value
-	var formatSign = document.getElementById("formatSign");
+	<!--- var formatSign = document.getElementById("formatSign"); --->
 	
 
-	if (phoneType === "OutsideUS") {
+	<!--- if (phoneType === "OutsideUS") {
 		formatSign.style.display = "none";
 	} else {
 		formatSign.style.display = "inline";
-	}
+	} --->
 
 
 }
