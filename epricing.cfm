@@ -355,7 +355,7 @@
 																				( '#moduleName#', '#ipAddress#', #date#, '#action#')
 																		</cfquery>
 
-																		<!--- <cftry> --->
+																		
 
 																			<cfmail
 																				server="#application.mailserver#"
@@ -394,47 +394,7 @@
 																					</font>
 																			</cfmail>
 
-																			<!--- <script>
-																				$(document).ready(function() {
-																					toastr.options = {
-																						'closeButton': true,
-																						'debug': false,
-																						'newestOnTop': false,
-																						'progressBar': true,
-																						'positionClass': 'toast-center-center',
-																						'preventDuplicates': false,
-																						'showDuration': '1000',
-																						'hideDuration': '1000',
-																						'timeOut': '5000',
-																						'extendedTimeOut': '1000',
-																						'showEasing': 'swing',
-																						'hideEasing': 'linear',
-																						'showMethod': 'fadeIn',
-																						'hideMethod': 'fadeOut',
-																					}
-																					toastr.success('Your Record is added successfully.');
-																				});
-
-
-																			</script>
-
-																			<style>
-																				/* Force center positioning */
-																				##toast-container.toast-center-center {
-																					top: 40% !important;
-																					left: 50% !important;
-																					transform: translate(-50%, -50%) !important;
-																					position: fixed !important;
-																					margin: 0 auto;
-																				}
-
-																				/* Custom pink + white */
-																				##toast-container > .toast-success {
-																					background-color: ##ff4da6 !important;
-																					color: white !important;
-																					font-weight: bold;
-																				}
-																			</style> --->
+																		
 
 																			<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">
 																				THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY
@@ -445,16 +405,6 @@
 																			</span>
 
 																			<cfset success = true />
-
-																			<!--- <cfcatch>
-																				<!--- <cfdump var="#cfcatch#" abort="true"> --->
-																				<cfoutput>
-																					<script language="JavaScript">
-																						alert('#cfcatch.detail#');
-																					</script>
-																				</cfoutput>
-																			</cfcatch>
-																		</cftry>																	 --->
 
 																	</cfif>
 

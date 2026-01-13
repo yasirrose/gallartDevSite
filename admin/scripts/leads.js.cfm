@@ -61,6 +61,7 @@ getKeywords = function(){
 
    function doEdit(type) {
 	  
+		console.log('test type: ' + type)
 		var editBtn = document.getElementById('edit');
 		var deleteBtn = document.getElementById('delete');
 
@@ -78,18 +79,6 @@ getKeywords = function(){
 			var phone = document.getElementById('phoneNumber').value.trim();
 			var phoneType = document.getElementById('PhoneType').value;
 		
-
-			<!--- if (fname === '') {
-				toastr.error('First Name is required.');
-				document.getElementById('fname').focus();
-				return false;
-			}
-
-			if (lname === '') {
-				toastr.error('Last Name is required.');
-				document.getElementById('lname').focus();
-				return false;
-			} --->
 
 			<!--- if (name === '') {
 				toastr.error('Name is required.');
@@ -129,7 +118,7 @@ getKeywords = function(){
 
 			var result = edit.editLeadFromForm();
 
-			<!--- console.log('test lead: ' , result) --->
+			console.log('test lead: ' , result)
 
 			if ( result.SUCCESS === true) {
 				document.getElementById('emailButton').style.display = 'block';
@@ -307,7 +296,7 @@ getKeywords = function(){
 
 	Addresstype = strLead['ADDRESSTYPE'];
 
-	console.log('test address: ' + Addresstype);
+	<!--- console.log('test address: ' + Addresstype); --->
 
 	if (!Addresstype || Addresstype.trim() === "") {
 		Addresstype = "USA";
@@ -324,9 +313,11 @@ getKeywords = function(){
 
 	if (Addresstype && Addresstype.toLowerCase() === "outside") {
 		document.getElementById("stateTextRow").style.display = "";
+		document.getElementById("OutsideCountry").style.display = "";
 		document.getElementById("stateDropdownRow").style.display = "none";
 	} else {
 		document.getElementById("stateTextRow").style.display = "none";
+				document.getElementById("OutsideCountry").style.display = "none";
 		document.getElementById("stateDropdownRow").style.display = "";
 
 		state = strLead['STATE']

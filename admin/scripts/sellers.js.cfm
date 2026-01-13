@@ -41,6 +41,7 @@ function gridChange(thisId) {
 		document.getElementById('viewListings').innerHTML = 'NO LISTINGS IN SYSTEM';
 	}
 
+	document.getElementById('password').value = strSeller['PASSWORD'];
 	
 	<!--- console.table(strSeller);                      --->
 

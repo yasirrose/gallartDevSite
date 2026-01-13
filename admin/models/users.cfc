@@ -74,6 +74,8 @@
 
 		<cfset var qUser = '' />
 		<cfset var qListings = '' />
+
+		<cfset var encryptionKey = "k7vASHylotO9mtMuRTfa2g==">
 		
 		<cfquery name="qUser" datasource="#application.dsource#"> 
            	SELECT * from users
@@ -84,13 +86,35 @@
            	SELECT * from products
             WHERE fk_users = #arguments.pk_users#
         </cfquery>
+
+		<cfset var decryptedPassword = "">
+
+		 <cfif len(trim(qUser.password))>
+			<cftry>
+				<!--- Try decrypting (new encrypted records) --->
+				<cfset decryptedPassword = decrypt(
+					qUser.password,
+					encryptionKey,
+					"AES",
+					"Base64"
+				)>
+				<cfcatch>
+					<!--- Old plain-text passwords --->
+					<cfset decryptedPassword = qUser.password>
+				</cfcatch>
+			</cftry>
+		</cfif>
 		
 		<cfset returnStruct.listings = qListings.recordcount />
 		
 		<cfloop list="#qUser.ColumnList#" index="idx">
-			<cfset returnStruct[idx] = evaluate("qUser."&idx) />
-		</cfloop>
-		
+    <cfif ucase(idx) NEQ "PASSWORD">
+        <cfset returnStruct[ucase(idx)] = qUser[idx][1] />
+    </cfif>
+</cfloop>
+
+<cfset returnStruct["PASSWORD"] = decryptedPassword>
+
 		<cfreturn returnStruct />
 	
 	</cffunction>
@@ -128,6 +152,19 @@
 		<cfargument name="password" type="string" default="">
 		<cfargument name="moduleName" type="string" default="">
 		<cfargument name="website" type="string" default="">
+
+		<!--- <cfset generatedKey = generateSecretKey("AES")>
+		<cfdump var="#generatedKey#" abort="true"> --->
+
+		<cfset var encryptionKey = "k7vASHylotO9mtMuRTfa2g==">
+
+		<cfif len(trim(arguments.password))>
+			<cfset encryptedPassword = encrypt(
+				arguments.password, encryptionKey, "AES", "Base64"
+			)>
+		 <cfelse>
+			<cfset encryptedPassword = "">
+		</cfif>
 
 		<!--- <cfdump var="#arguments#" abort="true"> --->
 		<cfset phone = "">
@@ -200,7 +237,7 @@
 							'#cellphone#',
 							'#businessphone#',
 							'#otherphone#',
-							'#arguments.password#',
+							'#encryptedPassword#',
 							<cfqueryparam value="#now()#" cfsqltype="CF_SQL_TIMESTAMP" maxlength="100">,
 							'#arguments.website#'
 						)
@@ -249,7 +286,7 @@
 						cellphone = '#cellphone#',
 						businessphone = '#businessphone#',
 						otherphone = '#otherphone#',
-						password = '#arguments.password#',
+						password = '#encryptedPassword#',
 						website = '#arguments.website#',
 						datestamp = <cfqueryparam value="#now()#" cfsqltype="CF_SQL_TIMESTAMP" maxlength="100">
 						WHERE pk_users = '#arguments.pk_users#'

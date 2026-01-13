@@ -205,8 +205,7 @@
       <cfset artistSlug = url.artist> <!--- from /artist/{artist}/{slug} --->
       <cfset productSlug = url.slug>  <!--- product slug --->
       <cfquery name="productinfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-         SELECT *
-         FROM products where 0=0
+         SELECT * FROM products where 0=0
          AND  slug = <cfqueryparam value="#slug#" cfsqltype="cf_sql_varchar"> 
          <cfif NOT isDefined('url.sellerlisting')>
          -- AND active = 1
@@ -336,13 +335,13 @@
                // Base URL
                baseURL = "http://23.20.226.157/artist/" & artist & "/" & slug;
 
-               // // Example 'url' struct
+                // Example 'url' struct
                // url = {
                // artist: url.artist,
                // // artistname: url.artistname,
-               // gallery: "GALLART",
-               // pid: "#productinfo.uid#",
-               // title: "#productinfo.name#"
+               // gallery: url.gallery,
+               // pid: url.pid,
+               // title: url.title
                // };
                // // Construct the query string
                // queryString = "";

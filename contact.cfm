@@ -211,7 +211,7 @@
 															Name: #form.name#<br>
 															Email Address: #form.email#<br>
 															Phone: #form.phone#<br>
-															Phone Outside the US: #otherphone#<br>
+															Phone Outside the US: #form.otherphone#<br>
 															Comments: #form.comments#<br>
 															<br><br>
 															</font>

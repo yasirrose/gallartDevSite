@@ -316,7 +316,7 @@
 										Password:
 									</td>
 									<td>
-										<cfinput type="text" name="password" id="password"  bind="{data.password}" maxlength="15" size="30">&nbsp;
+										<cfinput type="text" name="password" id="password"   maxlength="15" size="30">&nbsp;
 									</td>
 								</tr>
 								<tr>
