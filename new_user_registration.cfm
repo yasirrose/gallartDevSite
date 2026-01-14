@@ -866,6 +866,17 @@
 															<cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq '' and form.cellphone neq '' >
 																<cflock name="insertuser" timeout="10">
 																	<!--- <cfdump var="test data" abort="true"> --->
+
+																	<cfset encryptionKey = application.encryptionKey>
+
+																	<cfif len(trim(form.password))>
+																		<cfset encryptedPassword = encrypt(
+																			form.password, encryptionKey, "AES", "Base64"
+																		)>
+																	 <cfelse>
+																		<cfset encryptedPassword = "">
+																	</cfif>
+
 																	<cfquery name="insertUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 																		INSERT into users
 																		(
@@ -885,7 +896,7 @@
 																			<cfqueryparam value="#form.fname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
 																			<cfqueryparam value="#form.lname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
 																			<cfqueryparam value="#form.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
-																			<cfqueryparam value="#form.password#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
+																			<cfqueryparam value="#encryptedPassword#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
 																			<cfqueryparam value="#cellphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
 																			<cfqueryparam value="#phone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
 																			<cfqueryparam value="#businessphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
@@ -1217,9 +1228,6 @@
 																							</cfform>						
 																						</cfoutput>
 																					</cfif>
-
-
-
 
 																					</div>
 																				</div>
@@ -1882,10 +1890,10 @@
 
 		<style>
 			.error-message {
-			color: #ff0000;
-			font-size: 0.9em;
-			margin-top: 5px;
-			display: block;
+				color: #ff0000;
+				font-size: 0.9em;
+				margin-top: 5px;
+				display: block;
 			}
 			.input-field {
 			margin-bottom: 15px;

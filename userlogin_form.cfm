@@ -19,10 +19,14 @@
     <!--- <cfdump var="#captchaResponse.success#" abort="true"> --->
 
     <cfif captchaResponse.success  >
+
+        <cfset encryptedInput = encrypt(form.password, application.encryptionKey, "AES","Base64")>
+
         <cfquery name="ValidUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
             SELECT * FROM users
             WHERE email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar">
-            AND password = <cfqueryparam value="#form.password#" cfsqltype="cf_sql_varchar">
+            AND (password = <cfqueryparam value="#form.password#" cfsqltype="cf_sql_varchar">
+                OR password = <cfqueryparam value="#encryptedInput#" cfsqltype="cf_sql_varchar">)
         </cfquery>
     
         <cfif ValidUser.recordcount>
@@ -130,9 +134,9 @@
 
 <!--- </cfoutput> --->
 
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-<script>
+    <script>
 
         $(document).ready(function() {
             toastr.options = {
@@ -208,35 +212,35 @@
                 method: 'POST',
                 body: formData,
             })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json(); // Parse JSON only if response is valid
-        })
-        .then(data => {
-            if (data.success) {
-            
-                window.location.href = data.redirectURL; // Redirect on successful login
-            } else {
-                toastr.error(data.errorMessage ); // Display error message
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Parse JSON only if response is valid
+            })
+            .then(data => {
+                if (data.success) {
+                
+                    window.location.href = data.redirectURL; // Redirect on successful login
+                } else {
+                    toastr.error(data.errorMessage ); // Display error message
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Sign In';
+                }
+            })
+            .catch(error => {
+                document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
+                console.error('Error:', error);
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Sign In';
-            }
-        })
-        .catch(error => {
-            document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
-            console.error('Error:', error);
-            loginBtn.disabled = false;
-            loginBtn.textContent = 'Sign In';
+            });
         });
-    });
-</script>
- <style>
-	.error-message {
-        color: #ff0000;
-        font-size: 0.9em;
-        margin-top: 5px;
-        display: block;
-	}
- </style>
+    </script>
+    <style>
+        .error-message {
+            color: #ff0000;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: block;
+        }
+    </style>

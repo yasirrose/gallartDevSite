@@ -56,6 +56,10 @@
 <!--- from truecost, amount to mark up for retail --->
 <cfset retailmkup = "3.25"> --->
 
+<cfif NOT structKeyExists(application, "encryptionKey")>
+    <cfset application.encryptionKey = "k7vASHylotO9mtMuRTfa2g==">
+</cfif>
+
 
 <cfset imgpath = "http://#server_name#/images">
 

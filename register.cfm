@@ -280,6 +280,17 @@
 
                                                  <cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq ''  >
                                                    <cflock name="insertuser" timeout="10">
+
+                                                      <cfset encryptionKey = application.encryptionKey>
+
+                                                      <cfif len(trim(form.password))>
+                                                         <cfset encryptedPassword = encrypt(
+                                                            form.password, encryptionKey, "AES", "Base64"
+                                                         )>
+                                                       <cfelse>
+                                                         <cfset encryptedPassword = "">
+                                                      </cfif>
+
                                                       <!--- <cfdump var="test data" abort="true"> --->
                                                       <cfquery name="insertUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
                                                          INSERT into users
@@ -299,7 +310,7 @@
                                                                <cfqueryparam value="#form.fname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
                                                                ,<cfqueryparam value="#form.lname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
                                                                ,<cfqueryparam value="#form.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-                                                               ,<cfqueryparam value="#form.password#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+                                                               ,<cfqueryparam value="#encryptedPassword#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
                                                                ,<cfqueryparam value="#cellphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
                                                                ,<cfqueryparam value="#phone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
                                                                ,<cfqueryparam value="#businessphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">

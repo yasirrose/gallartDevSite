@@ -75,7 +75,7 @@
 		<cfset var qUser = '' />
 		<cfset var qListings = '' />
 
-		<cfset var encryptionKey = "k7vASHylotO9mtMuRTfa2g==">
+		<cfset var encryptionKey = application.encryptionKey>
 		
 		<cfquery name="qUser" datasource="#application.dsource#"> 
            	SELECT * from users
@@ -108,10 +108,10 @@
 		<cfset returnStruct.listings = qListings.recordcount />
 		
 		<cfloop list="#qUser.ColumnList#" index="idx">
-    <cfif ucase(idx) NEQ "PASSWORD">
-        <cfset returnStruct[ucase(idx)] = qUser[idx][1] />
-    </cfif>
-</cfloop>
+			<cfif ucase(idx) NEQ "PASSWORD">
+				<cfset returnStruct[ucase(idx)] = qUser[idx][1] />
+			</cfif>
+		</cfloop>
 
 <cfset returnStruct["PASSWORD"] = decryptedPassword>
 
@@ -156,7 +156,7 @@
 		<!--- <cfset generatedKey = generateSecretKey("AES")>
 		<cfdump var="#generatedKey#" abort="true"> --->
 
-		<cfset var encryptionKey = "k7vASHylotO9mtMuRTfa2g==">
+		<cfset var encryptionKey = application.encryptionKey>
 
 		<cfif len(trim(arguments.password))>
 			<cfset encryptedPassword = encrypt(
