@@ -17,6 +17,7 @@
 		<cfargument name="Email" required="no" type="string" default="">
 	
 		<cfset var qEmployees='' />
+		<cfset var encryptionKey = application.encryptionKey />
 
 	   	<cfquery name="qEmployees" datasource="#application.dsource#">
 	      	SELECT emp_fname,emp_lname,emp_email,pk_employees,emp_phone,password,roles,commission_minus,commission_percent
@@ -37,7 +38,20 @@
 	      	</cfif>
 	   	</cfquery>
 	   	
-   		<cfreturn queryconvertforgrid(qEmployees,page,pagesize)/>
+		<!--- Decrypt any stored passwords so the grid shows plaintext (fall back to plain if not encrypted) --->
+		<cfif qEmployees.recordCount gt 0>
+			<cfloop query="qEmployees">
+				<cfif len(trim(qEmployees.password[qEmployees.currentRow]))>
+					<cftry>
+						<cfset qEmployees.password[qEmployees.currentRow] = decrypt(qEmployees.password[qEmployees.currentRow], encryptionKey, "AES", "Base64")>
+					<cfcatch>
+						<cfset qEmployees.password[qEmployees.currentRow] = qEmployees.password[qEmployees.currentRow]>
+					</cfcatch>
+					</cftry>
+				</cfif>
+			</cfloop>
+		</cfif>
+		<cfreturn queryconvertforgrid(qEmployees,page,pagesize)/>
 	
    	</cffunction>
 	
@@ -72,24 +86,27 @@
 		<cfset var result = { success = true, message = "" }>
 		<cfset var employeeId = "">
 		<cfset var action = "">
+		<cfset var encryptionKey = application.encryptionKey />
+		<cfset var encryptedPassword = ""> 
 		
 	    	<cftry>
 
-				<cfif len(arguments.password)>
+				<cfif len(trim(arguments.password))>
+					<cfset encryptedPassword = encrypt(arguments.password, encryptionKey, "AES", "Base64")>
 					<cfif len(arguments.pk_employees)>
-						<!--- Get current password for this employee --->
+						<!--- Get current (stored) password for this employee --->
 						<cfquery name="currentPasswordQry" datasource="#application.dsource#">
 							SELECT password
 							FROM employees
 							WHERE pk_employees = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_employees#">
 						</cfquery>
 
-						<!--- Only check for duplicates if password changed --->
-						<cfif currentPasswordQry.recordCount eq 0 OR arguments.password NEQ currentPasswordQry.password>
+						<!--- Only check for duplicates if password changed (consider legacy plain-text or encrypted stored passwords) --->
+						<cfif currentPasswordQry.recordCount eq 0 OR (encryptedPassword NEQ currentPasswordQry.password AND arguments.password NEQ currentPasswordQry.password)>
 							<cfquery name="checkPassword" datasource="#application.dsource#">
 								SELECT COUNT(*) AS passwordCount
 								FROM employees
-								WHERE password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">
+								WHERE (password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#"> OR password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">)
 								AND pk_employees != <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_employees#">
 							</cfquery>
 
@@ -99,13 +116,12 @@
 								<cfreturn result>
 							</cfif>
 						</cfif>
-
 					<cfelse>
-						<!--- New record: check password normally --->
+						<!--- New record: check encrypted password normally --->
 						<cfquery name="checkPassword" datasource="#application.dsource#">
 							SELECT COUNT(*) AS passwordCount
 							FROM employees
-							WHERE password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">
+							WHERE (password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#"> OR password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">)
 						</cfquery>
 
 						<cfif checkPassword.passwordCount GT 0>
@@ -143,7 +159,7 @@
 									<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_lname#">,
 									<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_email#">,
 									<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_phone#">,
-									<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">,
+									<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#">,
 									<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.commission_minus#">,
 									<cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.commission_percent#">
 								)
@@ -176,7 +192,7 @@
 							emp_lname = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_lname#">,
 							emp_email = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_email#">,
 							emp_phone = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_phone#">,
-							password  = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">,
+							password  = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#">,
 							commission_minus  = <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.commission_minus#">,
 							commission_percent  = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.commission_percent#">
 							WHERE pk_employees = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_employees#">
@@ -282,12 +298,17 @@
 				
 		<cfset var success = true />
 		<cfset var qEmployees = '' />
+		<cfset var encryptionKey = application.encryptionKey />
+		<cfset var encryptedPassword = "" />
+		<cfif len(trim(form.password))>
+			<cfset encryptedPassword = encrypt(form.password, encryptionKey, "AES", "Base64")>
+		</cfif>
 		
 		<cftry>
-	
-		<cfquery name="qEmployees" datasource="#application.dsource#"> 
+
+        <cfquery name="qEmployees" datasource="#application.dsource#"> 
            	SELECT * from employees
-            WHERE password = '#form.password#'
+           	WHERE (password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#"> OR password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.password#">)
         </cfquery>
 		
 		<cfquery name="qEmployeeRoles" datasource="#application.dsource#"> 
@@ -304,7 +325,7 @@
 			<cfset session.userinfo.pk_employees = qEmployees.pk_employees />
 			<cfset session.userinfo.fname = qEmployees.emp_fname />
 			<cfset session.userinfo.lname = qEmployees.emp_lname />
-			<cfset session.userinfo.password = qEmployees.password />
+			<cfset session.userinfo.password = form.password />
 			<cfset session.userinfo.email = qEmployees.emp_email />
 			<cfset session.userinfo.emp_email = qEmployees.emp_email />
 			<cfset session.userinfo.roles = valueList(qEmployeeRoles.role) />
@@ -324,6 +345,8 @@
 
 		<cfset var qEmployee = '' />
 		<cfset var qEmployeeRoles = '' />
+		<cfset var encryptionKey = application.encryptionKey />
+		<cfset var decryptedPassword = "" />
 		
 		<cfquery name="qEmployee" datasource="#application.dsource#"> 
            	SELECT * from employees
@@ -336,7 +359,18 @@
         </cfquery>
 		
 		<cfset returnStruct.emp_email = qEmployee.emp_email />
+		<cfif len(trim(qEmployee.password))>
+			<cftry>
+				<cfset decryptedPassword = decrypt(qEmployee.password, encryptionKey, "AES", "Base64")>
+			<cfcatch>
+				<cfset decryptedPassword = qEmployee.password>
+			</cfcatch>
+			</cftry>
+		</cfif>
 		<cfset returnStruct.roles = valueList(qEmployeeRoles.fk_roles) />
+		<cfset returnStruct.PASSWORD = decryptedPassword />
+		<cfset returnStruct.password = decryptedPassword />
+		<cfset returnStruct.EMP_EMAIL = qEmployee.emp_email />
 		
 		<cfreturn returnStruct />
 	
@@ -347,15 +381,22 @@
 				
 		<cfset var success = true />
 
+		<cfset var encryptionKey = application.encryptionKey />
+		<cfset var encryptedPassword = "" />
 		<cftry>
-	
-		<cfquery name="qEmployees" datasource="#application.dsource#"> 
-           	SELECT * from employees
-            WHERE password = '#form.password#'
-        </cfquery>
-		
-		<cfcatch type="any"><cfset success = false /></cfcatch>
+			<cfif len(trim(form.password))>
+				<cfset encryptedPassword = encrypt(form.password, encryptionKey, "AES", "Base64")>
+			</cfif>
+			<cfquery name="qEmployees" datasource="#application.dsource#"> 
+				SELECT * from employees
+				WHERE (password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#"> OR password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.password#">)
+			</cfquery>
+			<cfcatch type="any">
+				<cfset success = false />
+			</cfcatch>
 		</cftry>
+
+		<!--- <cfdump var="#qEmployees#" abort="true"> --->
 		
 		<cfif not qEmployees.recordcount>
 			<cfset success = false />
@@ -372,13 +413,20 @@
 		<cfset var success = true />
 		<cfset var qEmployees='' />
 
+		<cfset var encryptionKey = application.encryptionKey />
+		<cfset var encryptedOld = "" />
+		<cfset var encryptedNew = "" />
 		<cftry>
-	
-		<cfquery name="qEmployees" datasource="#application.dsource#"> 
-           	SELECT * from employees
-            WHERE password = '#form.old_password#'
-        </cfquery>
-		
+			<cfif len(trim(form.old_password))>
+				<cfset encryptedOld = encrypt(form.old_password, encryptionKey, "AES", "Base64")>
+			</cfif>
+			<cfif len(trim(form.new_password))>
+				<cfset encryptedNew = encrypt(form.new_password, encryptionKey, "AES", "Base64")>
+			</cfif>
+			<cfquery name="qEmployees" datasource="#application.dsource#"> 
+				SELECT * from employees
+				WHERE (password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedOld#"> OR password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.old_password#">)
+			</cfquery>
 		<cfcatch type="any"><cfset success = false /></cfcatch>
 		</cftry>
 		
@@ -386,10 +434,10 @@
 			<cfset success = false />
 		<cfelse>
 			<cfquery name="editEmployee" datasource="#application.dsource#"> 
-                UPDATE employees SET 
-                password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.new_password#">
-                WHERE password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.old_password#">
-            </cfquery>
+				UPDATE employees SET 
+				password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedNew#">
+				WHERE (password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedOld#"> OR password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#form.old_password#">)
+			</cfquery>
 		</cfif>
 	
 		<cfreturn success />
@@ -400,10 +448,14 @@
 		<cfargument name="password" type="string">
 		
 		<cfset var qEmployee = '' />
-		
-		<cfquery name="qEmployee" datasource="#application.dsource#"> 
+		<cfset var encryptionKey = application.encryptionKey />
+		<cfset var encryptedPassword = "" />
+		<cfif len(trim(arguments.password))>
+			<cfset encryptedPassword = encrypt(arguments.password, encryptionKey, "AES", "Base64")>
+		</cfif>
+        <cfquery name="qEmployee" datasource="#application.dsource#"> 
            	SELECT * from employees
-            WHERE password = '#arguments.password#'
+           	WHERE (password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#"> OR password = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.password#">)
         </cfquery>
 		
 

@@ -13,14 +13,14 @@
 	<cfparam name="form.captchaError" default="0">
 	<cfparam name="form.errorMsg" default="">
  	<cfparam name="form.errorPhone" default="0">
-	<cfparam name="form.errorEmail" default="0">
+	<!--- <cfparam name="form.errorEmail" default="0">
     <cfparam name="form.errorPassword" default="0">
     <cfparam name="form.errorGeneral" default="">
     <cfparam name="url.errorEmail" default="0">
 
       <cfif url.errorEmail EQ 1>
          <cfset form.errorEmail = 1>
-      </cfif>
+      </cfif> --->
 	<cfparam
 		name="FORM.captcha"	type="string"	default=""	/>
  
@@ -704,15 +704,15 @@
 				<input type="Hidden" name="businessphone">
 				<input type="Hidden" name="otherphone">
 				<input type="Hidden" name="website">
-				<input type="Hidden" name="password">
-				<input type="Hidden" name="password2">
+				<!--- <input type="Hidden" name="password">
+				<input type="Hidden" name="password2"> --->
 				
 				<input type="Hidden" name="errorMsg">
 				<input type="Hidden" name="captchaError" value="0">
 				<input type="Hidden" name="errorPhone" value="0">
-				<input type="Hidden" name="errorEmail" value="0">
+				<!--- <input type="Hidden" name="errorEmail" value="0">
 				<input type="Hidden" name="errorPassword" value="0">
-				<input type="Hidden" name="errorGeneral">
+				<input type="Hidden" name="errorGeneral"> --->
 			</form>
 
 		</cfoutput>
@@ -811,7 +811,7 @@
 															</cfquery>
 															
 															<cfif CheckDups.recordcount gt 0>
-																<cfoutput>
+																<!--- <cfoutput>
 																	<script language="JavaScript">
 																		document.errorFrm.fname.value = '#form.fname#'
 																		document.errorFrm.lname.value = '#form.lname#'
@@ -825,7 +825,11 @@
 																		document.errorFrm.errorEmail.value = '1'
 																		document.errorFrm.submit();
 																	</script>
-																</cfoutput>
+																</cfoutput> --->
+																<script language="JavaScript">
+																	alert('The email you selected is taken. If you are already a member please log in.');
+																	history.go(-1);
+																</script>
 																<cfabort>
 															</cfif>
 
@@ -1029,9 +1033,6 @@
 																		Gallery Art is always looking to add artworks by auction tracked artists to our collection. We offer immediate payment when buying outright. Please note that all purchases are subject to first-hand inspection.
 																	</p>
 																	<p>Select "<b>Direct Purchase</b>" from the drop down box below and fill out the form. </p>
-																</div>
-																<div>
-																	<!--- <h2>Sell with Gallery Art</h2> --->
 																	<h4>Become a Seller:</h4>
 																	<p>
 																		List up to 5 artworks on GallArt.com for FREE! Gallery Art will charge a 20% fee when you sell your art. Upon being notified of a sale, the seller is responsible for shipping or delivering the artwork to our gallery.
@@ -1250,7 +1251,7 @@
 																								</span><br><br>
 																							</cfif>
 																							<!--- onsubmit="return validateSellerForm()" --->
-																							<CFFORM ACTION="/sell-your-art" METHOD="POST"  id="submitSellerForm">
+																							<CFFORM ACTION="#script_name#" METHOD="POST"  id="submitSellerForm">
 																								<input type="hidden" name="submitted" value="1" />
 																								<input	type="hidden" name="captcha_check"	value="#FORM.captcha_check#" />
 																								<div class="input-form">
@@ -1381,11 +1382,11 @@
 
 		
 
-		 <cfif FORM.errorEmail EQ 1>
+		 <!--- <cfif FORM.errorEmail EQ 1>
             <script>
                alert('The email you selected is taken. If you are already a member please log in.');
             </script>
-         </cfif>
+         </cfif> --->
 
 		<script>
 
@@ -1443,19 +1444,13 @@
 				function setTabVisibility(tabName) {
 					const generalForm = document.getElementById("content-general");
 					const sellerForm = document.getElementById("content-seller");
-					// const descGeneral = document.getElementById("desc-general");
-					// const descSeller = document.getElementById("desc-seller");
 
 					if (tabName === "general") {
 						generalForm.style.display = "block";
 						sellerForm.style.display = "none";
-						// descGeneral.style.display = "block";
-						// descSeller.style.display = "none";
 					} else if (tabName === "seller") {
 						generalForm.style.display = "none";
 						sellerForm.style.display = "block";
-						// descGeneral.style.display = "none";
-						// descSeller.style.display = "block";
 					}
 				}
 

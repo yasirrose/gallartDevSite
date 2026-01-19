@@ -590,7 +590,7 @@
 							</tr>
 							<tr>
 								<td>
-									Upload New:&nbsp;<input type="File" name="thisImage" id="thisImage" />
+									Upload New:&nbsp;<input type="File" name="thisImage" id="thisImage" accept="image/jpeg,image/png"/>
 								</td>
 							</tr>
 						</table>
@@ -760,10 +760,63 @@
 				})
 				// $('.chosen-select').trigger('chosen:updated');
 				var addImageIndex = 1;
-				$("#addImageButton").click(function(){
-					$("#addImageContainer").append("<div class='additionalImage'><input type='File' name='addImage_" + addImageIndex + "' id='addImage_" + addImageIndex + "' /></div>");
-					addImageIndex ++;
+
+				// $("#addImageButton").click(function(){
+				// 	$("#addImageContainer").append("<div class='additionalImage'><input type='File' accept='image/jpeg,image/png' name='addImage_" + addImageIndex + "' id='addImage_" + addImageIndex + "' /></div>");
+				// 	addImageIndex ++;
+				// });
+
+				var maxImages = 5;
+
+				$("#addImageButton").click(function () {
+
+					var currentCount = $(".additionalImage").length;
+
+					if (currentCount >= maxImages) {
+						alert("You can upload a maximum of 5 images only.");
+						return false;
+					}
+
+					var html = `
+						<div class="additionalImage" id="imageRow_${addImageIndex}" 
+							style="border:1px solid black; padding:10px; margin-bottom:10px; position:relative;"
+						>
+							<input 
+								type="file" 
+								accept="image/jpeg,image/png" 
+								name="addImage_${addImageIndex}" 
+								id="addImage_${addImageIndex}" 
+							/>
+
+							<span class="removeImage" data-id="${addImageIndex}"
+								style="
+									position:absolute;
+									top:5px;
+									right:8px;
+									cursor:pointer;
+									color:grey;
+									font-weight:bold;
+									font-size:20px;
+								"
+								title="Remove"
+							>
+								&times;
+							</span>
+						</div>
+					`;
+
+					$("#addImageContainer").append(html);
+					addImageIndex++;
 				});
+
+
+				// Remove specific image field
+				$(document).on("click", ".removeImage", function () {
+					var id = $(this).data("id");
+					$("#imageRow_" + id).remove();
+				});
+
+				
 			});
 		</script>
 
