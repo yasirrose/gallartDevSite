@@ -629,10 +629,20 @@
                   isValid = false;
                }
 
-               if(phoneType){
-                  if(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone"){
-                     if (S_phone && !phoneRegex.test(S_phone)) {
-                        document.getElementById('S_cellphoneError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
+               if (phoneType) {
+                  if (!S_phone) {
+                     document.getElementById('S_cellphoneError').textContent = 'Please enter your phone number.';
+                     document.getElementById('S_cellphone').focus();
+                     isValid = false;
+                  } 
+                  else if (
+                     phoneType === "Home Phone" || 
+                     phoneType === "Cell Phone" || 
+                     phoneType === "Business Phone"
+                  ) {
+                     if (!phoneRegex.test(S_phone)) {
+                        document.getElementById('S_cellphoneError').textContent =
+                           'Please enter phone number in format: (xxx) xxx-xxxx';
                         document.getElementById('S_cellphone').focus();
                         isValid = false;
                      }

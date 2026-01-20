@@ -28,9 +28,9 @@
          <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
          <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
          <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-         <script language="JavaScript" src="./js/utils.js"></script>
+         <script language="JavaScript" src="/js/utils.js"></script>
       </cfoutput>
-      <link href="stylesheet_.css" rel="stylesheet" type="text/css">
+      <link href="/stylesheet_.css" rel="stylesheet" type="text/css">
       <script type="text/javascript">
          var _gaq = _gaq || [];
          _gaq.push(['_setAccount', 'UA-34565365-1']);
@@ -176,7 +176,7 @@
 
                            <div aria-label="breadcrumb">
                               <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>" style="color:black;">Home</a></li>
+                                <li class="breadcrumb-item"><a href="/" style="color:black;">Home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Sales</li>
                               </ol>
                           </div>
@@ -280,14 +280,15 @@
                                                  <div class="select-option">
                                                      <cfoutput>
                                                         
-                                                      <select name="priceOrder" id="priceOrder" onChange="artistClick()">
-                                                         <!--- <option value="" >Sort</option> --->
-                                                         <option value="newest" selected >Newest</option>
-                                                         <option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Price: Low - High</option>
-                                                          <option value="desc" <cfif isDefined('form.priceOrder') and priceOrder eq 'desc'>selected</cfif>>Price: High  Low</option>
-                                                      </select>
-                                                   
-                                                         
+                                                         <select name="priceOrder" id="priceOrder" onChange="artistClick()">
+                                                            <option value="" >Sort</option>
+                                                            <option value="newest" <cfif isDefined('form.priceOrder') and priceOrder eq 'newest'>selected</cfif>>Date Added: New to Old</option>
+
+                                                            <option value="asc" <cfif isDefined('form.priceOrder') and priceOrder eq 'asc'>selected</cfif>>Price: Low to High</option>
+                                                            
+                                                            <option value="desc" <cfif isDefined('form.priceOrder') and priceOrder eq 'desc'>selected</cfif>>Price: High to Low</option>
+                                                         </select>
+                                                                                                          
                                                      </cfoutput>
                                                  </div>
                                              </div>
@@ -393,6 +394,9 @@
             border: 1px solid #aaa;
             height: 30px;
             font-size: 14px;
+         }
+         html .select2-container .select2-selection--single .select2-selection__rendered{
+            display: block !important;
          }
 
      </style>

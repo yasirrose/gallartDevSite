@@ -174,10 +174,10 @@
             const password = document.getElementById('password').value.trim();
             const recaptchaResponse = grecaptcha.getResponse();
 
-            // if (!recaptchaResponse) {
-            //     document.getElementById('recaptchaError').textContent = 'Please verify reCAPTCHA.';
-            //     isValid = false;
-            // }
+            if (!recaptchaResponse) {
+                document.getElementById('recaptchaError').textContent = 'Please verify reCAPTCHA.';
+                isValid = false;
+            }
 
             if (!email_login) {
                 document.getElementById('email_loginError').textContent = 'Please enter your email address';
