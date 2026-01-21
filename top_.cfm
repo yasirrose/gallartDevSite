@@ -21,7 +21,11 @@
 </script>
 <div id="top">
 	<div class="top-conteiner">
-		<div class="site-logo"><a href="/"><img src="/images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
+		<div class="site-logo">
+			<a href="/">
+				<img src="/images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections">
+			</a>
+		</div>
 		<!--- <div class="mailto">
 			<div class="mailto-text">
 				<p>20633 Biscayne Blvd Aventura, FL 33180</p>
@@ -66,7 +70,11 @@
 									<i class="far fa-user"></i>
 								</a>
 							</li>
-							<li><a href="/view-cart"><i class="fas fa-shopping-cart"></i></a></li>
+							<li>
+								<a href="/view-cart">
+									<i class="fas fa-shopping-cart"></i>
+								</a>
+							</li>
 						</ul>
 					</div>
 					<!---<p>20633 Biscayne Blvd Aventura, FL 33180</p> --->
@@ -106,19 +114,26 @@
 </div>
 <script>
 	document.getElementById('searchForm').addEventListener('submit', function(e) {
-	e.preventDefault(); // Prevent default submission
+		e.preventDefault(); // Prevent default submission
 
-	// const keyword = document.getElementById('keywords').value.trim().replace(/[<>"'&]/g, '').replace(/\s+/g, '+');
-	// const keyword = document.getElementById('keywords').value.replace(/\s+/g, '%2B');
+		// const keyword = document.getElementById('keywords').value.trim().replace(/[<>"'&]/g, '').replace(/\s+/g, '+');
+		// const keyword = document.getElementById('keywords').value.replace(/\s+/g, '%2B');
 
-	const rawInput = document.getElementById('keywords').value;
-	const keyword = encodeURIComponent(rawInput).replace(/%20/g, '%2B');
+		const rawInput = document.getElementById('keywords').value;
+		const keyword = encodeURIComponent(rawInput).replace(/%20/g, '%2B');
 
-	if (keyword !== '') {
-		// Redirect using clean URL
-		const encodedKeyword = encodeURIComponent(keyword);
-		window.location.href = '/artists/search/' + encodedKeyword;
-	}
+		const filePattern = /\.(cfm|php|html|js|css|txt|xml|json|asp|aspx|jsp)$/i;
+
+		if (filePattern.test(keyword)) {
+			alert("File names are not allowed in search.");
+			return;
+		}
+
+		if (keyword !== '') {
+			// Redirect using clean URL
+			const encodedKeyword = encodeURIComponent(keyword);
+			window.location.href = '/artists/search/' + encodedKeyword;
+		}
 	});
   
 </script>

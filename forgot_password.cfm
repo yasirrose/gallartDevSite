@@ -220,14 +220,14 @@
 															<div class="user-content text-center">
 																<p>Enter your email address below, and we will email your password to you:</p>
 																<div class="input-form">
-																	<div class="input-field">
-																		<input type="text" name="email" id="email" maxlength="30" size="40"><span class="star"> * </span>
-																		<span class="error-message" id="email_loginError"></span>
+																	<div class="input-field px-3">
+																		<input type="text" name="email" id="email" maxlength="30" style="width: 100% !important;" size="40"><span class="star"> * </span>
+																		<span class="error-message m-0" id="email_loginError"></span>
 																	</div>
 																	
 																	<div class="input-field pt-3 px-3">
 																		<div class="g-recaptcha" id="gRecaptchaGeneral" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
-																		<span class="error-message" id="recaptchaError"></span>
+																		<span class="error-message m-0" id="recaptchaError"></span>
 																	</div>
 																	
 																	<div class="input-button mt-3 register-btn">
