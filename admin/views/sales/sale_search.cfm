@@ -20,8 +20,11 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2" style="font-size: 11px;"><strong>Use fields below to search for listings for which sale prices are to be set:</strong><br />
-							<br />
+						<td colspan="2" style="font-size: 11px;">
+							<strong>
+								Use fields below to search for listings for which sale prices are to be set:
+							</strong>
+							<br/><br/>
 						</td>
 					</tr>
 					<tr>
@@ -30,13 +33,17 @@
 								<tr>
 									<td width="100" style="font-size: 10px;">
 										<strong>Art ID:</strong>
-									</td>
-									<td>
+										<br>
 										<cfinput name="modelno" size="10" maxlength="10"/>
+									</td>
+									<td width="100" style="font-size: 10px;">
+										<strong>Title:</strong>
+										<br>
+										<cfinput name="title" size="30" maxlength="30"/>
 									</td>
 				
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										<strong>Title:</strong>
 									</td>
@@ -44,12 +51,10 @@
 										<cfinput name="title" size="30" maxlength="30"/>
 									</td>
 				
-								</tr>
+								</tr> --->
 								<tr>
 									<td style="font-size: 10px;">
 										<strong>Artist:</strong>
-									</td>
-									<td>
 										<select name="artist" class="select2">
 											<option value="">All</option>
 											<cfoutput query="getAllArtists" group="manufacturer">
@@ -59,9 +64,22 @@
 											</cfoutput>
 										</select>
 									</td>
+									<td>
+										<strong>Exclude Artist:</strong>
+										<br>
+										<select name="exclude_artist" class="select2">
+											<option value="">All</option>
+											<cfoutput query="getAllArtists" group="manufacturer">
+											<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+												<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#</option>
+											</cfif>
+											</cfoutput>
+										</select>
+
+									</td>
 				
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										<strong>Exclude Artist:</strong>
 									</td>
@@ -76,7 +94,7 @@
 										</select>
 									</td>
 				
-								</tr>
+								</tr> --->
 								<tr>
 									<td style="font-size: 10px;">
 										<strong>Medium:</strong>
@@ -114,9 +132,16 @@
 								<tr>
 									<td style="font-size: 10px;">
 										<strong>Description:</strong> (keywords)
-									</td>
-									<td>
 										<cfinput name="caption" size="30" maxlength="30"/>
+									</td>
+									<!--- <td>
+										<cfinput name="caption" size="30" maxlength="30"/>
+									</td> --->
+									<td width="106" style="font-size: 10px;">
+										<strong>Gallery Price from:</strong>
+										$<cfinput name="FromPrice" size="10" maxlength="10"/>
+										<strong>to:</strong>
+										$<cfinput name="ToPrice" size="10" maxlength="10"/>
 									</td>
 				
 								</tr>
@@ -124,7 +149,7 @@
 									<td colspan="2">
 										<table cellspacing="0" cellpadding="0" border="0" width="100%">
 											<tr>
-												<td width="106" style="font-size: 10px;">
+												<!--- <td width="106" style="font-size: 10px;">
 													<strong>Gallery Price from:</strong>
 												</td>
 												<td width="100">
@@ -135,7 +160,17 @@
 												</td>
 												<td nowrap>
 													$<cfinput name="ToPrice" size="10" maxlength="10"/>
-												</td>
+												</td> --->
+												<!--- <td width="100">
+													
+												</td> --->
+												<!--- <td width="25" style="font-size: 10px;">
+													<strong>to:</strong>
+													$<cfinput name="ToPrice" size="10" maxlength="10"/>
+												</td> --->
+												<!--- <td nowrap>
+													
+												</td> --->
 											</tr>
 										</table>					
 									</td>
@@ -184,7 +219,18 @@
 									<td style="font-size: 10px;" colspan="2">
 										<strong>Gallery Listings Only:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										<input type="checkbox" name="gallery_only" value="1" checked>
+
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<strong>On Sale</strong>
+										<input type="Checkbox" name="OnSale" value="1"> 
+										<input type="Hidden" name="OnSale" value="">
+										
 									</td>
+									<!--- <td style="font-size: 10px;" colspan="2">
+										<input type="Checkbox" name="OnSale" value="1"> 
+										<input type="Hidden" name="OnSale" value="">
+										On Sale
+									</td> --->
 				
 								</tr>
 								<tr>
@@ -209,13 +255,13 @@
 												<td width="106" style="font-size: 10px;">&nbsp;
 													
 												</td>
-												<td width="20">
+												<!--- <td width="20">
 													<input type="Checkbox" name="OnSale" value="1">
 													<input type="Hidden" name="OnSale" value="">
 												</td>
 												<td width="75" style="font-size: 10px;">
 													On Sale
-												</td>
+												</td> --->
 												<!--- <td width="20">
 													<input type="Checkbox" name="Trump" value="1">
 													<input type="Hidden" name="Trump" value="">

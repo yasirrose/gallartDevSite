@@ -86,12 +86,13 @@
 				<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
 				<cfset date = now()>
 				<cfset moduleName = 'forgot_password'>
+				<cfset action = 'forgot Password'>
 				
 				<cfquery name="addLog" datasource="#application.dsource#" >
 					INSERT INTO logs 
-						( moduleName, ipAddress, date)
+						( moduleName, ipAddress, date, action)
 						VALUES
-						( '#moduleName#', '#ipAddress#', #date#)
+						( '#moduleName#', '#ipAddress#', #date#, '#action#')
 				</cfquery>
 
 				<cfmail 

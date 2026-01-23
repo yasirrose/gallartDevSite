@@ -94,13 +94,17 @@
 								<tr>
 									<td width="100" style="font-size: 10px;">
 										<strong>Art ID:</strong>
-									</td>
-									<td>
+										<br>
 										<cfinput name="modelno" size="10" maxlength="10"/>
+									</td>
+									<td style="font-size: 10px;">
+										<strong>Title:</strong>
+										<br>
+										<cfinput name="name" size="30" maxlength="30"/>
 									</td>
 				
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										<strong>Title:</strong>
 									</td>
@@ -108,7 +112,7 @@
 										<cfinput name="name" size="30" maxlength="30"/>
 									</td>
 				
-								</tr>
+								</tr> --->
 								<tr>
 									<td style="font-size: 10px;">
 										<strong>Artist:</strong>
@@ -117,9 +121,9 @@
 										<select name="manufacturer" class="select2">
 											<option value="">All
 											<cfoutput query="getAllArtists" group="manufacturer">
-											<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-												<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
-											</cfif>
+												<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+													<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
+												</cfif>
 											</cfoutput>
 										</select>
 									</td>
@@ -135,7 +139,8 @@
 											<cfoutput query="getAllMedium">
 												<option value="#path#">#path#
 											
-										</cfoutput></select>
+											</cfoutput>
+										</select>
 									</td>
 				
 								</tr>
@@ -143,8 +148,7 @@
 								<tr>
 									<td style="font-size: 10px;">
 										<strong>Art Style:</strong>
-									</td>
-									<td>
+										<br>
 										<cfquery name="qGetStyle" datasource="#application.dsource#">
 											SELECT * 
 											FROM filterOption
@@ -157,14 +161,34 @@
 											<cfoutput query="qGetStyle">
 												<option value="#filterName#">#filterName#</option>
 											
-										</cfoutput></select>
+											</cfoutput>
+										</select>
+									</td>
+									<td>
+										<strong>Art Size:</strong>
+										<br>
+										<cfquery name="qGetSize" datasource="#application.dsource#">
+											SELECT * 
+											FROM filterOption
+											WHERE filterType = 'Size'
+											ORDER BY filterName ASC
+										</cfquery>
+
+										<select name="artSize">
+											<option value="">All
+											<cfoutput query="qGetSize">
+												<option value="#filterName#">#filterName#</option>
+											
+											</cfoutput>
+										</select>
 									</td>
 				
 								</tr>
 
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										<strong>Art Size:</strong>
+										
 									</td>
 
 									<cfquery name="qGetSize" datasource="#application.dsource#">
@@ -174,22 +198,24 @@
 										ORDER BY filterName ASC
 									</cfquery>
 
+									
+
 									<td>
 										<select name="artSize">
 											<option value="">All
 											<cfoutput query="qGetSize">
 												<option value="#filterName#">#filterName#</option>
 											
-										</cfoutput></select>
+											</cfoutput>
+										</select>
 									</td>
 				
-								</tr>
+								</tr> --->
 
 								<tr>
 									<td style="font-size: 10px;">
 										<strong>Art Type:</strong>
-									</td>
-									<td>
+										<br>
 										<cfquery name="qGetType" datasource="#application.dsource#">
 											SELECT * 
 											FROM filterOption
@@ -202,12 +228,31 @@
 											<cfoutput query="qGetType">
 												<option value="#filterName#">#filterName#</option>
 											
-										</cfoutput></select>
+											</cfoutput>
+										</select>
+									</td>
+									<td style="font-size: 10px;">
+										<strong>Art Subject:</strong>
+										<br>
+										<cfquery name="qGetSubject" datasource="#application.dsource#">
+											SELECT * 
+											FROM filterOption
+											WHERE filterType = 'Subject'
+											ORDER BY filterName ASC
+										</cfquery>
+
+										<select name="artSubject">
+											<option value="">All
+											<cfoutput query="qGetSubject">
+												<option value="#filterName#">#filterName#</option>
+											
+											</cfoutput>
+										</select>
 									</td>
 				
 								</tr>
 
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										<strong>Art Subject:</strong>
 									</td>
@@ -225,10 +270,11 @@
 											<cfoutput query="qGetSubject">
 												<option value="#filterName#">#filterName#</option>
 											
-										</cfoutput></select>
+											</cfoutput>
+										</select>
 									</td>
 				
-								</tr>
+								</tr> --->
 
 								<tr>
 									<td colspan="2">
@@ -347,12 +393,23 @@
 								<tr>
 									<td style="font-size: 10px;">
 										<strong>Active/Inactive:</strong>
-									</td >
-									<td style="font-size: 10px;">
 										<input type="radio" name="Active" value="1" checked>Active
 										<input type="radio" name="Active" value="0">Inactive
 										<input type="radio" name="Active" value="">All
+									</td >
+									<!--- <td style="font-size: 10px;">
+										<input type="radio" name="Active" value="1" checked>Active
+										<input type="radio" name="Active" value="0">Inactive
+										<input type="radio" name="Active" value="">All
+									</td> --->
+
+									<!--- <td style="font-size: 10px;">
+										<strong>Promotion:</strong>
 									</td>
+									<td style="font-size: 10px;">
+										<input type="Checkbox" name="Promotion" value="1">
+										<input type="Hidden" name="Promotion" value="">
+									</td> --->
 				
 								</tr>
 								<tr>
@@ -456,7 +513,7 @@
 								</tr>
 								<tr>
 									<td style="font-size: 9pt;">
-										<input type="Checkbox" name="displayFields" value="ModelNo" checked>Art ID<br>
+										<!--- <input type="Checkbox" name="displayFields" value="ModelNo" checked>Art ID<br>
 										<input type="Checkbox" name="displayFields" value="Artist" checked>Artist<br>
 										<input type="Checkbox" name="displayFields" value="Medium" checked>Medium<br>
 										<input type="Checkbox" name="displayFields" value="Year">Year<br>
@@ -481,7 +538,42 @@
 										<input type="Checkbox" name="displayFields" value="Slideshow" >Slide Show <br>
 										<input type="Checkbox" name="displayFields" value="Frontshow" >Featured on Home Page <br>
 										<input type="Checkbox" name="displayFields" value="BottomHome" >Bottom on Home Page <br>
-										<input type="Checkbox" name="displayFields" value="Promotion" >Promotion  
+										<input type="Checkbox" name="displayFields" value="Promotion" >Promotion   --->
+
+										<div class="checkbox-grid editBox" >
+											<label><input type="checkbox" name="displayFields" value="ModelNo" checked> Art ID</label>
+											<label><input type="checkbox" name="displayFields" value="Artist" checked> Artist</label>
+											<label><input type="checkbox" name="displayFields" value="Medium" checked> Medium</label>
+											<label><input type="checkbox" name="displayFields" value="Year"> Year</label>
+
+											<label><input type="checkbox" name="displayFields" value="Size"> Size</label>
+											<label><input type="checkbox" name="displayFields" value="Edition"> Edition</label>
+											<label><input type="checkbox" name="displayFields" value="Low" checked> Low Estimate</label>
+											<label><input type="checkbox" name="displayFields" value="High" checked> High Estimate</label>
+
+											<label><input type="checkbox" name="displayFields" value="Retail" checked> Retail Price</label>
+											<label><input type="checkbox" name="displayFields" value="Gallery" checked> Gallery Price</label>
+											<label><input type="checkbox" name="displayFields" value="Sale" checked> Sale Price</label>
+											<label><input type="checkbox" name="displayFields" value="SellerInfo"> Seller Info</label>
+
+											<label><input type="checkbox" name="displayFields" value="Thumbnail" checked> Thumbnail</label>
+											<label><input type="checkbox" name="displayFields" value="artType"> Art Style</label>
+											<label><input type="checkbox" name="displayFields" value="artSize"> Art Size</label>
+											<label><input type="checkbox" name="displayFields" value="artSubject"> Art Subject</label>
+
+											<label><input type="checkbox" name="displayFields" value="artTypee"> Art Type</label>
+											<label><input type="checkbox" name="displayFields" value="quantity"> Quantity</label>
+											<label><input type="checkbox" name="displayFields" value="datestamp"> Listing Date</label>
+											<label><input type="checkbox" name="displayFields" value="lastEdit"> Last Edit</label>
+
+											<label><input type="checkbox" name="displayFields" value="location_notes"> Notes</label>
+											<label><input type="checkbox" name="displayFields" value="caption"> Description</label>
+											<label><input type="checkbox" name="displayFields" value="Slideshow"> Slide Show</label>
+											<label><input type="checkbox" name="displayFields" value="Frontshow"> Featured on Home Page</label>
+
+											<label><input type="checkbox" name="displayFields" value="BottomHome"> Bottom on Home Page</label>
+											<label><input type="checkbox" name="displayFields" value="Promotion"> Promotion</label>
+										</div>
 										
 									</td>
 								</tr>
@@ -566,5 +658,17 @@
 	} 
 
 </script>
+
+<style>
+	.checkbox-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 6px 15px;
+	}
+
+	.checkbox-grid label {
+		white-space: nowrap;
+	}
+</style>
 
 

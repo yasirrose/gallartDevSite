@@ -120,7 +120,13 @@
 		// const keyword = document.getElementById('keywords').value.replace(/\s+/g, '%2B');
 
 		const rawInput = document.getElementById('keywords').value;
-		const keyword = encodeURIComponent(rawInput).replace(/%20/g, '%2B');
+		// const keyword = encodeURIComponent(rawInput).replace(/%20/g, '%2B');
+
+		const keyword = encodeURIComponent(rawInput.trim())
+					.replace(/[<> &]/g, '')  // Remove <, >, and & (keep ' and ())
+					.replace(/\//g, '-')     // Replace slashes with hyphens
+					.replace(/\s+/g, '+')    // Replace spaces with +
+					.replace(/%20/g, '%2B');
 
 		const filePattern = /\.(cfm|php|html|js|css|txt|xml|json|asp|aspx|jsp)$/i;
 
@@ -131,6 +137,7 @@
 
 		if (keyword !== '') {
 			// Redirect using clean URL
+
 			const encodedKeyword = encodeURIComponent(keyword);
 			window.location.href = '/artists/search/' + encodedKeyword;
 		}

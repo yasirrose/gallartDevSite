@@ -278,132 +278,132 @@
                                                          <cfset otherphone = "">
                                                       </cfif>
 
-                                                 <cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq ''  >
-                                                   <cflock name="insertuser" timeout="10">
+                                                      <cfif form.fname neq '' and form.lname neq '' and form.email neq '' and form.password neq ''  >
+                                                         <cflock name="insertuser" timeout="10">
 
-                                                      <cfset encryptionKey = application.encryptionKey>
+                                                            <cfset encryptionKey = application.encryptionKey>
 
-                                                      <cfif len(trim(form.password))>
-                                                         <cfset encryptedPassword = encrypt(
-                                                            form.password, encryptionKey, "AES", "Base64"
-                                                         )>
-                                                       <cfelse>
-                                                         <cfset encryptedPassword = "">
+                                                            <cfif len(trim(form.password))>
+                                                               <cfset encryptedPassword = encrypt(
+                                                                  form.password, encryptionKey, "AES", "Base64"
+                                                               )>
+                                                            <cfelse>
+                                                               <cfset encryptedPassword = "">
+                                                            </cfif>
+
+                                                            <!--- <cfdump var="test data" abort="true"> --->
+                                                            <cfquery name="insertUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+                                                               INSERT into users
+                                                                  (
+                                                                     fname,
+                                                                     lname,
+                                                                     email,
+                                                                     password,
+                                                                     cellphone,
+                                                                     phone,
+                                                                     businessphone,
+                                                                     otherphone,
+                                                                     datestamp
+                                                                  )
+                                                                  values
+                                                                  (
+                                                                     <cfqueryparam value="#form.fname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+                                                                     ,<cfqueryparam value="#form.lname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+                                                                     ,<cfqueryparam value="#form.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+                                                                     ,<cfqueryparam value="#encryptedPassword#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+                                                                     ,<cfqueryparam value="#cellphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+                                                                     ,<cfqueryparam value="#phone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+                                                                     ,<cfqueryparam value="#businessphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+                                                                     ,<cfqueryparam value="#otherphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+                                                                     ,<cfqueryparam value="#now()#" cfsqltype="CF_SQL_TIMESTAMP" maxlength="100">
+                                                                  )
+                                                            </cfquery>
+                                                            <!--- getting the last input UID --->
+                                                            <cfquery name="lastUID" datasource="#dsource#" username="#uname#" password="#pword#">
+                                                               SELECT @@identity as uid FROM users
+                                                            </cfquery>
+                                                            <cfset session.sellerinfo.pk_users = lastUID.uid>
+                                                            <cfset session.sellerinfo.fname = form.fname>
+                                                            <cfset session.sellerinfo.lname = form.lname>
+                                                            <cfset session.sellerinfo.email = form.email>
+                                                            <cfset session.sellerinfo.login = 1 />
+
+                                                            <!--- Add the logs data --->
+                                                            <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+                                                            <cfset date = now()>
+                                                            <cfset moduleName = 'Register'>
+                                                            <cfset action = 'Insert'>
+
+                                                            <cfquery name="addLog" datasource="#application.dsource#" >
+                                                               INSERT INTO logs
+                                                                  ( moduleName, ipAddress, date, action, sellerUser)
+                                                                  VALUES
+                                                                  ( '#moduleName#', '#ipAddress#', #date#, '#action#', #session.sellerinfo.pk_users#)
+                                                            </cfquery>
+
+                                                         </cflock>
+                                                         <cfmail
+                                                               server="#servername#"
+                                                               username="onli16@onlinegalleryart.com"
+                                                               password="re3objec"
+                                                               to="#emailsupport#"
+                                                               cc="#emailsupportcc#"
+                                                               from="#form.email#"
+                                                               subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller"
+                                                               type="HTML"
+                                                               >
+                                                            <font style="font-size: 10pt; font-family: Arial;">
+                                                            <strong>
+                                                               #session.sellerinfo.fname# #session.sellerinfo.lname#</strong>
+                                                               registered as a new Member on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
+                                                            <br><br>
+                                                         </cfmail>
+                                                         <cfmail
+                                                               server="#servername#"
+                                                               username="onli16@onlinegalleryart.com"
+                                                               password="re3objec"
+                                                               to="#form.email#"
+                                                               from="onli16@onlinegalleryart.com"
+                                                               subject="Gallery Art - Welcome New Member"
+                                                               type="HTML"
+                                                               >
+                                                            <font style="font-size: 10pt; font-family: Arial;">
+                                                            Thank you, #session.sellerinfo.fname# #session.sellerinfo.lname#, for registering as a Member at www.gallart.com. <br><br>
+                                                            Your password is:<br>
+                                                            #form.password#<br><br>
+                                                            Please keep it in a safe place.<br><br>
+                                                            You are now ready to list your artwork!<br><br>
+                                                            #getPages.page_content#
+                                                            <br><br>
+                                                         </cfmail>
+                                                         <script>
+                                                            $(document).ready(function() {
+                                                               toastr.options = {
+                                                                  'closeButton': true,
+                                                                  'debug': false,
+                                                                  'newestOnTop': false,
+                                                                  'progressBar': true,
+                                                                  'positionClass': 'toast-top-right',
+                                                                  'preventDuplicates': false,
+                                                                  'showDuration': '1000',
+                                                                  'hideDuration': '1000',
+                                                                  'timeOut': '5000',
+                                                                  'extendedTimeOut': '1000',
+                                                                  'showEasing': 'swing',
+                                                                  'hideEasing': 'linear',
+                                                                  'showMethod': 'fadeIn',
+                                                                  'hideMethod': 'fadeOut',
+                                                                     }
+                                                                  });
+
+                                                                  toastr.success('Your Record is added successfully.');
+                                                               </script>
+                                                               <cflocation url="/overView" addtoken="No">
+                                                            <cfelse>
+                                                               <cfthrow message="Error: Your data is not added. Please fill out all required fields before submitting the form.">
+                                                            </cfif>
+                                                         </cfif>
                                                       </cfif>
-
-                                                      <!--- <cfdump var="test data" abort="true"> --->
-                                                      <cfquery name="insertUser" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-                                                         INSERT into users
-                                                            (
-                                                               fname,
-                                                               lname,
-                                                               email,
-                                                               password,
-                                                               cellphone,
-                                                               phone,
-                                                               businessphone,
-                                                               otherphone,
-                                                               datestamp
-                                                            )
-                                                            values
-                                                            (
-                                                               <cfqueryparam value="#form.fname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-                                                               ,<cfqueryparam value="#form.lname#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-                                                               ,<cfqueryparam value="#form.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-                                                               ,<cfqueryparam value="#encryptedPassword#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-                                                               ,<cfqueryparam value="#cellphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
-                                                               ,<cfqueryparam value="#phone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
-                                                               ,<cfqueryparam value="#businessphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
-                                                               ,<cfqueryparam value="#otherphone#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
-                                                               ,<cfqueryparam value="#now()#" cfsqltype="CF_SQL_TIMESTAMP" maxlength="100">
-                                                            )
-                                                      </cfquery>
-                                                      <!--- getting the last input UID --->
-                                                      <cfquery name="lastUID" datasource="#dsource#" username="#uname#" password="#pword#">
-                                                         SELECT @@identity as uid FROM users
-                                                      </cfquery>
-                                                      <cfset session.sellerinfo.pk_users = lastUID.uid>
-                                                      <cfset session.sellerinfo.fname = form.fname>
-                                                      <cfset session.sellerinfo.lname = form.lname>
-                                                      <cfset session.sellerinfo.email = form.email>
-                                                      <cfset session.sellerinfo.login = 1 />
-
-                                                      <!--- Add the logs data --->
-                                                      <cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
-                                                      <cfset date = now()>
-                                                      <cfset moduleName = 'Register'>
-                                                      <cfset action = 'Insert'>
-
-                                                      <cfquery name="addLog" datasource="#application.dsource#" >
-                                                         INSERT INTO logs
-                                                            ( moduleName, ipAddress, date, action, sellerUser)
-                                                            VALUES
-                                                            ( '#moduleName#', '#ipAddress#', #date#, '#action#', #session.sellerinfo.pk_users#)
-                                                      </cfquery>
-
-                                                   </cflock>
-                                                   <cfmail
-                                                         server="#servername#"
-                                                         username="onli16@onlinegalleryart.com"
-                                                         password="re3objec"
-                                                         to="#emailsupport#"
-                                                         cc="#emailsupportcc#"
-                                                         from="#form.email#"
-                                                         subject="GallArt.com <> Buying & Selling Fine Art <> New Member Registration <> Seller"
-                                                         type="HTML"
-                                                         >
-                                                      <font style="font-size: 10pt; font-family: Arial;">
-                                                      <strong>
-                                                         #session.sellerinfo.fname# #session.sellerinfo.lname#</strong>
-                                                         registered as a new Member on #dateformat(createodbcdate(now()))# at #timeformat(createodbcdatetime(now()))#.  <br><br>
-                                                      <br><br>
-                                                   </cfmail>
-                                                   <cfmail
-                                                         server="#servername#"
-                                                         username="onli16@onlinegalleryart.com"
-                                                         password="re3objec"
-                                                         to="#form.email#"
-                                                         from="onli16@onlinegalleryart.com"
-                                                         subject="Gallery Art - Welcome New Member"
-                                                         type="HTML"
-                                                         >
-                                                      <font style="font-size: 10pt; font-family: Arial;">
-                                                      Thank you, #session.sellerinfo.fname# #session.sellerinfo.lname#, for registering as a Member at www.gallart.com. <br><br>
-                                                      Your password is:<br>
-                                                      #form.password#<br><br>
-                                                      Please keep it in a safe place.<br><br>
-                                                      You are now ready to list your artwork!<br><br>
-                                                      #getPages.page_content#
-                                                      <br><br>
-                                                   </cfmail>
-                                                   <script>
-                                                      $(document).ready(function() {
-                                                         toastr.options = {
-                                                            'closeButton': true,
-                                                            'debug': false,
-                                                            'newestOnTop': false,
-                                                            'progressBar': true,
-                                                            'positionClass': 'toast-top-right',
-                                                            'preventDuplicates': false,
-                                                            'showDuration': '1000',
-                                                            'hideDuration': '1000',
-                                                            'timeOut': '5000',
-                                                            'extendedTimeOut': '1000',
-                                                            'showEasing': 'swing',
-                                                            'hideEasing': 'linear',
-                                                            'showMethod': 'fadeIn',
-                                                            'hideMethod': 'fadeOut',
-                                                               }
-                                                            });
-
-                                                            toastr.success('Your Record is added successfully.');
-                                                         </script>
-                                                         <cflocation url="/overView" addtoken="No">
-                                                      <cfelse>
-                                                         <cfthrow message="Error: Your data is not added. Please fill out all required fields before submitting the form.">
-                                                      </cfif>
-                                                   </cfif>
-                                                </cfif>
                                                 <cfcatch>
                                                    <cfset hasError = true>
                                                    <cfoutput>
@@ -452,7 +452,7 @@
                                                                <div class="col-md-4">
                                                                   <div class="input-field">
                                                                      <label><b>Email:<span style="color: ##ff0000;">*</span></b></label>
-                                                                     <cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30" maxlength="20" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
+                                                                     <cfinput type="text" name="Email" id="S_Email" value="#form.Email#" size="30" maxlength="30" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
                                                                      <span class="error-message" id="S_EmailError"></span>
                                                                   </div>
                                                                </div>
