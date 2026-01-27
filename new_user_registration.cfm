@@ -1106,21 +1106,21 @@
 																												<label><b>Your Name:<span style="color: ##ff0000;">*</span></b></label> 
 																											</div>
 																										</div> --->
-																										<div class="col-md-6">
+																										<div class="col-md-4">
 																											<div class="input-field"> 
 																												<label><b> First Name<span style="color: ##ff0000;">*</span></b></label>
 																												<cfinput type="text" name="fname" id="fname" value="#form.fname#" size="30" maxlength="30" >
 																												<span class="error-message" id="G_fnameError"></span>
 																											</div>
 																										</div>
-																										<div class="col-md-6">
+																										<div class="col-md-4">
 																											<div class="input-field"> 
 																												<label><b>Last Name<span style="color: ##ff0000;">*</span></b></label>
 																												<cfinput type="text" name="lname" id="lname" value="#form.lname#" size="30" maxlength="30" >
 																												<span class="error-message" id="G_lnameError"></span>
 																											</div>
 																										</div>
-																										<div class="col-md-4 pt-4">
+																										<div class="col-md-4">
 																											<div class="input-field">
 																												<label><b>Email<span style="color: ##ff0000;">*</span></b></label>
 																												<cfinput type="text" name="email_purchase" id="email_purchase" value="#form.email_purchase#" size="30" maxlength="20"  validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$"  >
@@ -1149,6 +1149,13 @@
 																												<span class="error-message" id="G_phoneError"></span>
 																											</div>
 																										</div>
+																										<div class="col-md-4 pt-4">
+																											<div class="input-field pb-3">
+																												<label><b>Price Desired<span style="color: ##ff0000;">*</span></b></label>
+																												<cfinput type="text" name="size" value="#form.size#" maxlength="6" size="30" id="size" placeholder="e.g $2000">
+																												<span class="error-message" id="G_sizeError"></span>
+																											</div>
+																										</div>
 																										<div class="col-md-12">
 																											<div class="input-field">
 																												<label><b>Tell us About the Artwork<span style="color: ##ff0000;">*</span></b></label>
@@ -1157,13 +1164,7 @@
 																												<div id="charCount" class="mb-3">0 / 500 characters</div>
 																											</div>
 																										</div>
-																										<div class="col-md-12">
-																											<div class="input-field pb-3">
-																												<label><b>Price Desired<span style="color: ##ff0000;">*</span></b></label>
-																												<cfinput type="text" name="size" value="#form.size#" maxlength="6" size="30" id="size" placeholder="e.g $2000">
-																												<span class="error-message" id="G_sizeError"></span>
-																											</div>
-																										</div>
+																										
 																										<div class="col-md-12">
 																											<div class="input-field image-upload pb-2"> 
 																												<h3>

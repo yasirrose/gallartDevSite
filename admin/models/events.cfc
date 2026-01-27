@@ -59,7 +59,7 @@
 		<cfargument name="event_location" type="string" default="">
 		<cfargument name="isCurrent" type="string" default="">
 
-		<!--- <cfdump var="#arguments#" abort="true"> --->
+		
 			    
 	    <!--- <cfset var success = true /> --->
 
@@ -68,7 +68,7 @@
 	    	<cftry>
 	    
 				<cfif arguments.pk_event_registration_title eq ''>
-					
+					<!--- <cfdump var="#arguments#" abort="true"> --->
 					<cfquery name="addRegistrationTitle" datasource="#application.dsource#"> 
 						INSERT into event_registration_title
 							(	
@@ -128,6 +128,9 @@
 					</cfquery>
 					
 					<cfset thisId =  arguments.pk_event_registration_title />
+
+					<cfset result.success = true>
+    				<cfset result.message = "Record is Updated successfully.">
 				
 				</cfif>
 				
@@ -139,8 +142,7 @@
 					</cfquery>
 				</cfif>
 
-				<cfset result.success = true>
-    			<cfset result.message = "Record is Updated successfully.">
+				
 	    			
 				<cfcatch type="any">
 					<!--- <cfset success = false /> --->
@@ -280,7 +282,7 @@
 		<cfargument name="OTHER_ARTIST" type="string" default="">
 		<cfargument name="NUMBER_PEOPLE" type="string" default="">
 
-		<!--- <cfdump var="#arguments#" abort="true"> --->
+		
 
 	    
 	    <!--- <cfset var success = true /> --->
@@ -328,7 +330,7 @@
 						)
 					</cfquery>
 					
-					<cfset moduleName = 'Manage Event'>
+					<cfset moduleName = 'Manage Event Registration'>
 					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
 					<cfset date = now()>				
 					<cfset action = 'Add'>
@@ -364,7 +366,7 @@
 						WHERE pk_event_registration = #arguments.pk_event_registration#
 					</cfquery>
 
-					<cfset moduleName = 'Manage Event'>
+					<cfset moduleName = 'Manage Event Registration'>
 					<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
 					<cfset date = now()>				
 					<cfset action = 'Update'>
@@ -377,7 +379,7 @@
 					</cfquery>
 					
 					<cfset result.success = true>
-					<cfset result.message = "Record is Updatedddd successfully.">
+					<cfset result.message = "Record is Updated successfully.">
 				
 				</cfif>
 	    
@@ -405,7 +407,7 @@
 				WHERE pk_event_registration = #arguments.pk_event_registration#
 			</cfquery>
 
-			<cfset moduleName = 'Manage Event'>
+			<cfset moduleName = 'Manage Event Registration'>
 			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
 			<cfset date = now()>				
 			<cfset action = 'Delete'>
