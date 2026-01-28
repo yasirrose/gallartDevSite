@@ -1413,7 +1413,7 @@
 									"<input type='file' accept='image/jpeg,image/png' name='addImage_" + addImageIndex + "' id='addImage_" + addImageIndex + "' />" +
 								"</div>" +
 								// Close button
-								"<span class='removeImage' style='position:absolute; top:0; right:0; cursor:pointer; color:red; font-weight:bold; font-size:18px;'>&times;</span>" +
+								"<span class='removeImage' style='position:absolute; top:10; right:7; cursor:pointer; color:grey; font-weight:bold; font-size:18px;'>&times;</span>" +
 							"</div>"
 						);
 
@@ -1508,7 +1508,7 @@
 
 					const submitButton = document.getElementById('G_submitbtn');
 
-					console.log(phoneType);
+					console.log(recaptcha.length);
 
 					if (recaptcha.length == 0) {
 						document.getElementById("G_recaptchaError").innerText = "Please confirm you are not a robot.";
@@ -1651,7 +1651,7 @@
 					S_submitBtn.disabled = true;
 					S_submitBtn.textContent = "Processing..."; 
 
-					console.log('test type: ' + S_phoneType);
+					console.log(recaptcha.length);
 					
 					if (recaptcha.length == 0) {
 						document.getElementById("S_recaptchaError").innerText = "Please confirm you are not a robot.";

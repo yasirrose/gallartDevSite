@@ -67,53 +67,70 @@
 								<td id="stuff" colspan="2"></td>
 							</tr>
 							<tr>
-								<td width="100">
+								<td >
 									First Name:
-								</td>
-								<td>
+									<br>
 									<cfinput type="text" name="emp_fname" id="emp_fname"  bind="{data.emp_fname}" maxlength="30" size="30">
 								</td>
+								<td>
+									Last Name:
+									<br>
+									<cfinput type="text" name="emp_lname" id="emp_lname"  bind="{data.emp_lname}" maxlength="30" size="30">
+								</td>
+								<td>
+									Phone:
+									<br>
+									<cfinput type="text" name="emp_phone" id="emp_phone"  bind="{data.emp_phone}" maxlength="30" size="30">&nbsp;
+								</td>
 							</tr>
-							<tr>
+							<!--- <tr>
 								<td>
 									Last Name:
 								</td>
 								<td>
 									<cfinput type="text" name="emp_lname" id="emp_lname"  bind="{data.emp_lname}" maxlength="30" size="30">
 								</td>
-							</tr>
+							</tr> --->
 							<tr>
 								<td>
 									Email:
-								</td>
-								<td>
+									<br>
 									<cfinput type="text" name="emp_email" id="emp_email"  bind="{data.emp_email}" maxlength="30" size="30">&nbsp;
 									<span  id="emailLink"></span>
 								</td>
+								<td>
+									Password:
+									<br>
+									<cfinput type="text" name="password" id="password"  bind="{data.password}" maxlength="30" size="30">&nbsp;
+								</td>
 							</tr>
-							<tr>
+							<!--- <tr>
 								<td>
 									Phone:
-								</td>
-								<td>
+									<br>
 									<cfinput type="text" name="emp_phone" id="emp_phone"  bind="{data.emp_phone}" maxlength="30" size="30">&nbsp;
 								</td>
-							</tr>
-							<tr>
+								<!--- <td>
+									<cfinput type="text" name="emp_phone" id="emp_phone"  bind="{data.emp_phone}" maxlength="30" size="30">&nbsp;
+								</td> --->
+							</tr> --->
+							<!--- <tr>
 								<td>
 									Password:
 								</td>
 								<td>
 									<cfinput type="text" name="password" id="password"  bind="{data.password}" maxlength="30" size="30">&nbsp;
 								</td>
-							</tr>
+							</tr> --->
 							<tr>
-								<td valign="top">
+								<!--- <td valign="top">
 									Roles:
-								</td>
-								<td>
+								</td> --->
+								<td colspan="3"> 
+									Roles:
+									<br>
 									<cfoutput>
-										<table>
+										<table style="width: 100%;">
 											<tr>
 												<cfset colCount = 0>
 												<cfloop query="getRoles">
@@ -140,19 +157,23 @@
 								<tr>
 									<td>
 										Minus amount (from total sales):
-									</td>
-									<td>
+										<br>
 										$<cfinput type="text" name="commission_minus" id="commission_minus"  bind="{data.commission_minus}" maxlength="30" size="30" validate="float" message="You must enter a dollar amount for the minus amount - no $ or ,">&nbsp;
 									</td>
+									<td>
+										Percentage:
+										<br>
+										<cfinput type="text" name="commission_percent" id="commission_percent"  bind="{data.commission_percent}" maxlength="30" size="30" validate="integer" message="You must enter an integer for the commission.">&nbsp;
+									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										Percentage:
 									</td>
 									<td>
 										<cfinput type="text" name="commission_percent" id="commission_percent"  bind="{data.commission_percent}" maxlength="30" size="30" validate="integer" message="You must enter an integer for the commission.">&nbsp;
 									</td>
-								</tr>
+								</tr> --->
 							 <cfelse>
 								<cfinput type="hidden" name="commission_minus"  bind="{data.commission_minus}">
 								<cfinput type="hidden" name="commission_percent"  bind="{data.commission_percent}">
@@ -169,18 +190,18 @@
 			</tr>
 		</table>
 
-<style>
-	.toast-center {
-		top: 50% !important;
-		left: 50% !important;
-		transform: translate(-50%, -50%) !important;
-		position: fixed !important;
-		z-index: 999999 !important;
-	}
+		<style>
+			.toast-center {
+				top: 50% !important;
+				left: 50% !important;
+				transform: translate(-50%, -50%) !important;
+				position: fixed !important;
+				z-index: 999999 !important;
+			}
 
-	#toast-container > .toast {
-		background-color: #ff4da6 !important;
-		color: white !important;
-	}
-</style>
+			#toast-container > .toast {
+				background-color: #ff4da6 !important;
+				color: white !important;
+			}
+		</style>
 <!--- <cfset ajaxOnLoad("init")> --->

@@ -515,20 +515,20 @@
                                                          <cfset nameParts = listToArray(manufacturer, ",")>
                                                          <!--- Check if we have both first and last name parts --->
                                                          <cfif arrayLen(nameParts) EQ 2>
-                                                         <!--- Assign first and last name correctly --->
-                                                         <cfset firstName = trim(nameParts[2])>
-                                                         <cfset lastName = trim(nameParts[1])>
-                                                         <cfset fullName = firstName & " " & lastName>
-                                                         <cfelse>
-                                                         <!--- If the format is unexpected, just display it as is --->
-                                                         <cfset fullName = trim(manufacturer)>
+                                                            <!--- Assign first and last name correctly --->
+                                                            <cfset firstName = trim(nameParts[2])>
+                                                            <cfset lastName = trim(nameParts[1])>
+                                                            <cfset fullName = firstName & " " & lastName>
+                                                          <cfelse>
+                                                            <!--- If the format is unexpected, just display it as is --->
+                                                          <cfset fullName = trim(manufacturer)>
                                                          
-                                                      </cfif>
-                                                      <!--- <cfset capitalize = REReplace(fullName, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")> --->
-                                                      <a href="/artists/#URLEncodedFormat(producturl)#" >
-                                                         <h3 class="meta">#fullName#</h3>
-                                                      </a>
-                                                      <!--- <h3 class="meta">#ucase(manufacturer)#</h3> --->
+                                                         </cfif>
+                                                      
+                                                         <a href="/artists/#URLEncodedFormat(producturl)#" >
+                                                            <h3 class="meta">#fullName#</h3>
+                                                         </a>
+
                                                       </cfif>
                                                       <cfif productinfo.name gt 0 OR productinfo.name NEQ ''>
                                                          

@@ -44,23 +44,30 @@
   	</tr>
   	<tr>
 		<td>
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" class="layout-table-content">
 				<tr>
-					<td width="106" style="font-size: 10px;">
-						<strong>Gallery Price from:</strong>
+					<td valign="top" width="50%">
+						<table cellspacing="0" cellpadding="0" border="0" width="75%" class="layout-table-content">
+							<tr>
+								<td width="100" style="font-size: 10px;">
+									<strong>Gallery Price from:$</strong>
+									<br>
+									<cfinput name="FromPrice" size="10" maxlength="10"/>
+								</td>
+								<td width="100" style="font-size: 10px;">
+									<strong>Gallery Price to:$</strong>
+									<br>
+									<cfinput name="ToPrice" size="10" maxlength="10"/>
+								</td>
+							</tr>
+						</table>
 					</td>
-					<td width="100">
-						$<cfinput name="FromPrice" size="10" maxlength="10"/>
+					<td valign="top" width="50%">
+
 					</td>
-					<td width="25" style="font-size: 10px;">
-						<strong>to:</strong>
-					</td>
-					<td nowrap>
-						$<cfinput name="ToPrice" size="10" maxlength="10"/>
-					</td>
+					
 				</tr>
-			</table>
-			<br><br>					
+			</table>				
 		</td>
 	</tr>
     </cfform>
@@ -90,14 +97,14 @@
 					</tr>
 					<tr>
 						<td valign="top" width="50%">
-							<table cellspacing="0" cellpadding="3" border="0" width="100%">
+							<table cellspacing="0" cellpadding="3" border="0" width="100%" class="layout-table-content">
 								<tr>
 									<td width="100" style="font-size: 10px;">
 										<strong>Art ID:</strong>
 										<br>
 										<cfinput name="modelno" size="10" maxlength="10"/>
 									</td>
-									<td style="font-size: 10px;">
+									<td width="100" style="font-size: 10px;">
 										<strong>Title:</strong>
 										<br>
 										<cfinput name="name" size="30" maxlength="30"/>
@@ -114,10 +121,9 @@
 				
 								</tr> --->
 								<tr>
-									<td style="font-size: 10px;">
+									<td width="100" style="font-size: 10px;">
 										<strong>Artist:</strong>
-									</td>
-									<td>
+										<br>
 										<select name="manufacturer" class="select2">
 											<option value="">All
 											<cfoutput query="getAllArtists" group="manufacturer">
@@ -127,13 +133,9 @@
 											</cfoutput>
 										</select>
 									</td>
-				
-								</tr>
-								<tr>
-									<td style="font-size: 10px;">
+									<td width="100" style="font-size: 10px;">
 										<strong>Medium:</strong>
-									</td>
-									<td>
+										<br>
 										<select name="path" class="select2">
 											<option value="">All
 											<cfoutput query="getAllMedium">
@@ -146,7 +148,7 @@
 								</tr>
 
 								<tr>
-									<td style="font-size: 10px;">
+									<td width="100" style="font-size: 10px;">
 										<strong>Art Style:</strong>
 										<br>
 										<cfquery name="qGetStyle" datasource="#application.dsource#">
@@ -164,7 +166,7 @@
 											</cfoutput>
 										</select>
 									</td>
-									<td>
+									<td width="100" style="font-size: 10px;">
 										<strong>Art Size:</strong>
 										<br>
 										<cfquery name="qGetSize" datasource="#application.dsource#">
@@ -213,7 +215,7 @@
 								</tr> --->
 
 								<tr>
-									<td style="font-size: 10px;">
+									<td width="100" style="font-size: 10px;">
 										<strong>Art Type:</strong>
 										<br>
 										<cfquery name="qGetType" datasource="#application.dsource#">
@@ -231,7 +233,7 @@
 											</cfoutput>
 										</select>
 									</td>
-									<td style="font-size: 10px;">
+									<td width="100" style="font-size: 10px;">
 										<strong>Art Subject:</strong>
 										<br>
 										<cfquery name="qGetSubject" datasource="#application.dsource#">
@@ -277,108 +279,79 @@
 								</tr> --->
 
 								<tr>
-									<td colspan="2">
-										<table cellspacing="0" cellpadding="0" border="0" width="100%">
-											<tr>
-												<td width="106" style="font-size: 10px;">
-													<strong>Year:</strong>
-												</td>
-												<td width="100">
-													<cfinput name="Year" size="10" maxlength="10"/>
-												</td>
-												<td width="50" style="font-size: 10px;">
-													<strong>Size:</strong>
-												</td>
-												<td>
-													<cfinput type="Text" name="Height" style="width: 50px;" maxlength="4">
-													&nbsp;x&nbsp;
-													<cfinput type="Text" name="Width" style="width: 50px;" maxlength="4"> (HEIGHT X WIDTH)
-												</td>
-											</tr>
-										</table>					
+									<td width="100" style="font-size: 10px;">
+										<strong>Year:</strong>
+										<br>
+										<cfinput name="Year" size="10" maxlength="10"/>
+									</td>
+									<td width="100" style="font-size: 10px;">
+										<strong>Size:</strong>
+										<br>
+										<cfinput type="Text" name="Height" style="width: 50px;" maxlength="4">
+										&nbsp;x&nbsp;
+										<cfinput type="Text" name="Width" style="width: 50px;" maxlength="4"> (HEIGHT X WIDTH)
 									</td>
 								</tr>
 								<tr>
-									<td style="font-size: 10px;">
+									<td width="100" style="font-size: 10px;">
 										<strong>Description:</strong> (keywords)
-									</td>
-									<td>
+										<br>
 										<cfinput name="caption" size="30" maxlength="30"/>
 									</td>
-				
-								</tr>
-								<tr>
-									<td colspan="2">
-										<table cellspacing="0" cellpadding="0" border="0" width="100%">
-											<tr>
-												<td width="106" style="font-size: 10px;">
-													<strong>Gallery Price from:</strong>
-												</td>
-												<td width="100">
-													$<cfinput name="FromPrice" size="10" maxlength="10"/>
-												</td>
-												<td width="25" style="font-size: 10px;">
-													<strong>to:</strong>
-												</td>
-												<td nowrap>
-													$<cfinput name="ToPrice" size="10" maxlength="10"/>
-												</td>
-											</tr>
-										</table>					
+									<td width="100" style="font-size: 10px;">
+										<strong>Number of Records:</strong>
+									    <br>
+										<select name="number_records">
+											<option value="">All</option>
+											<option value="1">1 - 50</option>
+											<option value="51">51 - 100</option>
+											<option value="101">101 - 150</option>
+											<option value="151">151 - 200</option>
+											<option value="201">201 - 250</option>
+											<option value="251">251 - 300</option>
+										</select>
 									</td>
 								</tr>
 								<tr>
-									<td colspan="2">
-										<table cellspacing="0" cellpadding="0" border="0" width="100%">
-											<tr>
-												<td width="106" style="font-size: 10px;">
-													<strong>Date from:</strong>
-												</td>
-												<td width="100">
-													<cfinput name="FromDate" type="datefield" validate="date" size="10" maxlength="10"/>
-												</td>
-												<td width="25" style="font-size: 10px;">
-													<strong>to:</strong>
-												</td>
-												<td nowrap>
-													<cfinput name="ToDate" type="datefield" validate="date" size="10" maxlength="10"/>
-												</td>
-											</tr>
-										</table>					
+									<td width="100" style="font-size: 10px;">
+										<strong>Gallery Price from:$</strong>
+										<br>
+										<cfinput name="FromPrice" size="10" maxlength="10"/>
+									</td>
+									<td width="100" style="font-size: 10px;">
+										<strong>Gallery Price to:$</strong>
+										<br>
+										<cfinput name="ToPrice" size="10" maxlength="10"/>
 									</td>
 								</tr>
 								<tr>
-									<td colspan="2">
-										<table cellspacing="0" cellpadding="0" border="0" width="100%">
-											<tr>
-												<td width="106" style="font-size: 10px;">
-													<strong>Last Edit from:</strong>
-												</td>
-												<td width="100">
-													<cfinput name="FromLastedit" type="datefield" validate="date" size="10" maxlength="10"/>
-												</td>
-												<td width="25" style="font-size: 10px;">
-													<strong>to:</strong>
-												</td>
-												<td nowrap>
-													<cfinput name="ToLastedit" type="datefield" validate="date" size="10" maxlength="10"/>
-												</td>
-											</tr>
-										</table>					
+									<td class="calendar-field" width="100" style="font-size: 10px;">
+										<strong>Date from:</strong>
+										<br>
+										<cfinput name="FromDate" type="datefield" validate="date" size="10" maxlength="10"/>
+									</td>
+									<td class="calendar-field" width="100" style="font-size: 10px;">
+										<strong>to:</strong>
+										<br>
+										<cfinput name="ToDate" type="datefield" validate="date" size="10" maxlength="10"/>
 									</td>
 								</tr>
 								<tr>
-									<td style="font-size: 10px;" colspan="2">
-										<strong>Gallery Listings Only:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										<input type="checkbox" name="gallery_only" value="1" checked>
+									<td class="calendar-field" width="100" style="font-size: 10px;">
+										<strong>Last Edit from:</strong>
+										<br>
+										<cfinput name="FromLastedit" type="datefield" validate="date" size="10" maxlength="10"/>
 									</td>
-				
+									<td class="calendar-field" width="100" style="font-size: 10px;">
+										<strong>to:</strong>
+										<br>
+										<cfinput name="ToLastedit" type="datefield" validate="date" size="10" maxlength="10"/>
+									</td>
 								</tr>
 								<tr>
-									<td style="font-size: 10px;">
+									<td width="100" style="font-size: 10px;">
 										<strong>Seller:</strong>
-									</td>
-									<td>
+										<br>
 										<select name="SellerId" class="select2">
 											<option value="">All
 											<option value="0">Only Seller Listings
@@ -388,15 +361,27 @@
 											</cfoutput>
 										</select>
 									</td>
-				
-								</tr>
-								<tr>
-									<td style="font-size: 10px;">
+									
+									<td width="100" style="font-size: 10px;">
 										<strong>Active/Inactive:</strong>
-										<input type="radio" name="Active" value="1" checked>Active
-										<input type="radio" name="Active" value="0">Inactive
-										<input type="radio" name="Active" value="">All
-									</td >
+										<br>
+										<div class="form-row">
+											<div class="form-group">
+												<strong>Active</strong>
+												<input type="radio" name="Active" value="1" checked>
+											</div>
+											<div class="form-group">
+												<strong>Inactive</strong>
+												<input type="radio" name="Active" value="0">
+											</div>
+											<div class="form-group">
+												<strong>All</strong>
+												<input type="radio" name="Active" value="">
+											</div>
+										</div>
+									</td>
+								</tr>
+								<!--- <tr> --->
 									<!--- <td style="font-size: 10px;">
 										<input type="radio" name="Active" value="1" checked>Active
 										<input type="radio" name="Active" value="0">Inactive
@@ -411,8 +396,8 @@
 										<input type="Hidden" name="Promotion" value="">
 									</td> --->
 				
-								</tr>
-								<tr>
+								<!--- </tr> --->
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										<strong>Promotion:</strong>
 									</td >
@@ -421,7 +406,7 @@
 										<input type="Hidden" name="Promotion" value="">
 									</td>
 				
-								</tr>
+								</tr> --->
 								<tr>
 									<td style="font-size: 10px;">
 										<strong>Number of Records:</strong>
@@ -439,8 +424,51 @@
 									</td>
 								</tr>
 								<tr>
-									<td colspan="2">
-										<table cellspacing="0" cellpadding="0" border="0" width="100%">
+									<td width="100" style="font-size: 10px;" colspan="2">
+										<div class="form-row">
+											<div class="form-group">
+												<strong>Gallery Listings Only:</strong>
+												<input type="checkbox" name="gallery_only" value="1" checked>
+											</div>
+											<div class="form-group">
+												<strong>Promotion:</strong>
+												<input type="Checkbox" name="Promotion" value="1">
+												<input type="Hidden" name="Promotion" value="">
+											</div>
+
+											<div class="form-group">
+												<strong>On Sale</strong>
+												<input type="Checkbox" name="OnSale" value="1">
+												<input type="Hidden" name="OnSale" value="">
+											</div>
+											<div class="form-group">
+												<strong>Trump Site</strong>
+												<input type="Checkbox" name="Trump" value="1">
+												<input type="Hidden" name="Trump" value="">
+											</div>
+											<div class="form-group">
+												<strong>Auction Site</strong>
+												<input type="Checkbox" name="Auction" value="1">
+												<input type="Hidden" name="Auction" value="">
+											</div>
+											<div class="form-group">
+												<strong>Slideshow</strong>
+												<input type="Checkbox" name="Slideshow">
+												<input type="Hidden" name="Slideshow">
+											</div>
+
+											<div class="form-group">
+												<strong>Featured on Home Page</strong>
+												<input type="Checkbox" name="Frontshow">
+												<input type="Hidden" name="Frontshow">
+											</div>
+											<div class="form-group">
+												<strong>Bottom of Home Page</strong>
+												<input type="Checkbox" name="BottomHome">
+												<input type="Hidden" name="BottomHome">
+											</div>
+										</div>
+										<!--- <table cellspacing="0" cellpadding="0" border="0" width="100%">
 											<tr>
 												<td width="106" style="font-size: 10px;">&nbsp;
 													
@@ -474,12 +502,24 @@
 													Slideshow
 												</td>
 											</tr>
-										</table>					
+										</table>--->
 									</td>
 								</tr>
 								<tr>
-									<td colspan="2">
-										<table cellspacing="0" cellpadding="0" border="0" width="100%">
+									<td width="100" style="font-size: 10px;">
+										<!-- <div class="form-row">
+											<div class="form-group">
+												<strong>Featured on Home Page</strong>
+												<input type="Checkbox" name="Frontshow">
+												<input type="Hidden" name="Frontshow">
+											</div>
+											<div class="form-group">
+												<strong>Bottom of Home Page</strong>
+												<input type="Checkbox" name="BottomHome">
+												<input type="Hidden" name="BottomHome">
+											</div>
+										</div> -->
+										<!--- <table cellspacing="0" cellpadding="0" border="0" width="100%">
 											<tr>
 												<td width="50" style="font-size: 10px;">&nbsp;
 													
@@ -499,12 +539,12 @@
 													Bottom of Home Page
 												</td>
 											</tr>
-										</table>					
+										</table> --->
 									</td>
 								</tr>
 							</table>
 						</td>
-						<td valign="top" width="50%">
+						<td valign="top" width="50%" style="padding-left: 30px !important;">
 							<table cellspacing="0" cellpadding="3" border="0" width="100%">
 								<tr>
 									<td style="font-size: 10pt;">
@@ -581,10 +621,11 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2" style="padding-top: 10px;" align="center">
+						<td style="padding-top: 10px;" align="end">
 							<input type="Reset" value="Reset">
 							<input type="Submit" id="submitBtn" value="Search">
 						</td>
+						<td style="padding-top: 10px;" align="center"></td>
 					</tr>
 				</table>
 			</cfform>
@@ -668,6 +709,35 @@
 
 	.checkbox-grid label {
 		white-space: nowrap;
+	}
+	.layout-table-content td {
+		width: 50%;
+	}
+	.layout-table-content input:not([type="checkbox"]):not([type="radio"]) {
+		width: 100%;
+	}
+	.layout-table-content .select2-container,
+	.layout-table-content select:not(.select2) {
+		width: 100% !important;
+	}
+	.layout-table-content .form-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2px;
+	}
+	.layout-table-content .form-row .form-group {
+		width: 24%;
+		display: flex;
+		flex-direction: row-reverse;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 2px;
+	}
+	.layout-table-content .calendar-field > div {
+		width: 100%;
+	}
+	.layout-table-content .calendar-field > div > div:first-child {
+		width: calc(100% - 20px);
 	}
 </style>
 
