@@ -80,7 +80,7 @@
 								<td>
 									Phone:
 									<br>
-									<cfinput type="text" name="emp_phone" id="emp_phone"  bind="{data.emp_phone}" maxlength="30" size="30">&nbsp;
+									<cfinput type="text" name="emp_phone" id="emp_phone"  bind="{data.emp_phone}" maxlength="30" size="30">
 								</td>
 							</tr>
 							<!--- <tr>
@@ -156,9 +156,9 @@
 								</tr>
 								<tr>
 									<td>
-										Minus amount (from total sales):
+										Minus amount (from total sales): $
 										<br>
-										$<cfinput type="text" name="commission_minus" id="commission_minus"  bind="{data.commission_minus}" maxlength="30" size="30" validate="float" message="You must enter a dollar amount for the minus amount - no $ or ,">&nbsp;
+										<cfinput type="text" name="commission_minus" id="commission_minus"  bind="{data.commission_minus}" maxlength="30" size="30" validate="float" message="You must enter a dollar amount for the minus amount - no $ or ,">
 									</td>
 									<td>
 										Percentage:

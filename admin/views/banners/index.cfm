@@ -229,13 +229,17 @@
 								</tr>
 								<tr>
 									<td width="100">
-										Banner Name
-									</td>
-									<td>
+										Banner Name:
+										<br>
 										<cfinput type="text" name="bannerName" id="bannerName" bind="{data.bannerName}" size="30" required="true" message="Please enter Banner Name.">
 									</td>
+									<td>
+										Banner Type:
+										<br>
+										<cfinput type="text" name="bannerType" id="bannerType" maxlength="30"  bind="{data.bannerType}" size="30" required="true" message="Please enter Banner Type.">
+									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										Banner Type:
 									</td>
@@ -243,17 +247,25 @@
 										<cfinput type="text" name="bannerType" id="bannerType" maxlength="30"  bind="{data.bannerType}" size="30" required="true" message="Please enter Banner Type.">
 							
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td>
 										Banner image URL:
+										<br>
+										<cfinput type="text"  name="bannerImagesUrl" id="bannerImagesUrl" maxlength="30"  bind="{data.bannerImagesUrl}" size="30" >
 									</td>
 									<td>
-										<cfinput type="text"  name="bannerImagesUrl" id="bannerImagesUrl" maxlength="30"  bind="{data.bannerImagesUrl}" size="30" >
-							
+										Active:
+										<br>
+										<cfinput type="hidden"  name="activeValue" id="activeValue"  bind="{data.active}"  >
+										<select name="active" id="active" style="height:18px; width: 178px;" >
+											<option value="">Please Select</option>
+											<option value="Yes">Yes</option>
+											<option value="No">No</option>
+										</select>
 									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										Active:
 									</td>
@@ -265,21 +277,28 @@
 											<option value="No">No</option>
 										</select>
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td>
 										Banner Image:
-									</td>
-									<td>
+										<br>
 										<cfinput type="text" disabled name="bannerImages" id="bannerImages" maxlength="30"  bind="{data.bannerImage}" size="30" >
-							
 									</td>
+									<td>										
+										Choose Image:
+										<br>
+										<input type="File" name="bannerImage" id="bannerImage" onchange="validateImage()"/>			
+										<span id="fileError" style="color:red;"></span>
+									</td>
+									
 								</tr>
 								<tr>
+									<!--- <td>
+										Note:
+									</td> --->
 									<td>
 										Note:
-									</td>
-									<td>
+										<br>
 										<p class="upload-guidelines">
 											<strong>Recommended Image Size:</strong><br>
 											Dimention: 1145 x 400 pixels<br>
@@ -289,15 +308,15 @@
 									</td>
 								</tr>
 								<tr>
-									<td>
-										Choose Image:
-									</td>
-									<td>
-										&nbsp;<input type="File" name="bannerImage" id="bannerImage" onchange="validateImage()"/>			
-										<span id="fileError" style="color:red;"></span>
+									
+									<td id="imageDisplay" height="150">
+										<cfoutput>
+											<img src="/images/banners/empty.png" name="mainImg" id="mainImg" border="0" width="200"  /><br>
+										</cfoutput>
+										<!--- <a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br> --->
 									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										
 									</td>
@@ -307,7 +326,7 @@
 										</cfoutput>
 										<!--- <a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br> --->
 									</td>
-								</tr>
+								</tr> --->
 								<input type="hidden" name="actionType" id="actionType" value="">
 								
 								<tr>

@@ -158,37 +158,77 @@
 						</cfform>
 					</td>
 					<td valign="top">
-						<input type="button" value="New" onclick="showNew()">
+						<input type="button" value="New" style="margin-top: 100px !important;" onclick="showNew()">
 						<cfform name="editForm">
 							<cfinput type="hidden" name="pk_users" id="pk_users" bind="{data.pk_users}">
 							<cfinput type="hidden" name="moduleName" id="moduleName" value="Seller Module">
-							<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox">
+							<table border = "0" width = "500" cellpadding = "5"  cellspacing = "0" class="editBox">
 								<tr>
 									<td id="stuff" colspan="2"></td>
 								</tr>
 								<tr>
 									<td width="100">
 										First Name:
-									</td>
-									<td>
+										<br>
 										<cfinput type="text" name="fname" id="fname" maxlength="30" bind="{data.fname}" size="30">
 									</td>
+									<td>
+										Last Name:
+										<br>
+										<cfinput type="text" name="lname" id="lname" maxlength="30" bind="{data.lname}" size="30">
+									</td>
+									<td>
+										Website:
+										<br>
+										<cfinput type="text" name="website" id="website"  bind="{data.website}" maxlength="30" size="30">
+									</td>
+
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										Last Name:
 									</td>
 									<td>
 										<cfinput type="text" name="lname" id="lname" maxlength="30" bind="{data.lname}" size="30">
 									</td>
-								</tr>
+								</tr> --->
+
 								<tr>
 									<td>
-										Email:
+										Select Phone Number type:
+										<br>
+										<select name="PhoneType" id="PhoneType" style="width: 100%;">
+											<option value="Cell Phone" >Mobile</option>
+											<option value="Home Phone" >Home</option>
+											<option value="Business Phone" >Business</option>
+											<option value="OutsideUS" >Outside US</option>
+										</select>
 									</td>
 									<td>
-										<cfinput type="text" name="seller_email" id="seller_email" maxlength="30"  bind="{data.seller_email}" size="30">&nbsp;
+										Phone Number:
+										<br>
+										<cfinput type="text" name="phoneNumber" id="phoneNumber" maxlength="20" size="30">
+									</td>
+									<td>
+										Email:
+										<br>
+										<cfinput type="text" name="seller_email" id="seller_email" maxlength="30"  bind="{data.seller_email}" size="30">
 										<span  id="emailLink"></span>
+									</td>
+									
+								</tr>
+
+								<tr>
+									<!--- <td>
+										Email:
+										<br>
+										<cfinput type="text" name="seller_email" id="seller_email" maxlength="30"  bind="{data.seller_email}" size="30">
+										<span  id="emailLink"></span>
+									</td> --->
+									<td>
+										Password:
+										<br>
+										<cfinput type="text" name="password" id="password"   maxlength="15" size="30">
 									</td>
 								</tr>
 								<!--- <tr>
@@ -226,22 +266,9 @@
 
 								
 
-								<tr>
-									<td>
-										Select Phone Number type:
-									</td>
-									<td>		
+								
 
-										<select name="PhoneType" id="PhoneType">
-											<option value="Cell Phone" >Mobile</option>
-											<option value="Home Phone" >Home</option>
-											<option value="Business Phone" >Business</option>
-											<option value="OutsideUS" >Outside US</option>
-										</select>
-									</td>
-								</tr>
-
-								<tr>
+								<!--- <tr>
 									<td>
 										Phone Number:
 									</td>
@@ -249,7 +276,7 @@
 										<cfinput type="text" name="phoneNumber" id="phoneNumber" maxlength="20" size="30">&nbsp;
 										<!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
 									</td>
-								</tr>
+								</tr> --->
 
 								<cfoutput>
 									<script>
@@ -303,22 +330,22 @@
 									</script>
 								</cfoutput>
 
-								<tr>
+								<!--- <tr>
 									<td>
 										Website:
 									</td>
 									<td>
 										<cfinput type="text" name="website" id="website"  bind="{data.website}" maxlength="30" size="30">&nbsp;
 									</td>
-								</tr>
-								<tr>
+								</tr> --->
+								<!--- <tr>
 									<td>
 										Password:
 									</td>
 									<td>
 										<cfinput type="text" name="password" id="password"   maxlength="15" size="30">&nbsp;
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td colspan="2" id="viewListings"></td>
 								</tr>
@@ -326,6 +353,7 @@
 									<td colspan="2" >
 										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
 										<cfinput type="button" name="delete" id="delete" value="Delete" onclick="doEdit('delete');" />
+										<cfinput type="button" name="sendEmail" id="sendEmailBtn" value="Send Email" onclick="window.location.href='mailto:' + document.getElementById('seller_email').value;" />
 									</td>
 								</tr>
 							</table>
@@ -352,16 +380,16 @@
 			<cfwindow name="viewListingsWin" modal="true" resizable="false" title="Edit Page" width="1150" height="800" headerStyle="background-color:##dd3a7d;">
 				<script>
 					getSellerId = function(){
-					var s = ColdFusion.getElementValue('sellerId');
-					return s;
+						var s = ColdFusion.getElementValue('sellerId');
+						return s;
 					}
 					getListingFrmTitle = function(){
-					var s = ColdFusion.getElementValue('listingFrmTitle');
-					return s;
+						var s = ColdFusion.getElementValue('listingFrmTitle');
+						return s;
 					}
 					getListingFrmArtist = function(){
-					var s = ColdFusion.getElementValue('listingFrmArtist');
-					return s;
+						var s = ColdFusion.getElementValue('listingFrmArtist');
+						return s;
 					}
 				</script>
 				<cfform name="viewListingsFrm">
@@ -393,3 +421,6 @@
 					</table>
 				</cfform>
 			</cfwindow>
+		</td>
+	</tr>
+</table>
