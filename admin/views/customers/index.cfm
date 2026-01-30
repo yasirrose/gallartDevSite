@@ -115,33 +115,50 @@
 							<cfinput type="hidden" name="id" id="id" bind="{data.id}">
 							<cfinput type="hidden" name="moduleName" id="moduleName" value="Customer Module">
 							<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox">
-								<tr>
+								<!--- <tr>
 									<td id="stuff" colspan="2"></td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td width="100">
 										First Name:
-									</td>
-									<td>
+										<br>
 										<cfinput type="text" name="fname" id="fname"  bind="{data.fname}" maxlength="30" size="30">
 									</td>
+									<td>
+										Last Name:
+										<br>
+										<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" maxlength="30" size="30">
+									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										Last Name:
 									</td>
 									<td>
 										<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" maxlength="30" size="30">
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td>
-										Email:
+										Address Type:
+										<br>
+										<cfset Addtype = "USA,Outside" />
+										<cfoutput>
+											<select name="Addresstype" id="Addresstype" style="width: 100%;" onchange="toggleStateField();">
+												<option value="">Please Select</option>
+												<cfloop list="#Addtype#" index="idx">
+													<option value="#idx#">#idx#</option>
+												</cfloop>
+											</select>
+										</cfoutput>
 									</td>
 									<td>
+										Email:
+										<br>
 										<cfinput type="text" name="customer_email" id="customer_email" maxlength="30" bind="{data.customer_email}" size="30">&nbsp;
 										<span  id="emailLink"></span>
 									</td>
+									
 								</tr>
 
 
@@ -181,19 +198,22 @@
 								<tr>
 									<td>
 										Select Phone Number type:
-									</td>
-									<td>		
-
-										<select name="PhoneType" id="PhoneType">
+										<br>
+										<select name="PhoneType" id="PhoneType" style="Width: 100%;">
 											<option value="Cell Phone" >Mobile</option>
 											<option value="Home Phone" >Home</option>
 											<option value="Business Phone" >Business</option>
 											<option value="OutsideUS" >Outside US</option>
 										</select>
 									</td>
+									<td>		
+										Phone Number:
+										<br>
+										<cfinput type="text" name="phoneNumber" id="phoneNumber" maxlength="30" size="30">
+									</td>
 								</tr>
 
-								<tr>
+								<!--- <tr>
 									<td>
 										Phone Number:
 									</td>
@@ -201,7 +221,7 @@
 										<cfinput type="text" name="phoneNumber" id="phoneNumber" maxlength="30" size="30">&nbsp;
 										<!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
 									</td>
-								</tr>
+								</tr> --->
 
 								<cfoutput>
 									<script>
@@ -255,7 +275,7 @@
 									</script>
 								</cfoutput>
 								
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										Address Type:
 									</td>
@@ -270,26 +290,34 @@
 											</select>
 										</cfoutput>
 									</td>	
-								</tr>
+								</tr> --->
 
 								<tr>
 									<td valign="top">
-										Address:
+										Address1:
+										<br>
+										<cfinput type="text" name="Address1" id="Address1" maxlength="30" bind="{data.Address1}" size="30">
 									</td>
 									<td>
-										<cfinput type="text" name="Address1" id="Address1" maxlength="30" bind="{data.Address1}" size="30"><br>
+										Address2:
+										<br>
 										<cfinput type="text" name="Address2" id="Address2" maxlength="30" bind="{data.Address2}" size="30">
 									</td>
 								</tr>
 								<tr>
 									<td>
-										City, Zip:
+										Zip:
+										<br>
+										<!--- <cfinput type="text" name="State" id="State"  bind="{data.State}" size="15">&nbsp; --->
+										<cfinput type="text" name="Zip" id="Zip"  bind="{data.Zip}" maxlength="10" style="width: 100%;" size="10">
 									</td>
 									<td>
-										<cfinput type="text" name="City" id="City"  bind="{data.City}" maxlength="25" size="25">&nbsp;
-										<!--- <cfinput type="text" name="State" id="State"  bind="{data.State}" size="15">&nbsp; --->
-										<cfinput type="text" name="Zip" id="Zip"  bind="{data.Zip}" maxlength="10" size="10">
+										City
+										<br>
+										<cfinput type="text" name="City" id="City"  bind="{data.City}" maxlength="25" size="25"> 
+										
 									</td>
+									
 								</tr>
 								<!--- <tr>
 									<td>
@@ -300,12 +328,16 @@
 									</td>
 								</tr> --->
 
-								<tr id="stateTextRow" style="display:none;">
+								<tr id="stateTextRow" style="display:none; ">
 									<td style="font-size: 10px;">
-										State/Province, Country
+										State/Province:
+										<br>
+										<cfinput type="text" name="state" id="state"  bind="{data.state}" style="width: 100%;" maxlength="25" size="25" class="displayInput"> 
 									</td>
 									<td>
-										<cfinput type="text" name="state" id="state"  bind="{data.state}" maxlength="25" size="25" class="displayInput"> &nbsp;
+										Country:
+										<br>
+										 &nbsp;
 										<cfinput type="text" name="country" id="country"  bind="{data.country}" maxlength="25" size="25" class="displayInput">
 
 									</td>
@@ -313,84 +345,106 @@
 								
 								<tr id="stateDropdownRow" style="display:none;">
 									<td style="font-size: 10px;">
-										State
-									</td>
-									<td>
+										State:
+										<br>
 										<cfoutput>
-											<select name="state_dropdown" id="state_dropdown">
+											<select name="state_dropdown" id="state_dropdown" style="width: 100%;">
 												<option value="">Please Select</option>
 												<cfloop query="getStates">
 													<option value="#getStates.stateAbb#">#getStates.state#</option>
 												</cfloop>
 											</select>
 										</cfoutput>
-									</td>	
+									</td>										
 								</tr>
 
 								<tr>
 									<td valign="top">
-										Shipping Address:
+										Shipping Address1:
+										<br>
+										<cfinput type="text" name="saddress1" id="saddress1"  bind="{data.saddress1}" maxlength="30" size="30">
 									</td>
 									<td>
-										<cfinput type="text" name="saddress1" id="saddress1"  bind="{data.saddress1}" maxlength="30" size="30"><br>
-										<cfinput type="text" name="saddress2" id="saddress2"  bind="{data.saddress2}" maxlength="30" size="30"><br>
+										Shipping Address2:
+										<br>
+										<cfinput type="text" name="saddress2" id="saddress2"  bind="{data.saddress2}" maxlength="30" size="30">
 									</td>
 								</tr>
 								<tr>
 									<td>
-										City, State, Zip:
+										State
+										<br>
+										<cfinput type="text" name="sstate" id="sstate" style="width: 100%;" bind="{data.sstate}" maxlength="15" size="15">										
 									</td>
 									<td>
+										City
+										<br>
 										<cfinput type="text" name="scity" id="scity"  bind="{data.scity}" maxlength="25" size="25">
-										&nbsp;
-										<cfinput type="text" name="sstate" id="sstate"  bind="{data.sstate}" maxlength="15" size="15">
-										&nbsp;
-										<cfinput type="text" name="szip" id="szip"  bind="{data.szip}" maxlength="10" size="10">&nbsp;
-									</td>
+										 
+									</td>									
+									
 								</tr>
 								<tr>
+									<td>
+										Zip:
+										<br>
+										<cfinput type="text" name="szip" id="szip" style="width: 100%;" bind="{data.szip}" maxlength="10" size="10">
+									</td>
 									<td>
 										Fax:
+										<br>
+										<cfinput type="text" name="Fax" id="Fax" maxlength="30" bind="{data.Fax}" size="30">
 									</td>
-									<td>
-										<cfinput type="text" name="Fax" id="Fax" maxlength="30" bind="{data.Fax}" size="30">&nbsp;
-									</td>
+									
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										Drivers License Number:
 									</td>
 									<td>
 										<cfinput type="text" name="DriversLicense" id="DriversLicense" maxlength="30"  bind="{data.DriversLicense}" size="30">&nbsp;
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td>
-										On Mailing List:
+										Drivers License Number:
+										<br>
+										<cfinput type="text" name="DriversLicense" id="DriversLicense" maxlength="30"  bind="{data.DriversLicense}" size="30">
 									</td>
 									<td>
+										On Mailing List:
+										<br>
 										<input type="radio" name="maillist" value="1">Yes
 										&nbsp;&nbsp;
 										<input type="radio" name="maillist" value="0">No
 									</td>
+									
 								</tr>
 								<tr>
 									<td>
 										Opt Out Date:
+										<br>
+										<cfinput type="text" name="optout" id="optout" maxlength="30" bind="{data.optout}" size="30">
 									</td>
-									<td>
-										<cfinput type="text" name="optout" id="optout" maxlength="30" bind="{data.optout}" size="30">&nbsp;
-									</td>
-								</tr>
-								<tr>
 									<td>
 										Comments:
+										<br>
+										<cftextarea  name="comments"  id="comments" style="width: 100%;" maxlength="500" cols="50" rows="3" bind="{data.comments}" />
+										<div id="commentsCount" class="mb-3">0 / 500 characters</div>
 									</td>
+									
+								</tr>
+								<!--- <tr>
 									<td>
+										Comments:
+										<br>
 										<cftextarea  name="comments"  id="comments" maxlength="500" cols="50" rows="3" bind="{data.comments}" />
 										<div id="commentsCount" class="mb-3">0 / 500 characters</div>
 									</td>
-								</tr>
+									<td>
+										
+									</td>
+								</tr> --->
 								<tr>
 									<td colspan="2" >
 										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />

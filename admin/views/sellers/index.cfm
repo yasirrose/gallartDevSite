@@ -81,11 +81,11 @@
 								</tr> --->
 								<tr>
 									<td align="left">
-										<strong>Title:</strong>
+										<strong>Title--:</strong>
 										<cfinput name="searchTitle" size="40" />
 									</td>
 									<td align="left">
-										<strong>Artist:</strong>
+										<strong>Artist--:</strong>
 										<select name="searchArtist">
 											<option value="">All
 											<cfoutput query="getAllArtists" group="manufacturer">
@@ -353,7 +353,7 @@
 									<td colspan="2" >
 										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
 										<cfinput type="button" name="delete" id="delete" value="Delete" onclick="doEdit('delete');" />
-										<cfinput type="button" name="sendEmail" id="sendEmailBtn" value="Send Email" onclick="window.location.href='mailto:' + document.getElementById('seller_email').value;" />
+										<cfinput type="button" name="sendEmail" id="emailLink" value="Send Email" onclick="window.location.href='mailto:' + document.getElementById('seller_email').value;" />
 									</td>
 								</tr>
 							</table>

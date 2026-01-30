@@ -32,7 +32,9 @@ function gridChange(thisId) {
  	var frm = document.forms["editForm"];
  	strSeller = edit.getUserFromId(thisId);
 	email = strSeller['EMAIL'];
-	document.getElementById('emailLink').innerHTML = '<a href="mailto:'+email+'" style="color: black; text-decoration: none;">[SEND EMAIL]</a>';
+	<!--- document.getElementById('emailLink').innerHTML = '<a href="mailto:'+email+'" style="color: black; text-decoration: none;">
+		[SEND EMAIL]
+	</a>'; --->
 	sellerListings = strSeller['LISTINGS'];
 	if (sellerListings > 0){
 		document.getElementById('viewListings').innerHTML ='<input type="Button" value="VIEW SELLER LISTINGS" onclick="ColdFusion.Window.show(\'viewListingsWin\');">';
