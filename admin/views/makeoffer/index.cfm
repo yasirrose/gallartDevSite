@@ -9,23 +9,23 @@
 
 	<style>
 
-	.date-field div {
-		float: none !important;
-		width: max-content;
-		display: inline-block;
-	}
-	.date-field input.datefieldinput {
-		padding-right: 18px;
-		max-width: 178px;
-	}
+		.date-field div {
+			float: none !important;
+			width: max-content;
+			display: inline-block;
+		}
+		.date-field input.datefieldinput {
+			padding-right: 18px;
+			max-width: 178px;
+		}
 
-	.date-field div#searchFromDategridForm_cf_buttondiv, .date-field div#searchToDategridForm_cf_buttondiv {
-		position: absolute;
-		top: 2px;
-		right: 2px;
-		padding: 0 !important;
-	}
-</style>
+		.date-field div#searchFromDategridForm_cf_buttondiv, .date-field div#searchToDategridForm_cf_buttondiv {
+			position: absolute;
+			top: 2px;
+			right: 2px;
+			padding: 0 !important;
+		}
+	</style>
 
 <table border = "0" width = "100%" cellpadding = "5" cellspacing = "0">
 	<tr>
@@ -63,16 +63,17 @@
 							<cfinput name="searchTitle" size="30" />
 						</td>
 						<td align="right">
-							<input type="Reset"><cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
+							<input type="Reset">
+							<cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
 						</td>
 						<td>&nbsp;</td>
 					</tr>
-					<tr>
+					<!--- <tr>
 						<td>&nbsp;</td>
 						<td colspan="2">
 							<iframe marginheight="0" marginwidth="0" style="margin-top: 10px;" src="http://23.20.226.157/admin/views/makeoffer/hideButtons.cfm" frameborder="0" width="200" height="40"></iframe>
 						</td>
-					</tr>
+					</tr> --->
 					<tr>
 						<td colspan="3">
 							<cfgrid format="html" name="data" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.makeoffer.getMakeoffer({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchLname},{searchEmail},{searchTitle},{searchFromDate},{searchToDate})">
@@ -94,32 +95,43 @@
 				<cfinput type="hidden" name="pk_makeoffer" id="pk_makeoffer" bind="{data.pk_makeoffer}">
 				<cfinput type="hidden" name="moduleName" id="moduleName" value="admin/makeOffer">
 				
-				<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox">
+				<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox" style="margin-top: 70px;">
 					<tr>
 						<td width="75">
 							First Name:
-						</td>
-						<td>
+							<br>
 							<cfinput type="text" name="fname" id="fname"  bind="{data.customer_fname}" size="30">
 						</td>
+						<td>
+							Last Name:
+							<br>
+							<cfinput type="text" name="lname" id="lname"  bind="{data.customer_lname}" size="30">
+						</td>
 					</tr>
-					<tr>
+					<!--- <tr>
 						<td>
 							Last Name:
 						</td>
 						<td>
 							<cfinput type="text" name="lname" id="lname"  bind="{data.customer_lname}" size="30">
 						</td>
-					</tr>
+					</tr> --->
 					<tr>
 						<td>
 							Name:
-						</td>
-						<td>
+							<br>
 							<cfinput type="text" name="name" id="name"  bind="{data.customer_name}" size="30">
 						</td>
+						<td>
+							Email:
+							<br>
+							<cfinput type="text" name="customer_email" id="customer_email"  bind="{data.customer_email}"  size="25">
+							<span  id="emailLink"></span>
+							
+							<span  id="mailLog"></span>
+						</td>
 					</tr>
-					<tr>
+					<!--- <tr>
 						<td>
 							Email:
 						</td>
@@ -129,78 +141,96 @@
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<span  id="mailLog"></span>
 						</td>
-					</tr>
+					</tr> --->
 					<tr>
 						<td>
 							Phone:
-						</td>
-						<td>
+							<br>
 							<cfinput type="text" name="makeoffer_phone" id="makeoffer_phone"  bind="{data.makeoffer_phone}" size="30">
 						</td>
+						<td>
+							Best Time To Call:
+							<br>
+							<cfinput type="text" name="best_time" id="best_time"  bind="{data.best_time}" size="30">
+						</td>
 					</tr>
-					<tr>
+					<!--- <tr>
 						<td>
 							Best Time To Call:
 						</td>
 						<td>
 							<cfinput type="text" name="best_time" id="best_time"  bind="{data.best_time}" size="50">
 						</td>
-					</tr>
+					</tr> --->
 					<tr>
 						<td>
-							Retail Price:
+							Retail Price: $
+							<br>
+							<cfinput type="text" name="retail_price" id="retail_price"  bind="{data.retail_price}" size="30">
 						</td>
 						<td>
-							$<cfinput type="text" name="retail_price" id="retail_price"  bind="{data.retail_price}" size="30">
-						</td>
-					</tr>
-					<tr>
-						<td>
-							Gallery Price:
-						</td>
-						<td>
-							$<cfinput type="text" name="gallery_price" id="gallery_price"  bind="{data.gallery_price}" size="30">
+							Gallery Price: $
+							<br>
+							<cfinput type="text" name="gallery_price" id="gallery_price"  bind="{data.gallery_price}" size="30">
 						</td>
 					</tr>
 					<tr>
+						
+						<td>
+							Sale Price: $
+							<br>
+							<cfinput type="text" name="sale_price" id="sale_price"  bind="{data.special_price}" size="30">
+						</td>
+						<td>
+							Offer: $
+							<br>
+							<cfinput type="text" name="offer" id="offer"  bind="{data.offer}" size="30">
+						</td>
+						
+					</tr>
+					<!--- <tr>
 						<td>
 							Sale Price:
 						</td>
 						<td>
 							$<cfinput type="text" name="sale_price" id="sale_price"  bind="{data.special_price}" size="30">
 						</td>
-					</tr>
-					<tr>
+					</tr> --->
+					<!--- <tr>
 						<td>
-							Offer:
+							Offer: $
+							<br>
+							<cfinput type="text" name="offer" id="offer"  bind="{data.offer}" size="30">
 						</td>
-						<td>
-							$<cfinput type="text" name="offer" id="offer"  bind="{data.offer}" size="30">
-						</td>
-					</tr>
+						
+					</tr> --->
 					<tr>
 						<td valign="top">
 							Title:
+							<br>
+							<cfinput type="text" name="title" id="title"  bind="{data.name}" size="30">
 						</td>
 						<td>
-							<cfinput type="text" name="title" id="title"  bind="{data.name}" size="50">
+							Artist:
+							<br>
+							<cfinput type="text" name="manufacturer" id="manufacturer"  bind="{data.manufacturer}" size="30">
 						</td>
 					</tr>
-					<tr>
+					<!--- <tr>
 						<td valign="top">
 							Artist:
 						</td>
 						<td>
 							<cfinput type="text" name="manufacturer" id="manufacturer"  bind="{data.manufacturer}" size="50">
 						</td>
-					</tr>
+					</tr> --->
 					<tr>
 						<td valign="top">
 							Art ID:
-						</td>
-						<td>
+							<br>
 							<cfinput type="text" name="modelno" id="modelno"  bind="{data.modelno}" size="30">
 						</td>
+
 					</tr>
 					<tr>
 						<td colspan="2">

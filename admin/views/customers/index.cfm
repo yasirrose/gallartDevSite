@@ -115,9 +115,9 @@
 							<cfinput type="hidden" name="id" id="id" bind="{data.id}">
 							<cfinput type="hidden" name="moduleName" id="moduleName" value="Customer Module">
 							<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox">
-								<!--- <tr>
+								<tr>
 									<td id="stuff" colspan="2"></td>
-								</tr> --->
+								</tr>
 								<tr>
 									<td width="100">
 										First Name:
@@ -312,7 +312,7 @@
 										<cfinput type="text" name="Zip" id="Zip"  bind="{data.Zip}" maxlength="10" style="width: 100%;" size="10">
 									</td>
 									<td>
-										City
+										City:
 										<br>
 										<cfinput type="text" name="City" id="City"  bind="{data.City}" maxlength="25" size="25"> 
 										

@@ -37,14 +37,16 @@
 
 		var images = strPurchasesConsignments['IMAGE_NAME'].split(',');
 
-		for(i = 0; i < frm.medium.options.length; i++){
+		<!--- for(i = 0; i < frm.medium.options.length; i++){
 			if(frm.medium.options[i].value == medium){
 				frm.medium.options[i].selected = true;
 			}
 			else{
 				frm.medium.options[i].selected = false;
 			}
-		}
+		} --->
+
+		$(frm.medium).val(medium).trigger('change');
 
 		for(i = 0; i < frm.PhoneType.options.length; i++){
 			if(frm.PhoneType.options[i].value == phoneType){

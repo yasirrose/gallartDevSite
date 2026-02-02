@@ -63,52 +63,66 @@
 						<cfform name="latestEditForm">
 							<cfinput type="hidden" name="uid" id="uid" bind="{data.uid}">
 							<cfinput type="hidden" name="moduleName" id="moduleName" value="Latest Listing Module">
-							<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox">
+							<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox" style="margin-top: 55px;">
 								<tr>
 									<td id="stuff" colspan="2"></td>
 								</tr>
 								<tr>
 									<td width="100">
 										First Name:
-									</td>
-									<td>
+										<br>
 										<cfinput type="text" name="fname" id="fname"  bind="{data.fname}" maxlength="30" size="30" class="displayInput" disabled>
 									</td>
+									<td>
+										Last Name:
+										<br>
+										<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" maxlength="30" size="30" class="displayInput" disabled>
+									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										Last Name:
 									</td>
 									<td>
 										<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" maxlength="30" size="30" class="displayInput" disabled>
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
+									<td>
+										Phone:
+										<br>
+										<cfinput type="text" name="phone" id="phone"  bind="{data.phone}" size="30" maxlength="30" class="displayInput" disabled>
+									</td>
 									<td>
 										Email:
-									</td>
-									<td>
-										<cfinput type="text" name="seller_email" id="seller_email" size="30" maxlength="30" class="displayInput" disabled>&nbsp;
+										<br>
+										<cfinput type="text" name="seller_email" id="seller_email" size="30" maxlength="30" class="displayInput" disabled>
 										<span  id="emailLink"></span>
 									</td>
+									
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										Phone:
 									</td>
 									<td>
 										<cfinput type="text" name="phone" id="phone"  bind="{data.phone}" size="30" maxlength="30" class="displayInput" disabled>&nbsp;
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td>
 										Title:
+										<br>
+										<cfinput type="text" name="name" id="name"  bind="{data.name}" maxlength="30" size="30">
 									</td>
 									<td>
-										<cfinput type="text" name="name" id="name"  bind="{data.name}" maxlength="30" size="30">&nbsp;
+										Size:
+										<br>
+										<cfinput type="text" name="size" id="size"  bind="{data.size}" maxlength="30" size="30">
 									</td>
+									
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td valign="top">
 										Artist:
 									</td>
@@ -121,69 +135,94 @@
 											</cfoutput>
 										</select>
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td>
-										Medium:
+										Artist:
+										<br>
+										<select name="manufacturer" id="manufacturer">
+											<cfoutput query="getAllArtists" group="manufacturer">
+												<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+												<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
+												</cfif>
+											</cfoutput>
+										</select>
 									</td>
 									<td>
-										<select name="path">
+										Medium:
+										<br>
+										<select name="path" style="width: 100%;">
 											<cfoutput query="getAllMedium" group="path">
 												<option value="#path#">#path#
 											</cfoutput>
 										</select>
-									</td>
+									</td>								
 								</tr>
 								<tr>
+									<td>
+										Retail Price:
+										<br>
+										<cfinput type="text" name="retail_price" id="retail_price"  bind="{data.retail_price}" maxlength="10" size="30">
+									</td>
+									<td>
+										Gallery Price:
+										<br>
+										<cfinput type="text" name="gallery_price" id="gallery_price"  bind="{data.gallery_price}" maxlength="10" size="30">&nbsp;
+									</td>
+								</tr>
+								<!--- <tr>
 									<td>
 										Size:
 									</td>
 									<td>
 										<cfinput type="text" name="size" id="size"  bind="{data.size}" maxlength="30" size="30">&nbsp;
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td valign="top">
 										Description:
-									</td>
-									<td>
+										<br>
 										<cftextarea name="caption" id="caption"  bind="{data.caption}" cols="40" rows="5" maxlength="500"/>
 										<div id="captionCount" class="mb-3">0 / 500 characters</div>
 									</td>
-								</tr>
-								<tr>
-									<td>
-										Retail Price:
-									</td>
-									<td>
-										<cfinput type="text" name="retail_price" id="retail_price"  bind="{data.retail_price}" maxlength="10" size="30">&nbsp;
+									<td id="imageDisplay" > 
+										Thumbnail:
+										<br>
+										<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
+										<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
 									</td>
 								</tr>
-								<tr>
+								
+								<!--- <tr>
 									<td>
 										Gallery Price:
 									</td>
 									<td>
 										<cfinput type="text" name="gallery_price" id="gallery_price"  bind="{data.gallery_price}" maxlength="10" size="30">&nbsp;
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td>
 										Active:
-									</td>
-									<td>
+										<br>
 										<input type="radio" name="active" value="1">Active <input type="radio" name="active" value="0">Inactive
 									</td>
+									<!--- <td id="imageDisplay" height="150"> 
+										Thumbnail:
+										<br>
+										<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
+										<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
+									</td> --->
 								</tr>
-								<tr>
-									<td>
+								<!--- <tr>
+									<td >
 										Thumbnail:
 									</td>
 									<td id="imageDisplay" height="150">
 										<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
 										<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td colspan="2" >
 										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />

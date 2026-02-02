@@ -294,7 +294,7 @@
 								<tr>
 									<td colspan="2">
 										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
-										<cfinput type="button" name="delete" id="delete" value="Delete" onclick="if (confirm('DELETE -- ARE YOU SURE?')){ doEdit('delete');}" />
+										<cfinput type="button" name="delete" id="delete" value="Delete" onclick="doEdit('delete');" />
 									</td>
 								</tr>
 							</table>
