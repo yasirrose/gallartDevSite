@@ -215,7 +215,7 @@
 									</td> --->
 								</tr>
 								<!--- <tr>
-									<td >
+									<td>
 										Thumbnail:
 									</td>
 									<td id="imageDisplay" height="150">

@@ -43,6 +43,7 @@
 						</td>
 						<td>
 							<cfinput name="searchTitle" id="searchTitle" size="30" />
+							<input type="hidden" name="searchTitleEncoded" id="searchTitleEncoded" value="">
 						</td>
 
 					</tr>
@@ -328,26 +329,28 @@
 
 <!--- from delete_dups --->
 <cfif structKeyExists(url,'TITLE') AND structKeyExists(url,'ARTIST')>
-	<script type="text/javascript">
+	<script>
 		document.addEventListener("DOMContentLoaded", function () {
+			// Decode for display
+			var decodedTitle = decodeURIComponent('<cfoutput>#url.TITLE#</cfoutput>');
+			document.getElementById('searchTitle').value = decodedTitle;
 
-			var titleVal  = '<cfoutput>#JSStringFormat(url.TITLE)#</cfoutput>';
-			var artistVal = '<cfoutput>#JSStringFormat(url.ARTIST)#</cfoutput>';
+			// Keep encoded value in hidden input for network/grid
+			document.getElementById('searchTitleEncoded').value = '<cfoutput>#url.TITLE#</cfoutput>';
 
-			document.getElementById('searchTitle').value = titleVal;
-
-			var artistDD = document.getElementById('searchArtist');
-			for (var i = 0; i < artistDD.options.length; i++) {
-				artistDD.options[i].selected = (artistDD.options[i].value === artistVal);
+			// Set artist
+			var artistValue = '<cfoutput>#url.ARTIST#</cfoutput>';
+			var artistSelect = document.getElementById('searchArtist');
+			for(var i = 0; i < artistSelect.options.length; i++){
+				artistSelect.options[i].selected = (artistSelect.options[i].value == artistValue);
 			}
 
-			// ✅ IMPORTANT: encode BEFORE grid refresh
+			// Show results
 			encodeSearchTitle();
-
-			// document.getElementById('showResults').value = 1;
+			document.getElementById('showResults').value = 1;
 			ColdFusion.Grid.refresh('data', false);
 		});
-
+		
 	</script>
 </cfif>
 
@@ -356,7 +359,7 @@
 
 	function encodeSearchTitle() {
 		var searchTitleValue = document.getElementById('searchTitle').value;
-		document.getElementById('searchTitle').value = encodeURIComponent(searchTitleValue);
+		document.getElementById('searchTitleEncoded').value = encodeURIComponent(searchTitleValue);
 		document.getElementById('showResults').value = 1;
 	}
 
