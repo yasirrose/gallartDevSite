@@ -25,11 +25,16 @@
                                         <tr>
                                             <td>
                                                 <textarea name="artists" cols="40" rows="5"></textarea>
+                                            </td>                                            
+                                        </tr>
+                                         <tr>
+                                            <td>
+                                                <input type="Submit" value="CREATE CSV LISTING" name="create">
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
-                                <td>
+                                <!--- <td>
                                     <table cellspacing="0" cellpadding="0" border="0" width="100%">
                                         <tr>
                                             <td>
@@ -37,7 +42,7 @@
                                             </td>
                                         </tr>
                                     </table>
-                                </td>
+                                </td> --->
                             </tr>
                         </table>
                     </form>

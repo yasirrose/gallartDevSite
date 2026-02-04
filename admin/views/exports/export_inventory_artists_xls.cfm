@@ -16,18 +16,20 @@
 					<form method="post" action="index.cfm?event=exports.artistsXls" onsubmit="return validateAndDisable(this)">
 						<table>
 							<tr>
-								<td valign="top">
+								<td>
 									<table cellspacing="0" cellpadding="0" border="0" width="100%">
 										<tr>
 											<td>
 												<strong>ENTER LIST OF ARTIST NAMES:</strong>
-											</td>
-										</tr>
-										<tr>
-											<td>
+												<br>
 												<textarea name="artists" cols="40" rows="5"></textarea>
 											</td>
 										</tr>
+										<!--- <tr>
+											<td>
+												<textarea name="artists" cols="40" rows="5"></textarea>
+											</td>
+										</tr> --->
 									</table>
 								</td>
 								<td>
@@ -41,7 +43,7 @@
 										</tr>
 										<tr>
 											<td colspan="2" style="font-size: 9pt;">
-												<input type="Checkbox" name="displayFields" value="ModelNo">Model No<br>
+												<!--- <input type="Checkbox" name="displayFields" value="ModelNo">Model No<br>
 												<input type="Checkbox" name="displayFields" value="Artist">Artist<br>
 												<input type="Checkbox" name="displayFields" value="Medium">Medium<br>
 												<input type="Checkbox" name="displayFields" value="Retail">Retail Price<br>
@@ -53,7 +55,27 @@
 												<input type="Checkbox" name="displayFields" value="Edition">Edition<br>
 												<input type="Checkbox" name="displayFields" value="Low">Low Estimate<br>
 												<input type="Checkbox" name="displayFields" value="High">High Estimate<br>
-												<input type="Checkbox" name="displayFields" value="Thumbnail">Thumbnail
+												<input type="Checkbox" name="displayFields" value="Thumbnail">Thumbnail --->
+
+												<div class="checkbox-grid editBox">
+													<label><input type="checkbox" name="displayFields" value="ModelNo"> Model No</label>
+													<label><input type="checkbox" name="displayFields" value="Artist"> Artist</label>
+													<label><input type="checkbox" name="displayFields" value="Medium"> Medium</label>
+													<label><input type="checkbox" name="displayFields" value="Retail"> Retail Price</label>
+
+													<label><input type="checkbox" name="displayFields" value="Gallery"> Gallery Price</label>
+													<label><input type="checkbox" name="displayFields" value="Sale"> Sale Price</label>
+													<label><input type="checkbox" name="displayFields" value="Trump"> Trump Price</label>
+													<label><input type="checkbox" name="displayFields" value="Year"> Year</label>
+
+													<label><input type="checkbox" name="displayFields" value="Size"> Size</label>
+													<label><input type="checkbox" name="displayFields" value="Edition"> Edition</label>
+													<label><input type="checkbox" name="displayFields" value="Low"> Low Estimate</label>
+													<label><input type="checkbox" name="displayFields" value="High"> High Estimate</label>
+
+													<label><input type="checkbox" name="displayFields" value="Thumbnail"> Thumbnail</label>
+												</div>
+
 											</td>
 										</tr>
 										<tr>
@@ -105,5 +127,19 @@
 			button.value = "Processing...";
 		}
 	</script>
+
+	<style>
+		.checkbox-grid {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 6px 12px;
+		}
+
+		.checkbox-grid label {
+			white-space: nowrap;
+			cursor: pointer;
+		}
+	</style>
+
 
 </cfoutput>

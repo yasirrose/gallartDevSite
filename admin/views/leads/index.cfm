@@ -423,15 +423,15 @@
 		</tr> --->
 		<cfif session.loggedin EQ true AND (listFindNoCase(session.userinfo.roles,'leads') OR session.userinfo.sa EQ 1)>
 			<cfinput type="hidden" name="password" value="#session.userinfo.password#">
-		<cfelse>
-		<tr>
-			<td>
-				Employee password:
-			</td>
-			<td>
-				<cfinput type="password" name="password" id="password" size="30" required="Yes" message="You must enter your password.">
-			</td>
-		</tr>
+		 <cfelse>
+			<tr>
+				<td>
+					Employee password:
+				</td>
+				<td>
+					<cfinput type="password" name="password" id="password" size="30" required="Yes" message="You must enter your password.">
+				</td>
+			</tr>
 		</cfif>
 		<tr>
 			<td colspan="2">
