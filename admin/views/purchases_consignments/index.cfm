@@ -234,19 +234,31 @@
 									</td>
 								</tr> --->
 								<tr>
-									<td style="font-size: 10px;">
+									<!--- <td style="font-size: 10px;">
 										Artist:
 										<br>
 										<cfinput type="text" name="artist" id="artist"  bind="{data.artist}" maxlength="25" size="25">
-									</td>
-									<td>
+									</td> --->
+									<!--- <td>
 										Title:
 										<br>
 										<cfinput type="text" name="title" id="title"  bind="{data.title}" maxlength="25" size="25">
+									</td> --->
+									<td valign="top" style="font-size: 10px; white-space: nowrap;">
+										Additional Details
+										<br>
+										<cftextarea name="additional_details" id="additional_details" rows="5" bind="{data.additional_details}" maxlength="500" style="width:100%;"></cftextarea>
+										<div id="additional_detailsCount" class="mb-3">0 / 500 characters</div>
+									</td>
+									<td valign="top" style="font-size: 10px;">
+										Price:
+										<br>
+										<cfinput type="text" name="size" id="size"  bind="{data.size}" maxlength="25" size="30">
 									</td>
 									
+									
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td class="multi-select-td">
 										Medium:
 										<br>
@@ -262,8 +274,8 @@
 										<br>
 										<cfinput type="text" name="size" id="size"  bind="{data.size}" maxlength="25" size="30">
 									</td>
-								</tr>
-								<tr>
+								</tr> --->
+								<!--- <tr>
 									<td valign="top" style="font-size: 10px; white-space: nowrap;">
 										Additional Details
 										<br>
@@ -279,8 +291,8 @@
 											</div>
 										</div>
 									</td>
-								</tr>
-								<!--- <tr>
+								</tr> --->
+								<tr>
 									<td  height="150" colspan="2">
 										<div id="imageDisplay">
 											<div class="img-box">
@@ -290,7 +302,7 @@
 											</div>
 										</div>
 									</td>
-								</tr> --->
+								</tr>
 								<tr>
 									<td colspan="2">
 										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />

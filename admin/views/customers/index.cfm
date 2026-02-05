@@ -39,26 +39,6 @@
 									</td>
 									<td>&nbsp;</td>
 								</tr>
-								<!--- <tr>
-									<td align="right">
-										<strong>Email:</strong>
-									</td>
-									<td>
-										<cfinput name="searchEmail" size="30" maxlength="30"/>
-
-									</td>
-									<td>&nbsp;</td>
-								</tr>
-								<tr>
-									<td align="right">
-										<strong>Area Code:</strong>
-									</td>
-									<td>
-										<cfinput name="searchAreacode" size="30" maxlength="30"/>
-
-									</td>
-									<td>&nbsp;</td>
-								</tr> --->
 								<tr>
 									<td align="left">
 										<strong>City:</strong>
@@ -75,20 +55,6 @@
 									</td>
 									<td>&nbsp;</td>
 								</tr>
-								<!--- <tr>
-									<td align="right">
-										<strong>State:</strong>
-									</td>
-									<td>
-										<select name="searchState">
-											<option value="">Please Select</option>
-											<cfoutput query="getStates">
-												<option value="#stateAbb#">#state#</option>
-											</cfoutput>
-										</select>
-									</td>
-									<td>&nbsp;</td>
-								</tr> --->
 								<tr>
 									<td colspan="3" align="center">
 										<input type="Reset" onclick="setTimeout(function(){location.reload();},100);">
@@ -139,7 +105,7 @@
 									</td>
 								</tr> --->
 								<tr>
-									<td>
+									<!--- <td>
 										Address Type:
 										<br>
 										<cfset Addtype = "USA,Outside" />
@@ -151,6 +117,11 @@
 												</cfloop>
 											</select>
 										</cfoutput>
+									</td> --->
+									<td valign="top">
+										Opt Out Date:
+										<br>
+										<cfinput type="text" name="optout" id="optout" maxlength="30" bind="{data.optout}" size="30">
 									</td>
 									<td>
 										Email:
@@ -293,29 +264,38 @@
 								</tr> --->
 
 								<tr>
+									<td>
+										Address Type:
+										<br>
+										<cfset Addtype = "USA,Outside" />
+										<cfoutput>
+											<select name="Addresstype" id="Addresstype" style="width: 100%;" onchange="toggleStateField();">
+												<option value="">Please Select</option>
+												<cfloop list="#Addtype#" index="idx">
+													<option value="#idx#">#idx#</option>
+												</cfloop>
+											</select>
+										</cfoutput>
+									</td>
 									<td valign="top">
 										Address1:
 										<br>
 										<cfinput type="text" name="Address1" id="Address1" maxlength="30" bind="{data.Address1}" size="30">
 									</td>
+									
+								</tr>
+								<tr>
 									<td>
 										Address2:
 										<br>
 										<cfinput type="text" name="Address2" id="Address2" maxlength="30" bind="{data.Address2}" size="30">
 									</td>
-								</tr>
-								<tr>
 									<td>
-										Zip:
+										Zip, City:
 										<br>
 										<!--- <cfinput type="text" name="State" id="State"  bind="{data.State}" size="15">&nbsp; --->
-										<cfinput type="text" name="Zip" id="Zip"  bind="{data.Zip}" maxlength="10" style="width: 100%;" size="10">
-									</td>
-									<td>
-										City:
-										<br>
+										<cfinput type="text" name="Zip" id="Zip"  bind="{data.Zip}" maxlength="10"  size="10">
 										<cfinput type="text" name="City" id="City"  bind="{data.City}" maxlength="25" size="25"> 
-										
 									</td>
 									
 								</tr>
@@ -337,7 +317,6 @@
 									<td>
 										Country:
 										<br>
-										 &nbsp;
 										<cfinput type="text" name="country" id="country"  bind="{data.country}" maxlength="25" size="25" class="displayInput">
 
 									</td>
@@ -359,33 +338,58 @@
 								</tr>
 
 								<tr>
-									<td valign="top">
+									<td>
+										Ship Address Type:
+										<br>
+										<cfset Addtype = "USA,Outside" />
+										<cfoutput>
+											<select name="ShipAddresstype" id="ShipAddresstype" style="width: 100%;" onchange="toggleShipStateField();">
+												<option value="">Please Select</option>
+												<cfloop list="#Addtype#" index="idx">
+													<option value="#idx#">#idx#</option>
+												</cfloop>
+											</select>
+										</cfoutput>
+									</td>
+
+									<td>
 										Shipping Address1:
 										<br>
 										<cfinput type="text" name="saddress1" id="saddress1"  bind="{data.saddress1}" maxlength="30" size="30">
 									</td>
+									<!--- <td>
+										Shipping Address2:
+										<br>
+										<cfinput type="text" name="saddress2" id="saddress2"  bind="{data.saddress2}" maxlength="30" size="30">
+									</td> --->
+								</tr>
+								<tr>
 									<td>
 										Shipping Address2:
 										<br>
 										<cfinput type="text" name="saddress2" id="saddress2"  bind="{data.saddress2}" maxlength="30" size="30">
 									</td>
-								</tr>
-								<tr>
-									<td>
+									<!--- <td>
 										State
 										<br>
 										<cfinput type="text" name="sstate" id="sstate" style="width: 100%;" bind="{data.sstate}" maxlength="15" size="15">										
-									</td>
+									</td> --->
 									<td>
+										Zip, City: 
+										<br>
+										<cfinput type="text" name="szip" id="szip"  bind="{data.szip}" maxlength="10" size="10">
+										<cfinput type="text" name="scity" id="scity"  bind="{data.scity}" maxlength="25" size="25">
+									</td>
+									<!--- <td>
 										City
 										<br>
 										<cfinput type="text" name="scity" id="scity"  bind="{data.scity}" maxlength="25" size="25">
 										 
-									</td>									
+									</td> --->
 									
 								</tr>
 								<tr>
-									<td>
+									<!--- <td>
 										Zip:
 										<br>
 										<cfinput type="text" name="szip" id="szip" style="width: 100%;" bind="{data.szip}" maxlength="10" size="10">
@@ -394,8 +398,46 @@
 										Fax:
 										<br>
 										<cfinput type="text" name="Fax" id="Fax" maxlength="30" bind="{data.Fax}" size="30">
+									</td> --->
+
+									<!--- <td>
+										Ship State
+										<br>
+										<div id="shipStateText" style="display: block;">
+											<cfinput type="text" name="sstate" id="sstate" style="width: 100%;" bind="{data.sstate}" maxlength="50" size="15">
+										</div>
+										<div id="shipStateDropdown" style="display: none;">
+											<select name="sstate_dropdown" id="shipStateDropdownSelect" style="width: 100%;">
+												<option value="">Please Select</option>
+												<cfoutput query="getStates">
+													<option value="#stateAbb#">#state#</option>
+												</cfoutput>
+											</select>
+										</div>
+									</td> --->
+									<td id="shipstateTextRow" style="display:none; ">
+										Ship State
+										<br>
+										<cfinput type="text" name="sstate" id="sstate" style="width: 100%;" bind="{data.sstate}" maxlength="50" size="15">
 									</td>
-									
+
+									<td id="shipstateDropdownRow" style="display:none;">
+										Ship State
+										<br>
+										<select name="sstate_dropdown" id="shipStateDropdownSelect" style="width: 100%;">
+											<option value="">Please Select</option>
+											<cfoutput query="getStates">
+												<option value="#stateAbb#">#state#</option>
+											</cfoutput>
+										</select>
+									</td>
+
+									<td>
+										Drivers License Number:
+										<br>
+										<cfinput type="text" name="DriversLicense" id="DriversLicense" maxlength="30"  bind="{data.DriversLicense}" size="30">
+									</td>
+
 								</tr>
 								<!--- <tr>
 									<td>
@@ -405,12 +447,8 @@
 										<cfinput type="text" name="DriversLicense" id="DriversLicense" maxlength="30"  bind="{data.DriversLicense}" size="30">&nbsp;
 									</td>
 								</tr> --->
-								<tr>
-									<td>
-										Drivers License Number:
-										<br>
-										<cfinput type="text" name="DriversLicense" id="DriversLicense" maxlength="30"  bind="{data.DriversLicense}" size="30">
-									</td>
+								<!--- <tr>
+									
 									<td>
 										On Mailing List:
 										<br>
@@ -419,18 +457,25 @@
 										<input type="radio" name="maillist" value="0">No
 									</td>
 									
-								</tr>
+								</tr> --->
 								<tr>
-									<td>
+									<!--- <td>
 										Opt Out Date:
 										<br>
 										<cfinput type="text" name="optout" id="optout" maxlength="30" bind="{data.optout}" size="30">
-									</td>
+									</td> --->
 									<td>
 										Comments:
 										<br>
 										<cftextarea  name="comments"  id="comments" style="width: 100%;" maxlength="500" cols="50" rows="3" bind="{data.comments}" />
 										<div id="commentsCount" class="mb-3">0 / 500 characters</div>
+									</td>
+									<td valign="top">
+										On Mailing List:
+										<br>
+										<input type="radio" name="maillist" value="1">Yes
+										&nbsp;&nbsp;
+										<input type="radio" name="maillist" value="0">No
 									</td>
 									
 								</tr>
@@ -457,88 +502,106 @@
 				</tr>
 			</table>
 
-	<script>
-		function toggleStateField() {
-			var addressType = document.getElementById("Addresstype").value;
+			<script>
+				function toggleStateField() {
+					var addressType = document.getElementById("Addresstype").value;
 
-			if (addressType === "Outside") {
-				// Show text field, hide dropdown
-				document.getElementById("stateTextRow").style.display = "";
-				document.getElementById("stateDropdownRow").style.display = "none";
-			} else if (addressType === "USA") {
-				// Show dropdown, hide text field
-				document.getElementById("stateDropdownRow").style.display = "";
-				document.getElementById("stateTextRow").style.display = "none";
-			} else {
-				// Hide both if nothing selected
-				document.getElementById("stateTextRow").style.display = "none";
-				document.getElementById("stateDropdownRow").style.display = "none";
-			}
-		}
-
-		function exportCustomers(btn) {
-			// disable button
-			btn.disabled = true;
-			btn.value = "Exporting...";
-
-			// trigger export via iframe
-			document.getElementById('createXls').src = 'views/exports/create_customer_xls.cfm';
-
-			// re-enable after 5 seconds
-			setTimeout(function(){
-				btn.disabled = false;
-				btn.value = "Create Excel Sheet";
-			}, 5000);
-		}
-
-	</script>
-
-	<script>
-		/* ---------- global counter function ---------- */
-		function updateAdditionalDetailsCounter() {
-			var textarea = document.getElementById('comments');
-			var counter = document.getElementById('commentsCount');
-			var maxLength = 500;
-			if (!textarea || !counter) return;
-			var len = textarea.value ? textarea.value.length : 0;
-			counter.textContent = len + ' / ' + maxLength + ' characters';
-
-			// optional red warning
-			if (len > maxLength) {
-				counter.style.color = 'red';
-			} else {
-				counter.style.color = '';
-			}
-		}
-
-		/* ---------- run on page load and attach input handler ---------- */
-		document.addEventListener("DOMContentLoaded", function() {
-			const textarea = document.getElementById("comments");
-			const maxLength = 500;
-
-			textarea.addEventListener("input", function() {
-				if (this.value.length > maxLength) {
-					this.value = this.value.substring(0, maxLength); // trim extra text
+					if (addressType === "Outside") {
+						// Show text field, hide dropdown
+						document.getElementById("stateTextRow").style.display = "";
+						document.getElementById("stateDropdownRow").style.display = "none";
+					} else if (addressType === "USA") {
+						// Show dropdown, hide text field
+						document.getElementById("stateDropdownRow").style.display = "";
+						document.getElementById("stateTextRow").style.display = "none";
+					} else {
+						// Hide both if nothing selected
+						document.getElementById("stateTextRow").style.display = "none";
+						document.getElementById("stateDropdownRow").style.display = "none";
+					}
 				}
-				updateAdditionalDetailsCounter();
-			});
-		});
-	</script>
 
-	<style>
-		.toast-center {
-			top: 50% !important;
-			left: 50% !important;
-			transform: translate(-50%, -50%) !important;
-			position: fixed !important;
-			z-index: 999999 !important;
-		}
+				function toggleShipStateField() {
+					var shipAddressType = document.getElementById("ShipAddresstype").value;
 
-		#toast-container > .toast {
-			background-color: #ff4da6 !important;
-			color: white !important;
-		}
-	</style>
+					if (shipAddressType === "USA") {
+						// Show dropdown, hide text field
+						document.getElementById("shipstateDropdownRow").style.display = "block";
+						document.getElementById("shipstateTextRow").style.display = "none";
+					} else if (shipAddressType === "Outside") {
+						// Show text field, hide dropdown
+						document.getElementById("shipstateTextRow").style.display = "block";
+						document.getElementById("shipstateDropdownRow").style.display = "none";
+					} else {
+						// Hide both if nothing selected
+						document.getElementById("shipstateTextRow").style.display = "none";
+						document.getElementById("shipstateDropdownRow").style.display = "none";
+					}
+				}
+
+				function exportCustomers(btn) {
+					// disable button
+					btn.disabled = true;
+					btn.value = "Exporting...";
+
+					// trigger export via iframe
+					document.getElementById('createXls').src = 'views/exports/create_customer_xls.cfm';
+
+					// re-enable after 5 seconds
+					setTimeout(function(){
+						btn.disabled = false;
+						btn.value = "Create Excel Sheet";
+					}, 5000);
+				}
+
+			</script>
+
+			<script>
+				/* ---------- global counter function ---------- */
+				function updateAdditionalDetailsCounter() {
+					var textarea = document.getElementById('comments');
+					var counter = document.getElementById('commentsCount');
+					var maxLength = 500;
+					if (!textarea || !counter) return;
+					var len = textarea.value ? textarea.value.length : 0;
+					counter.textContent = len + ' / ' + maxLength + ' characters';
+
+					// optional red warning
+					if (len > maxLength) {
+						counter.style.color = 'red';
+					} else {
+						counter.style.color = '';
+					}
+				}
+
+				/* ---------- run on page load and attach input handler ---------- */
+				document.addEventListener("DOMContentLoaded", function() {
+					const textarea = document.getElementById("comments");
+					const maxLength = 500;
+
+					textarea.addEventListener("input", function() {
+						if (this.value.length > maxLength) {
+							this.value = this.value.substring(0, maxLength); // trim extra text
+						}
+						updateAdditionalDetailsCounter();
+					});
+				});
+			</script>
+
+			<style>
+				.toast-center {
+					top: 50% !important;
+					left: 50% !important;
+					transform: translate(-50%, -50%) !important;
+					position: fixed !important;
+					z-index: 999999 !important;
+				}
+
+				#toast-container > .toast {
+					background-color: #ff4da6 !important;
+					color: white !important;
+				}
+			</style>
 
 <iframe id="createXls" src="" frameborder="0"></iframe>
 <!--- <cfset ajaxOnLoad("init")> --->

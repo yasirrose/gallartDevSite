@@ -379,9 +379,9 @@
 												<input type="radio" name="Active" value="">
 											</div>
 										</div>
-									</td>
+									</td >
 								</tr>
-								<!--- <tr> --->
+								<!-- <tr> -->
 									<!--- <td style="font-size: 10px;">
 										<input type="radio" name="Active" value="1" checked>Active
 										<input type="radio" name="Active" value="0">Inactive
@@ -396,8 +396,8 @@
 										<input type="Hidden" name="Promotion" value="">
 									</td> --->
 				
-								<!--- </tr> --->
-								<!--- <tr>
+								<!-- </tr> -->
+								<!-- <tr>
 									<td style="font-size: 10px;">
 										<strong>Promotion:</strong>
 									</td >
@@ -406,23 +406,7 @@
 										<input type="Hidden" name="Promotion" value="">
 									</td>
 				
-								</tr> --->
-								<tr>
-									<td style="font-size: 10px;">
-										<strong>Number of Records:</strong>
-									</td >
-									<td style="font-size: 10px;">
-										<select name="number_records">
-											<option value="">All</option>
-											<option value="1">1 - 50</option>
-											<option value="51">51 - 100</option>
-											<option value="101">101 - 150</option>
-											<option value="151">151 - 200</option>
-											<option value="201">201 - 250</option>
-											<option value="251">251 - 300</option>
-										</select>
-									</td>
-								</tr>
+								</tr> -->
 								<tr>
 									<td width="100" style="font-size: 10px;" colspan="2">
 										<div class="form-row">
@@ -468,7 +452,7 @@
 												<input type="Hidden" name="BottomHome">
 											</div>
 										</div>
-										<!--- <table cellspacing="0" cellpadding="0" border="0" width="100%">
+										<!-- <table cellspacing="0" cellpadding="0" border="0" width="100%">
 											<tr>
 												<td width="106" style="font-size: 10px;">&nbsp;
 													
@@ -502,7 +486,7 @@
 													Slideshow
 												</td>
 											</tr>
-										</table>--->
+										</table>-->
 									</td>
 								</tr>
 								<tr>
@@ -519,7 +503,7 @@
 												<input type="Hidden" name="BottomHome">
 											</div>
 										</div> -->
-										<!--- <table cellspacing="0" cellpadding="0" border="0" width="100%">
+										<!-- <table cellspacing="0" cellpadding="0" border="0" width="100%">
 											<tr>
 												<td width="50" style="font-size: 10px;">&nbsp;
 													
@@ -539,7 +523,7 @@
 													Bottom of Home Page
 												</td>
 											</tr>
-										</table> --->
+										</table> -->
 									</td>
 								</tr>
 							</table>

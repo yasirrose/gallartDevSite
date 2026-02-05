@@ -83,6 +83,7 @@ function gridChange(thisId) {
     }
 
 	Addresstype = strCustomer['ADDRESSTYPE'];
+	ShipAddresstype = strCustomer['SHIPADDRESSTYPE'];
 
 	for(i = 0; i < frm.Addresstype.options.length; i++){
 		if(frm.Addresstype.options[i].value == Addresstype){
@@ -90,6 +91,15 @@ function gridChange(thisId) {
 		}
 		else{
 			frm.Addresstype.options[i].selected = false;
+		}
+	}
+
+	for(i = 0; i < frm.ShipAddresstype.options.length; i++){
+		if(frm.ShipAddresstype.options[i].value == ShipAddresstype){
+			frm.ShipAddresstype.options[i].selected = true;
+		}
+		else{
+			frm.ShipAddresstype.options[i].selected = false;
 		}
 	}
 
@@ -108,6 +118,25 @@ function gridChange(thisId) {
 			}
 			else{
 				frm.state_dropdown.options[i].selected = false;
+			}
+		}
+	}
+
+	if (ShipAddresstype && ShipAddresstype.toLowerCase() === "outside") {
+		document.getElementById("shipstateTextRow").style.display = "";
+		document.getElementById("shipstateDropdownRow").style.display = "none";
+	} else {
+		document.getElementById("shipstateTextRow").style.display = "none";
+		document.getElementById("shipstateDropdownRow").style.display = "";
+
+		sstate = strCustomer['SSTATE']
+
+		for(i = 0; i < frm.sstate_dropdown.options.length; i++){
+			if(frm.sstate_dropdown.options[i].value == sstate){
+				frm.sstate_dropdown.options[i].selected = true;
+			}
+			else{
+				frm.sstate_dropdown.options[i].selected = false;
 			}
 		}
 	}

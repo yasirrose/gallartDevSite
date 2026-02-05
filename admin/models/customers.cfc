@@ -139,7 +139,11 @@
 		<cfargument name="state_dropdown" type="string" default="">
 		<cfargument name="phoneNumber" type="string" default="">
 		<cfargument name="phoneType" type="string" default="">
-		<cfargument name="moduleName" type="string" default="">		
+		<cfargument name="moduleName" type="string" default="">
+		<cfargument name="ShipAddresstype" type="string" default="">
+		<cfargument name="sstate_dropdown" type="string" default="">
+		
+		<!--- <cfdump var="#arguments#" abort="true"> --->
 
 		<cfif arguments.addressType EQ "USA">
 			<cfset finalState = arguments.state_dropdown>
@@ -149,6 +153,16 @@
 		<cfelse>
 			<cfset finalState = "">
 			<cfset country = "">
+		</cfif>
+
+		<cfif arguments.ShipAddresstype EQ "USA">
+			<cfset s_finalState = arguments.sstate_dropdown>
+		<cfelseif arguments.ShipAddresstype EQ "Outside">
+			<cfset s_finalState = arguments.sstate>
+			<!--- <cfset country = arguments.country> --->
+		<cfelse>
+			<cfset s_finalState = "">
+			<!--- <cfset country = ""> --->
 		</cfif>
 
 		<cfif len(trim(arguments.phoneNumber)) AND arguments.phoneType EQ "Home Phone">
@@ -239,10 +253,11 @@
 					State 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#finalState#">,
 					Zip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Zip#">,
 					Country 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#country#">,
+					ShipAddresstype = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#ShipAddresstype#">,
 					saddress1 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.saddress1#">,
 					saddress2 		= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.saddress2#">,
 					scity 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.scity#">,
-					sstate 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.sstate#">,
+					sstate 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#s_finalState#">,
 					szip 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.szip#">,
 					Fax 			= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.Fax#">,
 					DriversLicense	= <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.DriversLicense#">,

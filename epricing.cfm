@@ -540,6 +540,7 @@
 																					
 																					<div class="col-md-12">
 																						<div class="input-field">
+																							<label>Phone Type: </label>
 																							<select name="phoneType" id="phoneType" class="form-control" style="width:100% !important;">
 																								<option value="Cell Phone">Cell Phone</option>
 																								<option value="Home Phone">Home Phone</option>
