@@ -25,10 +25,10 @@ function populateFormfilter(thisId){
         frm.filterName.value = strEmployee['filterName'];
         frm.filterType.value = strEmployee['filterType'];
         document.getElementById('edit').value = 'Edit';
-        var deleteCheck = document.getElementById('deleteCheck').value;
+        <!--- var deleteCheck = document.getElementById('deleteCheck').value;
         if(deleteCheck){
             document.getElementById('delete').style.display = '';
-        }
+        } --->
 
        active = strEmployee['FILTERTYPE']
 

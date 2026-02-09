@@ -42,9 +42,9 @@
 						</cfform>
 					</td>
 					<td valign="top">
-						<cfif session.userinfo.sa EQ 1 OR session.userinfo.email EQ 'waseemgallart@gmail.com'>
+						<!--- <cfif session.userinfo.sa EQ 1 OR session.userinfo.email EQ 'waseemgallart@gmail.com'> --->
 							<input type="button" value="New" onclick="showNew()">
-						</cfif>
+						<!--- </cfif> --->
 						<cfform name="editForm">
 							<cfinput type="hidden" name="id" id="id" bind="{data.id}">
 							<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox">
@@ -78,7 +78,7 @@
 								
 								<tr>
 									<td colspan="2">
-										<cfif session.userinfo.sa EQ 1 OR session.userinfo.email EQ 'waseemgallart@gmail.com'>
+										<!--- <cfif session.userinfo.sa EQ 1 OR session.userinfo.email EQ 'waseemgallart@gmail.com'>
 											<cfset buttonStyle = "">
 											<cfset deleteChecck = "1">
 											
@@ -86,10 +86,10 @@
 											<cfset buttonStyle = "display:none;">
 											<cfset deleteChecck = "">
 
-										</cfif>
-										<cfinput type="hidden" value="#deleteChecck#" name="deleteCheck" id="deleteCheck" >
-										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" style="#buttonStyle#" />
-										<cfinput type="button" name="delete" id="delete" value="Delete" onclick=" doEdit('delete')" style="#buttonStyle#" />
+										</cfif> --->
+										<!--- <cfinput type="hidden" value="#deleteChecck#" name="deleteCheck" id="deleteCheck" > --->
+										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');"  />
+										<cfinput type="button" name="delete" id="delete" value="Delete" onclick=" doEdit('delete')"  />
 									</td>
 									<!--- <td colspan="2" >
 										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />

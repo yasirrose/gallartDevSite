@@ -218,9 +218,9 @@
 
 					</td>
 					<td valign="top">
-						<cfif session.userinfo.sa EQ 1 OR session.userinfo.email EQ 'waseemgallart@gmail.com'>
+						<!--- <cfif session.userinfo.sa EQ 1 OR session.userinfo.email EQ 'waseemgallart@gmail.com'> --->
 							<input type="button" value="New" onclick="showNew()">
-						</cfif>
+						<!--- </cfif> --->
 						<cfform name="editForm" action="" enctype="multipart/form-data">
 							<cfinput type="hidden" name="id" id="id" bind="{data.id}">
 							<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox">
@@ -236,7 +236,7 @@
 									<td>
 										Banner Type:
 										<br>
-										<cfinput type="text" name="bannerType" id="bannerType" maxlength="30"  bind="{data.bannerType}" size="30" required="true" message="Please enter Banner Type.">
+										<cfinput type="text" name="bannerType" id="bannerType"  bind="{data.bannerType}" size="30" required="true" message="Please enter Banner Type.">
 									</td>
 								</tr>
 								<!--- <tr>
@@ -252,7 +252,7 @@
 									<td>
 										Banner image URL:
 										<br>
-										<cfinput type="text"  name="bannerImagesUrl" id="bannerImagesUrl" maxlength="30"  bind="{data.bannerImagesUrl}" size="30" >
+										<cfinput type="text"  name="bannerImagesUrl" id="bannerImagesUrl"  bind="{data.bannerImagesUrl}" size="30" >
 									</td>
 									<td>
 										Active:
@@ -282,7 +282,7 @@
 									<td>
 										Banner Image:
 										<br>
-										<cfinput type="text" disabled name="bannerImages" id="bannerImages" maxlength="30"  bind="{data.bannerImage}" size="30" >
+										<cfinput type="text" disabled name="bannerImages" id="bannerImages"  bind="{data.bannerImage}" size="30" >
 									</td>
 									<td>										
 										Choose Image:

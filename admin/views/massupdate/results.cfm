@@ -20,6 +20,7 @@
     // Function to toggle checkboxes
 		function toggleCheckboxes(toggleId, checkboxClass) {
 			var toggleButton = document.getElementById(toggleId);
+			if (!toggleButton) return; // Skip if the toggle element does not exist
 			var checkboxes = document.querySelectorAll('.' + checkboxClass);
 			var isChecked = true;
 
@@ -256,6 +257,12 @@ function artSizevalue(uid) {
 						<td>
 							<a href="" id="activeToggle" style="color: #ffffff;">Active</a>
 						</td>
+						<cfif isDefined('form.displayFields') and listFind(form.displayFields,'Promotion')>
+							<td>
+								<!---  Use Promotion --->
+								<a href="" id="PromotionToggle" style="color: #ffffff;">Promotion </a>
+							</td>
+						</cfif>
 						<cfif isDefined('form.displayFields') and listFind(form.displayFields,'ModelNo')>
 						<td>
 							Model#
@@ -387,12 +394,7 @@ function artSizevalue(uid) {
 								<a href="" id="BottomHomeToggle" style="color: #ffffff;">Bottom </a>
 							</td>
 						</cfif>
-						<cfif isDefined('form.displayFields') and listFind(form.displayFields,'Promotion')>
-							<td>
-								<!---  Use Promotion --->
-								<a href="" id="PromotionToggle" style="color: #ffffff;">Promotion </a>
-							</td>
-						</cfif>
+						
 						<td>
 							Update Record
 						</td>
@@ -433,6 +435,11 @@ function artSizevalue(uid) {
 								<td>
 									<input type="Checkbox" name="active_#uid#" <cfif active eq 1>checked</cfif> class="activeCheckbox">
 								</td>
+								<cfif isDefined('form.displayFields') and listFind(form.displayFields,'Promotion')>
+									<td >
+										<input type="Checkbox" name="Promotion_#uid#" <cfif promotion eq 1>checked</cfif> class="PromotionCheckbox"> 	
+									</td>
+								</cfif>
 								<cfif isDefined('form.displayFields') and listFind(form.displayFields,'ModelNo')>
 									<td>
 										#modelno#
@@ -666,11 +673,7 @@ function artSizevalue(uid) {
 										<input type="Checkbox" name="BottomHome_#uid#" <cfif family eq 1>checked</cfif> class="BottomHomeCheckbox"> 	
 									</td>
 								</cfif>
-								<cfif isDefined('form.displayFields') and listFind(form.displayFields,'Promotion')>
-									<td >
-										<input type="Checkbox" name="Promotion_#uid#" <cfif promotion eq 1>checked</cfif> class="PromotionCheckbox"> 	
-									</td>
-								</cfif>
+								
 								
 								<td>
 									<!--- <input type="hidden" name="updatedRowRecord_#uid#" value="#uid#"> --->

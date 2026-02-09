@@ -302,11 +302,15 @@
 					<!--- <cfif listFindNoCase(session.userinfo.roles,'orders') OR session.userinfo.sa EQ 1>
 						<li style="border-right:1px white solid;"><a href="index.cfm?event=emailTemplate">Mail Templates</a></li>
 					</cfif> --->
-					<cfif (session.userinfo.sa EQ 1) OR (session.userinfo.email EQ 'waseemgallart@gmail.com')>
+					<cfif listFindNoCase(session.userinfo.roles,'Filter') OR session.userinfo.sa EQ 1>
 						<li style="border-right:1px white solid;"><a href="index.cfm?event=filterOption">Filter</a></li>
-						<li style="border-right:1px white solid;"><a href="index.cfm?event=banners">Banners</a></li>
-						<!--- <li style="border-right:1px white solid;"><a href="index.cfm?event=bulk">Bulk</a></li> --->
 					</cfif>
+					<cfif listFindNoCase(session.userinfo.roles,'Banners') OR session.userinfo.sa EQ 1>
+						<li style="border-right:1px white solid;"><a href="index.cfm?event=banners">Banners</a></li>
+					</cfif>
+						
+						<!--- <li style="border-right:1px white solid;"><a href="index.cfm?event=bulk">Bulk</a></li> --->
+					
 					
 					
 				</ul>
