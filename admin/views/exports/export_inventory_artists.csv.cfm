@@ -30,6 +30,8 @@
                                          <tr>
                                             <td>
                                                 <input type="Submit" value="CREATE CSV LISTING" name="create">
+                                                &nbsp;&nbsp;&nbsp;
+                                                <input type="Button" value="Back" onclick="location.href='index.cfm?event=exports.artistsCsv'" />
                                             </td>
                                         </tr>
                                     </table>
@@ -49,11 +51,11 @@
                 </cfif>
             </td>
         </tr>
-        <tr>
+        <!--- <tr>
             <td valign="top">
                 <input type="Button" value="Back" onclick="location.href='index.cfm?event=exports.artistsCsv'" />
             </td>
-        </tr>
+        </tr> --->
         
     </table>
        

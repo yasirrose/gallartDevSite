@@ -94,7 +94,8 @@
 				SCITY,
 				SSTATE,
 				WEBSITE,
-				AddressType
+				AddressType,
+				ShipAddresstype
 			)
 			VALUES
 			(
@@ -117,7 +118,8 @@
 				'#SHIPCITY#',
 				'#SHIPSTATE#',
 				'#WEBSITE#',
-				'#form.AddressType#'
+				'#form.AddressType#',
+				'#form.ShipAddressType#'
 			);
 			SELECT SCOPE_IDENTITY() AS uid
 		</cfquery>
