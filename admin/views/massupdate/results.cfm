@@ -86,21 +86,6 @@
 		return true;
 	}
 
-
-// function artSubjectvalue(uid) {
-//     var selectedArtValues = [];
-//     var selectedOptions = document.querySelector('select[name="artSubjectt_' + uid + '"]').selectedOptions;
-
-//     for (var i = 0; i < selectedOptions.length; i++) {
-//         selectedArtValues.push(selectedOptions[i].value);
-//     }
-
-//     // Set the value to the hidden input or another field if needed
-//     document.querySelector('input[name="artSubject_' + uid + '"]').value = selectedArtValues.join(',');
-    
-//     return true;
-// }
-
 function artTypesvalue(uid) {
     var selectedArtValues = [];
     var selectedOptions = document.querySelector('select[name="artTypes_' + uid + '"]').selectedOptions;
@@ -191,16 +176,16 @@ function artSizevalue(uid) {
 				<table border="0" cellspacing="0" cellpadding="2" align="center">
 					<tr>
 						<td colspan="15">
-							<cfoutput>
-								<cfif  structKeyExists(form,'groups')>#getListingsMassUpdate.totalrecords#<cfelse>#getListingsMassUpdate.qListings.recordcount#</cfif> listings found
-								<cfif structKeyExists(form,'alphaCharNum')> where artist's name starts with the letter <cfoutput>#chr(form.alphaCharNum)#</cfoutput></cfif>
-								<cfif  structKeyExists(form,'groups')>
-									(from #(page-1)*groups+1# to
-								<cfif (getListingsMassUpdate.totalrecords-(page*groups)-page) GT 0> 
-										#page*groups#<cfelse>#getListingsMassUpdate.totalrecords#</cfif>)
-								</cfif>.
-							</cfoutput>
-						</td>
+						<cfoutput>
+						<cfif  structKeyExists(form,'groups')>#getListingsMassUpdate.totalrecords.countall#<cfelse>#getListingsMassUpdate.qListings.recordcount#</cfif> listings found
+						<cfif structKeyExists(form,'alphaCharNum')> where artist's name starts with the letter <cfoutput>#chr(form.alphaCharNum)#</cfoutput></cfif>
+						<cfif  structKeyExists(form,'groups')>
+							(from #(page-1)*groups+1# to
+						<cfif (getListingsMassUpdate.totalrecords.countall-(page*groups)-page) GT 0> 
+#page*groups#<cfelse>#getListingsMassUpdate.totalrecords.countall#</cfif>)
+						</cfif>.
+						</cfoutput>
+					</td>
 					</tr>
 					<cfif isDefined('form.number_records') AND form.number_records neq ''>
 						<cfset through = form.number_records + 49 />

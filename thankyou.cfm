@@ -28,32 +28,48 @@ table tr td * {
 .table-cart-detail {
 	background: #F2F2F2;
     padding: 30px;
-    border-radius: 15px;	
-}
-.table-cart-detail {
-	background: #F2F2F2;
-    padding: 30px;
-    border-radius: 15px;	
+    border-radius: 15px;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
 }
 .table-cart-detail tbody, .table-cart-detail td, .table-cart-detail tfoot, .table-cart-detail th, .table-cart-detail thead, .table-cart-detail tr {
-	border-color: #c7c8c94f; 
-    border-width: 1px;	
+	border-color: #c7c8c94f;
+    border-width: 1px;
 	padding: 10px;
 }
 .billing-section .billing-listing ul li * {
-    width: 50%; 
+    width: 50%;
     min-width: 50%;
 }
 @media (max-width: 991px) {
 	.billing-section .billing-listing ul li * {
 		min-width: 50%;
-	}	
+	}
+}
+@media print {
+	.top-heading h4 {
+		text-align: center;
+	}
+	.table-cart-detail {
+		background: #F2F2F2 !important;
+		-webkit-print-color-adjust: exact;
+		color-adjust: exact;
+	}
 }
 </style>
 
 <cfoutput>
 <script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
+<script>
+function printDiv(divName) {
+    var printContents = document.getElementById(divName).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+}
+</script>
 
 <link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 
@@ -99,12 +115,7 @@ table tr td * {
 															SELECT * FROM orders
 															WHERE orderid='#getuserinfo.orderid#'
 														</cfquery>
-														<Cfoutput>
-															<div class="top-heading">
-																<h4>Thank you for your order. Your order number is #getuserinfo.orderid#</h4>
-																<p>You may print out the following for your records:</p>
-															</div>
-														</cfoutput>
+														<div id="printable">
 															<div class="billing-section">
 																<cfoutput query="get_order_info">
 																	<div class="billing-listing">
@@ -293,6 +304,10 @@ table tr td * {
 																	</tr> --->
 																</table>
 															</div>
+														</div>
+														<div class="text-center mt-3">
+															<button type="button" class="btn btn-primary" onclick="printDiv('printable')">Print Order Slip</button>
+														</div>
 
 															<cfelse>
 																<table cellpadding="0" cellspacing="0" border="0" width="100%">

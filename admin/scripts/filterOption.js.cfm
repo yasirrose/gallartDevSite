@@ -121,6 +121,10 @@ function doEdit(type) {
     }
     else if (type == 'delete'){
 
+        if (!confirm('Delete -- ARE YOU SURE? ')) {
+			return false; 
+		}
+
          result = edit.deleteEmployee();
 
          <!--- console.log('test delete: ' , result) --->
@@ -132,6 +136,8 @@ function doEdit(type) {
         } 
         else { 
             alert( result.MESSAGE)
+            editBtn.disabled = false;
+            deleteBtn.disabled = false;
         }
    }
     <!--- document.getElementById('edit').value = 'Edit';

@@ -43,7 +43,7 @@
 </script>
 <cfajaxproxy cfc="admin.models.leads" />
 
-	<table border="0" cellpadding="0" cellspacing="0" width="1000" height="100%">
+	<table border="0" cellpadding="0" cellspacing="0" width="1000" height="100%" align="left">
 		<tr>
 			<td valign="top">
 				<table border = "0" width = "100%" cellpadding = "5" cellspacing = "0">
@@ -65,7 +65,7 @@
 											<br>
 											<cfinput name="searchLname" size="30" />
 										</td>
-										<td>&nbsp;</td>
+										<!--- <td>&nbsp;</td> --->
 									</tr>
 									<!--- <tr>
 										<td align="right" style="font-size: 10px;">
@@ -219,7 +219,7 @@
 												<cfgridcolumn name="user_name" header="Name" width="175">
 												<cfgridcolumn name="leadEmail" header="Email" width="175">
 												<cfgridcolumn name="leadDate" header="Date" width="80">
-													<cfgridcolumn name="pk_leads" header="ID" display="false" dataalign="center">
+												<cfgridcolumn name="pk_leads" header="ID" display="false" dataalign="center">
 											</cfgrid>
 										</td>
 									</tr>
@@ -242,8 +242,7 @@
 										<tr>
 											<td width="150" class="title">
 												<strong>EMPLOYEE:</strong>
-											</td>
-											<td>
+												<br>
 												<cfoutput>
 													<select name="fk_employees" id="fk_employees" style="font-size: 8pt;">
 														<option value="0">Unassigned
@@ -254,16 +253,30 @@
 												</cfoutput>
 												<span  id="empDisplay" style="display: none;"></span>
 											</td>
+											<!--- <td>
+												<cfoutput>
+													<select name="fk_employees" id="fk_employees" style="font-size: 8pt;">
+														<option value="0">Unassigned
+														<cfloop query="getEmployees">
+															<option value="#pk_employees#">#emp_lname#, #emp_fname#
+														</cfloop>
+													</select>
+												</cfoutput>
+												<span  id="empDisplay" style="display: none;"></span>
+											</td> --->
 										</tr>
 									 <cfelse>
 										<tr>
 											<td width="150" class="title">
 												<strong>EMPLOYEE:</strong>
-											</td>
-											<td>
+												<br>
 												<span  id="empDisplay"></span>
 												<cfinput type="hidden" name="fk_employees" id="fk_employees" bind="{leadGrid.fk_employees}" >
 											</td>
+											<!--- <td>
+												<span  id="empDisplay"></span>
+												<cfinput type="hidden" name="fk_employees" id="fk_employees" bind="{leadGrid.fk_employees}" >
+											</td> --->
 										</tr>
 									</cfif>
 									<!--- <tr>
@@ -285,12 +298,18 @@
 									<tr>
 										<td style="font-size: 10px;">
 											<b> Name*:</b>
+											<br>
+											<cfinput type="text" name="name" id="name"  bind="{leadGrid.user_name}" size="30" maxlength="50" autosuggest="cfc:admin.models.leads.searchLeadsByName({cfautosuggestvalue})" maxResultsDisplay="10">
 										</td>
 										<td>
-											<cfinput type="text" name="name" id="name"  bind="{leadGrid.user_name}" size="30" maxlength="30" autosuggest="cfc:admin.models.leads.searchLeadsByName({cfautosuggestvalue})" maxResultsDisplay="10">
+											Email :
+											<br>
+											<cfinput type="text" name="leadEmail" id="leadEmail"  bind="{leadGrid.leadEmail}" size="30" autosuggest="cfc:admin.models.leads.searchLeadsByEmail({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="50">
+											&nbsp;
+											<input type="Button" id="emailButton" value="Send Email To Lead" onclick="openLeadEmailWindow();" />
 										</td>
 									</tr>
-									<tr>
+									<!--- <tr>
 										<td style="font-size: 10px;">
 											Email :
 										</td>
@@ -299,7 +318,7 @@
 											&nbsp;
 											<input type="Button" id="emailButton" value="Send Email To Lead" onclick="openLeadEmailWindow();" />
 										</td>
-									</tr>
+									</tr> --->
 									<!--- <tr>
 										<td style="font-size: 10px;">
 											Cell Phone:
@@ -328,26 +347,30 @@
 									<tr>
 										<td style="font-size: 10px;">
 											Phone Type:
-										</td>
-										<td>
-											<select name="PhoneType" id="PhoneType">
+											<br>
+											<select name="PhoneType" id="PhoneType" style="width: 100%;">
 												<option value="Home Phone" >Home</option>
 												<option value="Cell Phone">Mobile</option>
 												<option value="Business Phone">Business</option>
 												<option value="OutsideUS">Outside US</option>
 											</select>
 										</td>
+										<td style="font-size: 10px;">
+											Phone Number:
+											<br>
+											<cfinput type="text" name="phoneNumber" id="phoneNumber" size="30" maxlength="30">
+										</td>
 									</tr>
 
 									<tr>
-										<td style="font-size: 10px;">
+										<!--- <td style="font-size: 10px;">
 											Phone Number:
 										</td>
 										<td>
 											<cfinput type="text" name="phoneNumber" id="phoneNumber" maxlength="20">
 											<!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
 										</td>
-									</tr>
+									</tr> --->
 
 									<cfoutput>
 										<script>
@@ -410,69 +433,82 @@
 										</td>
 									</tr> --->
 
-									<tr>
-										<td style="font-size: 10px;">
-											Best Time To Call:
-										</td>
-										<td>
-											<cfinput type="text" name="besttime" id="besttime"  bind="{leadGrid.besttime}" size="30" maxlength="30">
-										</td>
-									</tr>
+									
 
 									<tr>
 										<td style="font-size: 10px;">
 											Address Type:
-										</td>
-										<td>
+											<br>
 											<cfset Addtype = "USA,Outside" />
 											<cfoutput>
-												<select name="Addresstype" id="Addresstype" onchange="toggleStateField();">
+												<select name="Addresstype" id="Addresstype" onchange="toggleStateField();" style="width: 100%;">
 													<option value="">Please Select</option>
 													<cfloop list="#Addtype#" index="idx">
 														<option value="#idx#">#idx#</option>
 													</cfloop>
 												</select>
-											</cfoutput>
+											</cfoutput>											
 										</td>
+										<td>
+											Address:
+											<br>
+											<cfinput type="text" name="address" id="address"  bind="{leadGrid.address}" autosuggest="cfc:admin.models.leads.searchLeadsByAddress({cfautosuggestvalue})" maxResultsDisplay="10" size="30" maxlength="100">
+										</td>
+										
 									</tr>
 
 									
 
 								
-									<tr>
+									<!--- <tr>
 										<td style="font-size: 10px;">
 											Address:
 										</td>
 										<td>
 											<cfinput type="text" name="address" id="address"  bind="{leadGrid.address}" autosuggest="cfc:admin.models.leads.searchLeadsByAddress({cfautosuggestvalue})" maxResultsDisplay="10" size="30" maxlength="30">
 										</td>
-									</tr>
+									</tr> --->
 									<tr>
 										<td style="font-size: 10px;">
 											City:
+											<br>
+											<cfinput type="text" name="city" id="city" autosuggest="cfc:admin.models.leads.searchLeadsByCity({cfautosuggestvalue})" style="width: 100%;" maxResultsDisplay="10" bind="{leadGrid.city}" size="30" maxlength="30">
 										</td>
 										<td>
-											<cfinput type="text" name="city" id="city" autosuggest="cfc:admin.models.leads.searchLeadsByCity({cfautosuggestvalue})" maxResultsDisplay="10" bind="{leadGrid.city}" size="30" maxlength="30">
+											Zip Code:
+											<br>
+											<cfinput type="text" name="zip" id="zip"  bind="{leadGrid.zip}" maxlength="10" size="30">
 										</td>
 									</tr>
 
 									<tr id="stateTextRow" style="display:none;">
 										<td style="font-size: 10px;">
 											State/Province
+											<br>
+											<cfinput type="text" name="State_Outside" id="State_Outside" maxlength="30" bind="{leadGrid.state}" size="30"> &nbsp;&nbsp;
 										</td>
 										<td>
-											<cfinput type="text" name="State_Outside" id="State_Outside" maxlength="30" bind="{leadGrid.state}"> &nbsp;&nbsp;
-											<!--- Country &nbsp;&nbsp;
-											<cfinput type="text" name="country" id="country"  bind="{leadGrid.country}"> --->
-
+											Country:
+											<br>
+											<cfinput type="text" name="country" id="country"  bind="{leadGrid.country}" maxlength="30" size="30">
 										</td>
+										
 									</tr>
 
 									<tr id="stateDropdownRow" style="display:none;">
 										<td style="font-size: 10px;">
 											State:
+											<br>
+											<cfoutput>
+												<select name="state" id="state" style="width: 100%;">
+													<option value="">Please Select</option>
+													<cfloop query="getStates">
+														<option value="#getStates.stateAbb#">#getStates.state#</option>
+													</cfloop>
+												</select>
+											</cfoutput>
 										</td>
-										<td>
+										<!--- <td>
 											<cfoutput>
 												<select name="state" id="state">
 													<option value="">Please Select</option>
@@ -481,7 +517,7 @@
 													</cfloop>
 												</select>
 											</cfoutput>
-										</td>
+										</td> --->
 									</tr>
 
 									<!--- <tr>
@@ -493,68 +529,105 @@
 										</td>
 									</tr> --->
 									
-									<tr>
+									<!--- <tr>
 										<td style="font-size: 10px;">
 											Zip Code:
 										</td>
 										<td>
 											<cfinput type="text" name="zip" id="zip"  bind="{leadGrid.zip}" maxlength="10" size="30">
 										</td>
-									</tr>
+									</tr> --->
 
-									<tr id="OutsideCountry" style="display:none;">
+									<!--- <tr id="OutsideCountry" style="display:none;">
 										<td style="font-size: 10px;">
 											Country:
 										</td>
 										<td>
 											<cfinput type="text" name="country" id="country"  bind="{leadGrid.country}" maxlength="30" size="30">
 										</td>
+									</tr> --->
+
+									<tr>
+										<td valign="top">
+											Orign:
+											<br>
+											<cfset originValues = "WALK-IN,WEBSITE,PHONE,OTHER" />
+											<cfoutput>
+												<select name="origin" id="origin" style="width: 100%;">
+													<option value="">Please Select</option>
+													<cfloop list="#originValues#" index="idx">
+														<option value="#idx#">#idx#</option>
+													</cfloop>
+												</select>
+											</cfoutput>
+										</td>
+										<td style="font-size: 10px;">
+											Best Time To Call:
+											<br>
+											<cfinput type="text" name="besttime" id="besttime"  bind="{leadGrid.besttime}" size="30" maxlength="30">
+										</td>
+										
 									</tr>
 
 									<tr>
 										<td style="font-size: 10px;">
 											Company:
+											<br>
+											<cfinput type="text" name="company" id="company" style="width: 100%;" bind="{leadGrid.company}" maxlength="30" size="30">
 										</td>
 										<td>
-											<cfinput type="text" name="company" id="company"  bind="{leadGrid.company}" maxlength="30" size="30">
+											Website:
+											<br>
+											<cfinput type="text" name="website" id="website"  bind="{leadGrid.website}" maxlength="50" size="30">
 										</td>
+										
 									</tr>
-									<tr>
+									<!--- <tr>
 										<td style="font-size: 10px;">
 											Website:
 										</td>
 										<td>
 											<cfinput type="text" name="website" id="website"  bind="{leadGrid.website}" maxlength="30" size="30">
 										</td>
-									</tr>
+									</tr> --->
 									<tr>
 										<td valign="top" style="font-size: 10px;">
 											Artists:
-										</td>
-										<td>
-											<cftextarea name="theartists" id="artists" cols="40" rows="3" maxlength="100" bind="{leadGrid.artists}"></cftextarea>
+											<br>
+											<cftextarea name="theartists" id="artists" style="width: 100%;" cols="40" rows="3" maxlength="100" bind="{leadGrid.artists}"></cftextarea>
 											<div id="artistsCount" class="mb-3">0 / 100 characters</div>
 										</td>
-									</tr>
-									<tr>
-										<td valign="top" style="font-size: 10px;">
+										<td>
 											Titles:
+											<br>
+											<cftextarea name="titles" id="titles" cols="40" rows="3" maxlength="100" bind="{leadGrid.titles}"></cftextarea>
+											<div id="titlesCount" class="mb-3">0 / 100 characters</div> 
+										</td>
+									</tr>
+									<!--- <tr>
+										<td valign="top" style="font-size: 10px;">
+											
 										</td>
 										<td>
 											<cftextarea name="titles" id="titles" cols="40" rows="3" maxlength="100" bind="{leadGrid.titles}"></cftextarea>
 											<div id="titlesCount" class="mb-3">0 / 100 characters</div> 
 										</td>
-									</tr>
+									</tr> --->
 									<tr>
 										<td valign="top" style="font-size: 10px;">
 											Notes:
-										</td>
-										<td>
-											<cftextarea name="notes" id="notes" cols="40" rows="15" maxlength="500" bind="{leadGrid.notes}"></cftextarea>
+											<br>
+											<cftextarea name="notes" id="notes" cols="40" style="width: 100%;" rows="5" maxlength="500" bind="{leadGrid.notes}"></cftextarea>
 											<div id="notesCount" class="mb-3">0 / 500 characters</div>
 										</td>
+										<td valign="top">
+											Mail list:
+											<br>
+											<input type="Checkbox" name="maillist" id="maillist" value="1">
+											<input type="hidden" name="maillist" value="">
+										</td>
 									</tr>
-									<tr>
+									<!--- <tr>
 										<td valign="top" style="font-size: 10px;">
 											Orign:
 										</td>
@@ -569,8 +642,8 @@
 											</select>
 											</cfoutput>
 										</td>
-									</tr>
-									<tr>
+									</tr> --->
+									<!--- <tr>
 										<td style="font-size: 10px;" valign="top">
 											Mail list:
 										</td>
@@ -578,7 +651,7 @@
 											<input type="Checkbox" name="maillist" id="maillist" value="1">
 											<input type="hidden" name="maillist" value="">
 										</td>
-									</tr>
+									</tr> --->
 									<tr>
 										<td colspan="2">
 											<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
@@ -704,18 +777,18 @@
 			if (addressType === "Outside") {
 				// Show text field, hide dropdown
 				document.getElementById("stateTextRow").style.display = "";
-				document.getElementById("OutsideCountry").style.display = "";
+				// document.getElementById("OutsideCountry").style.display = "";
 				document.getElementById("stateDropdownRow").style.display = "none";
 			} else if (addressType === "USA") {
 				// Show dropdown, hide text field
 				document.getElementById("stateDropdownRow").style.display = "";
-				document.getElementById("OutsideCountry").style.display = "none";
+				// document.getElementById("OutsideCountry").style.display = "none";
 				document.getElementById("stateTextRow").style.display = "none";			
 			} else {
 				// Hide both if nothing selected
 				document.getElementById("stateTextRow").style.display = "none";			
 				document.getElementById("stateDropdownRow").style.display = "none";
-				document.getElementById("OutsideCountry").style.display = "none";
+				// document.getElementById("OutsideCountry").style.display = "none";
 			}
 		}
 	</script> 
@@ -757,7 +830,11 @@
 	</script>
 
 
-
+	<style>
+		div.autosuggest {
+			display: flex;
+		}
+	</style>
 
 
 <iframe id="leadExport" src="" frameborder="0"></iframe>

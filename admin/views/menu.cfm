@@ -308,8 +308,7 @@
 					<cfif listFindNoCase(session.userinfo.roles,'Banners') OR session.userinfo.sa EQ 1>
 						<li style="border-right:1px white solid;"><a href="index.cfm?event=banners">Banners</a></li>
 					</cfif>
-						
-						<!--- <li style="border-right:1px white solid;"><a href="index.cfm?event=bulk">Bulk</a></li> --->
+					
 					
 					
 					

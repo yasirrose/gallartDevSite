@@ -159,138 +159,168 @@ function init(){
 			<!--- <input type="button" value="New" onclick="showNew()"> --->
 			<cfform name="editForm">
 				<cfinput type="hidden" name="pk_event_registration" id="pk_event_registration" bind="{data.pk_event_registration}">
-				<table border = "0" width = "500" cellpadding = "1" cellspacing = "0" bgcolor="eeeeee">
+				<table border = "0" width = "500" cellpadding = "1" cellspacing = "0" bgcolor="eeeeee" style="margin-top: 70px;">
 					<tr>
 						<td>
 							<table border = "0" width = "100%" cellpadding = "3" cellspacing = "0">
 								<tr>
 									<td width="130" style="font-size: 10px;">
-										Event:
-									</td>
-									<td>
+										<b>Event:</b>
+										<br>
 										<cfinput type="text" name="event_title" id="event_title"  bind="{data.event_title}" size="50" disabled="true" class="displayInput">
 									</td>
+									
 								</tr>
 								<tr>
 									<td width="130" style="font-size: 10px;">
 										First Name:
-									</td>
-									<td>
+										<br>
 										<cfinput type="text" name="fname" id="fname" maxlength="50" bind="{data.fname}" size="50">
 									</td>
+									<td>
+										Last Name:
+										<br>
+										<cfinput type="text" name="lname" id="lname" maxlength="50" bind="{data.lname}" size="50">
+									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										Last Name:
 									</td>
 									<td>
 										<cfinput type="text" name="lname" id="lname" maxlength="50" bind="{data.lname}" size="50">
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td style="font-size: 10px;">
 										Address 1
-									</td>
-									<td>
+										<br>
 										<cfinput type="text" name="address1" id="address1" maxlength="50" bind="{data.address1}" size="50">
 									</td>
+									<td>
+										Address 2
+										<br>
+										<cfinput type="text" name="address2" id="address2" maxlength="50" bind="{data.address2}" size="50">
+									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										Address 2
 									</td>
 									<td>
 										<cfinput type="text" name="address2" id="address2" maxlength="50" bind="{data.address2}" size="50">
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td style="font-size: 10px;">
 										City
-									</td>
-									<td>
+										<br>
 										<cfinput type="text" name="city" id="city"  bind="{data.city}" maxlength="50" size="50">
 									</td>
+									<td>
+										State
+										<br>
+										<cfinput type="text" name="state" id="state"  bind="{data.state}" maxlength="50" size="50">
+									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										State
 									</td>
 									<td>
 										<cfinput type="text" name="state" id="state"  bind="{data.state}" maxlength="50" size="50">
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td style="font-size: 10px;">
 										Zipcode
+										<br>
+										<cfinput type="text" name="zip" id="zip"  bind="{data.zip}" maxlength="50" size="50">
 									</td>
 									<td>
-										<cfinput type="text" name="zip" id="zip"  bind="{data.zip}" maxlength="50" size="25">
+										Country
+										<br>
+										<cfinput type="text" name="country" id="country"  bind="{data.country}" maxlength="50" size="50">
 									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										Country
 									</td>
 									<td>
 										<cfinput type="text" name="country" id="country"  bind="{data.country}" maxlength="50" size="50">
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td style="font-size: 10px;">
 										Primary Phone
+										<br>
+										<cfinput type="text" name="primary_phone" id="primary_phone" maxlength="50" bind="{data.primary_phone}" size="50">
 									</td>
 									<td>
-										<cfinput type="text" name="primary_phone" id="primary_phone" maxlength="50" bind="{data.primary_phone}" size="25">
+										Secondary Phone
+										<br>
+										<cfinput type="text" name="secondary_phone" id="secondary_phone" maxlength="50"  bind="{data.secondary_phone}" size="50">
 									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										Secondary Phone
 									</td>
 									<td>
 										<cfinput type="text" name="secondary_phone" id="secondary_phone" maxlength="50"  bind="{data.secondary_phone}" size="25">
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td style="font-size: 10px;">
 										Email:
-									</td>
-									<td>
+										<br>
 										<cfinput type="text" name="email" id="email"  bind="{data.email}" maxlength="50" size="50">
 									</td>
+									<td>
+										Artist Interested In:
+										<br>
+										<cfinput type="text" name="art_interested" id="art_interested" maxlength="50" bind="{data.art_interested}" size="50"  />
+									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td style="font-size: 10px;" valign="top">
 										Artist Interested In:
 									</td>
 									<td>
 										<cfinput type="text" name="art_interested" id="art_interested" maxlength="50" bind="{data.art_interested}" size="50"  />
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td style="font-size: 10px;" valign="top">
 										Other Artist Not Listed:
-									</td>
-									<td>
+										<br>
 										<cfinput type="text" name="other_artist" id="other_artist" maxlength="50" bind="{data.other_artist}" size="50"  />
+									</td>
+									<td style="font-size: 10px;">
+										Number of People in Party:
+										<br>
+										<cfinput type="text" name="number_people" id="number_people" maxlength="25" bind="{data.number_people}" size="25">
 									</td>
 								</tr>
 								<tr>
-									<td style="font-size: 10px;">
+									<!--- <td style="font-size: 10px;">
 										Consignment Form:
 									</td>
 									<td>
 										<cfinput type="Checkbox" name="consignment_form" id="consignment_form" value="1">
 										<input type="Hidden" name="consignment_form">
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
-									<td style="font-size: 10px;">
-										Number of People in Party:
-									</td>
+									
 									<td>
-										<cfinput type="text" name="number_people" id="number_people" maxlength="25" bind="{data.number_people}" size="25">
+										Consignment Form:
+										<br>
+										<cfinput type="Checkbox" name="consignment_form" id="consignment_form" value="1">
+										<input type="Hidden" name="consignment_form">
 									</td>
+									
 								</tr>
 								<tr>
 									<td colspan="2">

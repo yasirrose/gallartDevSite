@@ -132,7 +132,7 @@
 			</td>
 		</tr> --->
 
-		<cfoutput>
+		<cfoutput> 
 			<script>
 				document.addEventListener("DOMContentLoaded", function() {
 					const phoneInput = document.getElementById("PhoneNumber");

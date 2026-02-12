@@ -93,6 +93,8 @@
 			
 			var checkboxes = frm.querySelectorAll("input[name='displayFields']:checked");
 			
+			console.log('test: '+ checkboxes.length)
+			
 			if (checkboxes.length === 0) {
 				alert("Please check at least one field name.");
 				return false;
