@@ -105,11 +105,7 @@
 								});
 							}
 						});
-					});
-
-
-					
-
+					});					
 				</script>
 			</cfoutput>
 
@@ -510,13 +506,16 @@
 			<tr>
 				<td valign="top" colspan="2">
 					<input type="Button" value="Add Product By Art ID" onclick="openProductIdWindow();" />
+					<input type="Button" value="Add Product By Product Title" onclick="openProductTitleWindow();" />
+					<input type="Button" value="Add Product Not In Database" onclick="openArtInfo();" />
+					<input type="Button" value="Add Framing Order" onclick="openFramingInfo();" />
 				</td>
 			</tr>
-			<tr>
+			<!--- <tr>
 				<td valign="top" colspan="2">
 					<input type="Button" value="Add Product By Product Title" onclick="openProductTitleWindow();" />
 				</td>
-			</tr>
+			</tr> --->
 
 			<script>
 				function openArtInfo() {
@@ -528,7 +527,7 @@
 				}
 			</script>
 
-			<tr>
+			<!--- <tr>
 				<td valign="top" colspan="2">
 					<input type="Button" value="Add Product Not In Database" onclick="openArtInfo();" />
 				</td>
@@ -537,7 +536,7 @@
 				<td valign="top" colspan="2">
 					<input type="Button" value="Add Framing Order" onclick="openFramingInfo();" />
 				</td>
-			</tr>
+			</tr> --->
 			<tr>
 				<td colspan="2" id="artListings">
 				</td>

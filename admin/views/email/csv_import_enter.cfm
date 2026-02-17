@@ -1,18 +1,18 @@
 <cfoutput>
-	<table border="0" cellpadding="0" cellspacing="0" width="90%">
+	<table border="0" cellpadding="0" cellspacing="0" width="50%" class="editBox" style="margin-top: 20px; margin-right: auto; width: max-content; margin-left: 100px;">
 		<tr>
 			<td valign="top"><br>
 				<h3>CSV IMPORT</h3><br><br>
 				<span style="font-size: 11px;">
 					Excel file must contain 3 fields in this order: lname, fname, email<br>
 					All blank fields must be replaced by ~<br><br>
-					In Excel, select all 3 columns and delete rest<br>
+					In Excel, select all 3 columns and delete rest<br><br>
 					click F5, then Special, click "blanks" radio button, click OK<br />
 					type ~<br />
-					press Ctrl + Enter <br>
-					save as csv file<br>
-					to delete rows without email address:<br />
-					select email row, then sort<br />
+					press Ctrl + Enter <br><br>
+					save as csv file<br><br>
+					to delete rows without email address:<br /><br>
+					select email row, then sort<br /><br>
 					delete empty rows
 				</span>
 
@@ -43,19 +43,6 @@
 							SELECT @@identity as uid 
 						</cfquery>
 						<cfset session.importID = getImportID.uid />
-
-						<!--- <cfset moduleName = 'CSV Import Module'>
-						<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
-						<cfset date = now()>				
-						<cfset action = 'Insert'>
-
-						<cfquery name="addLog" datasource="#application.dsource#" >
-							INSERT INTO logs 
-								( moduleName, ipAddress, date, action)
-								VALUES
-								( '#moduleName#', '#ipAddress#', #date#, '#action#')
-						</cfquery> --->
-
 					</cfif>
 
 					<cffile action="UPLOAD" filefield="csvFile" destination="#expandpath('.')#" nameconflict="OVERWRITE">
@@ -79,7 +66,7 @@
 				 <cfelse>
 					<form method="post" action="index.cfm?event=email.csvImportEnter" enctype="multipart/form-data">
 						<input type="Hidden" name="importCsv">
-						<table cellspacing="0" cellpadding="5" border="0" width="400" height="600">
+						<table cellspacing="0" cellpadding="5" border="0" width="400" >
 							<cfif isDefined('form.pk_email_imports_list')>
 								<input type="Hidden" name="pk_email_imports_list" value="#form.pk_email_imports_list#">
 								<cfquery name="getImportList" datasource="#application.dsource#">
@@ -129,7 +116,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td height="400" valign="top">
+								<td  valign="top">
 									<br><br>
 									<input type="Button" value="Back" onclick="location.href='index.cfm?event=email.csvImportSearch'">
 								</td>

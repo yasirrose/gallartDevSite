@@ -4,76 +4,76 @@
 	SELECT  * FROM tracker WHERE sessionid = '#session.xss#'
 </cfquery>
 <html>
-<head>
-	<cfoutput>
-		<title>#companyname# - #titletext#</title>
-		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
-		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-	 </cfoutput>
+	<head>
+		<cfoutput>
+			<title>#companyname# - #titletext#</title>
+			<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+			<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+		</cfoutput>
 
-<cfinclude template="meta.cfm">
+		<cfinclude template="meta.cfm">
 
-<style>
-table tr td * {
-    font-size: 13px !important;
-}
-.billing-section .billing-listing ul li:not(:last-child) {
-    border-bottom: 1px solid #c7c8c9;
-}
-.billing-section .billing-listing ul li {
-	padding-bottom: 10px;
-}
-.table-cart-detail {
-	background: #F2F2F2;
-    padding: 30px;
-    border-radius: 15px;
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-}
-.table-cart-detail tbody, .table-cart-detail td, .table-cart-detail tfoot, .table-cart-detail th, .table-cart-detail thead, .table-cart-detail tr {
-	border-color: #c7c8c94f;
-    border-width: 1px;
-	padding: 10px;
-}
-.billing-section .billing-listing ul li * {
-    width: 50%;
-    min-width: 50%;
-}
-@media (max-width: 991px) {
-	.billing-section .billing-listing ul li * {
-		min-width: 50%;
-	}
-}
-@media print {
-	.top-heading h4 {
-		text-align: center;
-	}
-	.table-cart-detail {
-		background: #F2F2F2 !important;
-		-webkit-print-color-adjust: exact;
-		color-adjust: exact;
-	}
-}
-</style>
+		<style>
+			table tr td * {
+				font-size: 13px !important;
+			}
+			.billing-section .billing-listing ul li:not(:last-child) {
+				border-bottom: 1px solid #c7c8c9;
+			}
+			.billing-section .billing-listing ul li {
+				padding-bottom: 10px;
+			}
+			.table-cart-detail {
+				background: #F2F2F2;
+				padding: 30px;
+				border-radius: 15px;
+				-webkit-print-color-adjust: exact;
+				color-adjust: exact;
+			}
+			.table-cart-detail tbody, .table-cart-detail td, .table-cart-detail tfoot, .table-cart-detail th, .table-cart-detail thead, .table-cart-detail tr {
+				border-color: #c7c8c94f;
+				border-width: 1px;
+				padding: 10px;
+			}
+			.billing-section .billing-listing ul li * {
+				width: 50%;
+				min-width: 50%;
+			}
+			@media (max-width: 991px) {
+				.billing-section .billing-listing ul li * {
+					min-width: 50%;
+				}
+			}
+			@media print {
+				.top-heading h4 {
+					text-align: center;
+				}
+				.table-cart-detail {
+					background: #F2F2F2 !important;
+					-webkit-print-color-adjust: exact;
+					color-adjust: exact;
+				}
+			}
+		</style>
 
-<cfoutput>
-<script language="JavaScript" src="/js/utils.js"></script>
-</cfoutput>
-<script>
-function printDiv(divName) {
-    var printContents = document.getElementById(divName).innerHTML;
-    var originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-}
-</script>
+		<cfoutput>
+			<script language="JavaScript" src="/js/utils.js"></script>
+		</cfoutput>
+		<script>
+			function printDiv(divName) {
+				var printContents = document.getElementById(divName).innerHTML;
+				var originalContents = document.body.innerHTML;
+				document.body.innerHTML = printContents;
+				window.print();
+				document.body.innerHTML = originalContents;
+			}
+		</script>
 
-<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+		<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 
-</head>
+	</head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	<div class="main-container registration-page">
 		<div id="Table_01">
@@ -249,65 +249,65 @@ function printDiv(divName) {
 																		</div> 
 																	</div>
 																</div>
-															<div class="table-cart-detail mt-4">
-																<table cellpadding="0" cellspacing="0" border="0" width="100%">
-																</cfoutput>		
-																	<!-- <tr>
-																		<td colspan=4 align="center"><hr>
-																		</td>
-																	</tr> -->
-																	<tr>
-																		<td width="13%"><font size="1" face="verdana, arial, helvetica"><b>Number</b></font></td>
-																		<td width="55%"><font size="1" face="verdana, arial, helvetica"><b>Name</b></font></td>
-																		
-																		<td align="Center" width="5%"><font size="1" face="verdana, arial, helvetica"><b>Qty</b></font></td>
-																		<td width="20%" align="center"><font size="1" face="verdana, arial, helvetica"><b>Price</b></font></td>
-																	</tr>
-																	<!-- <tr>
-																		<td colspan=4 align="center"><hr>
-																		</td>
-																	</tr> -->
-																	<cfloop query="get_items">
-																		<cfoutput>
-																			<tr>
-																				<td valign="top"><font size="1" face="arial, helvetica">#PID#</font></td>
-																				<td valign="top"><font size="1" face="arial, helvetica">#title#</font></td>
-												
-																								
-																				<td  valign="top" align="center"><font size="1" face="arial, helvetica">#get_items.qty#</font></td>
-												
-																				<td valign="top" align="right"><font size="1" face="arial, helvetica">#DollarFormat(Unit_Price)#</font></td>
-																			</tr>				
-																		</cfoutput>
-																	</cfloop>
-																	<cfoutput query="get_order_info">
+																<div class="table-cart-detail mt-4">
+																	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+																	</cfoutput>		
 																		<!-- <tr>
-																			<td colspan=4 align="right"><hr>
+																			<td colspan=4 align="center"><hr>
 																			</td>
 																		</tr> -->
 																		<tr>
-																			<td colspan=4 align="right"><font size="2" color="##ff0000" face="arial, helvetica">We will contact you with the shipping cost.</font>
-																			</td>
+																			<td width="13%"><font size="1" face="verdana, arial, helvetica"><b>Number</b></font></td>
+																			<td width="55%"><font size="1" face="verdana, arial, helvetica"><b>Name</b></font></td>
+																			
+																			<td align="Center" width="5%"><font size="1" face="verdana, arial, helvetica"><b>Qty</b></font></td>
+																			<td width="20%" align="center"><font size="1" face="verdana, arial, helvetica"><b>Price</b></font></td>
 																		</tr>
-																		<tr>
-																			<td colspan=4 align="right"><font size="2" face="arial, helvetica">Insurance: #DollarFormat(insurance)#</font>
+																		<!-- <tr>
+																			<td colspan=4 align="center"><hr>
 																			</td>
-																		</tr>
-																		<tr>
-																			<td colspan=4 align="right"><font size="2" face="arial, helvetica"><b>Total Price: #DollarFormat(total)#</b></font>
+																		</tr> -->
+																		<cfloop query="get_items">
+																			<cfoutput>
+																				<tr>
+																					<td valign="top"><font size="1" face="arial, helvetica">#PID#</font></td>
+																					<td valign="top"><font size="1" face="arial, helvetica">#title#</font></td>
+													
+																									
+																					<td  valign="top" align="center"><font size="1" face="arial, helvetica">#get_items.qty#</font></td>
+													
+																					<td valign="top" align="right"><font size="1" face="arial, helvetica">#DollarFormat(Unit_Price)#</font></td>
+																				</tr>				
+																			</cfoutput>
+																		</cfloop>
+																		<cfoutput query="get_order_info">
+																			<!-- <tr>
+																				<td colspan=4 align="right"><hr>
+																				</td>
+																			</tr> -->
+																			<tr>
+																				<td colspan=4 align="right"><font size="2" color="##ff0000" face="arial, helvetica">We will contact you with the shipping cost.</font>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td colspan=4 align="right"><font size="2" face="arial, helvetica">Insurance: #DollarFormat(insurance)#</font>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td colspan=4 align="right"><font size="2" face="arial, helvetica"><b>Total Price: #DollarFormat(total)#</b></font>
+																				</td>
+																			</tr>
+																		</cfoutput>
+																		<!--- <tr>
+																			<td colspan=4 align="center"><br><br>
 																			</td>
-																		</tr>
-																	</cfoutput>
-																	<!--- <tr>
-																		<td colspan=4 align="center"><br><br>
-																		</td>
-																	</tr> --->
-																</table>
+																		</tr> --->
+																	</table>
+																</div>
 															</div>
-														</div>
-														<div class="text-center mt-3">
-															<button type="button" class="btn btn-primary" onclick="printDiv('printable')">Print Order Slip</button>
-														</div>
+																<div class="text-center mt-3">
+																	<button type="button" class="btn btn-primary" onclick="printDiv('printable')">Print Order Slip</button>
+																</div>
 
 															<cfelse>
 																<table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -316,21 +316,25 @@ function printDiv(divName) {
 																		</td>
 																	</tr>
 																	<cfif parameterexists(errormsg)>
-																	<tr>
-																		<td align="center"><br><br>
-																		</td>
-																	</tr>
-																	<tr>
-																		<td align="center"><font size="3" face="arial, helvetica"><b><cfoutput>#errormsg#</cfoutput></b></font>
-																		</td>
-																	</tr>
+																		<tr>
+																			<td align="center">
+																				<br><br>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td align="center"><font size="3" face="arial, helvetica"><b><cfoutput>#errormsg#</cfoutput></b></font>
+																			</td>
+																		</tr>
 																	</cfif>
 																</table>
 															</cfif>
 															<cfelse>
 																<table cellpadding="0" cellspacing="0" border="0" width="100%">
 																	<tr>
-																		<td align="center"><font size="3" face="arial, helvetica"><b>You are not authorized to view this page at this time.</b></font>
+																		<td align="center">
+																			<font size="3" face="arial, helvetica">
+																				<b>You are not authorized to view this page at this time.</b>
+																			</font>
 																		</td>
 																	</tr>
 																</table>

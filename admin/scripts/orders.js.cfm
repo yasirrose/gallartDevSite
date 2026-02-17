@@ -174,11 +174,11 @@ function gridChange(thisId) {
 
 	if (Addresstype && Addresstype.toLowerCase() === "outside") {
 		document.getElementById("stateTextRow").style.display = "";
-		document.getElementById("OutsideCountry").style.display = "";
+		<!--- document.getElementById("OutsideCountry").style.display = ""; --->
 		document.getElementById("stateDropdownRow").style.display = "none";
 	} else {
 		document.getElementById("stateTextRow").style.display = "none";
-		document.getElementById("OutsideCountry").style.display = "none";
+		<!--- document.getElementById("OutsideCountry").style.display = "none"; --->
 		document.getElementById("stateDropdownRow").style.display = "";
 
 		state = strOrder['STATE']

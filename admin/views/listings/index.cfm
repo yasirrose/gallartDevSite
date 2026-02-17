@@ -31,28 +31,30 @@
 					<tr>
 						<td width="100" style="font-size: 10px;">
 							<strong>Art ID:</strong>
+							<br>
+							<cfinput name="searchModelno" id="searchModelno" size="10" style="width: 100%;"/>
 						</td>
 						<td>
-							<cfinput name="searchModelno" id="searchModelno" size="10" />
+							<strong>Title:</strong>
+							<br>
+							<cfinput name="searchTitle" id="searchTitle" size="30" style="width: 100%;"/>
 						</td>
 
 					</tr>
-					<tr>
+					<!--- <tr>
 						<td style="font-size: 10px;">
 							<strong>Title:</strong>
 						</td>
 						<td>
 							<cfinput name="searchTitle" id="searchTitle" size="30" />
-							<input type="hidden" name="searchTitleEncoded" id="searchTitleEncoded" value="">
 						</td>
 
-					</tr>
+					</tr> --->
 					<tr>
 						<td style="font-size: 10px;">
 							<strong>Artist:</strong>
-						</td>
-						<td>
-							<select name="searchArtist" id="searchArtist" class="select2">
+							<br>
+							<select name="searchArtist" id="searchArtist" style="width: 100%;">
 								<option value="">All
 								<cfoutput query="getAllArtists" group="manufacturer">
 								<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
@@ -61,9 +63,19 @@
 								</cfoutput>
 							</select>
 						</td>
+						<td>
+							<strong>Medium:</strong>
+							<br>
+							<select name="searchMedium" style="width: 100%;">
+								<option value="">All
+								<cfoutput query="getAllMedium">
+									<option value="#URLEncodedFormat(path)#">#left(path,50)#
+								</cfoutput>
+							</select>
+						</td>
 
 					</tr>
-					<tr>
+					<!--- <tr>
 						<td style="font-size: 10px;">
 							<strong>Medium:</strong>
 						</td>
@@ -76,9 +88,9 @@
 							</select>
 						</td>
 
-					</tr>
+					</tr> --->
 					<tr>
-						<td colspan="2">
+						<!--- <td colspan="2">
 							<table cellspacing="0" cellpadding="0" border="0" width="100%">
 								<tr>
 									<td width="106" style="font-size: 10px;">
@@ -95,19 +107,34 @@
 									</td>
 								</tr>
 							</table>
+						</td> --->
+						<td style="font-size: 10px;">
+							<strong>Year:</strong>
+							<br>
+							<cfinput name="searchYear" size="10" style="width: 100%;"/>
+						</td>
+						<td style="font-size: 10px;">
+							<strong>Size:</strong>
+							<br>
+							<cfinput type="Text" name="searchHeight" style="width: 50px;">&nbsp;x&nbsp;<cfinput type="Text" name="searchWidth" style="width: 50px;"> (HEIGHT X WIDTH)
 						</td>
 					</tr>
 					<tr>
+						<td>
+							<strong>Image:</strong>
+							<br>
+							<cfinput name="searchImageName" size="8" style="width: 90%;"/>.jpg
+						</td>
 						<td style="font-size: 10px;">
 							<strong>Description:</strong> (keywords)
+							<br>
+							<cfinput name="searchDescription" size="30" style="width: 100%;"/>
 						</td>
-						<td>
-							<cfinput name="searchDescription" size="30" />
-						</td>
+						
 
 					</tr>
 					<tr>
-						<td colspan="2">
+						<!--- <td colspan="2">
 							<table cellspacing="0" cellpadding="0" border="0" width="100%">
 								<tr>
 									<td width="106" style="font-size: 10px;">
@@ -124,10 +151,20 @@
 									</td>
 								</tr>
 							</table>
+						</td> --->
+						<td>
+							<strong>Gallery Price from: $</strong>
+							<br>
+							<cfinput name="searchFromPrice" size="10" style="width: 100%;"/>
 						</td>
+						<td>
+							<strong>Gallery Price to: $</strong>
+							<cfinput name="searchToPrice" size="10" style="width: 100%;"/>
+						</td>
+
 					</tr>
 					<tr>
-						<td colspan="2">
+						<!--- <td colspan="2">
 							<table cellspacing="0" cellpadding="0" border="0" width="100%">
 								<tr>
 									<td width="106" style="font-size: 10px;">
@@ -144,10 +181,21 @@
 									</td>
 								</tr>
 							</table>
+						</td> --->
+						<td>
+							<strong>Date from:</strong>
+							<br>
+							<input type="date" name="searchFromDate" size="10" style="width: 100%;"/>
 						</td>
+						<td>
+							<strong>to:</strong>
+							<br>
+							<input type="date" name="searchToDate" size="10" style="width: 100%;"/>
+						</td>
+
 					</tr>
 					<tr>
-						<td colspan="2">
+						<!--- <td colspan="2">
 							<table cellspacing="0" cellpadding="0" border="0" width="100%">
 								<tr>
 									<td width="106" style="font-size: 10px;">
@@ -164,14 +212,24 @@
 									</td>
 								</tr>
 							</table>
+						</td> --->
+						<td>
+							<strong>Last Edit from:</strong>
+							<br>
+							<input type="date" name="searchFromLastedit" size="10" style="width: 100%;"/>
+							
+						</td>
+						<td>
+							<strong>to:</strong>
+							<br>
+							<input type="date" name="searchToLastedit" size="10" style="width: 100%;"/>
 						</td>
 					</tr>
 					<tr>
 						<td style="font-size: 10px;">
 							<strong>Seller:</strong>
-						</td>
-						<td>
-							<select name="searchSellerId" class="select2">
+							<br>
+							<select name="searchSellerId" >
 								<option value="">All
 								<option value="0">Only Seller Listings
 								<cfoutput query="getAllSellers">
@@ -179,32 +237,34 @@
 								</cfoutput>
 							</select>
 						</td>
+						<td>
+							<strong>Active/Inactive:</strong>
+							<br>
+							<input type="radio" name="searchActive" value="1">Active
+							<input type="radio" name="searchActive" value="0">Inactive
+							<input type="radio" name="searchActive" value="" checked>All
+						</td>
 
 					</tr>
-					<tr>
+					<!--- <tr>
 						<td style="font-size: 10px;">
 							<strong>Image Name:</strong>
 						</td>
 						<td>
 							<cfinput name="searchImageName" size="8" />.jpg
 						</td>
-
-					</tr>
+					</tr> --->
 					<tr>
 						<td style="font-size: 10px;">
-							Active/Inactive:
-						</td >
-						<td style="font-size: 10px;">
-							<input type="radio" name="searchActive" value="1">Active
-							<input type="radio" name="searchActive" value="0">Inactive
-							<input type="radio" name="searchActive" value="" checked>All
+							<strong>Promotion:</strong>
+							
+							<input type="checkbox" name="searchpromotion" >
+							<input type="Hidden" name="searchpromotion">
 						</td>
-
 						
-
 					</tr>
 
-					<tr>
+					<!--- <tr>
 						<td style="font-size: 10px;">
 							Promotion:
 						</td >
@@ -212,7 +272,7 @@
 							<input type="checkbox" name="searchpromotion" >
 							<input type="Hidden" name="searchpromotion">
 						</td>						
-					</tr>
+					</tr> --->
 
 					
 					<tr>
@@ -329,25 +389,23 @@
 
 <!--- from delete_dups --->
 <cfif structKeyExists(url,'TITLE') AND structKeyExists(url,'ARTIST')>
-	<script>
+	<script type="text/javascript">
 		document.addEventListener("DOMContentLoaded", function () {
-			// Decode for display
-			var decodedTitle = decodeURIComponent('<cfoutput>#url.TITLE#</cfoutput>');
-			document.getElementById('searchTitle').value = decodedTitle;
 
-			// Keep encoded value in hidden input for network/grid
-			document.getElementById('searchTitleEncoded').value = '<cfoutput>#url.TITLE#</cfoutput>';
+			var titleVal  = '<cfoutput>#JSStringFormat(url.TITLE)#</cfoutput>';
+			var artistVal = '<cfoutput>#JSStringFormat(url.ARTIST)#</cfoutput>';
 
-			// Set artist
-			var artistValue = '<cfoutput>#url.ARTIST#</cfoutput>';
-			var artistSelect = document.getElementById('searchArtist');
-			for(var i = 0; i < artistSelect.options.length; i++){
-				artistSelect.options[i].selected = (artistSelect.options[i].value == artistValue);
+			document.getElementById('searchTitle').value = titleVal;
+
+			var artistDD = document.getElementById('searchArtist');
+			for (var i = 0; i < artistDD.options.length; i++) {
+				artistDD.options[i].selected = (artistDD.options[i].value === artistVal);
 			}
 
-			// Show results
+			// ✅ IMPORTANT: encode BEFORE grid refresh
 			encodeSearchTitle();
-			document.getElementById('showResults').value = 1;
+
+			// document.getElementById('showResults').value = 1;
 			ColdFusion.Grid.refresh('data', false);
 		});
 		
@@ -359,7 +417,7 @@
 
 	function encodeSearchTitle() {
 		var searchTitleValue = document.getElementById('searchTitle').value;
-		document.getElementById('searchTitleEncoded').value = encodeURIComponent(searchTitleValue);
+		document.getElementById('searchTitle').value = encodeURIComponent(searchTitleValue);
 		document.getElementById('showResults').value = 1;
 	}
 

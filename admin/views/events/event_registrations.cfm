@@ -303,8 +303,8 @@ function init(){
 										<cfinput type="text" name="number_people" id="number_people" maxlength="25" bind="{data.number_people}" size="25">
 									</td>
 								</tr>
-								<tr>
-									<!--- <td style="font-size: 10px;">
+								<!--- <tr>
+									<td style="font-size: 10px;">
 										Consignment Form:
 									</td>
 									<td>

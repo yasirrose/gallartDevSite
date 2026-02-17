@@ -1,4 +1,4 @@
-<table border="0" cellpadding="0" cellspacing="0" width="90%">
+<table border="0" cellpadding="0" cellspacing="0" width="50%" class="editBox" style="margin-top: 20px; margin-right: auto; width: max-content; margin-left: 100px;">
 	<tr>
 		<td>
 			<br>
@@ -31,7 +31,7 @@
 						<!--- Excel can only handle 66000 rows --->
 						Too many records
 					
-					<cfelse>					
+					 <cfelse>					
 					
 						<cffile action="write" file="#expandPath('.')#\data\export.csv" output="First Name,Last Name, Name, Cellphone" addnewline="yes">
 					
@@ -71,7 +71,7 @@
 					</cfif>
 					<cfabort>
 					
-				<cfelse>
+				 <cfelse>
 					<cfquery name="leads" dataSource="#dsource#" username="#uname#" password="#pword#">
 						SELECT fname,lname,cellphone, name from leads where maillist = 1 and cellphone <> '' and cellphone is not null and isdeleted is null
 					</cfquery>
@@ -104,9 +104,13 @@
 								<tr>
 									<td>
 										Leads: #leads.recordcount#
+										&nbsp; &nbsp; &nbsp; &nbsp;
+										Customers: #customers.recordcount#
+										&nbsp; &nbsp; &nbsp; &nbsp;
+										Sellers: #sellers.recordcount#
 									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										Customers: #customers.recordcount#
 									</td>
@@ -115,18 +119,30 @@
 									<td>
 										Sellers: #sellers.recordcount#
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td>
 										<br /><br />
+										Select User: 
 										<select name="table">
 											<option value="leads">Leads</option>
 											<option value="customers">Customers</option>
 											<option value="users">Users</option>
 										</select>
+
+										<!--- <br /><br /> --->
+										&nbsp; &nbsp; &nbsp; &nbsp;
+										Rows:
+										<select name="rows">
+											<option value="1000">1000</option>
+											<option value="2000">2000</option>
+											<option value="3000">3000</option>
+											<option value="4000">4000</option>
+											<option value="5000">5000</option>
+										</select>
 									</td>
 								</tr>
-								<tr>
+								<!--- <tr>
 									<td>
 										<br /><br />
 										Rows:
@@ -139,7 +155,7 @@
 											<option value="5000">5000</option>
 										</select>
 									</td>
-								</tr>
+								</tr> --->
 								<tr>
 									<td>
 										<br /><br />

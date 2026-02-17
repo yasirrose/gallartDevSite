@@ -119,7 +119,9 @@ function doEdit(type) {
 		editBtn.disabled = true;
 		deleteBtn.disabled = true;
 
-		if ( edit.deleteEvent()) {
+		result =  edit.deleteRegistration();
+
+		if (result.SUCCESS === true ) {
 
 			toastr.options = {
 				"closeButton": true,

@@ -295,7 +295,7 @@ getKeywords = function(){
 
 	Addresstype = strLead['ADDRESSTYPE'];
 
-	console.log('test address: ' + Addresstype);
+	<!--- console.log('test address: ' + Addresstype); --->
 
 	if (!Addresstype || Addresstype.trim() === "") {
 		Addresstype = "USA";

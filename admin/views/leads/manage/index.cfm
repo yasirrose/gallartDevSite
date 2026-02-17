@@ -362,8 +362,8 @@
 										</td>
 									</tr>
 
-									<tr>
-										<!--- <td style="font-size: 10px;">
+									<!--- <tr>
+										<td style="font-size: 10px;">
 											Phone Number:
 										</td>
 										<td>
