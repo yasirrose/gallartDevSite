@@ -47,15 +47,34 @@
 				}
 			}
 			@media print {
-				.top-heading h4 {
+
+				/* Page padding on all sides */
+				@page {
+					margin: 20mm;
+				}
+
+				body {
+					padding: 0 !important;
+				}
+
+				/* SHOW header when printing */
+				.print-header {
+					display: block !important;
+					margin-bottom: 20px;
 					text-align: center;
 				}
-				.table-cart-detail {
-					background: #F2F2F2 !important;
-					-webkit-print-color-adjust: exact;
-					color-adjust: exact;
+
+				.print-header img {
+					width: 100%;
+					height: auto;
 				}
 			}
+
+			/* Hide header normally (only show in print) */
+			.print-header {
+				display: none;
+			}
+
 		</style>
 
 		<cfoutput>
@@ -63,11 +82,19 @@
 		</cfoutput>
 		<script>
 			function printDiv(divName) {
+
 				var printContents = document.getElementById(divName).innerHTML;
 				var originalContents = document.body.innerHTML;
-				document.body.innerHTML = printContents;
+
+				document.body.innerHTML = `
+					<div style="padding:20px;">
+						${printContents}
+					</div>
+				`;
+
 				window.print();
-				document.body.innerHTML = originalContents;
+
+				location.reload();
 			}
 		</script>
 
@@ -115,7 +142,14 @@
 															SELECT * FROM orders
 															WHERE orderid='#getuserinfo.orderid#'
 														</cfquery>
+														<div class="top-heading">
+															<h4>Thank you for your order. Your order number is <cfoutput>#getuserinfo.orderid#</cfoutput></h4>
+															<p>You may print out the following for your records:</p>
+														</div>
 														<div id="printable">
+															<div class="print-header">
+																<img src="/images/top_01.jpg" alt="Header">
+															</div>
 															<div class="billing-section">
 																<cfoutput query="get_order_info">
 																	<div class="billing-listing">
@@ -306,7 +340,7 @@
 																</div>
 															</div>
 																<div class="text-center mt-3">
-																	<button type="button" class="btn btn-primary" onclick="printDiv('printable')">Print Order Slip</button>
+																	<button type="button" class="btn seeMore" onclick="printDiv('printable')">Print Order Slip</button>
 																</div>
 
 															<cfelse>
@@ -365,7 +399,7 @@
 		</td>
 	</tr>
 
-<cfinclude template="frmxss.cfm">
+	<cfinclude template="frmxss.cfm">
 
 </body>
 </html>

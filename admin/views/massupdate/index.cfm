@@ -96,7 +96,7 @@
 						<td colspan="2" style="font-size: 11px;"><strong>SEARCH:</strong></td>
 					</tr>
 					<tr>
-						<td valign="top" width="50%">
+						<td valign="top" width="50%" class="editBox">
 							<table cellspacing="0" cellpadding="3" border="0" width="100%" class="layout-table-content">
 								<tr>
 									<td width="100" style="font-size: 10px;">
@@ -379,9 +379,9 @@
 												<input type="radio" name="Active" value="">
 											</div>
 										</div>
-									</td >
+									</td>
 								</tr>
-								<!-- <tr> -->
+								<!--- <tr> --->
 									<!--- <td style="font-size: 10px;">
 										<input type="radio" name="Active" value="1" checked>Active
 										<input type="radio" name="Active" value="0">Inactive
@@ -396,8 +396,8 @@
 										<input type="Hidden" name="Promotion" value="">
 									</td> --->
 				
-								<!-- </tr> -->
-								<!-- <tr>
+								<!--- </tr> --->
+								<!--- <tr>
 									<td style="font-size: 10px;">
 										<strong>Promotion:</strong>
 									</td >
@@ -406,7 +406,7 @@
 										<input type="Hidden" name="Promotion" value="">
 									</td>
 				
-								</tr> -->
+								</tr> --->
 								<tr>
 									<td width="100" style="font-size: 10px;" colspan="2">
 										<div class="form-row">
@@ -452,7 +452,7 @@
 												<input type="Hidden" name="BottomHome">
 											</div>
 										</div>
-										<!-- <table cellspacing="0" cellpadding="0" border="0" width="100%">
+										<!--- <table cellspacing="0" cellpadding="0" border="0" width="100%">
 											<tr>
 												<td width="106" style="font-size: 10px;">&nbsp;
 													
@@ -486,7 +486,7 @@
 													Slideshow
 												</td>
 											</tr>
-										</table>-->
+										</table>--->
 									</td>
 								</tr>
 								<tr>
@@ -503,7 +503,7 @@
 												<input type="Hidden" name="BottomHome">
 											</div>
 										</div> -->
-										<!-- <table cellspacing="0" cellpadding="0" border="0" width="100%">
+										<!--- <table cellspacing="0" cellpadding="0" border="0" width="100%">
 											<tr>
 												<td width="50" style="font-size: 10px;">&nbsp;
 													
@@ -523,7 +523,7 @@
 													Bottom of Home Page
 												</td>
 											</tr>
-										</table> -->
+										</table> --->
 									</td>
 								</tr>
 							</table>

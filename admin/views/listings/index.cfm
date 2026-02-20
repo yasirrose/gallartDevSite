@@ -1,13 +1,8 @@
 <cfajaxproxy cfc="admin.models.art" />
 <cfajaxproxy bind="javascript:gridChange({data.uid})">
-<!--- <cfhtmlhead text='<script type="text/javascript" src="/admin/scripts/listings.js.cfm" language="JavaScript"></script>'> --->
 	<cfhtmlhead text='
-		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 		<script type="text/javascript" src="/admin/scripts/listings.js.cfm" language="JavaScript"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	'>
 
 <table border = "0" width = "100%" cellpadding = "5" cellspacing = "0">
@@ -31,17 +26,13 @@
 					<tr>
 						<td width="100" style="font-size: 10px;">
 							<strong>Art ID:</strong>
-							<br>
-							<cfinput name="searchModelno" id="searchModelno" size="10" style="width: 100%;"/>
 						</td>
 						<td>
-							<strong>Title:</strong>
-							<br>
-							<cfinput name="searchTitle" id="searchTitle" size="30" style="width: 100%;"/>
+							<cfinput name="searchModelno" id="searchModelno" size="10" />
 						</td>
 
 					</tr>
-					<!--- <tr>
+					<tr>
 						<td style="font-size: 10px;">
 							<strong>Title:</strong>
 						</td>
@@ -49,12 +40,13 @@
 							<cfinput name="searchTitle" id="searchTitle" size="30" />
 						</td>
 
-					</tr> --->
+					</tr>
 					<tr>
 						<td style="font-size: 10px;">
 							<strong>Artist:</strong>
-							<br>
-							<select name="searchArtist" id="searchArtist" style="width: 100%;">
+						</td>
+						<td>
+							<select name="searchArtist" id="searchArtist">
 								<option value="">All
 								<cfoutput query="getAllArtists" group="manufacturer">
 								<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
@@ -63,10 +55,14 @@
 								</cfoutput>
 							</select>
 						</td>
-						<td>
+
+					</tr>
+					<tr>
+						<td style="font-size: 10px;">
 							<strong>Medium:</strong>
-							<br>
-							<select name="searchMedium" style="width: 100%;">
+						</td>
+						<td>
+							<select name="searchMedium">
 								<option value="">All
 								<cfoutput query="getAllMedium">
 									<option value="#URLEncodedFormat(path)#">#left(path,50)#
@@ -75,22 +71,8 @@
 						</td>
 
 					</tr>
-					<!--- <tr>
-						<td style="font-size: 10px;">
-							<strong>Medium:</strong>
-						</td>
-						<td>
-							<select name="searchMedium" class="select2">
-								<option value="">All
-								<cfoutput query="getAllMedium">
-									<option value="#URLEncodedFormat(path)#">#left(path,50)#
-								</cfoutput>
-							</select>
-						</td>
-
-					</tr> --->
 					<tr>
-						<!--- <td colspan="2">
+						<td colspan="2">
 							<table cellspacing="0" cellpadding="0" border="0" width="100%">
 								<tr>
 									<td width="106" style="font-size: 10px;">
@@ -107,34 +89,19 @@
 									</td>
 								</tr>
 							</table>
-						</td> --->
-						<td style="font-size: 10px;">
-							<strong>Year:</strong>
-							<br>
-							<cfinput name="searchYear" size="10" style="width: 100%;"/>
-						</td>
-						<td style="font-size: 10px;">
-							<strong>Size:</strong>
-							<br>
-							<cfinput type="Text" name="searchHeight" style="width: 50px;">&nbsp;x&nbsp;<cfinput type="Text" name="searchWidth" style="width: 50px;"> (HEIGHT X WIDTH)
 						</td>
 					</tr>
 					<tr>
-						<td>
-							<strong>Image:</strong>
-							<br>
-							<cfinput name="searchImageName" size="8" style="width: 90%;"/>.jpg
-						</td>
 						<td style="font-size: 10px;">
 							<strong>Description:</strong> (keywords)
-							<br>
-							<cfinput name="searchDescription" size="30" style="width: 100%;"/>
 						</td>
-						
+						<td>
+							<cfinput name="searchDescription" size="30" />
+						</td>												
 
 					</tr>
 					<tr>
-						<!--- <td colspan="2">
+						<td colspan="2">
 							<table cellspacing="0" cellpadding="0" border="0" width="100%">
 								<tr>
 									<td width="106" style="font-size: 10px;">
@@ -151,20 +118,10 @@
 									</td>
 								</tr>
 							</table>
-						</td> --->
-						<td>
-							<strong>Gallery Price from: $</strong>
-							<br>
-							<cfinput name="searchFromPrice" size="10" style="width: 100%;"/>
 						</td>
-						<td>
-							<strong>Gallery Price to: $</strong>
-							<cfinput name="searchToPrice" size="10" style="width: 100%;"/>
-						</td>
-
 					</tr>
 					<tr>
-						<!--- <td colspan="2">
+						<td colspan="2">
 							<table cellspacing="0" cellpadding="0" border="0" width="100%">
 								<tr>
 									<td width="106" style="font-size: 10px;">
@@ -181,21 +138,10 @@
 									</td>
 								</tr>
 							</table>
-						</td> --->
-						<td>
-							<strong>Date from:</strong>
-							<br>
-							<input type="date" name="searchFromDate" size="10" style="width: 100%;"/>
 						</td>
-						<td>
-							<strong>to:</strong>
-							<br>
-							<input type="date" name="searchToDate" size="10" style="width: 100%;"/>
-						</td>
-
 					</tr>
 					<tr>
-						<!--- <td colspan="2">
+						<td colspan="2">
 							<table cellspacing="0" cellpadding="0" border="0" width="100%">
 								<tr>
 									<td width="106" style="font-size: 10px;">
@@ -212,23 +158,13 @@
 									</td>
 								</tr>
 							</table>
-						</td> --->
-						<td>
-							<strong>Last Edit from:</strong>
-							<br>
-							<input type="date" name="searchFromLastedit" size="10" style="width: 100%;"/>
-							
-						</td>
-						<td>
-							<strong>to:</strong>
-							<br>
-							<input type="date" name="searchToLastedit" size="10" style="width: 100%;"/>
 						</td>
 					</tr>
 					<tr>
 						<td style="font-size: 10px;">
 							<strong>Seller:</strong>
-							<br>
+						</td>
+						<td>
 							<select name="searchSellerId" >
 								<option value="">All
 								<option value="0">Only Seller Listings
@@ -237,34 +173,32 @@
 								</cfoutput>
 							</select>
 						</td>
-						<td>
-							<strong>Active/Inactive:</strong>
-							<br>
-							<input type="radio" name="searchActive" value="1">Active
-							<input type="radio" name="searchActive" value="0">Inactive
-							<input type="radio" name="searchActive" value="" checked>All
-						</td>
 
 					</tr>
-					<!--- <tr>
+					<tr>
 						<td style="font-size: 10px;">
 							<strong>Image Name:</strong>
 						</td>
 						<td>
 							<cfinput name="searchImageName" size="8" />.jpg
 						</td>
-					</tr> --->
+
+					</tr>
 					<tr>
 						<td style="font-size: 10px;">
-							<strong>Promotion:</strong>
-							
-							<input type="checkbox" name="searchpromotion" >
-							<input type="Hidden" name="searchpromotion">
+							Active/Inactive:
+						</td >
+						<td style="font-size: 10px;">
+							<input type="radio" name="searchActive" value="1">Active
+							<input type="radio" name="searchActive" value="0">Inactive
+							<input type="radio" name="searchActive" value="" checked>All
 						</td>
+
 						
+
 					</tr>
 
-					<!--- <tr>
+					<tr>
 						<td style="font-size: 10px;">
 							Promotion:
 						</td >
@@ -272,7 +206,7 @@
 							<input type="checkbox" name="searchpromotion" >
 							<input type="Hidden" name="searchpromotion">
 						</td>						
-					</tr> --->
+					</tr>
 
 					
 					<tr>
@@ -389,23 +323,25 @@
 
 <!--- from delete_dups --->
 <cfif structKeyExists(url,'TITLE') AND structKeyExists(url,'ARTIST')>
-	<script type="text/javascript">
+	<script>
 		document.addEventListener("DOMContentLoaded", function () {
+			// Decode for display
+			var decodedTitle = decodeURIComponent('<cfoutput>#url.TITLE#</cfoutput>');
+			document.getElementById('searchTitle').value = decodedTitle;
 
-			var titleVal  = '<cfoutput>#JSStringFormat(url.TITLE)#</cfoutput>';
-			var artistVal = '<cfoutput>#JSStringFormat(url.ARTIST)#</cfoutput>';
+			// Keep encoded value in hidden input for network/grid
+			document.getElementById('searchTitleEncoded').value = '<cfoutput>#url.TITLE#</cfoutput>';
 
-			document.getElementById('searchTitle').value = titleVal;
-
-			var artistDD = document.getElementById('searchArtist');
-			for (var i = 0; i < artistDD.options.length; i++) {
-				artistDD.options[i].selected = (artistDD.options[i].value === artistVal);
+			// Set artist
+			var artistValue = '<cfoutput>#url.ARTIST#</cfoutput>';
+			var artistSelect = document.getElementById('searchArtist');
+			for(var i = 0; i < artistSelect.options.length; i++){
+				artistSelect.options[i].selected = (artistSelect.options[i].value == artistValue);
 			}
 
-			// ✅ IMPORTANT: encode BEFORE grid refresh
+			// Show results
 			encodeSearchTitle();
-
-			// document.getElementById('showResults').value = 1;
+			document.getElementById('showResults').value = 1;
 			ColdFusion.Grid.refresh('data', false);
 		});
 		
@@ -417,54 +353,10 @@
 
 	function encodeSearchTitle() {
 		var searchTitleValue = document.getElementById('searchTitle').value;
-		document.getElementById('searchTitle').value = encodeURIComponent(searchTitleValue);
+		// Always store encoded value in hidden input
+		document.getElementById('searchTitleEncoded').value = encodeURIComponent(searchTitleValue);
 		document.getElementById('showResults').value = 1;
 	}
-
-
-	$(document).ready(function () {
-		$('.select2').select2({
-			matcher: function (params, data) {
-				if ($.trim(params.term) === '') {
-					return data;
-				}
-
-				// Prevent matching placeholder during search
-				if (data.id === '') {
-					return null;
-				}
-
-				var term = params.term.toLowerCase();
-				var text = data.text.toLowerCase();
-
-				// Starts with match
-				if (text.startsWith(term)) {
-					return data;
-				}
-
-				// Contains match (less priority)
-				if (text.indexOf(term) > -1) {
-					var modifiedData = $.extend({}, data, true);
-					modifiedData.text = data.text + ' ';
-					return modifiedData;
-				}
-
-				return null;
-			},
-
-			sorter: function (data) {
-				var term = $('.select2-search__field').val().toLowerCase();
-				return data.sort(function (a, b) {
-					var aStarts = a.text.toLowerCase().startsWith(term);
-					var bStarts = b.text.toLowerCase().startsWith(term);
-
-					if (aStarts && !bStarts) return -1;
-					if (!aStarts && bStarts) return 1;
-					return 0;
-				});
-			}
-        });
-	});
 </script>
 
 
