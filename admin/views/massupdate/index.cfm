@@ -5,71 +5,73 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <table cellspacing="0" cellpadding="0" border="0" width="100%" align="left">
-    <cfform method="post" action="index.cfm?event=massupdate.results">
-	<input type="hidden" name="page" value="1" />
-    <tr>
-    	<td colspan="2"><br>
-			<input type="submit" value="ALPHABETICAL ENTRY IN GROUPS - DEFAULT DISPLAY FIELDS" />&nbsp;Groups of:&nbsp;<input type="text" name="groups" value="25" size="2" />&nbsp;
-            Letter:&nbsp;
-            <select name="alphaCharNum">
-            	<option value="65">A</option>
-                <option value="66">B</option>
-                <option value="67">C</option>
-                <option value="68">D</option>
-                <option value="69">E</option>
-                <option value="70">F</option>
-                <option value="71">G</option>
-                <option value="72">H</option>
-                <option value="73">I</option>
-                <option value="74">J</option>
-                <option value="75">K</option>
-                <option value="76">L</option>
-                <option value="77">M</option>
-                <option value="78">N</option>
-                <option value="79">O</option>
-                <option value="80">P</option>
-                <option value="81">Q</option>
-                <option value="82">R</option>
-                <option value="83">S</option>
-                <option value="84">T</option>
-                <option value="85">U</option>
-                <option value="86">V</option>
-                <option value="87">W</option>
-                <option value="88">X</option>
-                <option value="89">Y</option>
-                <option value="90">Z</option>
-            </select>
-		<br><br>
-		</td>
-  	</tr>
-  	<tr>
-		<td>
-			<table cellspacing="0" cellpadding="0" border="0" width="100%" class="layout-table-content">
-				<tr>
-					<td valign="top" width="50%">
-						<table cellspacing="0" cellpadding="0" border="0" width="75%" class="layout-table-content">
-							<tr>
-								<td width="100" style="font-size: 10px;">
-									<strong>Gallery Price from:$</strong>
-									<br>
-									<cfinput name="FromPrice" size="10" maxlength="10"/>
-								</td>
-								<td width="100" style="font-size: 10px;">
-									<strong>Gallery Price to:$</strong>
-									<br>
-									<cfinput name="ToPrice" size="10" maxlength="10"/>
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td valign="top" width="50%">
+    <cfform method="post" action="index.cfm?event=massupdate.results" onsubmit="return validateForm();">
+		<input type="hidden" name="page" value="1" />
+		<tr>
+			<td colspan="2"><br>
+				<input type="submit" value="ALPHABETICAL ENTRY IN GROUPS - DEFAULT DISPLAY FIELDS" />
+				&nbsp;Groups of:&nbsp;
+				<input type="text" name="groups" value="25" size="2" />&nbsp;
+				Letter:&nbsp;
+				<select name="alphaCharNum">
+					<option value="65">A</option>
+					<option value="66">B</option>
+					<option value="67">C</option>
+					<option value="68">D</option>
+					<option value="69">E</option>
+					<option value="70">F</option>
+					<option value="71">G</option>
+					<option value="72">H</option>
+					<option value="73">I</option>
+					<option value="74">J</option>
+					<option value="75">K</option>
+					<option value="76">L</option>
+					<option value="77">M</option>
+					<option value="78">N</option>
+					<option value="79">O</option>
+					<option value="80">P</option>
+					<option value="81">Q</option>
+					<option value="82">R</option>
+					<option value="83">S</option>
+					<option value="84">T</option>
+					<option value="85">U</option>
+					<option value="86">V</option>
+					<option value="87">W</option>
+					<option value="88">X</option>
+					<option value="89">Y</option>
+					<option value="90">Z</option>
+				</select>
+				<br><br>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table cellspacing="0" cellpadding="0" border="0" width="100%" class="layout-table-content">
+					<tr>
+						<td valign="top" width="50%">
+							<table cellspacing="0" cellpadding="0" border="0" width="75%" class="layout-table-content">
+								<tr>
+									<td width="100" style="font-size: 10px;">
+										<strong>Gallery Price from:$</strong>
+										<br>
+										<cfinput name="FromPrice" size="10" maxlength="10"/>
+									</td>
+									<td width="100" style="font-size: 10px;">
+										<strong>Gallery Price to:$</strong>
+										<br>
+										<cfinput name="ToPrice" size="10" maxlength="10"/>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td valign="top" width="50%">
 
-					</td>
-					
-				</tr>
-			</table>				
-		</td>
-	</tr>
+						</td>
+						
+					</tr>
+				</table>				
+			</td>
+		</tr>
     </cfform>
     <!---<form method="post" action="index.cfm?event=massupdate.results">
     <!-- set alphaCharNum to coldfusion chr for letter A -->
@@ -681,6 +683,25 @@
 		}
 		return true; // allow the form to submit
 	} 
+
+
+	function validateForm() {
+		var groupValue = document.getElementsByName("groups")[0].value.trim();
+
+		// check empty
+		if (groupValue === "") {
+			alert("Groups field cannot be empty.");
+			return false;
+		}
+
+		// check numeric only
+		if (isNaN(groupValue) || Number(groupValue) <= 0) {
+			alert("Please enter a valid numeric value for Groups.");
+			return false;
+		}
+
+		return true; // allow submit
+	}
 
 </script>
 

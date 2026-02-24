@@ -664,7 +664,7 @@
                                     <div class="banner-section">
                                         <div class="art-work-content">
                                             <div class="bottom-content">
-                                                <div class="user-registrations quotes-page contact-page">
+                                                <div class="user-registrations quotes-page contact-page" style="max-width: 100%;">
                                                     <div class="top-heading">
                                                         <cfif structKeyExists(url,'error')>
                                                             <span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;">
@@ -696,157 +696,182 @@
                                                     <p>GALLART.COM will review your listings.  If they are approved, they will be shown on the site.</p>
                                         
                                                     <cfoutput>
+                                                        <div class="user-registrations new-user-form">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-sectiom">
 
-                                                        <form name="frm1" action="/user_listing_detail" method="post" enctype="multipart/form-data" onSubmit="javascript:return validEntries(document.frm1);">
-                                                            <div class="input-form">
-                                                                <input type="Hidden" name="fk_users" value="#session.sellerinfo.pk_users#">
-                                                                <input type="hidden" name="orderable" value="0">
-                                                                <input type="hidden" name="quantity" value="0">
-                                                                <input type="hidden" name="availablity" value="3 - 5 Business Days">
-                                                                <input type="hidden" name="expressair" value="no">
-                                                                <input type="hidden" name="options" value="">
-                                                                <input type="hidden" name="active" value="0">
-                                                                <input type="hidden" name="datestamp" value="#dateformat(now(), 'mm/dd/yyyy')#">
-                                                                <input type="hidden" name="vendor" value="0001">
+                                                                        <form name="frm1" action="/user_listing_detail" method="post" enctype="multipart/form-data" onSubmit="javascript:return validEntries(document.frm1);">
+                                                                            <div class="input-form">
+                                                                                <input type="Hidden" name="fk_users" value="#session.sellerinfo.pk_users#">
+                                                                                <input type="hidden" name="orderable" value="0">
+                                                                                <input type="hidden" name="quantity" value="0">
+                                                                                <input type="hidden" name="availablity" value="3 - 5 Business Days">
+                                                                                <input type="hidden" name="expressair" value="no">
+                                                                                <input type="hidden" name="options" value="">
+                                                                                <input type="hidden" name="active" value="0">
+                                                                                <input type="hidden" name="datestamp" value="#dateformat(now(), 'mm/dd/yyyy')#">
+                                                                                <input type="hidden" name="vendor" value="0001">
 
-                                                                <div class="input-field">
-                                                                    <label><b>Title:<span style="color: ##ff0000;">*</span></b></label>
-                                                                    <input type="text" name="name" value="#replace(detail.Name,'"','&quot;','all')#" maxlength="30" size="40">
-                                                                    <span class="error-message" id="titleError"></span>
-                                                                </div>
-
-                                                                <div class="input-field">
-                                                                    <label><b>Select Artist:<span style="color: ##ff0000;">*</span></b></label>
-                                                                    <Select name="artistview"  onchange="ArtistView()" class="select2">
-                                                                        <option value="">Select here ...</option>
-                                                                        <cfloop query="artists">
-                                                                        <cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-                                                                        <option value="#HTMLEditFormat(manufacturer)#" <cfif HTMLEditFormat(manufacturer) is #HTMLEditFormat(formValues.manufacturer)#>Selected</cfif>>#HTMLEditFormat(manufacturer)#
+                                                                                <div class="row" style="align-items: flex-end;">
+                                                                                    <div class="col-md-4">
+                                                                                        <div class="input-field">
+                                                                                            <label><b>Title:<span style="color: ##ff0000;">*</span></b></label>
+                                                                                            <input type="text" name="name" value="#replace(detail.Name,'"','&quot;','all')#" maxlength="50" size="40">
+                                                                                            <span class="error-message" id="titleError"></span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <div class="input-field">
+                                                                                            <label><b>Select Artist:<span style="color: ##ff0000;">*</span></b></label>
+                                                                                            <Select name="artistview"  onchange="ArtistView()" class="select2">
+                                                                                                <option value="">Select here ...</option>
+                                                                                                <cfloop query="artists">
+                                                                                                <cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+                                                                                                <option value="#HTMLEditFormat(manufacturer)#" <cfif HTMLEditFormat(manufacturer) is #HTMLEditFormat(formValues.manufacturer)#>Selected</cfif>>#HTMLEditFormat(manufacturer)#
+                                                                                                </cfif>
+                        
+                                                                                                </cfloop>
+                                                                                            </select>
+                                                                                            <span class="error-message" id="artistviewError"></span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <div class="input-field">
+                                                                                            <label><b><i>Select an artist from dropdown above, OR type in a new artist below (last name, first name):</i></b></label>
+                                                                                            <input type="Text" name="manufacturer" maxlength="50" value="#HTMLEditFormat(detail.manufacturer)#" size="40">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <div class="input-field">
+                                                                                            <label><b>Year:</b></label>
+                                                                                            <input type="text" name="year" value="#detail.year#" maxlength="6" size="25">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <div class="input-field">
+                                                                                            <label><b>Size (height x width) in inches:<span style="color: ##ff0000;">*</span></b></label>
+                                                                                            <input type="text" name="size" value="#detail.size#" maxlength="25" size="25">
+                                                                                            <span class="error-message" id="SizeError"></span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <div class="input-field">
+                                                                                            <label><b>Select Medium from dropdown below:<span style="color: ##ff0000;">*</span></b></label>
+                                                                                            <Select name="category" class="select2">
+                                                                                                <option value="">Select here ...</option>
+                                                                                                <cfloop query="cats">
+                                                                                                    <option value="#path#" <cfif #path# is #detail.path#>Selected</cfif>>#path#
+                                                                                                
+                                                                                                </cfloop>
+                                                                                            </select>
+                                                                                            <span class="error-message" id="MediumError"></span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <div class="input-field">
+                                                                                            <label><b>Retail Price:</b></label>
+                                                                                            <input type="text" name="retail_price" value="#dollarformat(detail.retail_price)#" size="25" maxlength="10">
+                                                                                            <span class="error-message" id="RetailPriceError"></span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <div class="input-field">
+                                                                                            <label><b>Selling Price (20% fee will be deducted from this price):<span style="color: ##ff0000;">*</span></b></label>
+                                                                                            <input type="text" name="gallery_price" value="#dollarformat(detail.gallery_price)#" size="25" maxlength="10">
+                                                                                            <span class="error-message" id="GalleryPriceError"></span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="input-field">
+                                                                                            <label><b>Description:<span style="color: ##ff0000;">*</span></b></label>
+                                                                                            <textarea name="caption" maxlength="500" id="caption" cols="90" rows="4">#detail.caption#</textarea>
+                                                                                            <div id="charCount" class="mb-3 mt-1">0 / 500 characters</div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="input-field">
+                                                                                            <!--- <label><b>Upload New Product Picture</b> <span style="color: ##ff0000; font-size: 8pt;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span></label>
+                                                                                            <input type="file" name="fileup" size="22" style="font-size: xx-small;padding: 0;"> --->
+                                                                                            
+                                                                                                <div class="input-field image-upload pb-2">
+                                                                                                    <h3>
+                                                                                                    UPLOAD IMAGE
+                                                                                                    </h3>
+                                                                                                    <ul>
+                                                                                                        <li>- Please attach an image of the artwork </li>
+                                                                                                        <li>- The file must be a .JPG  </li>
+                                                                                                        <li>- Image size maximum <b>2MB</b>. </li>
+                                                                                                    </ul>
+                                                                                                </div>
+                                                                                                <!--- <label><b>Upload New Product Picture</b>
+                                                                                                    <span style="color: ##ff0000; font-size: 8pt;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span>
+                                                                                                    </label> --->
+                                                                                                <div class="file-upload-wrapper sm-file-upload-wrapper">
+                                                                                                    <label for="file-upload" class="file-upload-label">
+                                                                                                    <div class="file-upload-icon">
+                                                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                                                                            <path d="M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z"></path>
+                                                                                                        </svg>
+                                                                                                    </div>
+                                                                                                    <div class="file-upload-text"><strong>Browse File</strong></div>
+                                                                                                    </label>
+                                                                                                    <div class="file-upload-custom">
+                                                                                                        <input type="file" name="fileup" accept="image/jpeg,image/png" size="22" style="padding: 0;">
+                                                                                                    </div>
+                                                                                                    
+                                                                                                </div>
+                        
+                        
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="input-field">
+                                                                                            <cfif fileexists("#expandpath('.')#/img/thumbnails/#detail.uid#.jpg")>
+                                                                                                <img src="http://#server_name#/img/#detail.uid#.jpg?u=#randrange(1,1000)#" style="width: 200px !important;">
+                                                                                            </cfif>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="input-button flex-input-btn listing-detail-btns">
+                                                                                        <cfif isDefined('url.id')>
+                                                                                            <input type="Hidden" name="process" value="UPDATE" class="SeeMore">
+                                                                                            <input type="submit" name="process" id="btnUpdate" class="SeeMore" value="Update Your Listing" onClick="javascript:return confirm('Updating your product will temporarily remove it from the site until Gallery Art can review it -- Are You Sure?');"><br>
+                                                                                            <input type="reset" value="Reset" class="SeeMore" />
+                                                                                            <input type="hidden" name="id" value="#url.id#">
+                                                                                                <Cfif isDefined('returnq')>
+                                                                                                    <input type="hidden" name="returnq" value="#returnq#">
+                                                                                                </cfif>
+                                                                                            <input type="hidden" name="uid" value="#detail.uid#"><br><br>
+                                                                                            
+                                                                                        <cfelse>
+                                                                                            <input type="Hidden"  name="process" value="ADD">
+                                                                                            <input type="submit" id="btnAdd" name="process" class="SeeMore" value="Add Your Listing">
+                                                                                                <Cfif isDefined('returnq')>
+                                                                                                    <input type="hidden" name="returnq" value="#returnq#">
+                                                                                                </cfif>
+                                                                                        </cfif>
+                                                                                    </div>
+                                                                                </div>
+            
+                                                                            </div>
+                                                                        </form>
+                
+                                                                        <cfif structKeyExists(detail, "uid") and len(trim(detail.uid))>
+                                                                            <form name="frmDelete" action="/user_listing_detail" method="post">
+                                                                                <div class="input-form">
+                                                                                    <input type="Hidden" name="process" value="DELETE">
+                                                                                    <input type="hidden" name="uid" value="#detail.uid#">
+                
+                                                                                    <div class="input-button flex-input-btn listing-detail-btns">
+                                                                                        <input type="submit" name="process" id="btnDelete" class="SeeMore" value="Delete!" onclick="return handleDelete(this);">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
                                                                         </cfif>
-
-                                                                        </cfloop>
-                                                                    </select>
-                                                                    <span class="error-message" id="artistviewError"></span>
-                                                                </div>
-
-                                                                <div class="input-field">
-                                                                    <label><b><i>Select an artist from dropdown above, OR type in a new artist below (last name, first name):</i></b></label>
-                                                                    <input type="Text" name="manufacturer" maxlength="40" value="#HTMLEditFormat(detail.manufacturer)#" size="40">
-                                                                </div>
-
-                                                                <div class="input-field">
-                                                                    <label><b>Year:</b></label>
-                                                                    <input type="text" name="year" value="#detail.year#" maxlength="6" size="25">
-                                                                </div>
-
-                                                                <div class="input-field">
-                                                                    <label><b>Size (height x width) in inches:<span style="color: ##ff0000;">*</span></b></label>
-                                                                    <input type="text" name="size" value="#detail.size#" maxlength="15" size="25">&nbsp;<font face="Verdana, Arial,helvetica" size="1"></font>
-                                                                    <span class="error-message" id="SizeError"></span>
-                                                                </div>
-
-                                                                <div class="input-field">
-                                                                    <label><b>Select Medium from dropdown below:<span style="color: ##ff0000;">*</span></b></label>
-                                                                    <Select name="category" class="select2">
-                                                                        <option value="">Select here ...</option>
-                                                                        <cfloop query="cats">
-                                                                            <option value="#path#" <cfif #path# is #detail.path#>Selected</cfif>>#path#
-                                                                        
-                                                                        </cfloop>
-                                                                    </select>
-                                                                    <span class="error-message" id="MediumError"></span>
-                                                                </div>
-
-                                                                <div class="input-field">
-                                                                    <label><b>Retail Price:</b></label>
-                                                                    <input type="text" name="retail_price" value="#dollarformat(detail.retail_price)#" size="25" maxlength="10">
-                                                                    <span class="error-message" id="RetailPriceError"></span>
-                                                                </div>
-
-                                                                <div class="input-field">
-                                                                    <label><b>Selling Price (20% fee will be deducted from this price):<span style="color: ##ff0000;">*</span></b></label>
-                                                                    <input type="text" name="gallery_price" value="#dollarformat(detail.gallery_price)#" size="25" maxlength="10">
-                                                                    <span class="error-message" id="GalleryPriceError"></span>
-                                                                </div>
-
-                                                                <div class="input-field">
-                                                                    <label><b>Description:<span style="color: ##ff0000;">*</span></b></label>
-                                                                    <textarea name="caption" maxlength="500" id="caption" cols="90" rows="4">#detail.caption#</textarea>
-                                                                    <div id="charCount" class="mb-3">0 / 500 characters</div>
-                                                                </div>
-                                                                <div class="input-field">
-                                                                <!--- <label><b>Upload New Product Picture</b> <span style="color: ##ff0000; font-size: 8pt;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span></label>
-                                                                    <input type="file" name="fileup" size="22" style="font-size: xx-small;padding: 0;"> --->
-                                                                    
-                                                                        <div class="input-field image-upload pb-2">
-                                                                            <h3>
-                                                                            UPLOAD IMAGE
-                                                                            </h3>
-                                                                            <ul>
-                                                                                <li>- Please attach an image of the artwork </li>
-                                                                                <li>- The file must be a .JPG  </li>
-                                                                                <li>- Image size maximum <b>2MB</b>. </li>
-                                                                            </ul>
-                                                                        </div>
-                                                                        <!--- <label><b>Upload New Product Picture</b>
-                                                                            <span style="color: ##ff0000; font-size: 8pt;">(THE FILE MUST BE A .JPG, AND MUST BE LESS THAN #fileSizeLimitKb# IN SIZE)</span>
-                                                                            </label> --->
-                                                                        <div class="file-upload-wrapper sm-file-upload-wrapper">
-                                                                            <label for="file-upload" class="file-upload-label">
-                                                                            <div class="file-upload-icon">
-                                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                                                    <path d="M12 2C11.45 2 11 2.45 11 3V13H8L12 17L16 13H13V3C13 2.45 12.55 2 12 2ZM5 19H19C19.55 19 20 18.55 20 18V16C20 15.45 19.55 15 19 15H5C4.45 15 4 15.45 4 16V18C4 18.55 4.45 19 5 19Z"></path>
-                                                                                </svg>
-                                                                            </div>
-                                                                            <div class="file-upload-text"><strong>Browse File</strong></div>
-                                                                            </label>
-                                                                            <div class="file-upload-custom">
-                                                                                <input type="file" name="fileup" accept="image/jpeg,image/png" size="22" style="padding: 0;">
-                                                                            </div>
-                                                                            
-                                                                        </div>
-
-
                                                                     </div>
-                                                                <div class="input-field">
-                                                                    <cfif fileexists("#expandpath('.')#/img/thumbnails/#detail.uid#.jpg")>
-                                                                        <img src="http://#server_name#/img/#detail.uid#.jpg?u=#randrange(1,1000)#" style="width: 200px !important;">
-                                                                    </cfif>
-                                                                </div>
-                                                                <div class="input-button flex-input-btn listing-detail-btns">
-                                                                    <cfif isDefined('url.id')>
-                                                                        <input type="Hidden" name="process" value="UPDATE" class="SeeMore">
-                                                                        <input type="submit" name="process" id="btnUpdate" class="SeeMore" value="Update Your Listing" onClick="javascript:return confirm('Updating your product will temporarily remove it from the site until Gallery Art can review it -- Are You Sure?');"><br>
-                                                                        <input type="reset" value="Reset" class="SeeMore" />
-                                                                        <input type="hidden" name="id" value="#url.id#">
-                                                                            <Cfif isDefined('returnq')>
-                                                                                <input type="hidden" name="returnq" value="#returnq#">
-                                                                            </cfif>
-                                                                        <input type="hidden" name="uid" value="#detail.uid#"><br><br>
-                                                                        
-                                                                     <cfelse>
-                                                                        <input type="Hidden"  name="process" value="ADD">
-                                                                        <input type="submit" id="btnAdd" name="process" class="SeeMore" value="Add Your Listing">
-                                                                            <Cfif isDefined('returnq')>
-                                                                                <input type="hidden" name="returnq" value="#returnq#">
-                                                                            </cfif>
-                                                                    </cfif>
                                                                 </div>
                                                             </div>
-                                                        </form>
-
-                                                        <cfif structKeyExists(detail, "uid") and len(trim(detail.uid))>
-                                                            <form name="frmDelete" action="/user_listing_detail" method="post">
-                                                                <div class="input-form">
-                                                                    <input type="Hidden" name="process" value="DELETE">
-                                                                    <input type="hidden" name="uid" value="#detail.uid#">
-
-                                                                    <div class="input-button flex-input-btn listing-detail-btns">
-                                                                        <input type="submit" name="process" id="btnDelete" class="SeeMore" value="Delete!" onclick="return handleDelete(this);">
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                        </cfif>
+                                                        </div>
                                                     </cfoutput>
                                                 </div>
                                             </div>
@@ -971,9 +996,9 @@
 
             .select2-container--default .select2-selection--single {
                 background-color: #fff;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                height: 38px;
+                border: 1px solid lightgray;
+                border-radius: 10px;
+                height: 45px;
                 padding: 5px 10px;
                 font-size: 14px;
                 font-family: inherit;
@@ -1037,7 +1062,7 @@
             .file-upload-wrapper {
                 width: 100%;
                 padding: 20px;
-                background: #f2f2f2;
+                background: #fff;
                 border: 2px dashed lightgray;
                 border-radius: 8px;
                 text-align: center;
@@ -1085,6 +1110,65 @@
                 border-radius: 10px;
                 border: 1px solid lightgray;
                 padding: 6px 15px;
+            }
+            .form-sectiom {
+                background: #f2f2f2;
+                border-radius: 10px;
+                padding: 50px;
+            }
+            .user-registrations .input-form .input-field {
+                margin-bottom: 5px;
+                margin-top: 5px;
+            }
+            .user-registrations .input-form .input-field label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: 600;
+                font-size: 14px !important;
+            }
+            .user-registrations .input-form .input-field input, .user-registrations .input-form .input-field select {
+                width: 100% !important;
+                height: 45px !important;
+            }
+            .registration-page .content-section .banner-section .art-work-content input, .registration-page .content-section .banner-section .art-work-content select, .registration-page .content-section .banner-section .art-work-content .user-registrations .form-sectiom textarea {
+                background-color: #fff;
+                border-radius: 10px !important;
+                border: 1px solid lightgray !important;
+                margin-bottom: 0 !important;
+            }
+            .registration-page .content-section .banner-section .art-work-content .user-registrations .form-sectiom input, .registration-page .content-section .banner-section .art-work-content .user-registrations .form-sectiom select, .registration-page .content-section .banner-section .art-work-content .user-registrations .form-sectiom textarea {
+                border: 1px solid #000;
+                padding: 10px 20px;
+            }
+            .user-registrations .input-form .input-button.flex-input-btn input.SeeMore {
+                color: #ec008c !important;
+            }
+            .row .col-md-12 .input-field .file-upload-wrapper .file-upload-custom input {
+                border: none !important;
+                padding: 6px !important;
+            }
+            .user-registrations .input-form .input-button.flex-input-btn input.SeeMore {
+                width: max-content;
+                background: #ec008c;
+                width: 100%;
+                max-width: 150px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #fff !important;
+                font-size: 14px;
+                border: 2px solid #ec008c !important;
+                font-weight: 700;
+                letter-spacing: 1px;
+                transition: all 0.5s ease;
+                border-radius: 0px !important;
+                text-transform: capitalize;
+            }
+            .user-registrations .input-form .input-button.flex-input-btn input.SeeMore:hover {
+                background: transparent;
+                color: #ec008c !important;
+                transition: all 0.5s ease;
             }
         </style>
 

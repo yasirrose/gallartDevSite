@@ -124,6 +124,9 @@
 			var fname = document.getElementById('fname').value;
 			var lname = document.getElementById('lname').value;
 			var name = document.getElementById('name').value;
+			
+
+			console.log('size: ' + price);
 
 			
 
@@ -144,6 +147,8 @@
 				document.getElementById('fname').focus();
 				return false;
 			}
+
+			
 
 			editBtn.disabled = true;
 			deleteBtn.disabled = true;

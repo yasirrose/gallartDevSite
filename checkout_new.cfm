@@ -17,6 +17,14 @@
 	</cfif>
 </cfif>
 
+<!--- Remove item from cart handler --->
+<cfif isDefined('form.removeItem')>
+	<!--- <cfdump var="#form.selected_pid#" abort="true"> --->
+	<cfquery name="removeItem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+		Delete from cart where uid = '#form.selected_pid#'
+	</cfquery>
+</cfif>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
 
@@ -99,141 +107,103 @@
 	
 			// Move validEntries outside event listener
 			function validEntries(frm) {
-				let isValid = true;
-			
+
+    			let isValid = true;
+
+				// Clear old errors
 				document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
-			
-				const billnamef = document.getElementById('billnamef').value.trim();
-				const BillName = document.getElementById('BillName').value.trim();
-				const BillAddress1 = document.getElementById('BillAddress1').value.trim();
-				const billcity = document.getElementById('billcity').value.trim();
-				const billzip = document.getElementById('billzip').value.trim();
-				// const billcountry = document.getElementById('billcountry').value.trim();
-				// const cellphone = document.getElementById('cellphone').value.trim();
-				const Email = document.getElementById('Email').value.trim();
-				// const BillPhone = document.getElementById('BillPhone').value.trim();
-				const phoneNumber = document.getElementById('phoneNumber').value.trim();
+
+				// Helper function
+				function setError(fieldId, message, focus = false) {
+					const errorEl = document.getElementById(fieldId + 'Error');
+					if (errorEl) errorEl.textContent = message;
+
+					if (focus) {
+						const field = document.getElementById(fieldId);
+						if (field) field.focus();
+					}
+					isValid = false;
+				}
+
+				// Get values
+				const fields = {
+					billnamef: document.getElementById('billnamef').value.trim(),
+					BillName: document.getElementById('BillName').value.trim(),
+					BillAddress1: document.getElementById('BillAddress1').value.trim(),
+					billcity: document.getElementById('billcity').value.trim(),
+					billzip: document.getElementById('billzip').value.trim(),
+					Email: document.getElementById('Email').value.trim(),
+					phoneNumber: document.getElementById('phoneNumber').value.trim(),
+					cardnum: document.getElementById('cardnum').value.replace(/\s+/g, '').trim(),
+					cvcValue: document.getElementById('cardCVC').value.trim()
+				};
+
 				const phoneType = document.querySelector("[name='phoneType']").value;
-				// const addressType = document.querySelector("[name='AddressType']").value;
-				// const ShipaddressType = document.querySelector("[name='ShipAddressType']").value;
-				// const businessphone = document.getElementById('businessphone').value.trim();
-				const cardInput = document.getElementById("cardnum");		
-				const cardnum = cardInput.value.replace(/\s+/g, '').trim();
 				const selectedCardType = document.querySelector("[name='cardtype']").value;
 
-				const CVCInput = document.getElementById("cardCVC");
-				const cvcValue = CVCInput.value.trim();
-			
 				const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+				const emailRegex = /\S+@\S+\.\S+/;
+				const cvcRegex = /^\d{3,4}$/;
 
-				const submitButton = document.getElementById('submitBtn');
-			
-				if (!billnamef) {
-					document.getElementById('billnamefError').textContent = 'We require the billing first name to process the order.';
-					isValid = false;
-				}
-			
-				if (!BillName) {
-					document.getElementById('BillNameError').textContent = 'We require the billing last name to process the order.';
-					isValid = false;
-				}
-			
-				if (!Email) {
-					document.getElementById('EmailError').textContent = 'Email is required.';
-					isValid = false;
-				} else if (!/\S+@\S+\.\S+/.test(Email)) {
-					document.getElementById('EmailError').textContent = 'Please enter a valid email address.';
-					isValid = false;
-				}
-			
-				if (!BillAddress1) {
-					document.getElementById('BillAddress1Error').textContent = 'We require the billing address.';
-					isValid = false;
-				}
-			
-				if (!billcity) {
-					document.getElementById('billcityError').textContent = 'We require the billing city.';
-					isValid = false;
-				}
-			
-				if (!billzip) {
-					document.getElementById('billzipError').textContent = 'We require the billing postal code.';
-					isValid = false;
-				}
-				
-			
-				// if (!billcountry) {
-				// 	document.getElementById('billcountryError').textContent = 'We require the billing country.';
-				// 	isValid = false;
-				// }
-			
-				// if (!cellphone) {
-				// 	document.getElementById('cellphoneError').textContent = 'We require your cell phone number ';
-				// 	isValid = false;
-				// } 
-				// else if (!phoneRegex.test(cellphone)) {
-				// 	document.getElementById('cellphoneError').textContent = 'We require your cell phone number in the format (xxx) xxx-xxxx.';
-				// 	isValid = false;
-				// }
-			
-				// if (BillPhone && !phoneRegex.test(BillPhone)) {
-				// 	document.getElementById('BillphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
-				// 	isValid = false;
-				// }
-			
-				// if (businessphone && !phoneRegex.test(businessphone)) {
-				// 	document.getElementById('businessphoneError').textContent = 'Please enter a valid phone number in the format (xxx) xxx-xxxx.';
-				// 	isValid = false;
-				// }
-			
-				if (!cardnum) {
-					document.getElementById('cardnumError').textContent = 'You must enter a Credit Card Number.';
-					isValid = false;
-				} else if (cardRules[selectedCardType] && !cardRules[selectedCardType].pattern.test(cardnum)) {
-					document.getElementById('cardnumError').textContent = `Invalid ${selectedCardType} Card Number.`;
-					isValid = false;
-				}
+				// Required fields validation
+				const requiredMessages = {
+					billnamef: 'We require the billing first name to process the order.',
+					BillName: 'We require the billing last name to process the order.',
+					BillAddress1: 'We require the billing address.',
+					billcity: 'We require the billing city.',
+					billzip: 'We require the billing postal code.',
+					phoneNumber: 'We require your cell phone number.',
+					Email: 'Email is required.'
+				};
 
-				if (!cvcValue) {
-					document.getElementById('cardCVCError').textContent = 'You must enter a CVC number.';
-					isValid = false;
-				} else if (!/^\d{3,4}$/.test(cvcValue)) {
-					document.getElementById('cardCVCError').textContent = 'CVC must be 3 or 4 digits.';
-					isValid = false;
-				}
-
-				
-
-				if(!phoneNumber) {
-					document.getElementById('phoneNumberError').textContent = 'We require your cell phone number ';
-					isValid = false;
-				} else if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
-					// Format: (123) 456-7890
-					// var phoneRegex = /^\(\d{3}\)\s\d{3}-\d{4}$/;
-					if (!phoneRegex.test(phoneNumber)) {
-						document.getElementById('phoneNumberError').textContent = 'Please enter phone number in format: (xxx) xxx-xxxx ';
-						document.getElementById('phoneNumber').focus();
-						isValid = false;
+				Object.keys(requiredMessages).forEach(key => {
+					if (!fields[key]) {
+						setError(key, requiredMessages[key]);
 					}
+				});
+
+				// Email format
+				if (fields.Email && !emailRegex.test(fields.Email)) {
+					setError('Email', 'Please enter a valid email address.');
 				}
 
-
-			
-				if (!isValid) {
-					return false;
+				// Card validation
+				if (!fields.cardnum) {
+					setError('cardnum', 'You must enter a Credit Card Number.');
+				} else if (cardRules[selectedCardType] &&
+					!cardRules[selectedCardType].pattern.test(fields.cardnum)) {
+					setError('cardnum', `Invalid ${selectedCardType} Card Number.`);
 				}
 
-				
+				// CVC validation
+				if (!fields.cvcValue) {
+					setError('cardCVC', 'You must enter a CVC number.');
+				} else if (!cvcRegex.test(fields.cvcValue)) {
+					setError('cardCVC', 'CVC must be 3 or 4 digits.');
+				}
 
-				return isValid;
-			
-				if (formSubmited === 1) {
+				// Phone format validation
+				if (fields.phoneNumber &&
+					["Home Phone", "Cell Phone", "Business Phone"].includes(phoneType) &&
+					!phoneRegex.test(fields.phoneNumber)) {
+
+					setError('phoneNumber',
+						'Please enter phone number in format: (xxx) xxx-xxxx',
+						true
+					);
+				}
+
+				// Stop if invalid
+				if (!isValid) return false;
+
+				// Prevent double submit
+				if (typeof formSubmited !== "undefined" && formSubmited === 1) {
 					alert('The form was submitted, please wait ...');
 					return false;
-				} else {
-					formSubmited = 1;
-					return true;
 				}
+
+				formSubmited = 1;
+				return true;
 			}
 		
 			// Credit card validation using Luhn algorithm
@@ -254,6 +224,32 @@
 				}
 			
 				return sum % 10 === 0;
+			}
+		
+			// Function to remove item from cart
+			function removeItem(itemId) {
+				if(confirm('Are you sure you want to remove this item from your cart?')) {
+					// Create a hidden form for removal
+					var form = document.createElement('form');
+					form.method = 'POST';
+					form.action = 'checkout_new';
+
+					var input = document.createElement('input');
+					input.type = 'hidden';
+					input.name = 'removeItem';
+					input.value = '1';
+
+					var pidInput = document.createElement('input');
+					pidInput.type = 'hidden';
+					pidInput.name = 'selected_pid';
+					pidInput.value = itemId;
+
+					form.appendChild(input);
+					form.appendChild(pidInput);
+
+					document.body.appendChild(form);
+					form.submit();
+				}
 			}
 		</SCRIPT>
 	
@@ -358,6 +354,7 @@
 																			<td width="10%" align="center" style="color: ##ffffff;"><b>Qty</b></td>
 																			<td width="15%" align="Center" style="color: ##ffffff;"><b>Price</b></td>
 																			<td width="15%" align="Center" style="color: ##ffffff;"><b>Ext.</b></td>
+																			<td width="15%" align="Center" style="color: ##ffffff;"><b>Action</b></td>
 																			<td width="10%">&nbsp;
 																				<!--- Update --->
 																			</td>
@@ -379,11 +376,19 @@
 																				</td>
 																				<cfset ext = #charge# * #qty#>
 																				<td align="center" valign="middle">
-																					#dollarformat(Ext)#</td>
-																					<cfset subtotal = #subtotal# + #ext#>
-																					<td align="center" valign="middle">
-																						<!--- <input type="submit" class="Seemore" name="updateQty" value="Update"  onclick="document.getElementById('selected_pid').value='#uid#'"> --->
-																					</td>
+																					#dollarformat(Ext)#
+																				</td>
+																				<td align="center" valign="middle">
+																					<a href="javascript:void(0);" onclick="removeItem('#uid#');" style="text-decoration: underline; cursor: pointer;">
+																						Remove
+																					</a>
+																				</td>
+																				<cfset subtotal = #subtotal# + #ext#>
+																				<td align="center" valign="middle">
+																					<!--- <input type="submit" class="Seemore" name="updateQty" value="Update"  onclick="document.getElementById('selected_pid').value='#uid#'"> --->
+																				</td>
+																				
+																				
 																			</tr>
 																		</cfloop>
 																		<tr>
@@ -424,11 +429,11 @@
 																		<div class="row align-items-center">
 																			<div class="col-md-2"><label><span class="required">*</span><b>Name</b> <i>(First Last)</i></label></div>
 																			<div class="col-md-5">
-																				<cfinput type="text" name="billnamef" id="billnamef" size="15" maxlength="15">
+																				<cfinput type="text" name="billnamef" id="billnamef" size="15" maxlength="30">
 																				<span class="error-message" id="billnamefError"></span>
 																			</div>
 																			<div class="col-md-5">
-																				<cfinput type="text" name="BillName" id="BillName" size="25" maxlength="15">
+																				<cfinput type="text" name="BillName" id="BillName" size="25" maxlength="30">
 																				<span class="error-message" id="BillNameError"></span>
 																			</div>
 																		</div>
@@ -458,7 +463,7 @@
 																				<label><span class="required">*</span><b>Address 1</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<cfinput type="text" name="BillAddress1" id="BillAddress1" size="35" maxlength="35" >
+																				<cfinput type="text" name="BillAddress1" id="BillAddress1" size="35" maxlength="100" >
 																				<span class="error-message" id="BillAddress1Error"></span>
 																			</div>
 																		</div>
@@ -471,7 +476,7 @@
 																				<label><span class="required">&nbsp;</span><b>Address 2</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<cfinput type="text" name="BillAddress2" size="35" maxlength="35" >
+																				<cfinput type="text" name="BillAddress2" size="35" maxlength="100" >
 																			</div>
 																		</div>
 																	</div>														
@@ -483,12 +488,12 @@
 																			</div>
 																			<div class="col-md-5">
 
-																				<cfinput type="text" name="billcity" id="billcity" size="25" >
+																				<cfinput type="text" name="billcity" id="billcity" size="25" maxlength="30">
 																				<span class="error-message" id="billcityError"></span>
 
 																			</div>
 																			<div class="col-md-5">
-																				<cfinput type="text" name="billzip" size="13" id="billzip" >
+																				<cfinput type="text" name="billzip" size="13" id="billzip" maxlength="10">
 																				<span class="error-message" id="billzipError"></span>
 																			</div>
 																		</div>
@@ -516,7 +521,7 @@
 																				<label><span class="required">&nbsp;</span><b>State/Province</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<cfinput type="text" name="billstateText" id="billstateText" size="25" maxlength="25">
+																				<cfinput type="text" name="billstateText" id="billstateText" size="25" maxlength="35">
 																			</div>
 																		</div>
 																	</div>
@@ -623,7 +628,7 @@
 																				<label><span class="required">&nbsp;</span><b>Website</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<input type="text" name="website" size="35" maxlength="30">
+																				<input type="text" name="website" size="35" maxlength="50">
 																			</div>
 																		</div>
 																	</div>
@@ -649,10 +654,10 @@
 																				<label><span class="required">&nbsp;</span><b>Name</b> <i>(First Last)</i></label>
 																			</div>
 																			<div class="col-md-5">
-																				<input type="text" name="shipNamef" size="15" maxlength="15">
+																				<input type="text" name="shipNamef" size="15" maxlength="30">
 																			</div>
 																			<div class="col-md-5">
-																				<input type="text" name="shipName" size="25" maxlength="15">
+																				<input type="text" name="shipName" size="25" maxlength="30">
 																			</div>
 																		</div>
 																	</div>
@@ -682,7 +687,7 @@
 																				<label><span class="required">&nbsp;</span><b>Address 1</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<cfinput type="text" name="shipAddress1" size="35" >
+																				<cfinput type="text" name="shipAddress1" size="100" >
 																			</div>
 																		</div>
 																	</div>
@@ -693,7 +698,7 @@
 																				<label><span class="required">&nbsp;</span><b>Address 2</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<cfinput type="text" name="shipAddress2" size="35" maxlength="35" >
+																				<cfinput type="text" name="shipAddress2" size="35" maxlength="100" >
 																			</div>
 																		</div>
 																	</div>
@@ -704,10 +709,10 @@
 																				<label><span class="required">&nbsp;</span><b> City, Zip</b></label>
 																			</div>
 																			<div class="col-md-5">
-																				<cfinput type="text" name="shipcity" size="25" >
+																				<cfinput type="text" name="shipcity" size="25" maxlength="30">
 																			</div>
 																			<div class="col-md-5">
-																				<cfinput type="text" name="shipzip" size="13" >
+																				<cfinput type="text" name="shipzip" size="13" maxlength="10">
 																			</div>
 																		</div>
 																	</div>
@@ -735,7 +740,7 @@
 																				<label><span class="required">&nbsp;</span><b>State/Province</b></label>
 																			</div>
 																			<div class="col-md-10">
-																				<cfinput type="text" name="ShipstateText" id="ShipstateText" size="25" maxlength="20">
+																				<cfinput type="text" name="ShipstateText" id="ShipstateText" size="25" maxlength="35">
 																			</div>
 																		</div>
 																	</div>
@@ -1079,16 +1084,53 @@
 						document.querySelector('[name="shipName"]').value = document.getElementById('BillName').value;
 						document.querySelector('[name="shipcity"]').value = document.getElementById('billcity').value;
 						document.querySelector('[name="shipzip"]').value = document.getElementById('billzip').value;
+						document.querySelector('[name="shipAddress1"]').value = document.getElementById('BillAddress1').value;
+						document.querySelector('[name="shipAddress2"]').value = document.getElementById('BillAddress2').value;
+						document.querySelector('[name="shipPhone"]').value = document.getElementById('phoneNumber').value;
 						
 						// Agar dropdown bhi copy karna ho
 						document.getElementById('ShipAddressType').value = document.getElementById('AddressType').value;
+
+						ShiptoggleAddressFields();
+
+						// Copy state dropdown
+						if (document.getElementById('billstateDropdown')) {
+
+							let stateValue = document.getElementById('billstateDropdown').value;
+
+							document.getElementById('ShipstateDropdown').value = stateValue;
+
+							// ⭐ IMPORTANT — select2 refresh
+							$('#ShipstateDropdown').trigger('change');
+						}
+
+						// Copy state text
+						if(document.getElementById('billstateText')){
+							document.getElementById('ShipstateText').value = document.getElementById('billstateText').value;
+						}
+
+						// Copy state dropdown value
+						if (document.getElementById('billcountry')) {
+
+							let stateValue = document.getElementById('billcountry').value;
+
+							document.getElementById('shipcountry').value = stateValue;
+
+							// ⭐ IMPORTANT — select2 refresh
+							$('#shipcountry').trigger('change');
+						}
+
 					} else {
 						// Uncheck hone par shipping fields khali kar do
 						document.querySelector('[name="shipNamef"]').value = '';
 						document.querySelector('[name="shipName"]').value = '';
 						document.querySelector('[name="shipcity"]').value = '';
 						document.querySelector('[name="shipzip"]').value = '';
+						document.querySelector('[name="shipAddress1"]').value = '';
+						document.querySelector('[name="shipAddress2"]').value = '';
+						document.querySelector('[name="shipPhone"]').value = '';
 						document.getElementById('ShipAddressType').value = 'USA'; // default select
+						ShiptoggleAddressFields();
 					}
 				});
 			});
