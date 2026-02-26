@@ -707,8 +707,14 @@
 
 	function printImageSheet() {
 
-		
+		var artist = document.getElementById("artist").value;
 
+		// check empty or null
+		if (artist === "" || artist === null) {
+			alert("Please select an Artist before searching.");
+			return false;
+		}
+		
 		var imageSheet = new admin.models.art();
 
 		imageSheet.setForm("imageSheetForm");

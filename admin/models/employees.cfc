@@ -241,7 +241,7 @@
 				<cfcatch type="any">
 					<!--- <cfset success = false /> --->
 					<cfset result.success = false>
-                    <cfset result.message = cfcatch.detail>
+                    <cfset result.message = cfcatch.message>
 				</cfcatch>
 			</cftry>
 			

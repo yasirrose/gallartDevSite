@@ -147,7 +147,7 @@
 																				<strong>There are no items in your cart.<br>Please choose item(s) to purchase before checking out.</strong>
 																			</p>
 																		</div>
-																	<cfelse>
+																	 <cfelse>
 																		
 																		<table border="0" cellspacing="0" cellpadding="2" align="center" width="100%">
 																			<tr>
@@ -171,22 +171,22 @@
 																				<form action="/view-cart/#uid#/y" method="post" onsubmit="return validateForm(this)">
 																					<tr class="#this_row()#">
 																						<td valign="top">
-																							<a onmouseover="popUpWin('#get_name.imageURL#')" onmouseout="myWin.close();">#get_name.name#</a>
+																							<a onmouseover="popUpWin('/img/#get_name.uid#.jpg')" onmouseout="myWin.close();">#get_name.name#</a>
 																						</td>
 																						<td align="center">
-																							<input type="text" name="qty" value="#qty#" size="2" style="font-size: 14px;">
+																							<input type="text" name="qty" maxlength="4" value="#qty#" size="2" style="font-size: 14px;">
 																						</td>
-																						<td align="right">#dollarformat(charge)#</td>
+																						<td align="center">#dollarformat(charge)#</td>
 																						<cfset ext = charge * qty>
-																						<td align="right">#dollarformat(ext)#</td>
+																						<td align="center">#dollarformat(ext)#</td>
 																						<cfset subtotal = subtotal + ext>
 																						<td>
-																							<!--- <input type="submit" class="Seemore" name="action" value="update"> --->
-																							<button type="submit" class="Seemore " name="action" value="update" >Update</button>
+																							<input type="submit"  name="action" value="Update">
+																							<!--- <button type="submit" class="Seemore " name="action" value="update" >Update</button> --->
 																						</td>
 																						<td>
-																							<!--- <input type="submit" class="Seemore" name="action" value="delete"> --->
-																							<button type="submit" class="Seemore " name="action" value="delete"  onclick="return confirmDelete();">Delete</button>
+																							<!--- <input type="submit" name="action" value="Remove" style="color: red;" onclick="return confirmDelete();"> --->
+																							<!--- <button type="submit" class="Seemore " name="action" value="delete"  onclick="return confirmDelete();">Remove</button> --->
 																						</td>
 																					</tr>
 																				</form>

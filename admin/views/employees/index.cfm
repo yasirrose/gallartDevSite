@@ -158,12 +158,12 @@
 									<td>
 										Minus amount (from total sales): $
 										<br>
-										<cfinput type="text" name="commission_minus" id="commission_minus"  bind="{data.commission_minus}" maxlength="30" size="30" validate="float" message="You must enter a dollar amount for the minus amount - no $ or ,">
+										<cfinput type="text" name="commission_minus" id="commission_minus"  bind="{data.commission_minus}" maxlength="15" size="30" validate="float" message="You must enter a dollar amount for the minus amount - no $ or ,">
 									</td>
 									<td>
 										Percentage:
 										<br>
-										<cfinput type="text" name="commission_percent" id="commission_percent"  bind="{data.commission_percent}" maxlength="30" size="30" validate="integer" message="You must enter an integer for the commission.">&nbsp;
+										<cfinput type="text" name="commission_percent" id="commission_percent"  bind="{data.commission_percent}" maxlength="15" size="30" validate="integer" message="You must enter an integer for the commission.">
 									</td>
 								</tr>
 								<!--- <tr>

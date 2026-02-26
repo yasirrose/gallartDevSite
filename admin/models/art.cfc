@@ -2185,19 +2185,24 @@
 				<cfset extracells = cols - (qImages.recordcount MOD cols)>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-					<cfloop query="qImages">
-					<td align="left" valign="top" style="font-size: 7px;">
-						<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")>
-							<img src="http://23.20.226.157/img/thumbnails/#uid#.jpg" width="50" /><br>
-						<cfelse>
-							<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg" width="50"><br>
-						</cfif>
-						
-						#name#<br><br>
-					</td>
-					<CFIF currentrow MOD cols IS "0"></tr>
-					    <CFIF currentrow LT recordcount><tr>
-					</CFIF></CFIF></cfloop>
+						<cfloop query="qImages">
+							<td align="left" valign="top" style="font-size: 7px;">
+								<cfif fileexists("http://23.20.226.157/img/thumbnails/#uid#.jpg")>
+									<img src="http://23.20.226.157/img/thumbnails/#uid#.jpg" width="50" /><br>
+								<cfelse>
+									<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg" width="50"><br>
+								</cfif>
+								
+								#name#<br><br>
+							</td>
+							<CFIF currentrow MOD cols IS "0">
+								
+							</tr>
+								<CFIF currentrow LT recordcount>
+									<tr>
+								</CFIF>
+							</CFIF>
+						</cfloop>
 
 					<CFIF extracells LT cols>
 					    <cfloop index="noindex" from="1" to="#extracells#">

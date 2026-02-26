@@ -124,7 +124,7 @@
 			var fname = document.getElementById('fname').value;
 			var lname = document.getElementById('lname').value;
 			var name = document.getElementById('name').value;
-			
+			var price = document.getElementById("size").value.trim();
 
 			console.log('size: ' + price);
 
@@ -148,8 +148,12 @@
 				return false;
 			}
 
+			if (!/^\d+(\.\d{1,2})?$/.test(price)) {
+				alert("Please enter a valid numeric price (e.g., 100 or 100.50).");
+				document.getElementById("size").focus();
+				return false;
+			}
 			
-
 			editBtn.disabled = true;
 			deleteBtn.disabled = true;
 

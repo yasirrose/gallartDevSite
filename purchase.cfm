@@ -46,12 +46,8 @@
 		<cfset OTHERPHONE = ''>
 	</cfif>
 
-<!--- <cfdump var="#form#" abort="true"> --->
 	
 <cftry>
-
-	<!--- <cfdump var="#form.AddressType#" abort="true"> --->
-
 	<cfif form.AddressType EQ 'Outside'>
 		<cfset BILLSTATE = form.billstateText>
 		<cfset BILLCOUNTRY = form.billcountry>

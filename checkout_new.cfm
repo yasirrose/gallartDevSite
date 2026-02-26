@@ -856,23 +856,23 @@
 																			<div class="col-md-2">
 																				MM&nbsp;
 																				<select name="cardexpm">
-																				<cfloop from="1" to="12" index="monthis">
-																				<cfif len(monthis) EQ 1>
-																				<option value="0#monthis#">0#monthis#
-																				<cfelse>
-																				<option value="#monthis#">#monthis#
-																				</cfif>
-																				</cfloop>
-																				<!--- cfloop tag must go AFTER closing cfif --->
+																					<cfloop from="1" to="12" index="monthis">
+																						<cfif len(monthis) EQ 1>
+																							<option value="0#monthis#">0#monthis#
+																						<cfelse>
+																							<option value="#monthis#">#monthis#
+																						</cfif>
+																					</cfloop>
+																					<!--- cfloop tag must go AFTER closing cfif --->
 																				</select>
 																			</div>
 																			<div class="col-md-2">
 																				YY&nbsp;
 																				<select name="cardexpy">
-																				<cfset toyear = #Year(Now())# + 10>
-																				<cfloop from="#Year(Now())#" to="#toyear#" index="yearis">
-																				<option value="#right(yearis,2)#">#right(yearis,2)#
-																				</cfloop>
+																					<cfset toyear = #Year(Now())# + 10>
+																					<cfloop from="#Year(Now())#" to="#toyear#" index="yearis">
+																						<option value="#right(yearis,2)#">#right(yearis,2)#
+																					</cfloop>
 																				</select>
 																			</div>
 																		</div>
@@ -920,14 +920,12 @@
 		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+
 		<script>
+
 			$(document).ready(function() {
 				$('.select2').select2();
 			});
-		</script>
-
-
-		<script>
 
 			function toggleAddressFields() {
 				var type = document.getElementById("AddressType").value;
@@ -1048,10 +1046,6 @@
 				});
 			});
 
-		</script>
-
-
-		<script>
 			document.addEventListener("DOMContentLoaded", function() {
 				const textarea = document.getElementById("comments");
 				const counter = document.getElementById("charCount");
@@ -1070,10 +1064,8 @@
 					textarea.addEventListener("input", updateCount);
 				}
 			});
-		</script>
 
 
-		<script>
 			document.addEventListener("DOMContentLoaded", function () {
 				const sameAddress = document.getElementById('sameAddress');
 
@@ -1134,6 +1126,7 @@
 					}
 				});
 			});
+
 		</script>
 
 		<style>
