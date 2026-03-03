@@ -51,8 +51,8 @@ function doEdit(type) {
 	  var lname = document.getElementById('emp_lname').value.trim();
 	  var email = document.getElementById('emp_email').value.trim();
 	  var password = document.getElementById('password').value.trim();
-	  var commission_minus = document.getElementById('commission_minus').value.trim();
-	  var commission_percent = document.getElementById('commission_percent').value.trim();
+	  <!--- var commission_minus = document.getElementById('commission_minus').value.trim();
+	  var commission_percent = document.getElementById('commission_percent').value.trim(); --->
 
 	  var editBtn = document.getElementById('edit');
 	  var deleteBtn = document.getElementById('delete');
@@ -100,7 +100,7 @@ function doEdit(type) {
 			}
 		} --->
 
-		if (!/^\d+(\.\d+)?$/.test(commission_minus)) {
+		<!--- if (!/^\d+(\.\d+)?$/.test(commission_minus)) {
 			alert("Only numeric value allowed (integer or decimal).");
 			document.getElementById('commission_minus').focus();
 			return false;
@@ -109,7 +109,7 @@ function doEdit(type) {
 		if (!/^[0-9]+$/.test(commission_percent)) {
 			alert("Only numeric value allowed.");
 			return false;
-		}
+		} --->
 
 		editBtn.disabled = true;
 		deleteBtn.disabled = true;
@@ -232,7 +232,7 @@ function showNew () {
 		document.editForm.roles[i].checked = false;
 	} --->
 
-	['pk_employees', 'emp_fname', 'emp_lname', 'emp_email', 'emp_phone', 'password','commission_minus','commission_percent']
+	['pk_employees', 'emp_fname', 'emp_lname', 'emp_email', 'emp_phone', 'password']
         .forEach(id => document.getElementById(id).value = '');
 
 		document.getElementById('edit').value = 'Add';

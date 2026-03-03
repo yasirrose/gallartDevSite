@@ -56,17 +56,18 @@
 		</style>
 	</head>
 	<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-						
+		<!--- Counter for the Back Button --->
 		<cfif parameterexists(url.jcount)>
 			<cfset jcount = #url.jcount# +1>
 			<cfset goback = "javascript:history.go(-#jcount#)">
-		<cfelse>
+		 <cfelse>
 			<cfset goback="javascript:history.go(-1)">
 			<cfset jcount="2">
 		</cfif>
-
-		<Cfif parameterexists(uid)>
-			<cfif form.action EQ "delete">
+		<!--- End Back Button Counter --->
+		<!---  Process within this page ie change quantity or remove item from cart --->	
+		<cfif parameterexists(uid)>
+			<cfif form.action EQ "Remove">
 				<cfquery name="deleteItem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 					DELETE FROM cart WHERE uid = <cfqueryparam value="#uid#" cfsqltype="cf_sql_integer">
 				</cfquery>
@@ -75,13 +76,13 @@
 					<cfquery name="lineitem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 						Delete from cart where uid = '#uid#'
 					</cfquery>
-				<cfelse>
-					<cfquery name="lineitem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-						Update cart set qty = #qty# where uid = '#uid#'
-					</cfquery>
+				 <cfelse>
+						<cfquery name="lineitem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+							Update cart set qty = #qty# where uid = '#uid#'
+						</cfquery>
 				</cfif>
 			</cfif>
-			
+
 			<cflocation url="/view-cart" addtoken="No">
 		</cfif>
 
@@ -128,8 +129,8 @@
 
 											<div aria-label="breadcrumb">
 												<ol class="breadcrumb">
-												<li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
-												<li class="breadcrumb-item active" aria-current="page">View Cart</li>
+													<li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+													<li class="breadcrumb-item active" aria-current="page">View Cart</li>
 												</ol>
 											</div>
 											<cfset subtotal = 0> <!-- Initialize subtotal -->
@@ -176,16 +177,21 @@
 																						<td align="center">
 																							<input type="text" name="qty" maxlength="4" value="#qty#" size="2" style="font-size: 14px;">
 																						</td>
-																						<td align="center">#dollarformat(charge)#</td>
+																						<td align="center">
+																							#dollarformat(charge)#
+																						</td>
 																						<cfset ext = charge * qty>
-																						<td align="center">#dollarformat(ext)#</td>
+																						<td align="center">
+																							#dollarformat(ext)#
+																						</td>
 																						<cfset subtotal = subtotal + ext>
+																						<input type="hidden" name="productQty" id="productQty" value="#get_name.quantity#">
 																						<td>
 																							<input type="submit"  name="action" value="Update">
 																							<!--- <button type="submit" class="Seemore " name="action" value="update" >Update</button> --->
 																						</td>
 																						<td>
-																							<!--- <input type="submit" name="action" value="Remove" style="color: red;" onclick="return confirmDelete();"> --->
+																							<input type="submit" name="action" value="Remove" style="color: red;" onclick="return confirmDelete();">
 																							<!--- <button type="submit" class="Seemore " name="action" value="delete"  onclick="return confirmDelete();">Remove</button> --->
 																						</td>
 																					</tr>
@@ -243,13 +249,40 @@
 
 		<script>
 			function validateForm(form) {
-				var qty = form.qty.value;
-				qty = parseInt(qty);
+				var qtyValue  = form.qty.value;
+				var productQty  = form.productQty.value;
 
-				if (isNaN(qty) || qty <= 0) {
-					alert("Quantity must be a positive number.");
-					return false; // prevent form submission
+				console.log('test: ' + productQty);
+
+				 // Check if empty
+				if (qtyValue === "") {
+					alert("Please add Quantity before updating.");
+					return false;
 				}
+
+				// Check if NOT numeric (only digits allowed)
+				if (!/^[0-9]+$/.test(qtyValue)) {
+					alert("Only numeric value allowed.");
+					return false;
+				}
+
+
+				var qty = parseInt(qtyValue, 10);
+				var pQty = parseInt(productQty, 10);
+
+				// Check if zero or negative
+				if (qty <= 0) {
+					alert("Quantity must be greater than 0.");
+					return false;
+				}
+
+				if (productQty !== null && productQty !== "" && pQty !== 0) {
+					if (qty > pQty) {
+						alert('Quantity Limit Exceed');
+						return false;
+					}
+				}
+
 				return true;
 			}
 

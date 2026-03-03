@@ -109,6 +109,20 @@
 					frm.quantity.focus();
 					return false;
 				}
+				if (!/^[0-9]+$/.test(frm.quantity.value.trim())) {
+					alert('Quantity must be a numeric value. Please enter numbers only.');
+					frm.quantity.focus();
+					return false;
+				}
+
+				if(frm.year.value != ''){
+					if(!/^[0-9]+$/.test(frm.year.value.trim())){
+						alert('Year must be numeric');
+						frm.year.focus();
+						return false;
+					}
+				}
+
 				// if(!isValidSize(frm.size.value)){
 				// 	alert('You must enter a valid SIZE: only numbers and the letter x');
 				// 	frm.size.focus();
@@ -778,7 +792,9 @@
 					}
 
 					var html = `
-						<div class="additionalImage" id="imageRow_${addImageIndex}" 
+						<div 
+						class="additionalImage" 
+						id="imageRow_${addImageIndex}" 
 							style="border:1px solid black; padding:10px; margin-bottom:10px; position:relative;"
 						>
 							<input 
@@ -788,7 +804,9 @@
 								id="addImage_${addImageIndex}" 
 							/>
 
-							<span class="removeImage" data-id="${addImageIndex}"
+							<span 
+							class="removeImage" 
+							data-id="${addImageIndex}"
 								style="
 									position:absolute;
 									top:5px;

@@ -31,20 +31,15 @@
 
 	<table border = "0" width = "600" cellpadding = "5" cellspacing = "5" bgcolor="eeeeee">
 		<tr>
-			<td>
+			<td width="100">
 				First Name:
-				<br>
+			</td>
+			<td>
 				<cfinput name="fname" id="fname" autosuggest="cfc:admin.models.leads.searchLeadsByFname({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="30" size="50" align="left" style="z-index:1000;" tabindex="0">
 				<!--- <cfinput type="text" name="fname" id="fname"  size="30"> --->
 			</td>
-			<td>
-				Last Name:
-				<br>
-				<cfinput name="lname" id="lname" autosuggest="cfc:admin.models.leads.searchLeadsByLname({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" maxlength="50" align="left" style="z-index:1000;" tabindex="0">
-				<!--- cfinput type="text" name="lname" id="lname"  size="30"> --->
-			</td>
 		</tr>
-		<!--- <tr>
+		<tr>
 			<td>
 				<!---<span style="color: #ff0000;">*</span>&nbsp;--->Last Name<!--- (required):--->
 			</td>
@@ -52,18 +47,14 @@
 				<cfinput name="lname" id="lname" autosuggest="cfc:admin.models.leads.searchLeadsByLname({cfautosuggestvalue})" maxResultsDisplay="10"  size="50" maxlength="30" align="left" style="z-index:1000;" tabindex="0">
 				<!--- cfinput type="text" name="lname" id="lname"  size="30"> --->
 			</td>
-		</tr> --->
+		</tr>
 		<tr>
 			<td>
 				Email:
-				<br>
-				<cfinput name="leadEmail" id="leadEmail" autosuggest="cfc:admin.models.leads.searchLeadsByEmail({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="30" size="50" align="left" style="z-index:1000;" tabindex="0">
-				<!--- <cfinput type="text" name="leadEmail" id="leadEmail"  size="30"> --->
 			</td>
 			<td>
-				Best Time To Call:
-				<br>
-				<cfinput type="text" name="besttime" id="besttime" maxlength="30" size="50">
+				<cfinput name="leadEmail" id="leadEmail" autosuggest="cfc:admin.models.leads.searchLeadsByEmail({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="30" size="50" align="left" style="z-index:1000;" tabindex="0">
+				<!--- <cfinput type="text" name="leadEmail" id="leadEmail"  size="30"> --->
 			</td>
 		</tr>
 		<!--- <tr>
@@ -103,25 +94,21 @@
 
 		<tr>
 			<td>
-				Select Phone Number type:
-				<br>
-				<select name="PhoneType" id="PhoneType" style="width: 100%;">
+				Select Phone Number type
+			</td>
+			<td>		
+
+				<select name="PhoneType" id="PhoneType">
 					<option value="Home Phone" >Home</option>
 					<option value="Cell Phone" >Mobile</option>
 					<option value="Business Phone" >Business</option>
 					<option value="OutsideUS" >Outside US</option>
 				</select>
 			</td>
-			<td>		
-				Phone Number:
-				<br>
-				<input type="text" name="PhoneNumber" id="PhoneNumber" maxlength="20" size="50" >
-				<!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
-			</td>
 		</tr>
 
 
-		<!--- <tr>
+		<tr>
 			<td>
 				Phone Number
 			</td>
@@ -130,7 +117,7 @@
 				<input type="text" name="PhoneNumber" id="PhoneNumber" maxlength="20" size="50" >
 				<!--- <span id="formatSign">(xxx) xxx-xxxx</span> --->
 			</td>
-		</tr> --->
+		</tr>
 
 		<cfoutput> 
 			<script>
@@ -191,29 +178,25 @@
 		</cfoutput>
 
 
-		<!--- <tr>
+		<tr>
 			<td>
 				Best Time To Call:
 			</td>
 			<td>
 				<cfinput type="text" name="besttime" id="besttime" maxlength="30" size="30">
 			</td>
-		</tr> --->
+		</tr>
 
 		<tr>
 			<td>
 				Address Type:
-				<br>
-				<select name="AddressType" id="AddressType" onchange="toggleAddressFields()" style="width: 100%;">
+			</td>
+			<td>
+				<select name="AddressType" id="AddressType" onchange="toggleAddressFields()">
 					<option value="">Please Select</option>
 					<option value="USA"  >USA Address</option>
 					<option value="Outside" >Outside USA</option>
 				</select>
-			</td>
-			<td>
-				Address:
-				<br>
-				<cfinput type="text" name="address" id="address" autosuggest="cfc:admin.models.leads.searchLeadsByAddress({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="30" size="50">
 			</td>
 		</tr>
 
@@ -252,33 +235,28 @@
 
 
 
-		<!--- <tr>
+		<tr>
 			<td>
 				Address:
 			</td>
 			<td>
-				<cfinput type="text" name="address" id="address" autosuggest="cfc:admin.models.leads.searchLeadsByAddress({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="30" size="30">
+				<cfinput type="text" name="address" id="address" autosuggest="cfc:admin.models.leads.searchLeadsByAddress({cfautosuggestvalue})" maxlength="30" size="30">
 			</td>
-		</tr> --->
+		</tr>
 		<tr>
 			<td>
 				City:
-				<br>
-				<cfinput type="text" name="city" id="city" autosuggest="cfc:admin.models.leads.searchLeadsByCity({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="30" size="50" >
 			</td>
 			<td>
-				Zip Code:
-				<br>
-				<cfinput type="text" name="zip" id="zip" size="50" maxlength="10" value="">
+				<cfinput type="text" name="city" id="city" autosuggest="cfc:admin.models.leads.searchLeadsByCity({cfautosuggestvalue})" maxlength="30" size="30" >
 			</td>
 		</tr>
 
 		<tr id="StateUSA" style="display:none;">
+			<td>State:</td>
 			<td>
-				State:
-				<br>
 				<cfoutput>
-					<select name="State" id="State" style="width: 100%;">
+					<select name="State" id="State">
 						<option value="">Please Select</option>
 						<cfloop query="getStates">
 							<option value="#stateAbb#" >#state#</option>
@@ -289,16 +267,8 @@
 		</tr>
 
 		<tr id="outSideState" style="display:none;">
-			<td>
-				State/Province:
-				<br>
-				<input type="text" name="State_Outside" id="State_Outside" maxlength="30" size="50">
-			</td>
-			<td>
-				Country:
-				<br>
-				<input type="text" name="Country" id="Country" size="50" maxlength="30" >
-			</td>
+			<td>State/Province:</td>
+			<td><input type="text" name="State_Outside" id="State_Outside" maxlength="30" size="50"></td>
 		</tr>
 
 
@@ -325,57 +295,48 @@
 				<cfinput type="text" name="country" id="country" size="30">
 			</td>
 		</tr> --->
-		<!--- <tr>
+		<tr>
 			<td>
 				Zip Code:
 			</td>
 			<td>
-				<cfinput type="text" name="zip" id="zip" size="30" maxlength="10" value="">
+				<cfinput type="text" name="zip" id="zip" size="30" maxlength="10" value="" >
 			</td>
-		</tr> --->
+		</tr>
 
 
-		<!--- <tr id="outSideCountry" style="display:none;">
+		<tr id="outSideCountry" style="display:none;">
 			<td>Country:</td>
 			<td><input type="text" name="Country" id="Country" size="50" maxlength="30" ></td>
-		</tr> --->
+		</tr>
 
 
 		<tr>
 			<td>
 				Company:
-				<br>
-				<cfinput type="text" name="company" id="company" size="50" maxlength="30" value="">
 			</td>
 			<td>
-				Website:
-				<br>
-				<cfinput type="text" name="website" id="website" size="50" maxlength="30" value="">
+				<cfinput type="text" name="company" id="company" size="30" maxlength="30" value="">
 			</td>
 		</tr>
-		<!--- <tr>
+		<tr>
 			<td>
 				Website:
 			</td>
 			<td>
 				<cfinput type="text" name="website" id="website" size="30" maxlength="30" value="">
 			</td>
-		</tr> --->
+		</tr>
 		<tr>
 			<td valign="top">
 				Artists:
-				<br>
-				<cftextarea name="artists" id="artists" maxlength="100" cols="60" rows="3" style="width: 100%;"></cftextarea>
-				<div id="artistsCount" class="mb-3">0 / 100 characters</div> 
 			</td>
 			<td>
-				Titles:
-				<br>
-				<cftextarea name="titles" id="titles" maxlength="100" cols="40" rows="3"></cftextarea>
-				<div id="titlesCount" class="mb-3">0 / 100 characters</div>  
+				<cftextarea name="artists" id="artists" maxlength="100" cols="60" rows="3"></cftextarea>
+				<div id="artistsCount" class="mb-3">0 / 100 characters</div> 
 			</td>
 		</tr>
-		<!--- <tr>
+		<tr>
 			<td valign="top">
 				Titles:
 			</td>
@@ -383,29 +344,17 @@
 				<cftextarea name="titles" id="titles" maxlength="100" cols="60" rows="3"></cftextarea>
 				<div id="titlesCount" class="mb-3">0 / 100 characters</div> 
 			</td>
-		</tr> --->
+		</tr>
 		<tr>
-			<td>
+			<td valign="top">
 				Comments:
-				<br>
-				<cftextarea name="notes" id="notes" maxlength="500" cols="60" rows="10" style="width: 100%;"></cftextarea>
+			</td>
+			<td>
+				<cftextarea name="notes" id="notes" maxlength="500" cols="60" rows="10"></cftextarea>
 				<div id="notesCount" class="mb-3">0 / 500 characters</div> 
 			</td>
-			<td valign="top">
-				Origin:
-				<br>
-				<cfset originValues = "WALK-IN,WEBSITE,PHONE,HOUSE,OTHER" />
-				<cfoutput>
-					<select name="origin" style="width: 100%;">
-						<option value="">Please Select</option>
-						<cfloop list="#originValues#" index="idx">
-							<option value="#idx#">#idx#</option>
-						</cfloop>
-					</select>
-				</cfoutput>
-			</td>
 		</tr>
-		<!--- <tr>
+		<tr>
 			<td valign="top">
 				Origin:				
 			</td>
@@ -420,7 +369,7 @@
 				</select>
 				</cfoutput>
 			</td>
-		</tr> --->
+		</tr>
 		<cfif session.loggedin EQ true AND (listFindNoCase(session.userinfo.roles,'leads') OR session.userinfo.sa EQ 1)>
 			<cfinput type="hidden" name="password" value="#session.userinfo.password#">
 		 <cfelse>
@@ -452,17 +401,17 @@
 		if (type === "Outside") {
 			// Show text field, hide dropdown
 			document.getElementById("outSideState").style.display = "";
-			// document.getElementById("outSideCountry").style.display = "";
+			document.getElementById("outSideCountry").style.display = "";
 			document.getElementById("StateUSA").style.display = "none";
 		} else if (type === "USA") {
 			// Show dropdown, hide text field
 			document.getElementById("outSideState").style.display = "none";
-			// document.getElementById("outSideCountry").style.display = "none";
+			document.getElementById("outSideCountry").style.display = "none";
 			document.getElementById("StateUSA").style.display = "";
 		} else {
 			// Hide both if nothing selected
 			document.getElementById("outSideState").style.display = "none";
-			// document.getElementById("outSideCountry").style.display = "none";
+			document.getElementById("outSideCountry").style.display = "none";
 			document.getElementById("StateUSA").style.display = "none";
 		}
 	}
@@ -499,10 +448,5 @@
 		setupCounter("notes", "notesCount", 500);
 	});
 </script>
-<style>
-	div.autosuggest {
-		display: flex;
-	}
-</style>
 
 

@@ -92,7 +92,7 @@
     </form>--->
 	<tr>
 		<td colspan="2">
-			<cfform method="post" action="index.cfm?event=massupdate.results" onsubmit="return disableSubmitBtn()">
+			<cfform method="post" action="index.cfm?event=massupdate.results" onsubmit="return validateSearchForm() && disableSubmitBtn()">
 				<table cellspacing="0" cellpadding="0" border="0" width="75%" align="left">
 					<tr>
 						<td colspan="2" style="font-size: 11px;"><strong>SEARCH:</strong></td>
@@ -284,7 +284,7 @@
 									<td width="100" style="font-size: 10px;">
 										<strong>Year:</strong>
 										<br>
-										<cfinput name="Year" size="10" maxlength="10"/>
+										<cfinput name="Year" id="Year" size="10" maxlength="10"/>
 									</td>
 									<td width="100" style="font-size: 10px;">
 										<strong>Size:</strong>
@@ -702,6 +702,37 @@
 
 		return true; // allow submit
 	}
+
+	function validateSearchForm() {
+
+		var year   = document.getElementById('Year').value.trim();
+		var height = document.getElementsByName('Height')[0].value.trim();
+		var width  = document.getElementsByName('Width')[0].value.trim();
+
+		// ===== YEAR VALIDATION (Only Integer Allowed) =====
+		if (year !== '' && !/^\d+$/.test(year)) {
+			alert('Year must be a numeric value.');
+			document.getElementById('Year').focus();
+			return false;
+		}
+
+		// ===== HEIGHT VALIDATION (Integer or Float Allowed) =====
+		if (height !== '' && !/^\d+(\.\d+)?$/.test(height)) {
+			alert('Height must be numeric (integer or decimal).');
+			document.getElementsByName('Height')[0].focus();
+			return false;
+		}
+
+		// ===== WIDTH VALIDATION (Integer or Float Allowed) =====
+		if (width !== '' && !/^\d+(\.\d+)?$/.test(width)) {
+			alert('Width must be numeric (integer or decimal).');
+			document.getElementsByName('Width')[0].focus();
+			return false;
+		}
+
+		return true; // allow submit if all valid
+	}
+
 
 </script>
 

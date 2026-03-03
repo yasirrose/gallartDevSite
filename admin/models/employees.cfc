@@ -77,8 +77,8 @@
 		<cfargument name="emp_phone" type="string" default="">
 		<cfargument name="password" type="string" default="">
 		<cfargument name="roles" type="string" default="">
-		<cfargument name="commission_minus" type="string" default="">
-		<cfargument name="commission_percent" type="numeric" default="">
+		<!--- <cfargument name="commission_minus" type="string" default="">
+		<cfargument name="commission_percent" type="numeric" default=""> --->
 		<cfargument name="moduleName" type="string" default="">
 	    
 	    <!--- <cfset var success = true /> --->
@@ -149,9 +149,8 @@
 									emp_lname,
 									emp_email,
 									emp_phone,
-									password,
-									commission_minus,
-									commission_percent
+									password
+									
 								)
 								values
 								(
@@ -159,9 +158,8 @@
 									<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_lname#">,
 									<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_email#">,
 									<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_phone#">,
-									<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#">,
-									<cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.commission_minus#">,
-									<cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.commission_percent#">
+									<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#">
+									
 								)
 								SELECT @@identity as uid 
 							</cfquery>
@@ -192,9 +190,8 @@
 							emp_lname = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_lname#">,
 							emp_email = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_email#">,
 							emp_phone = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.emp_phone#">,
-							password  = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#">,
-							commission_minus  = <cfqueryparam cfsqltype="CF_SQL_MONEY" value="#arguments.commission_minus#">,
-							commission_percent  = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.commission_percent#">
+							password  = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#encryptedPassword#">
+							
 							WHERE pk_employees = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#arguments.pk_employees#">
 						</cfquery>
 						
