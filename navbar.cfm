@@ -14,7 +14,7 @@
 		float: left;
 	}
 	.navElement {
-		background: url('images/nav_bkg.png') repeat-x;
+		background: url('/images/nav_bkg.png') repeat-x;
 		padding: 13px 20px 10px;
 		color: #FFF!important;
 		text-decoration: none;
@@ -40,28 +40,28 @@
 <div class="navContainer">
 	<ul>
 		<li>
-			<a href="index.cfm?xss=#xss#" class="navElement">Home</a>
+			<a href="/" class="navElement">Home</a>
 		</li>
 		<li>
-			<a href="user_registration.cfm?xss=#xss#" class="navElement">Sell Your Art</a>
+			<a href="user_registration.cfm" class="navElement">Sell Your Art</a>
 		</li>
 		<li>
-			<a href="alerts.cfm?xss=#xss#" class="navElement">Alerts</a>
+			<a href="alerts.cfm" class="navElement">Alerts</a>
 		</li>
 		<li>
-			<a href="new_listings.cfm?xss=#xss#" class="navElement">Recent Acquisitions</a>
+			<a href="recent-acquisitions" class="navElement">Recent Acquisitions</a>
 		</li>
 		<li>
-			<a href="classifieds.cfm?xss=#xss#" class="navElement">Classifieds</a>
+			<a href="classifieds.cfm" class="navElement">Classifieds</a>
 		</li>
 		<li>
-			<a href="featured_events.cfm?xss=#xss#" class="navElement">Events</a>
+			<a href="featured_events.cfm" class="navElement">Events</a>
 		</li>
 		<li>
-			<a href="sales.cfm?xss=#xss#" class="navElement">Sales</a>
+			<a href="sales.cfm" class="navElement">Sales</a>
 		</li>
 		<li>
-			<a href="guests.cfm?xss=#xss#" class="navElement">Guest Book</a>
+			<a href="guests.cfm" class="navElement">Guest Book</a>
 		</li>
 		<li>
 			<a href="http://blog.gallart.com/" class="navElement">Blog</a>
@@ -71,49 +71,49 @@
 <!--- <table border="0" cellpadding="0" cellspacing="0" width="900" height="37" bgcolor="##000000;">
 	<tr>
 		<td align="center" valign="top">	
-			<a href="index.cfm?xss=#xss#" class="nav"><img src="images/home_nav.gif" border="0" /></a>
+			<a href="index.cfm" class="nav"><img src="images/home_nav.gif" border="0" /></a>
 		</td>
 		<td>
 			<hr style="height: 30px; width: 1px;" color="ffffff">
 		</td>
 		<td align="center" valign="top">
-			<a href="user_registration.cfm?xss=#xss#" class="nav"><img src="images/sellyourart_nav.gif" border="0" /></a>
+			<a href="user_registration.cfm" class="nav"><img src="images/sellyourart_nav.gif" border="0" /></a>
 		</td>
 		<td>
 			<hr style="height: 30px; width: 1px;" color="ffffff">
 		</td>
 		<td align="center" valign="top">
-			<a href="alerts.cfm?xss=#xss#" class="nav"><img src="images/alerts_nav.gif" border="0" /></a>
+			<a href="alerts.cfm" class="nav"><img src="images/alerts_nav.gif" border="0" /></a>
 		</td>
 		<td>
 			<hr style="height: 30px; width: 1px;" color="ffffff">
 		</td>
 		<td align="center" valign="top">
-			<a href="new_listings.cfm?xss=#xss#" class="nav"><img src="images/recent_acquisitions_nav.gif" border="0" /></a>
+			<a href="new_listings.cfm" class="nav"><img src="images/recent_acquisitions_nav.gif" border="0" /></a>
 		</td>
 		<td>
 			<hr style="height: 30px; width: 1px;" color="ffffff">
 		</td>
 		<td align="center" valign="top">
-			<a href="classifieds.cfm?xss=#xss#" class="nav"><img src="images/classifieds_nav.gif" border="0" /></a>
+			<a href="classifieds.cfm" class="nav"><img src="images/classifieds_nav.gif" border="0" /></a>
 		</td>
 		<td>
 			<hr style="height: 30px; width: 1px;" color="ffffff">
 		</td>
 		<td align="center" valign="top">
-			<a href="featured_events.cfm?xss=#xss#" class="nav"><img src="images/events_nav.gif" border="0" /></a>
+			<a href="featured_events.cfm" class="nav"><img src="images/events_nav.gif" border="0" /></a>
 		</td>
 		<td>
 			<hr style="height: 30px; width: 1px;" color="ffffff">
 		</td>
 		<td align="center" valign="top">
-			<a href="sales.cfm?xss=#xss#" class="nav"><img src="images/sales_nav.gif" border="0" /></a>
+			<a href="sales.cfm" class="nav"><img src="images/sales_nav.gif" border="0" /></a>
 		</td>
 		<td>
 			<hr style="height: 30px; width: 1px;" color="ffffff">
 		</td>
 		<td align="center" valign="top">
-			<a href="guests.cfm?xss=#xss#" class="nav"><img src="images/guestbook_nav.gif" border="0" /></a>	
+			<a href="guests.cfm" class="nav"><img src="images/guestbook_nav.gif" border="0" /></a>	
 		</td>
 		<td>
 			<hr style="height: 30px; width: 1px;" color="ffffff">

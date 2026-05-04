@@ -8,10 +8,10 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -161,9 +161,9 @@
 													<tr>
 														<td valign="top">
 															<cfif manufacturer EQ "RAE" OR manufacturer EQ "SEEN">
-																<a style="font-size: 14px;" href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">#ucase(manufacturer)#</a>
+																<a style="font-size: 14px;" href="/artists/#manufacturer#/">#ucase(manufacturer)#</a>
 															<cfelse>
-																<a style="font-size: 14px;" href="products.cfm?keywords=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">#ucase(manufacturer)#</a>
+																<a style="font-size: 14px;" href="/products?keywords=#manufacturer#">#ucase(manufacturer)#</a>
 															</cfif>
 														</td>
 													</tr>

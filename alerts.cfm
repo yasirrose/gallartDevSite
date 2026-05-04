@@ -45,7 +45,7 @@
 
 </cfloop>
 
-<cflocation url="#script_name#?xss=#xss#&alertthanks=1" addtoken="No">
+<cflocation url="#script_name#?alertthanks=1" addtoken="No">
 
 </cfif>
 
@@ -63,12 +63,12 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
-	<script language="JavaScript" src="./js/utils.js"></script>
+	<script type="text/javascript" src="/js/jquery-1.2.6.min.js"></script>
+	<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -115,22 +115,30 @@
 								<i class="fas fa-bars"></i>
 							</div>
 						</div>
-						<div class="sidebar web-sidebar-modal">	
+						<!--- <div class="sidebar web-sidebar-modal">	
 							<cfinclude template="left_.cfm">
-						</div>
+						</div> --->
 						<div class="content-section">
 							<div class="bottom-content-sec">
 								<div class="banner-section">
 									<div class="art-work-content">
+
+										<div aria-label="breadcrumb">
+											<ol class="breadcrumb">
+											  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item active" aria-current="page">Email Alerts</li>
+											</ol>
+										</div>
+										
 										<div class="bottom-content">
 											<div class="user-registrations alert-page">
 												<div class="user-content">
 													<div class="top-heading">
 														<h3><strong>EMAIL ALERTS</strong></h3>
-														<p>Click <a href="alerts_info.cfm?xss=#xss#">HERE</a> for more information.</p>
+														<p>Click <a href="/alerts_info">HERE</a> for more information.</p>
 													</div>
 													<cfif not isDefined('session.sellerinfo.fname')>
-														<p>You must be a registered member in order to submit email alerts.  Please login below or click <a href="alerts_registration.cfm?xss=#xss#">HERE </a> to register.</p>
+														<p>You must be a registered member in order to submit email alerts.  Please login below or click <a href="/alerts_registration">HERE </a> to register.</p>
 														<p><cfif structKeyExists(session,'sellerinfo') AND session.sellerinfo.login EQ 0>
 																<span style="color: red;">Sorry, we couldn't find that username/password combination in our system.  Please try again.</span>
 															</cfif>

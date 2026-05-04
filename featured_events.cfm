@@ -13,8 +13,8 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="./js/jquery-1.2.6.min.js"></script>
-	<script language="JavaScript" src="./js/utils.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
 <cfquery name="getPages" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -23,7 +23,7 @@
 </cfquery>
 
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -69,15 +69,26 @@
 								<i class="fas fa-bars"></i>
 							</div>
 						</div>
-						<div class="sidebar web-sidebar-modal">	
+						<!--- <div class="sidebar web-sidebar-modal">	
 							<cfinclude template="left_.cfm">
-						</div>
+						</div> --->
 						<div class="content-section">
 							<div class="bottom-content-sec">
 								<div class="banner-section">
 									<div class="art-work-content">
+
+										<div aria-label="breadcrumb" style="margin-top:60px;" >
+											<ol class="breadcrumb">
+											  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+											  <li class="breadcrumb-item active" aria-current="page">Events</li>
+											</ol>
+										</div>
+
 										<div class="bottom-content">
-											<cfoutput>#getPages.page_content#</cfoutput>
+											<div class="featuredevents-page">
+												<cfoutput>#getPages.page_content#</cfoutput>
+											</div>
+											
 										</div>
 									</div>
 								</div>

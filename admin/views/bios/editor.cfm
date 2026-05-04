@@ -1,0 +1,133 @@
+<cfscript>
+	param name='url.id' default='0';
+
+	record = new admin.models.bios();
+
+	if( url.keyExists( 'id' ) ) {
+		bio = record.getBio( url.id );
+	}
+
+	if ( form.keyExists( 'fieldnames' ) ) {
+
+		result = record.saveBio(
+			pk_bios = form.id,
+			artist  = form.txtArtist,
+			bio     = form.txtBio
+		);
+
+		if ( result.success ) {
+			writeOutput("
+				<script>
+					alert('#JSStringFormat(result.message)#');
+					window.opener.location.reload();
+					window.close();
+				</script>
+			");
+		} else {
+			writeOutput("
+				<script>
+					alert('Error: #JSStringFormat(result.message)#');
+				</script>
+			");
+		}
+	}
+</cfscript>
+
+<cfoutput>
+
+	<!--- <cfset selectedArtist = "">
+	<cfif structKeyExists(url, "artist")>
+		<cfset selectedArtist = url.artist>
+	<cfelseif structKeyExists(bio, "artist")>
+		<cfset selectedArtist = bio.artist>
+	</cfif> --->
+
+	<cfset selectedArtist = "">
+
+	<cfif structKeyExists(form, "txtArtist")>
+		<!--- error case: user ka typed data --->
+		<cfset selectedArtist = form.txtArtist>
+
+	<cfelseif structKeyExists(url, "artist")>
+		<cfset selectedArtist = url.artist>
+
+	<cfelseif structKeyExists(bio, "artist")>
+		<cfset selectedArtist = bio.artist>
+	</cfif>
+
+	<cfform name="frm" action="" onsubmit="return validateBioForm();">
+		<input type="hidden" name="id" value="#url.id#" />
+
+		<table width="100%">
+			<cfif url.id == 0>
+				<tr>
+					<td>
+						<!--- <cfdump var='#cgi#' label='cgi' expand=0 abort=0> --->
+						Artist: <select name="txtArtist">
+							<option value="">Please Select Artist</option>
+							<cfloop query="getAllGallartArtists">
+								<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#</option>
+							</cfloop>
+						</select>
+					</td>
+				</tr>
+			 <cfelse>
+				<input type="hidden" name="txtArtist" value="#HTMLEditFormat(url.artist)#" />
+			</cfif>
+
+			<!--- <tr>
+				<td>
+					Artist: <select name="txtArtist">
+						<cfloop query="getAllGallartArtists">
+							<cfset selected = ( trim(manufacturer) eq trim(selectedArtist) ) ? "selected" : "" >
+							<option value="#HTMLEditFormat(manufacturer)#" #selected#>#HTMLEditFormat(manufacturer)#</option>
+						</cfloop>
+					</select>
+				</td>
+			</tr> --->
+
+			<tr>
+				<td colspan="2">
+					<cftextarea name="txtBio" id="txtBio" width="725" height="525" richtext="yes" toolbar="Basic">
+						<!--- #bio.bio# --->
+						<cfif structKeyExists(form, "txtBio")>
+							#form.txtBio#
+						<cfelse>
+							#bio.bio#
+						</cfif>
+					</cftextarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><input type="submit" name="btnAction" value="Update"></td>
+			</tr>
+		</table>
+	</cfform>
+
+	<script>
+		function validateBioForm() {
+			
+			if (window.CKEDITOR) {
+				for (var instance in CKEDITOR.instances) {
+					CKEDITOR.instances[instance].updateElement();
+				}
+			}
+
+			var artist = document.forms["frm"]["txtArtist"].value.trim();
+			var bio = document.forms["frm"]["txtBio"].value.trim();			
+
+			if(artist === ''){
+				alert("Please add title");
+				return false;
+			}
+
+			// if(bio === ''){
+			// 	alert("Please add Bio");
+			// 	return false;
+			// }
+			
+			return true; 
+		}
+	</script>
+
+</cfoutput>

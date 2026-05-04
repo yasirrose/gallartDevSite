@@ -22,7 +22,7 @@
 	<tr>
 		<td>
 			<table border="0" cellspacing="0" cellpadding="0" width="173" height="121">
-				<form action="new_listings.cfm?xss=#xss#" method="post">
+				<form action="/recent-acquisitions" method="post">
 				<tr>
 					<td style="padding-left: 20px; padding-top: 25px;">
 						<strong>Search New Listings</strong>
@@ -56,7 +56,7 @@
 							<cfloop query="getArtists">
 							<tr>
 								<td>
-									<a href="new_listings.cfm?artist=#manufacturer#">#manufacturer#</a>
+									<a href="recent-acquisitions?artist=#manufacturer#">#manufacturer#</a>
 								</td>
 							</tr>
 							</cfloop>

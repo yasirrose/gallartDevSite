@@ -1,0 +1,380 @@
+body {
+	font-family: Arial;
+	background: #FFFFFF;
+}
+
+td {
+	
+	font-size: 10px;
+}
+
+.header {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.subheader {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.title {
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.orderTitle {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+input,select {
+	font-size: 10px;
+
+}
+
+h2{
+	font-size:16px;	
+}
+
+.formTable{
+	border-top: 1px solid #000000;
+	border-left: 1px solid #000000;
+}
+
+.formCell{
+	height: 40px;
+	margin: 0px 0px 0px 0px;
+	padding: 5px 0px 0px 0px;
+	vertical-align: top;
+	border-right: 1px solid #000000;
+}
+
+.productCell{
+	height: 30px;
+	margin: 0px 0px 0px 0px;
+	padding: 5px 0px 0px 0px;
+	vertical-align: top;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+.formCellNoBorder{
+	height: 20px;
+	margin: 0px 0px 0px 0px;
+	padding: 5px 0px 0px 0px;
+}
+
+.formCellBorderBottom {
+	height: 30px;
+	margin: 0px 0px 0px 0px;
+	padding: 5px 0px 5px 0px;
+	border-bottom: 1px solid #000000;
+}
+
+.label{
+	font-size: 9px;
+	margin-top: 3px;
+	margin-left: 3px;
+	color: #111111;
+}
+
+.data{
+	font-size: 15px;
+	margin-top: 10px;
+	margin-left: 3px;
+}
+
+.largeLabel{
+	font-size: 12px;
+	margin-left: 3px;
+}
+
+.displayInput {
+	border: 1px solid #7f9db9; 
+	background-color: #FFFFFF; 
+	color: #000000;
+}
+
+.editBox {
+	border: 1px solid #cccccc;
+	background-color: #f6f6f6;
+}
+
+.row0 {background : #db3a7d; color: #FFFFFF; font-weight : bold;} 
+.row1 {background : #bbbbbb;} 
+.row2 {background : #eeeeee;}
+
+.massupdate {
+	font-size: 8pt;
+	border: 1px solid #bbbbbb;
+	background-color: #ffffff;
+}
+
+/* yui css modifications */
+
+.yuimenubaritem a.selected {
+	background-color: #000!important;
+	color: #fff!important;
+}
+
+input[type="checkbox"] {
+	margin: 3px 0.5ex;
+}
+
+input[type="button"], input[type="submit"], input[type="reset"], input[type="file"]::-webkit-file-upload-button, button {
+	padding: 2px 6px 3px;
+	border: 2px outset buttonface;
+	margin: 1px;
+}
+
+input, input[type="password"], input[type="search"] {
+	padding: 1px;
+}
+
+h1,h2,h3 {
+	margin: 1% 0;
+}
+
+form {
+	margin-bottom: 1em;
+}
+
+td {
+	padding: 2px!important;
+}
+
+.ScreenOnly td {
+	padding: 0!important;
+}
+
+.x-grid3 table {
+	width: 100%!important;
+}
+
+.x-grid3-body {
+	width: 100%!important;
+}
+
+.x-grid3-row {
+	width: 100%!important;
+}
+
+.container-fluid{
+	max-width: 1850px;
+}
+
+.form-section {
+    margin-top: 20px;
+}
+.main-heading h3 {
+    font-size: 16px;
+    line-height: 1.2;
+}
+.form-content .form-group {
+    display: flex;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.form-content .form-group label {
+    width: 75px;
+    text-align: left;
+	font-size: 10px;
+    padding-right: 5px;
+    padding-top: 5px;
+}
+.leads-main-module .form-content .form-group.mail-list label {
+    padding-top: 0;
+}
+.form-content .form-group input, .form-content .form-group select {
+    width: calc(100% - 75px);
+    border: 1px solid #000;
+    height: 30px;
+    border-radius: 3px;
+    font-size: 10px;
+    padding: 0 5px;
+}
+.leads-main-module table td, .leads-main-module .x-column-header-text-inner {
+    font-size: 10px;
+}
+.leads-main-module .x-panel-bodyWrap {
+    overflow: auto;
+}
+.leads-main-module .x-grid-header-ct {
+    overflow: auto;
+    position: static !important;
+}
+.leads-main-module .x-grid-body {
+    top: 0 !important;
+}
+.leads-main-module .form-content .form-group.date-filed > div > div {
+    float: none !important;
+    width: 100% !important;
+}
+.leads-main-module .form-content .form-group.date-filed > div {
+    width: calc(100% - 75px) !important;
+    float: none !important;
+}
+.leads-main-module .form-content .form-group.date-filed > div input {
+    padding-right: 20px;
+}
+.leads-main-module .form-content .form-group.date-filed div#searchToDategridForm_cf_buttondiv {
+    position: absolute;
+    right: 0;
+    width: max-content !important;
+}
+.leads-main-module .form-content .form-group.date-filed div#searchFromDategridForm_cf_buttondiv {
+    position: absolute;
+    right: 0;
+    width: max-content !important;
+}
+.leads-main-module .yui-calendar {
+    width: 100% !important;
+}
+.leads-main-module .form-content .form-group.reset-search-btn {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+    width: calc(100% - 75px) !important;
+    float: right;
+}
+.leads-main-module .form-content .form-group.reset-search-btn input {
+    width: 45%;
+    min-width: max-content;
+}
+
+.form-content .form-group textarea {
+    width: calc(100% - 75px);
+    border: 1px solid #000;
+    height: 90px;
+    border-radius: 3px;
+    font-size: 10px;
+    padding: 5px;
+}
+
+.form-table table {
+    width: 100% !important;
+}
+.form-content .form-group.reset-search-btn {
+    flex-wrap: nowrap;
+    gap: 40px;
+}
+.form-content .form-table div div#pagingtoolbar-1010-innerCt {
+    width: inherit !important;
+}
+.form-content .form-group.mail-list {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+.form-content .form-group.mail-list input {
+    width: 25px;
+}
+.form-content .form-group.date-filed > div {
+    display: flex;
+    align-items: center;
+}
+.form-content .form-group.date-filed > div input {
+    width: 100%;
+}
+.form-content .form-group.date-filed {
+    flex-wrap: nowrap;
+    align-items: center;
+}
+.form-content .form-group input.reset-btn {
+    background: #000;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+.form-content .form-group input.delete-btn {
+    background: #DD3A7D;
+    color: #fff;
+    font-weight: bold;
+    border-color: #DD3A7D;
+}
+.reset-search-btn {
+    text-align: left;
+    gap: 15px;
+    display: flex
+;
+}
+.reset-search-btn .delete-btn {
+    background: #DD3A7D;
+    color: #fff;
+    font-weight: bold;
+    border: 1px solid #DD3A7D;
+    border-radius: 5px;
+    width: 100px;
+    height: 40px;
+    font-size: 12px;
+}
+.reset-search-btn .reset-btn {
+    background: #000;
+    color: #fff;
+    font-weight: bold;
+    border: 1px solid #000;
+    border-radius: 5px;
+    width: 100px;
+    height: 40px;
+    font-size: 12px;
+}
+.form-buttons input {
+    box-shadow: 2px 2px 0px 0px #00000040;
+    background: #EEEEEE;
+    height: 30px;
+    border-radius: 5px;
+    width: 140px;
+    font-weight: 400;
+    font-size: 12px;
+    border: 1px solid #EEEEEE;
+}
+.reset-search-btn, .form-buttons {
+    text-align: left;
+    gap: 15px;
+    display: flex;
+}
+.form-table {
+    margin-top: 20px;
+}
+.main-heading {
+    text-align: left;
+    margin-bottom: 15px;
+}
+.new-btn input {
+    width: 75px;
+    height: 30px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 0px 0px #00000040;
+    font-weight: bold;
+    font-size: 14px;
+    background: #EEEEEE;
+    border: 1px solid #EEEEEE;
+}
+.new-btn {
+    text-align: left;
+    margin-bottom: 10px;
+}
+.form-content .form-group.date-filed > div {
+    width: calc(100% - 110px);
+}
+.required-text {
+    text-align: left;
+    margin-bottom: 10px;
+}
+.required-text span {
+    color: #000;
+    font-weight: bold;
+    font-size: 14px;
+}
+.form-content.right-form {
+    background: #EEEEEE;
+    padding: 15px;
+}
+.form-content .form-group input#emailButton {
+    font-size: 11px;
+    box-shadow: 2px 2px 0 0 #00000040;
+    background: #EEEEEE;
+    border: 1px solid #EEEEEE;
+}

@@ -15,10 +15,14 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+	<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -46,100 +50,84 @@
 
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
-			<cfinclude template="top.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="700" valign="top" height="37" align="center">
-			<cfinclude template="navbar_user.cfm">
-		</td>
-	</tr>
-	<tr height="100%">
-		<td valign="top" width="700" height="100%">
-			<table cellspacing="0" cellpadding="0" border="0" width="700">
-				<tr>
-					<td align="center" style="padding-top: 10px;">
-						<cfif isDefined('process') and process EQ 'add'>
-							<span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;"><br>THANK YOU FOR ADDING YOUR LISTING TO OUR SITE!</span>
-						</cfif>
-						<h4 style="font-style: italic;">SELL YOUR ART ON GALLART.COM!</h4>
-					</td>
-				</tr>
-				<tr>
-					<td align="center">
-						<cfoutput>
-						<FORM action="user_listing_results.cfm?xss=#xss#" method="post">
-						<table cellspacing="0" cellpadding="5" border="0">
-							<tr>
-								<td colspan="2">
-									Use this form to search for your listings by TITLE, ARTIST, MEDIUM, PRICE, OR DESCRIPTION:
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td style="padding-right: 10px;"><b>Title</b>:</b></td>
-								<td>
-									<input type="Text" name="name" style="width: 155px;">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td style="padding-right: 10px;"><b>Artist:</b></td>
-								<td>
-									<input type="Text" name="manufacturer" style="width: 155px;">
-								</td>
-							</tr>
-					
-							<tr class="#this_row()#">
-								<td style="padding-right: 10px;"><b>Medium:</b>
-								<td>
-								<SELECT name="path" style="font-size: 8pt;">
-									<option value="">All
-									<cfloop query="cats">
-										<option value="#path#">#ucase(path)#
-									
-								</cfloop></select>
-								
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td style="padding-right: 10px;"><b>Gallery Price:</b></td>
-								<td>
-									<input type="Text" name="gallery_price" style="width: 155px;">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td style="padding-right: 10px;"><b>Keyword In Description:</b></td>
-								<td>
-									<input type="Text" name="caption" style="width: 155px;">
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2" align="Center">
-								<input type="image" src="images/search.gif" name="search" style="border: none;"><br>
-								<input style="background:url(images/reset.gif) no-repeat; width: 87px; height: 30px; border: none; cursor: pointer;" type="reset" value="" /><br><br>
-								<input type="Button" style="background:url(images/enter_new_listing_button.gif) no-repeat; width: 150px; height: 30px; border: none; cursor: pointer;" onClick="javascript: window.location.href='user_listing_detail.cfm?xss=#xss#'" value="" />
-							
-								</td>
-							</tr>
-						
-						</TABLE>
-						</FORM>		
-						</cfoutput>
-					</td>
-				
-				</tr>
-			</table>
-		</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td colspan="2" valign="baseline">
-			<cfinclude template="footer_user.cfm">
-		</td>
-	</tr>
-</table>
+	<div class="main-container registration-page">
+		<div id="Table_01">
+			<div class="header-section">
+				<div class="top-header">
+					<cfinclude template="top_.cfm">
+				</div>
+				<div class="navbar-section">
+					<cfinclude template="navbar_user.cfm">
+				</div>
+			</div>
+			<div class="inner-section">
+				<div class="container-fluid">
+					<div class="main-content pb-4">
+						<div class="content-section">
+								<div class="bottom-content-sec">
+									<div class="banner-section">
+										<div class="art-work-content">
+											<div class="bottom-content">
+												<div class="user-registrations quotes-page contact-page">
+													<div class="top-heading">
+														<cfif isDefined('process') and process EQ 'add'>
+															<span style="color: #dd3a7d; padding-top: 25px; font-size: 13px; font-weight: bold;"><br>THANK YOU FOR ADDING YOUR LISTING TO OUR SITE!</span>
+														</cfif>
+														<h3>SELL YOUR ART ON GALLART.COM!</h3>
+													</div>
+													<p>Use this form to search for your listings by TITLE, ARTIST, MEDIUM, PRICE, OR DESCRIPTION:</p>
+													<cfoutput>
+														<FORM action="/user_listing_results" method="post">
+															<div class="input-form">
+																<div class="input-field">
+																	<label><b>Title:</b></label>
+																	<input type="Text" name="name">
+																</div>
+																<div class="input-field">
+																	<label><b>Artist:</b></label>
+																	<input type="Text" name="manufacturer">
+																</div>
+																<div class="input-field">
+																	<label><b>Medium:</b></label>
+																	<SELECT name="path">
+																			<option value="">All
+																			<cfloop query="cats">
+																				<option value="#path#">#ucase(path)#
+																			
+																		</cfloop>
+																	</select>
+																</div>
+																<div class="input-field">
+																	<label><b>Gallery Price:</b></label>
+																	<input type="Text" name="gallery_price">
+																</div>
+																<div class="input-field">
+																	<label><b>Keyword In Description:</b></label>
+																	<input type="Text" name="caption">
+																</div>
+																<div class="input-button flex-input-btn">
+																	<input type="submit" value="Search" name="search" class="SeeMore">
+																	<input value="Reset" type="reset" class="SeeMore"/>
+																	<input type="Button" class="SeeMore" onClick="javascript: window.location.href='/user_listing_detail'" value="Enter New Lisitng" />
+																</div>
+															</div>
+														</FORM>		
+													</cfoutput>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-section">
+                <cfinclude template="footer_user.cfm">
+            </div>
+		</div>
+	</div>
 
 <cfinclude template="frmxss.cfm">
 

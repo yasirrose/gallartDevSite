@@ -1,4 +1,4 @@
-<link href="stylesheet_print.css?x=<cfoutput>#RandRange(0,1000)#</cfoutput>" rel="stylesheet" type="text/css" media="print" />
+<link href="/stylesheet_print.css?x=<cfoutput>#RandRange(0,1000)#</cfoutput>" rel="stylesheet" type="text/css" media="print" />
 <!--- <cfoutput>
 
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -7,30 +7,90 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 </cfoutput> --->
 <script language="JavaScript">
-function helpWin(url) {
-	w = 350;  // width
-	h = 75;  // height
-	var features =	'scrollbars=no, toolbar=no, status=no, menubar=no ' +
-					',resizable=no, location=no, directories=no ' +
-					',left=' + ((screen.width-w)/2) +
-					',top='  + ((screen.height-h)/2) +
-					',width=' + w + ',height=' + h;
+	function helpWin(url) {
+		w = 350;  // width
+		h = 75;  // height
+		var features =	'scrollbars=no, toolbar=no, status=no, menubar=no ' +
+						',resizable=no, location=no, directories=no ' +
+						',left=' + ((screen.width-w)/2) +
+						',top='  + ((screen.height-h)/2) +
+						',width=' + w + ',height=' + h;
 
-	myWin =	window.open(url,'WinName',features);
-}
+		myWin =	window.open(url,'WinName',features);
+	}
 </script>
 <div id="top">
 	<div class="top-conteiner">
-		<div class="site-logo"><a href="index.cfm?xss=<cfoutput>#xss#</cfoutput>"><img src="images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections"></a></div>
-		<div class="mailto">
+		<div class="site-logo">
+			<a href="/">
+				<img src="/images/top_01.jpg" alt="Gallery Art - Buying & Selling Fine Art & Collections">
+			</a>
+		</div>
+		<!--- <div class="mailto">
 			<div class="mailto-text">
 				<p>20633 Biscayne Blvd Aventura, FL 33180</p>
 				<p><strong>305-932-6166</strong></p>
 			</div>
 			<a class="btn" href="mailto:sales@gallart.com">Email Us! CLICK!</a>
+		</div> --->
+		<div class="productSearch-filed web-search">
+
+			<cfif structKeyExists(url, "keywords")>
+				<cfset decodedKeyword = urlDecode(url.keywords)>
+			<cfelse>
+				<cfset decodedKeyword = "">
+			</cfif>
+
+			<form id="searchForm" method="get">
+				<input type="text" name="keywords"  id="keywords"  value="<cfoutput>#htmlEditFormat(decodedKeyword)#</cfoutput>" placeholder="Search by artist, medium, keywords">                  
+				<button type="submit" class="search-btn" id="searchButton">
+					<i class="fas fa-search"></i>
+				</button>
+			</form>
 		</div>
 		<div class="top_icons">
-			<a href="https://www.facebook.com/pages/GallArt/119056118127427?ref=hl" target="_blank"><img src="https://gallart.com/images/social_icons/facebook-sm.png" border="0" alt="facebook" /></a>
+
+			<div class="mailto">
+				<div class="mailto-text">
+					<div class="resigter">
+						
+						<cfif listLast(CGI.SCRIPT_NAME, "/") EQ "item.cfm" AND structKeyExists(URL, "artist") AND structKeyExists(URL, "slug")>
+
+							<!--- Build SEO URL manually --->
+							<cfset redirectURL = "/artist/#url.artist#/#url.slug#">
+
+						<cfelse>
+							<cfset redirectURL = CGI.SCRIPT_NAME &
+								( len(CGI.QUERY_STRING) ? "?" & CGI.QUERY_STRING : "" )>
+						</cfif>
+
+						<ul>
+							<li>
+								<a href="/login?redirect=<cfoutput>#urlEncodedFormat(redirectURL)#</cfoutput>">
+									<i class="far fa-user"></i>
+								</a>
+							</li>
+							<li>
+								<a href="/view-cart">
+									<i class="fas fa-shopping-cart"></i>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<!---<p>20633 Biscayne Blvd Aventura, FL 33180</p> --->
+					<p><strong>305.932.6166</strong></p>
+				</div>
+				<!--- <a class="btn" href="mailto:sales@gallart.com">Email Us! CLICK!</a> --->
+			</div>
+			<!--- <div class="productSearch-filed web-search">
+				<form action="products.cfm" method="get">
+				<input type="text" name="keywords" id="keywords" placeholder="Product Search">                  
+				<button type="submit" class="search-btn"  id="searchButton" ><i class="fas fa-search"></i></button>
+				</form>
+			</div> --->
+
+			<!---<div style="display:flex;">
+				<a href="https://www.facebook.com/pages/GallArt/119056118127427?ref=hl" target="_blank"><img src="https://gallart.com/images/social_icons/facebook-sm.png" border="0" alt="facebook" /></a>
 			<a href="https://instagram.com/gallartcom/" target="_blank"><img src="https://gallart.com/images/social_icons/instagram-sm.png" border="0" alt="instagram" /></a>
 			<a href="https://twitter.com/GallArtcom" target="_blank"><img src="https://gallart.com/images/social_icons/twitter-sm.png" border="0" alt="twitter" /></a>
 			<!--- <a href="https://www.tumblr.com/blog/gallartcom" target="_blank"><img src="https://gallart.com/images/social_icons/tumblr-sm.png" border="0" alt="tumblr" /></a> --->
@@ -45,8 +105,43 @@ function helpWin(url) {
 				<img src="https://gallart.com/images/social_icons/youtube.png" border="0" alt="youtube" />
 				<!--- https://www.youtube.com/channel/yourchannelid --->
 			</a>
+			</div> --->
+
+			
 			
 		</div>
 	</div>
 </div>
+<script>
+	document.getElementById('searchForm').addEventListener('submit', function(e) {
+		e.preventDefault(); // Prevent default submission
+
+		// const keyword = document.getElementById('keywords').value.trim().replace(/[<>"'&]/g, '').replace(/\s+/g, '+');
+		// const keyword = document.getElementById('keywords').value.replace(/\s+/g, '%2B');
+
+		const rawInput = document.getElementById('keywords').value;
+		// const keyword = encodeURIComponent(rawInput).replace(/%20/g, '%2B');
+
+		const keyword = encodeURIComponent(rawInput.trim())
+					.replace(/[<> &]/g, '')  // Remove <, >, and & (keep ' and ())
+					.replace(/\//g, '-')     // Replace slashes with hyphens
+					.replace(/\s+/g, '+')    // Replace spaces with +
+					.replace(/%20/g, '%2B');
+
+		const filePattern = /\.(cfm|php|html|js|css|txt|xml|json|asp|aspx|jsp)$/i;
+
+		if (filePattern.test(keyword)) {
+			alert("File names are not allowed in search.");
+			return;
+		}
+
+		if (keyword !== '') {
+			// Redirect using clean URL
+
+			const encodedKeyword = encodeURIComponent(keyword);
+			window.location.href = '/artists/search/' + encodedKeyword;
+		}
+	});
+  
+</script>
 

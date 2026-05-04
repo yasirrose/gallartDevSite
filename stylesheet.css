@@ -277,7 +277,7 @@ p {
 		margin-top: 20px;	
 	}
 	#left .productSearch{
-		background: url("images/product_search.jpg") no-repeat 0 0;
+		background: url("/images/product_search.jpg") no-repeat 0 0;
 		width: 173px;
 		height: 121px;
 		position: relative;

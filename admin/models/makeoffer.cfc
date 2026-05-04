@@ -1,0 +1,104 @@
+<cfcomponent>
+	<!--- initializes the component --->
+	<cffunction name="init" access="public" output="No" returntype="makeoffer">
+		<cfscript>
+				return this;
+		</cfscript>
+	</cffunction>
+	
+
+	<cffunction name="getMakeoffer" access="remote">
+	  	
+      	<cfargument name="page" required="yes">
+      	<cfargument name="pageSize" required="yes">
+      	<cfargument name="gridsortcolumn" required="yes">
+      	<cfargument name="gridsortdirection" required="yes">
+		<cfargument name="Lname" required="no" type="string" default="">
+		<cfargument name="Email" required="no" type="string" default="">
+		<cfargument name="Title" required="no" type="string" default="">
+		<cfargument name="fromDate" required="no" type="string" default="">
+		<cfargument name="toDate" required="no" type="string" default="">
+		
+		<!--- <cfdump var="#arguments#" abort="true"> --->
+	
+	
+		<cfset var qMakeoffer='' />
+	
+	   	<cfquery name="qMakeoffer" datasource="#application.dsource#">
+	      	SELECT CONVERT(CHAR(9),mo.datestamp,6) as offerdate,u.lname as seller_lname,u.fname as seller_fname,u.email as seller_email,u.phone as seller_phone,c.lname as customer_lname,c.fname as customer_Fname,c.email as customer_email,c.name as customer_name,
+			CASE WHEN c.name IS NULL OR LTRIM(RTRIM(c.name)) = '' 
+			THEN LTRIM(RTRIM(c.fname + ' ' + c.lname)) 
+			ELSE c.name END AS combine_customer_name, *
+	      	FROM makeoffer mo
+			INNER JOIN customers c on mo.fk_customers = c.id
+			INNER JOIN products p on mo.fk_products = p.uid
+			LEFT OUTER JOIN users u on p.fk_users = u.pk_users
+			WHERE 0=0 and isdeleted is null
+			<cfif arguments.Lname neq '' and arguments.Lname neq 'searchLname'>
+	      		AND c.lname like '#arguments.Lname#%'
+	      	</cfif>
+			<cfif arguments.Email neq '' and arguments.Email neq 'searchEmail'>
+	      		AND c.email like '#arguments.Email#%'
+	      	</cfif>
+			<cfif arguments.Title neq '' and arguments.Title neq 'searchTitle'>
+	      		AND p.name like '#arguments.Title#%'
+	      	</cfif>
+			<cfif arguments.fromDate neq '' and arguments.fromDate neq 'searchFromDate'>
+				AND mo.datestamp >= #arguments.fromDate#
+			</cfif>
+			<cfif arguments.toDate neq '' and arguments.toDate neq 'searchToDate'>
+				AND mo.datestamp <= #arguments.toDate#
+			</cfif>
+	      	<cfif gridsortcolumn neq ''>
+	      		ORDER BY #gridsortcolumn# #gridsortdirection#
+			<cfelse>
+				ORDER BY mo.datestamp DESC
+	      	</cfif>
+	   	</cfquery>
+	   	
+   		<cfreturn queryconvertforgrid(qMakeoffer,page,pagesize)/>
+	
+   	</cffunction>
+	
+		
+	<cffunction name="deleteMakeoffer" access="remote" returntype="struct">
+		<cfargument name="pk_makeoffer" type="string" default="">		
+		
+		<!--- <cfset var success = true /> --->
+		
+		<cfset var result = { success = true, message = "" }>
+
+		<cftry>
+	
+			<cfquery name="deleteGuest" datasource="#application.dsource#"> 
+				DELETE from makeoffer
+				WHERE pk_makeoffer = '#arguments.pk_makeoffer#'
+			</cfquery>
+
+			<cfset ipAddress = CGI.HTTP_X_FORWARDED_FOR>
+			<cfset date = now()>				
+			<cfset action = 'Delete'>
+
+			<cfquery name="addLog" datasource="#application.dsource#" >
+				INSERT INTO logs 
+					( moduleName, ipAddress, date, action)
+					VALUES
+					( '#arguments.moduleName#', '#ipAddress#', #date#, '#action#')
+			</cfquery>
+
+			<cfset result.success = true>
+    		<cfset result.message = "Record is Deleted successfully.">
+		
+			<cfcatch type="any">
+				<!--- <cfset success = false /> --->
+				<cfset result.success = false>
+            	<cfset result.message = cfcatch.message>
+			</cfcatch>
+		</cftry>
+	
+		<cfreturn result />
+	
+	</cffunction>
+	
+	
+</cfcomponent>

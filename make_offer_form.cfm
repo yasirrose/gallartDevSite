@@ -9,7 +9,7 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 <script language="JavaScript" src="http://#server_name#/js/jquery-1.2.6.min.js"></script>
 <script language="JavaScript" src="http://#server_name#/js/slimbox2.js"></script>
 <link href="http://#server_name#/css/slimbox2.css" rel="stylesheet" type="text/css">
@@ -26,7 +26,7 @@ function popUpWin(urlPage){
 	
 </SCRIPT>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -169,7 +169,7 @@ password="re3objec" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.Email
 					<tr>
 						<td style="padding-top: 20px;" align="center">
 							<span style="color:##dd3a7d; font-size: 16px; font-weight: bold;">THANK YOU FOR MAKING YOUR OFFER!<br>WE WILL BE IN TOUCH WITH YOU SHORTLY<br><br>
-<a href="index.cfm?xss=#xss#" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">CLICK HERE</a> TO MAKE ANOTHER OFFER</span>
+<a href="/" style="color:##dd3a7d; font-size: 16px; font-weight: bold; text-decoration: underline;">CLICK HERE</a> TO MAKE ANOTHER OFFER</span>
 						</td>
 					</tr>
 				</table>

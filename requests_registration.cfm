@@ -18,10 +18,10 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 
 <script type="text/javascript">
 
@@ -122,7 +122,7 @@ password="re3objec" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.email
 		<br><br>
 	</cfmail>
 	
-	<cflocation url="requests_submit.cfm?xss=#xss#&newmember=1" addtoken="No">
+	<cflocation url="/requests_submit?newmember=1" addtoken="No">
 	
 <cfelse>
 	<div class="main-container registration-page">
@@ -138,83 +138,65 @@ password="re3objec" to="#emailsupport#" cc="#emailsupportcc#"  from="#form.email
 			<div class="inner-section">
 				<div class="container-fluid">
 					<div class="main-content">
-						<div class="mobile-sidebar-logo">
+<!--- 						<div class="mobile-sidebar-logo"> 
 							<div class="sidebar-Icon">
 								<i class="fas fa-bars"></i>
 							</div>
 						</div>
 						<div class="sidebar web-sidebar-modal">	
 							<cfinclude template="left_.cfm">
-						</div>
+						</div> --->
 						<div class="content-section">
 							<div class="bottom-content-sec">
 								<div class="banner-section">
 									<div class="art-work-content">
 										<div class="bottom-content">
-											<table border="0" cellpadding="0" cellspacing="0" width="100%">
-												<tr height="100%">
-													<td height="100%" valign="top" style="padding-top: 10px;">	
+											<div class="user-registrations alert-page">
+												<div aria-label="breadcrumb">
+													<ol class="breadcrumb">
+													  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+													  <li class="breadcrumb-item active" aria-current="page">Requests Registration</li>
+													</ol>
+												</div>
+												<div class="user-content">
+													<div class="top-heading">
 														<h4>SUBMIT A REQUEST FOR ART ON GALLERYART.COM</h4>
 														<cfif isDefined('session.sellerinfo')>
 															<div align="center">You are already a member.  Please click <a href="requests_submit.cfm?xss=#xss#">HERE</a> to login and submit your request.</div>
 														<cfelse>
+													</div>
+													<div class="form-content">
 														<cfform method="POST" action="#script_name#?#query_string#">
 														<cfoutput>
-														<table cellpadding="2" cellspacing="0" border="0" width="450">
-															<tr>
-																<Td colspan="2">
-																	Fill out the form below in order to become a member of Gallery Art.  You can then submit a request for art on our ART WANTED list.
-																</td>
-															</tr> 
-															<tr>
-																<Td colspan="2" align="Center" style="padding-top: 12px;">
-																	<h5 style="color: ##dd3a7d">REGISTRATION FORM</h5>
-																</td>
-															</tr>
-															<tr>
-																<td colspan="2">
-																	<table cellspacing="0" cellpadding="5" border="0" width="100%">
-																		<tr class="#this_row()#">
-																			<td><b>Name</b> <i>(First Last)</i>
-																			</td>
-																			<td><cfinput type="text" name="fname" size="20" required="Yes" message="Please enter your first name.">&nbsp;<cfinput type="text" name="lname" size="30" required="Yes" message="Please enter your last name.">
-																			</td>
-																		</tr>
-																		<tr class="#this_row()#">
-																			<td><b>Email</b>
-																			</td>
-																			<td><cfinput type="text" name="Email" size="45" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >
-																			</td>
-																		</tr>
-																		<tr class="#this_row()#">
-																			<td><b>Create a Password</b>
-																			</td>
-																			<td><cfinput type="password" name="password" size="20" required="Yes" message="Please enter a password.">
-																			</td>
-																		</tr>
-																		<tr class="#this_row()#">
-																			<td><b>Re-enter Password</b>
-																			</td>
-																			<td><cfinput type="password" name="password2" size="20" required="Yes" message="Please re-enter your password.">
-																			</td>
-																		</tr>
-																		<tr class="#this_row()#">
-																			<td colspan="2" align="center">
-																				<input type="Submit" name="proc_reg" value="CLICK  to Become A Member" class="pinkSubmit">								
-																			</td>
-																		</tr>
-																	
-																	</table>
-																
-																</td>
-															</tr>
-														</table>
-														</cfoutput>
-														</cfform>
-														</cfif>
-													</td>
-												</tr>
-											</table>
+														<p>Fill out the form below in order to become a member of Gallery Art.  You can then submit a request for art on our ART WANTED list.</p>
+														<h5 style="color: ##dd3a7d" class="text-center">REGISTRATION FORM</h5>
+														<div class="input-form">
+															<div class="input-field">
+																<label><b>Name</b> <i>(First Last)</i></label>
+																<cfinput type="text" name="fname" size="20" required="Yes" message="Please enter your first name.">&nbsp;<cfinput type="text" name="lname" size="30" required="Yes" message="Please enter your last name.">
+															</div>
+															<div class="input-field">
+																<label><b>Email</b></label>
+																<cfinput type="text" name="Email" size="45" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Please enter a proper email." >
+															</div>
+															<div class="input-field">
+																<label><b>Create a Password</b></label>
+																<cfinput type="password" name="password" size="20" required="Yes" message="Please enter a password.">
+															</div>
+															<div class="input-field">
+																<label><b>Re-enter Password</b></label>
+																<cfinput type="password" name="password2" size="20" required="Yes" message="Please re-enter your password.">
+															</div>
+															<div class="input-button">
+																<input type="Submit" name="proc_reg" value="CLICK  to Become A Member" class="SeeMore">	
+															</div>
+														</div>
+													</cfoutput>
+												</cfform>
+												</cfif>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>

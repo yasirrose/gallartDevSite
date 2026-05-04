@@ -1,0 +1,1 @@
+<cfoutput>testing the rules</cfoutput>

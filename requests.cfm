@@ -95,7 +95,7 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 <script type="text/javascript" src="http://#server_name#/js/jquery-1.2.6.min.js" ></script>
 <script type="text/javascript" src="http://#server_name#/js/thickbox-compressed.js" ></script>
 <link rel="stylesheet" type="text/css" href="http://#server_name#/css/thickbox.css">
@@ -114,7 +114,7 @@
 	}
 </script>
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -163,13 +163,21 @@
 							<i class="fas fa-bars"></i>
 						</div>
 					</div>
-					<div class="sidebar web-sidebar-modal">	
+					<!--- <div class="sidebar web-sidebar-modal">	
 						<cfinclude template="left_.cfm">
-					</div>
+					</div> --->
 					<div class="content-section">
 						<div class="bottom-content-sec">
 							<div class="banner-section">
 								<div class="art-work-content">
+
+									<div aria-label="breadcrumb">
+										<ol class="breadcrumb">
+										  <li class="breadcrumb-item"><a href="home" style="color:black;" >Home</a></li>
+										  <li class="breadcrumb-item active" aria-current="page">Requests</li>
+										</ol>
+									</div>
+
 									<div class="bottom-content">
 										<div class="top-heading text-left">
 											<h3>REQUESTS</h3>
@@ -188,7 +196,7 @@
 																	<table cellspacing="0" cellpadding="0" border="0" width="100%">
 																		<tr>
 																			<td>
-																				Click <a href="requests_submit.cfm?xss=#xss#">HERE</a> to submit a request for a piece of art that you want listed on our REQUEST page.
+																				Click <a href="requests_submit.cfm">HERE</a> to submit a request for a piece of art that you want listed on our REQUEST page.
 																			</td>
 																		</tr>
 																	</table>

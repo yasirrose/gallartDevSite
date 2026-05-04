@@ -1,3 +1,7 @@
+<!--- Global error handler --->
+<!--- <cferror type="exception" template="/errorHandler.cfm">
+<cferror type="request" template="/errorHandler.cfm"> --->
+
 <cfapplication 
     name="galleryart"
     clientmanagement="Yes"
@@ -7,7 +11,21 @@
 
 <cfset enableRobustException="true">
 <cfset application.dsource="gallarttest">
-<cfset server_name="gallart.com">
+<cfset request_host = "23.20.226.157">
+<cfif structKeyExists(cgi, "http_host") AND len(trim(cgi.http_host))>
+	<cfset request_host = lcase(listFirst(trim(cgi.http_host), ":"))>
+</cfif>
+<cfif structKeyExists(cgi, "https") AND lcase(trim(cgi.https)) EQ "on">
+	<cfset request_protocol = "https">
+<cfelse>
+	<cfset request_protocol = "http">
+</cfif>
+<cfset is_live_host = (request_host EQ "gallart.com" OR request_host EQ "www.gallart.com")>
+<cfif is_live_host>
+	<cfset server_name = "gallart.com">
+<cfelse>
+	<cfset server_name = request_host>
+</cfif>
 
 <cfset COMPANYNAME="gallart">
 <cfset dsource="gallarttest">
@@ -52,8 +70,12 @@
 <!--- from truecost, amount to mark up for retail --->
 <cfset retailmkup = "3.25"> --->
 
+<cfif NOT structKeyExists(application, "encryptionKey")>
+    <cfset application.encryptionKey = "k7vASHylotO9mtMuRTfa2g==">
+</cfif>
 
-<cfset imgpath = "https://#server_name#/images">
+
+<cfset imgpath = "http://#server_name#/images">
 
 <!--- all emails will be sent to this email address. To add more, send to an alias and forward to additional accounts. If an address is put into cc, it will be sent as well --->
 <cfset emailsupport = "websitegallart@gallart.com">
@@ -64,6 +86,10 @@
 <!--- When refering to the site, "sitename" is used. When refering to company, "companyname" is used --->
 <cfset sitename = "#server_name#">
 <cfset companyname="Gallart.com">
+<cfset application.currentBaseUrl = "#request_protocol#://#server_name#">
+<cfset application.siteBaseUrl = application.currentBaseUrl>
+<cfset application.siteCanonicalBaseUrl = "https://gallart.com">
+<cfset application.siteName = "Gallart">
 <cfset caddress = "20633 Biscayne Blvd">
 <cfset csz = "Aventura, FL 33180">
 <cfset czip = "33180">
@@ -84,12 +110,22 @@
 
 <cfset vendoradd = "y">
 
-<cfif not isDefined('xss')>
-	<cfset xss = randrange(1,9999) & chr(randrange(65,90)) & randrange(1,9999)>
-	<cfquery name="insertTrack" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-		INSERT INTO tracker(sessionid, referrer, entrypage, originIP) VALUES('#xss#', '#cgi.http_referer#', '#cgi.path_info#', '#cgi.remote_addr#')
-	</cfquery>
+<cfif NOT structKeyExists(session, "xss")>
+    <!--- Generate a unique tracking ID --->
+    <cfset session.xss = randrange(1,9999) & chr(randrange(65,90)) & randrange(1,9999)>
+    
+    <!--- Insert tracking data into database --->
+    <cfquery name="insertTrack" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+        INSERT INTO tracker(sessionid, referrer, entrypage, originIP) 
+        VALUES (
+            <cfqueryparam value="#session.xss#" cfsqltype="cf_sql_varchar">,
+            <cfqueryparam value="#cgi.http_referer#" cfsqltype="cf_sql_varchar">,
+            <cfqueryparam value="#cgi.path_info#" cfsqltype="cf_sql_varchar">,
+            <cfqueryparam value="#cgi.remote_addr#" cfsqltype="cf_sql_varchar">
+        )
+    </cfquery>
 </cfif>
+
 
 <cfif isDefined('url.emailLogId')>
 	<cfquery name="insertTrack" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -117,7 +153,8 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
 
 <!--- <cfparam name="flashow" default="siteflash"> --->
 <!--- for mails sent from main site (contact forms, etc) --->
-<cfset servername = "mail2.onlinegalleryart.com" />
+<!--- <cfset servername = "mail2.onlinegalleryart.com" /> --->
+<cfset servername = "smtp.gmail.com" />
 
 <!--- email blast server --->
 <cfset application.email_server = "mail2.gallart_.com" />
@@ -190,7 +227,35 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
     <cfargument name="EventName" type="string" required="true">
   
     <!--- Display the error information --->
-    <cfdump var="#Arguments.EventName#" label="Error Information">
-    <cfdump var="#Arguments.Exception#" label="Error Information">
+    <!--- <cfdump var="#Arguments.EventName#" label="Error Information">
+    <cfdump var="#Arguments.Exception#" label="Error Information"> --->
+
+	 <!--- 1. Developer ke liye error log karein --->
+    
+
+
+	 <!--- 2. Developer ko email bhejna (optional) --->
+    
+    <cfmail 
+		to="tldz.dev12@gmail.com" 
+		from="sales@gallart.com" 
+		subject="Site Error"
+		server="#servername#"
+		username="Sales@GallArt.com"
+		password="ylzwtvepstcsammm"
+		port="587"
+		useTLS="true"
+	>
+        Event: #Arguments.EventName#
+        Message: #Arguments.Exception.message#
+        Detail: #Arguments.Exception.detail#
+        Template: #Arguments.Exception.TagContext[1].template#
+        Browser: #cgi.http_user_agent#
+        IP: #cgi.remote_addr#
+    </cfmail>
+
+	<cflocation url="/404.cfm" addtoken="false">
+   
+
     <cfabort>
   </cffunction>

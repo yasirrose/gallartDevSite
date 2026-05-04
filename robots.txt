@@ -1,5 +1,8 @@
-Sitemap: http://gallart.com/Sitemap.xml
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /extranet/
+Disallow: /user_login_page.cfm
+Disallow: /vendor/
 
-User-agent: Baiduspider
-
-Disallow: /
+Sitemap: https://gallart.com/sitemap.xml

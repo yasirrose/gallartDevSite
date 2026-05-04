@@ -1,400 +1,1281 @@
+
+
+<cfif isDefined('form.updateQty')>
+	<cfset selectedQty = form["qty_" & form.selected_pid]>
+	<cfif #selectedQty# eq 0 or #selectedQty# eq '' >
+		<cfquery name="lineitem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+			Delete from cart where uid = '#form.SELECTED_PID#'
+		</cfquery>
+		<cfelse>
+			<cfquery name="lineitem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+				Update cart set qty = #selectedQty#
+				where uid = '#form.SELECTED_PID#'
+			</cfquery>
+			
+	</cfif>
+</cfif>
+
+<!--- Remove item from cart handler --->
+<cfif isDefined('form.removeItem')>
+	<!--- <cfdump var="#form.selected_pid#" abort="true"> --->
+	<cfquery name="removeItem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+		Delete from cart where uid = '#form.selected_pid#'
+	</cfquery>
+</cfif>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
 
 <html>
-<head>
-<cfoutput>
-<title>#companyname# - #titletext#</title>
-</cfoutput>
+	<head>
+		<cfoutput>
+			<title>#companyname# - #titletext#</title>
+		</cfoutput>
 
-<cfinclude template="meta.cfm">
+		<cfinclude template="meta.cfm">
 
-<cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
-</cfoutput>
+		<cfoutput>
+			<script language="JavaScript" src="/js/utils.js"></script>
+			<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+			<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+		</cfoutput>
 
-<SCRIPT LANGUAGE="JavaScript">
-var formSubmited = 0;
-function validEntries(frm){
-	if(formSubmited == 1) {
-		alert('The form was submited, please wait ...'); return false;
-	}
-			else {
-			formSubmited = 1;
-			return true;
-		}
-}
+		<SCRIPT LANGUAGE="JavaScript">
+			var formSubmited = 0;
+
+			var cardRules = {
+				"Visa": { length: 19, pattern: /^4\d{15}$/, format: "#### #### #### ####", placeholder: "4111 1111 1111 1111" },
+				"MC": { length: 19, pattern: /^5[1-5]\d{14}$/, format: "#### #### #### ####", placeholder: "5100 0000 0000 0000" },
+				"Amex": { length: 17, pattern: /^3[47]\d{13}$/, format: "#### ###### #####", placeholder: "3712 345678 90123" },
+				"Discover": { length: 19, pattern: /^6(?:011|5\d{2})\d{12}$/, format: "#### #### #### ####", placeholder: "6011 0000 0000 0000" }
+			};
+
+			document.addEventListener("DOMContentLoaded", function () {
+				const cardInput = document.getElementById("cardnum");
+				const cardTypeSelect = document.querySelector("[name='cardtype']");
+
+				// Function to update card validation rules on card type change
+				function updateCardValidation() {
+					const selectedCardType = cardTypeSelect.value;
+					if (cardRules[selectedCardType]) {
+						cardInput.maxLength = cardRules[selectedCardType].length;
+						cardInput.setAttribute("data-pattern", cardRules[selectedCardType].pattern);
+						cardInput.placeholder = cardRules[selectedCardType].placeholder;
+						cardInput.value = ""; // Reset input on type change
+					}
+				}
+
+				// Format card number according to selected card type
+				function formatCardNumber(value, selectedCardType) {
+					let cleanValue = value.replace(/\D/g, ''); // Remove non-numeric characters
+					let format = cardRules[selectedCardType] ? cardRules[selectedCardType].format : "#### #### #### ####";
+					let formattedValue = "";
+					let index = 0;
+
+					for (let char of format) {
+						if (char === "#") {
+							if (index < cleanValue.length) {
+								formattedValue += cleanValue[index++];
+							} else {
+								break;
+							}
+						} else {
+							formattedValue += char;
+						}
+					}
+
+					return formattedValue;
+				}
+
+				// Event listener for card type change
+				if (cardTypeSelect) {
+					cardTypeSelect.addEventListener("change", updateCardValidation);
+				}
+
+				// Event listener for card input to format number
+				if (cardInput) {
+					cardInput.addEventListener("input", function (e) {
+						let selectedCardType = cardTypeSelect.value;
+						e.target.value = formatCardNumber(e.target.value, selectedCardType);
+					});
+				}
+			});
 	
-</SCRIPT>
+			// Move validEntries outside event listener
+			function validEntries(frm) {
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
-<script type="text/javascript">
+    			let isValid = true;
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-34565365-1']);
-  _gaq.push(['_trackPageview']);
+				// Clear old errors
+				document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+				// Helper function
+				function setError(fieldId, message, focus = false) {
+					const errorEl = document.getElementById(fieldId + 'Error');
+					if (errorEl) errorEl.textContent = message;
 
-</script>
+					if (focus) {
+						const field = document.getElementById(fieldId);
+						if (field) field.focus();
+					}
+					isValid = false;
+				}
 
-<!-- BEGIN ROBLY WIDGET CODE -->
-<script type='text/javascript'>
-  var _d_site = _d_site || 'ebb8c5f7da7077e127988b3276107648';
-  (function(w, d, p, s, s2) {
-    w[p] = w[p] || function() { (w[p].q = w[p].q || []).push(arguments) };
-    s = d.createElement('script'); s.async = 1; s.src = '//s3.amazonaws.com/roblyimages/accounts/20559/forms/29541/signup_popup.js';
-    s2 = d.getElementsByTagName('script')[0]; s2.parentNode.insertBefore(s, s2);
-  })(window, document, 'Robly');
-</script>
-<!-- END ROBLY WIDGET CODE -->
+				// Get values
+				const fields = {
+					billnamef: document.getElementById('billnamef').value.trim(),
+					BillName: document.getElementById('BillName').value.trim(),
+					BillAddress1: document.getElementById('BillAddress1').value.trim(),
+					billcity: document.getElementById('billcity').value.trim(),
+					billzip: document.getElementById('billzip').value.trim(),
+					Email: document.getElementById('Email').value.trim(),
+					phoneNumber: document.getElementById('phoneNumber').value.trim(),
+					cardnum: document.getElementById('cardnum').value.replace(/\s+/g, '').trim(),
+					cvcValue: document.getElementById('cardCVC').value.trim()
+				};
 
-</head>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<!--- Show current cart contents --->
-<cfquery name="contents" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT * from cart C
-	INNER JOIN products P on C.pid = P.uid
-	WHERE trackerid='#xss#'
-</cfquery>
-<cfquery name="countries" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT * from countries
-</cfquery>
-<cfquery name="states" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT * from states
-</cfquery>
-<!--- Set variables --->
-<cfset subtotal = 0>
-<cfset tax = 0>
-<cfset total = 0>
-<table id="Table_01" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td colspan="2" width="100%" height="125" valign="top" bgcolor="#000000">
-			<cfinclude template="top.cfm">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" width="100%" valign="top" height="37" bgcolor="#000000">
-			<cfinclude template="navbar.cfm">
-		</td>
-	</tr>
-	<tr height="100%">
-		<td valign="top" height="100%" align="center">
-		<!--- content starts --->
-			<!--- Customer Entry --->
-			<table cellpadding="0" cellspacing="0" border="0" width="600">
-			<Tr>
-				<Td  valign="top">
-			<cfif #contents.recordcount# Lt 1>
-				<font face="arial,helvetica" size="2"><b>There are no items in your cart.  Please choose item(s) to purchase before checking out.</b>
-			<cfelse>
-			<cfoutput>
-			<cfform action="review.cfm?xss=#xss#" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);">
-			<table cellpadding="5" cellspacing="0" border="0" width="100%">
-				<tr>
-					<td>
-						<table width="600" border="0" cellspacing="0" cellpadding="2" align="center">
-							<tr>
-								<td colspan="5" height="40">
-									<strong>VIEW CONTENTS OF YOUR CART:</strong>
-								</td>
-							</tr>
-							<tr class="row0">
-								<td width="50%" height="20" style="color: ##ffffff;"><b>Name</b></td>
-								<td width="10%" align="center" style="color: ##ffffff;"><b>Qty</b></td>
-								<td width="15%" align="Center" style="color: ##ffffff;"><b>Price</b></td>
-								<td width="15%" align="Center" style="color: ##ffffff;"><b>Ext.</b></td>
-								<td width="10%">&nbsp;
-									
-								</td>
-							</tr>
-							<cfloop query="contents">
-							<TR class="#this_row()#">
-								<td valign="top">
-									#name#
-								</td>
-								<td align="center" valign="middle">
-									#qty#
-								</td>
-								<td align="right" valign="middle">
-									#dollarformat(charge)#
-								</td>
-								<cfset ext = #charge# * #qty#>
-								<td align="right" valign="middle">
-									#dollarformat(Ext)#</td>
-									<cfset subtotal = #subtotal# + #ext#>
-								<td align="right" valign="middle">&nbsp;
-									
-								</td>
-							</tr>
-							</cfloop>
-							<tr>
-								<td colspan="5">
-									<hr>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">&nbsp;
-									
-								</td>
-								<td>
-									<b>Sub Total:</b>
-								</td>
-								<td align="right">
-									<b>#dollarformat(subtotal)#</b>
-								</td>
-								<td>&nbsp;
-									
-								</td>
-							</tr>
-						</table>
-						<table cellpadding="2" cellspacing="0" border="0" width="100%" style="padding-top: 10px;">
-							<tr>
-								<td colspan="2">
-									<span class="required">* REQUIRED FIELDS</span>
-								</td>
-							</tr>
-							<tr>
-								<Td colspan="2" align="Center">
-									<strong>BILLING INFORMATION</strong>
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">*</span><b>Name</b> <i>(First Last)</i>
-								</td>
-								<td><cfinput type="text" name="billnamef" size="15" required="Yes" message="We require the billing first name to process the order.">&nbsp;<cfinput type="text" name="BillName" size="25" required="Yes" message="We require the billing last name to process the order.">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">*</span><b>Address 1</b>
-								</td>
-								<td><cfinput type="text" name="BillAddress1" size="35" required="Yes" message="We require the billing address.">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Address 2</b>
-								</td>
-								<td><input type="text" name="BillAddress2" size="35">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">*</span><b>City, St Zip</b>
-								</td>
-								<td><cfinput type="text" name="billcity" size="25" required="Yes" message="We require the billing city.">, 
-                                <select name="billstate">
-                                <option value="">Please Select</option>
-                                <cfloop query="states">
-                                    <option value="#stateAbb#">#state#</option>
-                                </cfloop>
-                                </select>
-                                 <cfinput type="text" name="billzip" size="13" required="Yes" message="We require the billing postal code.">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">*</span><b>Country:</b></td>
-								<td>
-									<select name="billcountry">
-										<cfloop query="countries">
-											<option value="#CountryCode#">#Country#</option>
-										</cfloop>
-									</select>
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">*</span><b>Cell Phone</b>
-								</td>
-								<td><cfinput type="text" name="cellphone" size="35" required="Yes" message="We require your cell phone number in the format (999) 999-9999." validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Home Phone</b>
-								</td>
-								<td><cfinput type="text" name="BillPhone" size="35" required="No" message="Your  home phone number must be in the format (999) 999-9999.." validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Business Phone</b>
-								</td>
-								<td><cfinput type="text" name="businessphone" size="35" required="No" message="Your business number must be in the format (999) 999-9999.." validate="regular_expression" pattern="^([\(]{1}[0-9]{3}[\)]{1}[ ]{1}[0-9]{3}[\-]{1}[0-9]{4})$" mask="(999) 999-9999">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Phone Outside the US</b>
-								</td>
-								<td><cfinput type="text" name="otherphone" size="35" required="No">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">*</span><b>Email</b>
-								</td>
-								<td><cfinput type="text" name="Email" size="35" required="Yes" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" message="Email is required." >
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Website</b>
-								</td>
-								<td><input type="text" name="website" size="35">
-								</td>
-							</tr>
-							<tr>
-								<Td colspan="2" align="Center" style="padding-top: 20px;">
-									<strong>SHIPPING INFORMATION</strong><br><i>(if different from Billing Info)</i>
-								</td>
-							</tr>
-							
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Name</b> <i>(First Last)</i>
-								</td>
-								<td><input type="text" name="shipNamef" size="15">&nbsp;<input type="text" name="shipName" size="25">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Address 1</b>
-								</td>
-								<td><input type="text" name="shipAddress1" size="35">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Address 2</b>
-								</td>
-								<td><input type="text" name="shipAddress2" size="35">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>City, St Zip</b>
-								</td>
-								<td><input type="text" name="shipcity" size="25">
-                                <select name="shipstate">
-                                <cfloop query="states">
-                                    <option value="#stateAbb#">#state#</option>
-                                </cfloop>
-                                </select>
-                                <input type="text" name="shipzip" size="13">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Country:</b></td>
-								<td>
-									<select name="shipcountry">
-										<cfloop query="countries">
-											<option value="#CountryCode#">#Country#</option>
-										</cfloop>
-									</select>
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Phone</b>
-								</td>
-								<td><input type="text" name="shipPhone" size="35">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">&nbsp;</span><b>Shipping Method</b>
-								</td>
-								<td>
-									<select name="shipMethod">
-										<option value="">Please Select</option>
-										<option value="UPS">UPS</option>
-										<option value="FedEx">FedEx</option>
-										<option value="USPS">USPS</option>
-									</select>
-								</td>
-							</tr>
+				const phoneType = document.querySelector("[name='phoneType']").value;
+				const selectedCardType = document.querySelector("[name='cardtype']").value;
+
+				const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+				const emailRegex = /\S+@\S+\.\S+/;
+				const cvcRegex = /^\d{3,4}$/;
+
+				// Required fields validation
+				const requiredMessages = {
+					billnamef: 'We require the billing first name to process the order.',
+					BillName: 'We require the billing last name to process the order.',
+					BillAddress1: 'We require the billing address.',
+					billcity: 'We require the billing city.',
+					billzip: 'We require the billing postal code.',
+					phoneNumber: 'We require your cell phone number.',
+					Email: 'Email is required.'
+				};
+
+				Object.keys(requiredMessages).forEach(key => {
+					if (!fields[key]) {
+						setError(key, requiredMessages[key]);
+					}
+				});
+
+				// Email format
+				if (fields.Email && !emailRegex.test(fields.Email)) {
+					setError('Email', 'Please enter a valid email address.');
+				}
+
+				// Card validation
+				if (!fields.cardnum) {
+					setError('cardnum', 'You must enter a Credit Card Number.');
+				} else if (cardRules[selectedCardType] &&
+					!cardRules[selectedCardType].pattern.test(fields.cardnum)) {
+					setError('cardnum', `Invalid ${selectedCardType} Card Number.`);
+				}
+
+				// CVC validation
+				if (!fields.cvcValue) {
+					setError('cardCVC', 'You must enter a CVC number.');
+				} else if (!cvcRegex.test(fields.cvcValue)) {
+					setError('cardCVC', 'CVC must be 3 or 4 digits.');
+				}
+
+				// Phone format validation
+				if (fields.phoneNumber &&
+					["Home Phone", "Cell Phone", "Business Phone"].includes(phoneType) &&
+					!phoneRegex.test(fields.phoneNumber)) {
+
+					setError('phoneNumber',
+						'Please enter phone number in format: (xxx) xxx-xxxx',
+						true
+					);
+				}
+
+				// Stop if invalid
+				if (!isValid) return false;
+
+				// Prevent double submit
+				if (typeof formSubmited !== "undefined" && formSubmited === 1) {
+					alert('The form was submitted, please wait ...');
+					return false;
+				}
+
+				formSubmited = 1;
+				return true;
+			}
+		
+		// Credit card validation using Luhn algorithm
+			function isValidCreditCard(number) {
+				let sum = 0;
+				let shouldDouble = false;
 				
-							<cfquery name="coptions" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-								select * from cardtypes
-								where requirenumber = 1
-							</cfquery>
-							<tr>
-								<Td colspan="2" align="Center" style="padding-top: 20px;">
-									<strong>PAYMENT INFORMATION</strong>
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">*</span><b>Card Type</b>
-								</td>
-								<td>
-								<cfselect name="cardtype">
-								<cfloop query="coptions">
-								<option value="#cardcode#">#showtype#
-								</cfloop>
-								</cfselect>
-								<!--- cfselect tag must go AFTER closing cfloop --->
-							   	</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">*</span><b>Card Number</b>
-								</td>
-								<td>
-								<cfinput type="Text" name="cardnum" message="You must enter a proper Credit Card Number." validate="creditcard" required="Yes" size="16" maxlength="16">
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td><span class="required">*</span><b>Expiration Date</b>
-								</td>
-								<td>
-								MM&nbsp;
-								<select name="cardexpm">
-								<cfloop from="1" to="12" index="monthis">
-								<cfif len(monthis) EQ 1>
-								<option value="0#monthis#">0#monthis#
-								<cfelse>
-								<option value="#monthis#">#monthis#
-								</cfif>
-								</cfloop>
-								<!--- cfloop tag must go AFTER closing cfif --->
-								</select>
-								YY&nbsp;
-								<select name="cardexpy">
-								<cfset toyear = #Year(Now())# + 10>
-								<cfloop from="#Year(Now())#" to="#toyear#" index="yearis">
-								<option value="#right(yearis,2)#">#right(yearis,2)#
-								
-								
-								</cfloop></td>
-							</tr>
-							<tr>
-								<td colspan="2">
-								<hr>
-								</td>
-							</tr>
-							<tr class="#this_row()#">
-								<td colspan="2"><span class="required">&nbsp;</span><b>Special Instructions:</b><Br>
-							<textarea cols="52" rows="3" name="comments" wrap="soft"></textarea>
-								</td>
-							</tr>
-							<Tr>
-								<td colspan="2" align="center" style="padding-top: 20px;">
-								<input type="submit" value="Review Order" class="pinkSubmit">&nbsp;&nbsp;<input type="reset" value="Reset Form" class="pinkSubmit">
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-			<input type="Hidden" name="fk_locations" value="1">
-			</cfform>
-			</cfoutput>
-			</cfif>
-			</td>
-			</tr>
-			</table>
+				for (let i = number.length - 1; i >= 0; i--) {
+					let digit = parseInt(number[i]);
 			
-		<!--- content ends --->
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" valign="baseline">
-			<cfinclude template="footer.cfm">
-		</td>
-	</tr>
-</table>
+					if (shouldDouble) {
+						digit *= 2;
+						if (digit > 9) digit -= 9;
+					}
+			
+					sum += digit;
+					shouldDouble = !shouldDouble;
+				}
+			
+				return sum % 10 === 0;
+			}
+		
+			// Function to remove item from cart
+			function removeItem(itemId) {
+				if(confirm('Are you sure you want to remove this item from your cart?')) {
+					// Create a hidden form for removal
+					var form = document.createElement('form');
+					form.method = 'POST';
+					form.action = 'checkout_new';
 
-<cfinclude template="frmxss.cfm">
+					var input = document.createElement('input');
+					input.type = 'hidden';
+					input.name = 'updateQty';
+					input.value = '1';
 
-</body>
+					var pidInput = document.createElement('input');
+					pidInput.type = 'hidden';
+					pidInput.name = 'selected_pid';
+					pidInput.value = itemId;
+
+					form.appendChild(input);
+					form.appendChild(pidInput);
+
+					document.body.appendChild(form);
+					form.submit();
+				}
+			}
+
+			// Function to update quantity item
+			function updateQuantityItem(itemId) {
+				var qtyValue = document.getElementById('qty_' + itemId).value;
+    			var productQty = document.getElementById('productQty_' + itemId).value;
+				// Check if empty
+				if (qtyValue === "") {
+					alert("Please enter a quantity before updating.");
+					return false;
+				}
+				// Check if NOT numeric (only digits allowed)
+				if (!/^[0-9]+$/.test(qtyValue)) {
+					alert("Please enter numbers only for the quantity.");
+					return false;
+				}
+				var qty = parseInt(qtyValue, 10);
+				var pQty = parseInt(productQty, 10);
+				// Check if zero or negative
+				if (qty <= 0) {
+					alert("Please enter a valid quantity. The quantity must be at least 1.");
+					return false;
+				}
+				if (productQty !== null && productQty !== "" && pQty !== 0) {
+					if (qty > pQty) {
+						alert("You can select a maximum of " + pQty + " item(s). Please enter a quantity within the available limit.");
+						return false;
+					}
+				}
+				var form = document.createElement('form');
+				form.method = 'POST';
+				form.action = 'checkout_new';
+				var input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'updateQty';
+				input.value = '1';
+				var pidInput = document.createElement('input');
+				pidInput.type = 'hidden';
+				pidInput.name = 'selected_pid';
+				pidInput.value = itemId;
+				var qtyInput = document.createElement('input');
+				qtyInput.type = 'hidden';
+				qtyInput.name = 'qty_'+itemId;
+				qtyInput.value = qty;
+				form.appendChild(input);
+				form.appendChild(pidInput);
+				form.appendChild(qtyInput);
+				document.body.appendChild(form);
+				form.submit();
+			}
+		</SCRIPT>
+	
+
+		<style>
+			.error-message {
+			color: #ff0000;
+			font-size: 0.9em;
+			/* margin-top: 5px; */
+			display: block;
+			}
+			.input-field {
+			margin-bottom: 15px;
+			}
+		</style>
+
+		<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript">
+
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-34565365-1']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+
+		</script>
+
+		<!-- BEGIN ROBLY WIDGET CODE -->
+		<script type='text/javascript'>
+		var _d_site = _d_site || 'ebb8c5f7da7077e127988b3276107648';
+		(function(w, d, p, s, s2) {
+			w[p] = w[p] || function() { (w[p].q = w[p].q || []).push(arguments) };
+			s = d.createElement('script'); s.async = 1; s.src = '//s3.amazonaws.com/roblyimages/accounts/20559/forms/29541/signup_popup.js';
+			s2 = d.getElementsByTagName('script')[0]; s2.parentNode.insertBefore(s, s2);
+		})(window, document, 'Robly');
+		</script>
+		<!-- END ROBLY WIDGET CODE -->
+
+	</head>
+	<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		<div class="main-container registration-page">
+			<!--- Show current cart contents --->
+			<cfquery name="contents" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+				SELECT * from cart C
+				INNER JOIN products P on C.pid = P.uid
+				WHERE trackerid='#session.xss#'
+			</cfquery>
+
+			<cfquery name="countries" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+				SELECT * from countries
+			</cfquery>
+			<cfquery name="states" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+				SELECT * from states
+			</cfquery>
+			<!--- Set variables --->
+			<cfset subtotal = 0>
+			<cfset tax = 0>
+			<cfset total = 0>
+			<div id="Table_01">
+				<div class="header-section">
+					<div class="top-header">
+						<cfinclude template="top_.cfm">
+					</div>
+					<div class="navbar-section">
+						<cfinclude template="navbar_.cfm">
+					</div>
+				</div>
+				<div class="inner-section">
+					<div class="container-fluid">
+						<div class="main-content">
+							<div class="mobile-sidebar-logo">
+								<div class="sidebar-Icon">
+									<i class="fas fa-bars"></i>
+								</div>
+							</div>
+							<!--- <div class="sidebar web-sidebar-modal">
+								<cfinclude template="left_.cfm">
+							</div> --->
+							<div class="content-section">
+								<div class="bottom-content-sec">
+									<div class="banner-section">
+										<div class="art-work-content">
+											<div class="bottom-content">
+												<div class="user-registrations">
+													<cfif #contents.recordcount# Lt 1>
+														<font face="arial,helvetica" size="2"><b>There are no items in your cart.  Please choose item(s) to purchase before checking out.</b>
+													 <cfelse>
+														<cfoutput>
+														
+															<div class="top-heading text-left">
+																<h3>VIEW CONTENTS OF YOUR CART:</h3>
+															</div>
+															<div class="table-responsive">
+																<cfform action="checkout_new" Method="post">
+																	<table border="0" cellspacing="0" cellpadding="2" align="center" style="width: 100%; margin-bottom: 20px;">
+																		<tr class="row0">
+																			<td width="40%" height="20" style="color: ##ffffff;"><b>Name</b></td>
+																			<td width="10%" align="center" style="color: ##ffffff;"><b>Qty</b></td>
+																			<td width="15%" align="Center" style="color: ##ffffff;"><b>Price</b></td>
+																			<td width="15%" align="Center" style="color: ##ffffff;"><b>Ext.</b></td>
+																			<td width="15%" align="Center" style="color: ##ffffff;"><b>Action</b></td>
+																			<!--- <td width="10%">&nbsp;
+																				<!--- Update --->
+																			</td> --->
+																		</tr>
+																		<cfloop query="contents">
+																			<TR class="#this_row()#">
+																				<td valign="center">
+																					#name#
+																				</td>
+																				<td align="center" valign="middle">
+																					<input type="text" name="qty_#uid#" id="qty_#uid#" value="#qty#" size="2">
+																					<input type="hidden" name="uid" value="#uid#" >
+																					<input type="hidden" name="productQty" id="productQty_#uid#" value="#contents.quantity#">
+																					<!--- <cfdump var="#pid#"> --->
+
+																					<!--- #qty# --->
+																				</td>
+																				<td align="center" valign="middle">
+																					#dollarformat(charge)#
+																				</td>
+																				<cfset ext = #charge# * #qty#>
+																				<td align="center" valign="middle">
+																					#dollarformat(Ext)#
+																				</td>
+																				<td align="center" valign="middle">
+																					<div class="d-flex justify-content-around">
+																						<a href="javascript:void(0);" onclick="removeItem('#uid#');" style="text-decoration: underline; cursor: pointer;">
+																							Remove
+																						</a>
+																						<a href="javascript:void(0);" onclick="updateQuantityItem('#uid#');" style="text-decoration: underline; cursor: pointer;">
+																							Update
+																						</a>
+																					</div>
+																				</td>
+																				<cfset subtotal = #subtotal# + #ext#>
+																				<!--- <td align="center" valign="middle">
+																					<!--- <input type="submit" class="Seemore" name="updateQty" value="Update"  onclick="document.getElementById('selected_pid').value='#uid#'"> --->
+																					<a href="javascript:void(0);" onclick="updateQuantityItem('#uid#');" style="text-decoration: underline; cursor: pointer;">
+																						update
+																					</a>
+																				</td> --->
+																				
+																				
+																			</tr>
+																		</cfloop>
+																		<tr>
+																			<td colspan="5">
+																				<hr>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td colspan="2">&nbsp;
+																				
+																			</td>
+																			<td>
+																				<b>Sub Total:</b>
+																			</td>
+																			<td align="right">
+																				<b>#dollarformat(subtotal)#</b>
+																			</td>
+																			<td>&nbsp;
+																				
+																			</td>
+																		</tr>
+																	</table>
+																	<input type="hidden" id="selected_pid" name="selected_pid" value="">
+																
+																</cfform>
+
+															</div>
+
+															<cfform action="review" method="post" name="frm1" onsubmit="javascript:return validEntries(document.frm1);" id="checkOutForm">
+																<div class="required-field">
+																	<span class="required">* REQUIRED FIELDS</span>
+																</div>
+																<div class="billing-info text-center">
+																	<strong>BILLING INFORMATION</strong>
+																</div>
+																<div class="input-form responsive-input-form">
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2"><label><span class="required">*</span><b>Name</b> <i>(First Last)</i></label></div>
+																			<div class="col-md-5">
+																				<cfinput type="text" name="billnamef" id="billnamef" size="15" maxlength="30">
+																				<span class="error-message" id="billnamefError"></span>
+																			</div>
+																			<div class="col-md-5">
+																				<cfinput type="text" name="BillName" id="BillName" size="25" maxlength="30">
+																				<span class="error-message" id="BillNameError"></span>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">*</span><b>Address Type</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				
+																				<select name="AddressType" id="AddressType" onchange="toggleAddressFields();">
+																					<option value="USA"  >USA Address</option>
+																					<option value="Outside" >Outside USA</option>
+																				</select>
+
+																			</div>											
+																		</div>
+																	</div>
+
+
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">*</span><b>Address 1</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="BillAddress1" id="BillAddress1" size="35" maxlength="100" >
+																				<span class="error-message" id="BillAddress1Error"></span>
+																			</div>
+																		</div>
+																	</div>
+
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Address 2</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="BillAddress2" size="35" maxlength="100" >
+																			</div>
+																		</div>
+																	</div>														
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">*</span><b> City, Zip</b></label>
+																			</div>
+																			<div class="col-md-5">
+
+																				<cfinput type="text" name="billcity" id="billcity" size="25" maxlength="30">
+																				<span class="error-message" id="billcityError"></span>
+
+																			</div>
+																			<div class="col-md-5">
+																				<cfinput type="text" name="billzip" size="13" id="billzip" maxlength="10">
+																				<span class="error-message" id="billzipError"></span>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="input-field #this_row()#" id="stateDropdownDiv" style="display:none;">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>State</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<select name="billstateDropdown" id="billstateDropdown" class="select2">
+																					<option value="">Please Select</option>
+																					<cfloop query="states">
+																						<option value="#stateAbb#">#state#</option>
+																					</cfloop>
+																				</select>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="input-field #this_row()#" id="stateTextDiv" style="display:none;">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>State/Province</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="billstateText" id="billstateText" size="25" maxlength="35">
+																			</div>
+																		</div>
+																	</div>
+
+																	<!-- COUNTRY FIELD -->
+																	<div class="input-field #this_row()#" id="countryDiv" style="display:none;">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label>
+																					<!--- <span class="required">*</span> --->
+																					<b>Country:</b>
+																				</label>
+																			</div>
+																			<div class="col-md-10">
+																				<select name="billcountry" id="billcountry" class="select2">
+																					<cfloop query="countries">
+																						<option value="#CountryCode#">#Country#</option>
+																					</cfloop>
+																				</select>
+																				<span class="error-message" id="billcountryError"></span>
+																			</div>															
+																		</div>
+																	</div>
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">*</span><b>Phone Number, Phone Type</b></label>
+																			</div>
+																			<div class="col-md-5 relative">
+																				<cfinput type="text" name="phoneNumber" id="phoneNumber" size="25" maxlength="20">
+																				<!--- <span id="formatSign" class="absolute-field">(xxx) xxx-xxxx</span> --->
+																				<span class="error-message" id="phoneNumberError"></span>
+																			</div>
+																			<div class="col-md-5">
+																				<select name="phoneType" id="phoneType">
+																					<option value="Cell Phone">Cell Phone</option>
+																					<option value="Home Phone">Home Phone</option>
+																					<option value="Business Phone">Business Phone</option>
+																					<option value="OutsideUS">Outside US Phone</option>
+																				</select>
+																			</div>
+																			
+																		</div>
+																	</div>
+
+																	<!--- <div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">*</span><b>Cell Phone</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="cellphone" id="cellphone" >
+																				<span class="error-message" id="cellphoneError"></span>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Home Phone</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="BillPhone" size="35" required="No" id="BillPhone" mask="(999) 999-9999">
+																				<span class="error-message" id="BillphoneError"></span>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Business Phone</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="businessphone" size="35" id="businessphone" mask="(999) 999-9999">
+																				<span class="error-message" id="businessphoneError"></span>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Phone Outside the US</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="otherphone" size="35" required="No">
+																			</div>
+																		</div>
+																	</div> --->
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">*</span><b>Email</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="Email" id="Email" size="35" maxlength="30" validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$" >
+																				<span class="error-message" id="EmailError"></span>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Website</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<input type="text" name="website" size="35" maxlength="50">
+																			</div>
+																		</div>
+																	</div>
+																</div>
+
+															
+
+																<div class="top-heading m-0 mt-3">
+																	<h4>SHIPPING INFORMATION</h4>
+																	<p><i>(if different from Billing Info)</i></p>
+																</div>
+
+																<div class="top-heading-info mb-2 mt-3" style="display: flex; align-items: center;">
+																	<input type="checkbox" name="sameAddress" id="sameAddress" style="margin: 0 5px 0 0; height: auto;">
+																	
+																	<label for="sameAddress">(Same Above Info)</label>
+																</div>
+
+																<div class="input-form responsive-input-form">
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Name</b> <i>(First Last)</i></label>
+																			</div>
+																			<div class="col-md-5">
+																				<input type="text" name="shipNamef" size="15" maxlength="30">
+																			</div>
+																			<div class="col-md-5">
+																				<input type="text" name="shipName" size="25" maxlength="30">
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Address Type</b></label>
+																			</div>
+																			<div class="col-md-10">
+
+																				<select name="ShipAddressType" id="ShipAddressType" onchange="ShiptoggleAddressFields();">
+																					<option value="USA"  >USA Address</option>
+																					<option value="Outside" >Outside USA</option>
+																				</select>
+
+																				
+																			</div>
+																		</div>
+																	</div>
+
+																	
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Address 1</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="shipAddress1" size="100" >
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Address 2</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="shipAddress2" size="35" maxlength="100" >
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b> City, Zip</b></label>
+																			</div>
+																			<div class="col-md-5">
+																				<cfinput type="text" name="shipcity" size="25" maxlength="30">
+																			</div>
+																			<div class="col-md-5">
+																				<cfinput type="text" name="shipzip" size="13" maxlength="10">
+																			</div>
+																		</div>
+																	</div>
+
+
+																	<div class="input-field #this_row()#" id="ShipstateDropdownDiv" style="display:none;">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>State</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<select name="ShipstateDropdown" id="ShipstateDropdown" class="select2">
+																					<option value="">Please Select</option>
+																					<cfloop query="states">
+																						<option value="#stateAbb#">#state#</option>
+																					</cfloop>
+																				</select>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="input-field #this_row()#" id="ShipstateTextDiv" style="display:none;">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>State/Province</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfinput type="text" name="ShipstateText" id="ShipstateText" size="25" maxlength="35">
+																			</div>
+																		</div>
+																	</div>
+
+																	<!-- COUNTRY FIELD -->
+																	<div class="input-field #this_row()#" id="ShipcountryDiv" style="display:none;">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label>
+																					<!--- <span class="required">*</span> --->
+																					<b>Country:</b>
+																				</label>
+																			</div>
+																			<div class="col-md-10">
+																				<select name="shipcountry" id="shipcountry" class="select2">
+																					<cfloop query="countries">
+																						<option value="#CountryCode#">#Country#</option>
+																					</cfloop>
+																				</select>
+																				<!--- <span class="error-message" id="billcountryError"></span> --->
+																			</div>															
+																		</div>
+																	</div>
+
+
+																	<!--- <div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Country:</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<select name="shipcountry" class="select2">
+																					<cfloop query="countries">
+																						<option value="#CountryCode#">#Country#</option>
+																					</cfloop>
+																				</select>
+																			</div>
+																		</div>
+																	</div> --->
+
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Phone</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<input type="text" name="shipPhone" size="35" maxlength="20">
+																			</div>
+																		</div>
+																	</div>
+																	<!--- <div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Shipping Method</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<select name="shipMethod">
+																					<option value="">Please Select</option>
+																					<option value="UPS">UPS</option>
+																					<option value="FedEx">FedEx</option>
+																					<option value="USPS">USPS</option>
+																				</select>
+																			</div>
+																		</div>
+																	</div> --->
+																</div>
+																<cfquery name="coptions" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+																	select * from cardtypes
+																	where requirenumber = 1
+																</cfquery>
+																<div class="top-heading m-0 mt-3">
+																	<h4>PAYMENT INFORMATION</h4>
+																</div>
+																<div class="input-form responsive-input-form">
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">*</span><b>Card Type</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<cfselect name="cardtype">
+																				<cfloop query="coptions">
+																				<option value="#cardcode#">#showtype#
+																				</cfloop>
+																				</cfselect>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">*</span><b>Card Number, CVC</b></label>
+																			</div>
+																			<div class="col-md-5">
+																				<cfinput type="Text" name="cardnum" id="cardnum"  placeholder="3712 345678 90123">
+																				<span class="error-message" id="cardnumError"></span>
+																			</div>
+																			<div class="col-md-5">
+																				<cfinput type="Text" name="cardCVC" id="cardCVC"  placeholder="123"  maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+																				<span class="error-message" id="cardCVCError"></span>
+																			</div>
+																		</div>
+																	</div>
+
+																
+
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">*</span><b>Expiration Date</b></label>
+																			</div>
+																			<div class="col-md-2">
+																				MM&nbsp;
+																				<select name="cardexpm">
+																				<cfloop from="1" to="12" index="monthis">
+																				<cfif len(monthis) EQ 1>
+																				<option value="0#monthis#">0#monthis#
+																				<cfelse>
+																				<option value="#monthis#">#monthis#
+																				</cfif>
+																				</cfloop>
+																				<!--- cfloop tag must go AFTER closing cfif --->
+																				</select>
+																			</div>
+																			<div class="col-md-2">
+																				YY&nbsp;
+																				<select name="cardexpy">
+																				<cfset toyear = #Year(Now())# + 10>
+																				<cfloop from="#Year(Now())#" to="#toyear#" index="yearis">
+																				<option value="#right(yearis,2)#">#right(yearis,2)#
+																				</cfloop>
+																				</select>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="input-field #this_row()#">
+																		<div class="row align-items-center">
+																			<div class="col-md-2">
+																				<label><span class="required">&nbsp;</span><b>Special Instructions:</b></label>
+																			</div>
+																			<div class="col-md-10">
+																				<textarea cols="52" rows="3" name="comments" id="comments" wrap="soft" maxlength="500"></textarea>
+																				<div id="charCount" class="mb-3">0 / 500 characters</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="text-center mt-3">
+																	<input type="submit" value="Review Order" id="submitBtn" class="pinkSubmit">
+																	<input type="reset" value="Reset Form" class="pinkSubmit">
+																</div>
+																<input type="Hidden" name="fk_locations" value="1">
+															</cfform>
+														</cfoutput>
+													</cfif>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<tr>
+			<td colspan="2" valign="baseline">
+				<cfinclude template="footer_.cfm">
+			</td>
+		</tr>
+		<cfinclude template="frmxss.cfm">
+
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+		<script>
+			$(document).ready(function() {
+				$('.select2').select2();
+			});
+		</script>
+
+
+		<script>
+
+			function toggleAddressFields() {
+				var type = document.getElementById("AddressType").value;
+
+				if (type === "USA") {
+					// Show state dropdown, hide text
+					document.getElementById("stateDropdownDiv").style.display = "block";
+					document.getElementById("stateTextDiv").style.display = "none";
+
+					// Hide country
+					document.getElementById("countryDiv").style.display = "none";
+
+				} else if (type === "Outside") {
+					// Show state as text field
+					document.getElementById("stateDropdownDiv").style.display = "none";
+					document.getElementById("stateTextDiv").style.display = "block";
+
+					// Show country
+					document.getElementById("countryDiv").style.display = "block";
+
+				} else {
+					// Default (nothing selected)
+					document.getElementById("stateDropdownDiv").style.display = "none";
+					document.getElementById("stateTextDiv").style.display = "none";
+					document.getElementById("countryDiv").style.display = "none";
+				}
+			}
+
+
+			function ShiptoggleAddressFields() {
+				var type = document.getElementById("ShipAddressType").value;
+
+				if (type === "USA") {
+					// Show state dropdown, hide text
+					document.getElementById("ShipstateDropdownDiv").style.display = "block";
+					document.getElementById("ShipstateTextDiv").style.display = "none";
+
+					// Hide country
+					document.getElementById("ShipcountryDiv").style.display = "none";
+
+				} else if (type === "Outside") {
+					// Show state as text field
+					document.getElementById("ShipstateDropdownDiv").style.display = "none";
+					document.getElementById("ShipstateTextDiv").style.display = "block";
+
+					// Show country
+					document.getElementById("ShipcountryDiv").style.display = "block";
+
+				} else {
+					// Default (nothing selected)
+					document.getElementById("ShipstateDropdownDiv").style.display = "none";
+					document.getElementById("ShipstateTextDiv").style.display = "none";
+					document.getElementById("ShipcountryDiv").style.display = "none";
+				}
+			}
+
+			// ✅ Run this function automatically when page loads
+			window.onload = function() {
+				toggleAddressFields();
+				ShiptoggleAddressFields();
+			};
+
+			document.addEventListener("DOMContentLoaded", function() {
+				const phoneInput = document.getElementById("phoneNumber");
+				const phoneType = document.getElementById("phoneType");
+				// const formatSign = document.getElementById("formatSign");
+
+				if (!phoneInput || !phoneType ) {
+					// Elements not on this page → exit
+					return;
+				}
+
+				// function toggleFormatSign() {
+				// 	if (phoneType.value === "OutsideUS") {
+				// 		formatSign.style.display = "none";
+				// 	} else {
+				// 		formatSign.style.display = "inline";
+				// 	}
+				// }
+
+				// run on load (in case form already has value)
+				// toggleFormatSign();
+
+				// run on change
+				// phoneType.addEventListener("change", toggleFormatSign);
+
+				phoneType.addEventListener("change", function() {
+					if (this.value === "OutsideUS") {
+						phoneInput.value = "+1"; 
+					} else {
+						
+						if (phoneInput.value.startsWith("+1")) {
+							phoneInput.value = "";
+						}
+					}
+				});
+
+
+				phoneInput.addEventListener("input", function(e) {
+					// If type is OutsideUS → skip formatting
+					if (phoneType.value === "OutsideUS") {
+						return;
+					}
+
+					let value = e.target.value.replace(/\D/g, ""); // only digits
+					if (value.length > 10) value = value.substring(0, 10);
+
+					// Apply formatting as user types
+					if (value.length > 6) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+					} else if (value.length > 3) {
+						e.target.value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+					} else if (value.length > 0) {
+						e.target.value = `(${value}`;
+					} else {
+						e.target.value = "";
+					}
+				});
+			});
+
+		</script>
+
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				const textarea = document.getElementById("comments");
+				const counter = document.getElementById("charCount");
+				const maxLength = 500;
+
+					if (textarea && counter) {
+					function updateCount() {
+							const currentLength = textarea.value.length;
+							counter.textContent = `${currentLength} / ${maxLength} characters`;
+					}
+
+					// Update counter initially
+					updateCount();
+
+					// Update on input
+					textarea.addEventListener("input", updateCount);
+				}
+			});
+		</script>
+
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				const sameAddress = document.getElementById('sameAddress');
+
+				sameAddress.addEventListener('change', function () {
+					if (this.checked) {
+						// Copy values from billing fields to shipping fields
+						document.querySelector('[name="shipNamef"]').value = document.getElementById('billnamef').value;
+						document.querySelector('[name="shipName"]').value = document.getElementById('BillName').value;
+						document.querySelector('[name="shipcity"]').value = document.getElementById('billcity').value;
+						document.querySelector('[name="shipzip"]').value = document.getElementById('billzip').value;
+						document.querySelector('[name="shipAddress1"]').value = document.getElementById('BillAddress1').value;
+						document.querySelector('[name="shipAddress2"]').value = document.getElementById('BillAddress2').value;
+						document.querySelector('[name="shipPhone"]').value = document.getElementById('phoneNumber').value;
+						
+						// Agar dropdown bhi copy karna ho
+						document.getElementById('ShipAddressType').value = document.getElementById('AddressType').value;
+
+						ShiptoggleAddressFields();
+
+						// Copy state dropdown
+						if (document.getElementById('billstateDropdown')) {
+
+							let stateValue = document.getElementById('billstateDropdown').value;
+
+							document.getElementById('ShipstateDropdown').value = stateValue;
+
+							// ⭐ IMPORTANT — select2 refresh
+							$('#ShipstateDropdown').trigger('change');
+						}
+
+						// Copy state text
+						if(document.getElementById('billstateText')){
+							document.getElementById('ShipstateText').value = document.getElementById('billstateText').value;
+						}
+
+						// Copy state dropdown value
+						if (document.getElementById('billcountry')) {
+
+							let stateValue = document.getElementById('billcountry').value;
+
+							document.getElementById('shipcountry').value = stateValue;
+
+							// ⭐ IMPORTANT — select2 refresh
+							$('#shipcountry').trigger('change');
+						}
+
+					} else {
+						// Uncheck hone par shipping fields khali kar do
+						document.querySelector('[name="shipNamef"]').value = '';
+						document.querySelector('[name="shipName"]').value = '';
+						document.querySelector('[name="shipcity"]').value = '';
+						document.querySelector('[name="shipzip"]').value = '';
+						document.querySelector('[name="shipAddress1"]').value = '';
+						document.querySelector('[name="shipAddress2"]').value = '';
+						document.querySelector('[name="shipPhone"]').value = '';
+						document.getElementById('ShipAddressType').value = 'USA'; // default select
+						ShiptoggleAddressFields();
+					}
+				});
+			});
+		</script>
+
+		<style>
+
+			body{
+				overflow-x: hidden;
+			}
+
+			.relative {
+				position: relative;
+			}
+			.absolute-field {
+				position: absolute;
+				right: 12px;
+				bottom: 1px;
+			}
+
+			.select2-container--default .select2-selection--single {
+				background-color: #fff;
+				border: 1px solid #bbbbbb;
+				border-radius: 0;
+				height: 40px;
+				padding: 5px 10px;
+				font-size: 14px;
+				font-family: inherit;
+				box-sizing: border-box;
+				margin-bottom: 10px;
+			}
+
+			.select2-container--default .select2-selection--single .select2-selection__rendered {
+				line-height: 28px;
+				color: #333;
+			}
+
+			.select2-container--default .select2-selection--single .select2-selection__arrow {
+				height: 36px;
+				top: 1px;
+				right: 10px;
+				width: 20px;
+			}
+
+			/* Ensure full width */
+			.select2-container {
+				width: 100% !important;
+			}
+
+
+			.select2-container--default .select2-search--dropdown .select2-search__field {
+				border: 1px solid #aaa;
+				height: 30px;
+				font-size: 14px;
+			}
+			.user-registrations .input-form .input-field input, .user-registrations .input-form .input-field select, .user-registrations .input-form .input-field textarea{
+				width: 100% !important;
+			}
+			/* Styleing of Select2 dropdown end */
+
+			.responsive-input-form .input-field div.autosuggest input {
+				width: 100% !important;
+				padding-right: 32px !important;
+			}
+			.responsive-input-form .input-field div.autosuggest {
+				width: 100%;
+				position: relative;
+			}
+			.responsive-input-form .input-field div.autosuggest div {
+				width: 100%;
+			}
+			.responsive-input-form .input-field div.autosuggest div.autosuggestcontainer {
+				top: 40px;
+			}
+			.responsive-input-form .input-field div.autosuggest #BillAddress1loadingicon, 
+			.responsive-input-form .input-field div.autosuggest #BillAddress2loadingicon,
+			.responsive-input-form .input-field div.autosuggest #billcityloadingicon,
+			.responsive-input-form .input-field div.autosuggest #billziploadingicon,
+			.responsive-input-form .input-field div.autosuggest #shipAddress1loadingicon,
+			.responsive-input-form .input-field div.autosuggest #shipAddress2loadingicon,
+			.responsive-input-form .input-field div.autosuggest #shipcityloadingicon,
+			.responsive-input-form .input-field div.autosuggest #shipziploadingicon {
+				position: absolute;
+				width: max-content;
+				right: 10px;
+				top: 10px;
+			}
+		</style>
+	
+
+	</body>
 </html>

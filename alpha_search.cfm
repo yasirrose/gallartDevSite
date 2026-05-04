@@ -7,7 +7,7 @@
 			<div class="alpha-row">
 				<cfloop from="65" to="90" index="idx">
 					<div>
-						<a href="alpha_list.cfm?man=#chr(idx)#&xss=#xss#" class="alpha">#chr(idx)#</a>
+						<a href="/alpha_list/#chr(idx)#" class="alpha">#chr(idx)#</a>
 					</div>
 				</cfloop>
 			</div>

@@ -1,0 +1,301 @@
+RewriteEngine On
+RewriteBase /
+Options +FollowSymLinks
+# Rewrite /admin or /admin/ to /admin/index.cfm
+RewriteRule ^admin/?$ /admin/index.cfm [L]
+
+# Rule 1: Handle search keywords
+RewriteCond %{REQUEST_URI} ^/artists/search/([^/]+)/?$
+RewriteRule ^artists/search/([^/]+)/?$ products.cfm?keywords=%1 [L,NE]
+
+# Rule 2: Handle artist (man)
+RewriteCond %{REQUEST_URI} ^/artists/([^/]+)/?$
+RewriteRule ^artists/([^/]+)/?$ products.cfm?man=%1 [L,NE]
+
+# Rule 3: Handle size
+RewriteCond %{REQUEST_URI} ^/artists/size/([^/]+)/?$
+RewriteRule ^artists/size/([^/]+)/?$ products.cfm?Size=%1 [L,NE]
+
+# Rule 4: Handle subject
+RewriteCond %{REQUEST_URI} ^/artists/subject/([^/]+)/?$
+RewriteRule ^artists/subject/([^/]+)/?$ products.cfm?Subject=%1 [L,NE]
+
+
+# Rule 5: Handle style
+RewriteCond %{REQUEST_URI} ^/artists/style/([^/]+)/?$
+RewriteRule ^artists/style/([^/]+)/?$ products.cfm?Style=%1 [L,NE]
+
+# Rule 6: Handle type
+RewriteCond %{REQUEST_URI} ^/artists/type/([^/]+)/?$
+RewriteRule ^artists/type/([^/]+)/?$ products.cfm?Type=%1 [L,NE]
+
+# Rule 7: Handle advanced parameters
+RewriteCond %{REQUEST_URI} ^/artists/adv_artist/([^/]+)/?$
+RewriteRule ^artists/adv_artist/([^/]+)/?$ products.cfm?adv_artist=%1 [L,NE]
+
+# Rule 8: Handle adv_title
+RewriteCond %{REQUEST_URI} ^/artists/adv_title/([^/]+)/?$
+RewriteRule ^artists/adv_title/([^/]+)/?$ products.cfm?adv_title=%1 [L,NE]
+
+# Rule 9: Handle adv_year
+RewriteCond %{REQUEST_URI} ^/artists/adv_year/([^/]+)/?$
+RewriteRule ^artists/adv_year/([^/]+)/?$ products.cfm?adv_year=%1 [L,NE]
+
+# Rule 10: Handle adv_medium
+RewriteCond %{REQUEST_URI} ^/artists/adv_medium/([^/]+)/?$
+RewriteRule ^artists/adv_medium/([^/]+)/?$ products.cfm?adv_medium=%1 [L,NE]
+
+# Rule 11: Handle adv_price_range
+RewriteCond %{REQUEST_URI} ^/artists/adv_price_range/([^/]+)/?$
+RewriteRule ^artists/adv_price_range/([^/]+)/?$ products.cfm?adv_price_range=%1 [L,NE]
+
+# Rule for up to 6 key-value pairs (12 segments)
+RewriteCond %{REQUEST_URI} ^/artists/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$
+RewriteRule ^artists/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ products.cfm?$1=%2&$3=%4&$5=%6&$7=%8&$9=%10&$11=%12 [L,NE]
+
+# Rule for 8key-value pairs (10 segments)
+RewriteCond %{REQUEST_URI} ^/artists/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$
+RewriteRule ^artists/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ products.cfm?$1=%2&$3=%4&$5=%6&$7=%8&$9=%10 [L,NE]
+
+# Rule for 9 key-value pairs (8 segments)
+RewriteCond %{REQUEST_URI} ^/artists/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$
+RewriteRule ^artists/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ products.cfm?$1=%2&$3=%4&$5=%6&$7=%8 [L,NE]
+
+# Rule for 10 key-value pairs (6 segments)
+RewriteCond %{REQUEST_URI} ^/artists/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$
+RewriteRule ^artists/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ products.cfm?$1=%2&$3=%4&$5=%6 [L,NE]
+
+# Rule for 11 key-value pairs (4 segments)
+RewriteCond %{REQUEST_URI} ^/artists/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$
+RewriteRule ^artists/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ products.cfm?$1=%2&$3=%4 [L,NE]
+
+# Rule for 12 key-value pair (2 segments)
+RewriteCond %{REQUEST_URI} ^/artists/([^/]+)/([^/]+)/?$
+RewriteRule ^artists/([^/]+)/([^/]+)/?$ products.cfm?$1=%2 [L,NE]
+
+
+# Redirect old /products URLs to /artists (for backward compatibility)
+RewriteCond %{REQUEST_URI} ^/products/(.*)$
+RewriteRule ^products/(.*)$ /artists/$1 [R=301,L,NE]
+
+# Rule 13: No home
+# Redirect /home/?xss=... (even if empty) to /index.cfm?xss=...
+RewriteCond %{REQUEST_URI} ^/home/?$
+RewriteCond %{QUERY_STRING} (^|&)xss=([^&]*)(&|$)
+RewriteRule ^home/?$ /index.cfm?xss=%2 [L]
+
+# Rule 14: Just /home with NO xss param – redirect to products page
+RewriteCond %{REQUEST_URI} ^/home/?$
+RewriteCond %{QUERY_STRING} !xss=
+RewriteRule ^home/?$ /index.cfm [L]
+
+# Rule 15: No new_listings
+# Match exactly /recent-acquisitions or /recent-acquisitions/
+RewriteRule ^recent-acquisitions/?$ /new_listings.cfm [L,NC]
+
+
+# Rule for /view-cart/{uid}/{co}
+RewriteRule ^view-cart/([^/]+)/([^/]+)/?$ /view.cfm?uid=$1&co=$2 [L]
+
+# Rule for /view-cart/{co}
+RewriteRule ^view-cart/([^/]+)/?$ /view.cfm?co=$1 [L]
+
+# Existing query string-based rules
+RewriteCond %{REQUEST_URI} ^/view-cart/?$
+RewriteCond %{QUERY_STRING} (^|&)co=([^&]*)(&|$)
+RewriteCond %{QUERY_STRING} !(^|&)uid=([^&]*)(&|$)
+RewriteRule ^view-cart/?$ /view.cfm?co=%2 [L]
+
+RewriteCond %{REQUEST_URI} ^/view-cart/?$
+RewriteCond %{QUERY_STRING} (^|&)co=([^&]*)(&|$)
+RewriteCond %{QUERY_STRING} (^|&)uid=([^&]*)(&|$)
+RewriteRule ^view-cart/?$ /view.cfm?uid=%2&co=%3 [L]
+
+RewriteCond %{REQUEST_URI} ^/view-cart/?$
+RewriteCond %{QUERY_STRING} !(^|&)co=([^&]*)(&|$)
+RewriteRule ^view-cart/?$ /view.cfm [L]
+
+
+# Rule 19: /alpha_list/something → /alpha_list.cfm?man=something
+RewriteRule ^alpha_list/([^/]+)?$ /alpha_list.cfm?man=$1 [L,QSA]
+
+# Rule 20: /alpha_list → /alpha_list.cfm
+RewriteRule ^alpha_list/?$ /alpha_list.cfm [L,QSA]
+
+# Redirect query string to clean URL: item.cfm?artist=xyz&pid=123 → /artist/xyz/123
+RewriteCond %{THE_REQUEST} \s/item\.cfm\?artist=([^&\s]+)&slug=([^&\s]+)\s [NC]
+RewriteRule ^ /artist/%1/%2? [R=301,L]
+
+# Rewrite clean URL back to item.cfm with query string
+RewriteRule ^artist/([A-Za-z0-9\-]+)/([A-Za-z0-9\-]+)/?$ /item.cfm?artist=$1&slug=$2 [QSA,NC,L]
+
+# Rewrite /artist to /item.cfm
+RewriteRule ^artist/?$ /item.cfm [QSA,NC,L]
+
+
+# Redirect query URL to pretty URL
+RewriteCond %{THE_REQUEST} \s/new_user_registration\.cfm\?processed=([^&]*)&entryCount=([^&]*) [NC]
+RewriteRule ^ /sell-your-art/%1/%2? [R=301,L]
+
+# Internally map pretty URL back to original script with parameters
+RewriteRule ^sell-your-art/([^/]+)/([^/]+)/?$ new_user_registration.cfm?processed=$1&entryCount=$2 [L,QSA]
+
+# Redirect root URL "/" to "/home"
+RewriteRule ^/?$ /index.cfm [QSA,NC,L]
+
+# Redirect /sale-items to /sales.cfm
+RewriteRule ^sale-items/?$ /sales.cfm [L]
+
+# Redirect /classifieds to /classifieds.cfm
+RewriteRule ^classifieds/?$ /classifieds.cfm [L]
+
+# Redirect /events to /featured_events.cfm
+RewriteRule ^events/?$ /featured_events.cfm [L]
+
+# Redirect /sell-your-art to /new_user_registration.cfm
+RewriteRule ^sell-your-art/?$ /new_user_registration.cfm [L]
+
+# Redirect /aboutus to /about.cfm
+RewriteRule ^about-us/?$ /about.cfm [L]
+
+# Redirect /contact-us to /contact.cfm
+RewriteRule ^contact-us/?$ /contact.cfm [L]
+
+# Redirect /promotion to /promotion.cfm
+RewriteRule ^promotion/?$ /promotion.cfm [L]
+
+# SELL YOUR ART
+RewriteRule ^registration/?$ /registration.cfm [L]
+
+# VIEW CART
+RewriteRule ^view-cart/?$ /view.cfm [L]
+
+# REQUESTS
+RewriteRule ^requests/?$ /requests.cfm [L]
+
+# QUOTES
+RewriteRule ^quotes/?$ /quotes.cfm [L]
+
+# MAILING LIST
+RewriteRule ^mailing-list/?$ /mailing_list.cfm [L]
+
+# BUYER INFO
+RewriteRule ^buyer-info/?$ /buyer_info.cfm [L]
+
+# SELLER INFO
+RewriteRule ^seller-info/?$ /seller_info.cfm [L]
+
+# SEARCH
+RewriteRule ^search/?$ /searchpage.cfm [L]
+
+# CONTACT US
+RewriteRule ^contact/?$ /contact.cfm [L]
+
+# privacy
+RewriteRule ^privacy/?$ /pns.cfm [L]
+
+# SHIPPING POLICY
+RewriteRule ^shipping-policy/?$ /shippingpolicy.cfm [L]
+
+# termsUse
+RewriteRule ^terms/?$ /termsUse.cfm [L]
+
+# alerts.cfm
+RewriteRule ^alerts/?$ /alerts.cfm [L]
+
+# http://23.20.226.157/review.cfm
+RewriteRule ^review/?$ /review.cfm [L]
+
+# http://23.20.226.157/checkout_new.cfm
+RewriteRule ^checkout_new/?$ /checkout_new.cfm [L]
+
+# http://23.20.226.157/user_login_page.cfm
+RewriteRule ^login/?$ /user_login_page.cfm [L]
+
+# http://23.20.226.157/forgot_password.cfm
+RewriteRule ^forgot_password/?$ /forgot_password.cfm [L]
+
+# http://23.20.226.157/register.cfm
+RewriteRule ^register/?$ /register.cfm [L]
+
+# http://23.20.226.157/register.cfm
+RewriteRule ^register/?$ /register.cfm [L]
+
+# http://23.20.226.157/database.cfm
+RewriteRule ^database/?$ /database.cfm [L]
+
+# http://23.20.226.157/products.cfm.cfm
+RewriteRule ^products/?$ /products.cfm [L]
+
+# http://23.20.226.157/database_search.cfm.cfm
+RewriteRule ^database_search/?$ /database_search.cfm [L]
+
+# http://23.20.226.157/database_search.cfm.cfm
+RewriteRule ^database_search/?$ /database_search.cfm [L]
+
+# http://23.20.226.157/logout.cfm.cfm
+RewriteRule ^logout/?$ /logout.cfm [L]
+
+# http://23.20.226.157/user_listing_detail.cfm
+RewriteRule ^user_listing_detail/?$ /user_listing_detail.cfm [L]
+
+# Rewrite /user_listing_detail/{error} to /user_listing_detail.cfm?proceerrorss={error}
+RewriteRule ^user_listing_detail/([0-9]+)$ /user_listing_detail.cfm?id=$1 [L,QSA]
+
+# http://23.20.226.157/overView.cfm
+RewriteRule ^overView/?$ /overView.cfm [L]
+
+# Rewrite /epricing/{pid} to /epricing.cfm?pid={pid}
+RewriteRule ^epricing/([0-9]+)$ /epricing.cfm?pid=$1 [L,QSA]
+
+# Rewrite /artist_bio/{bioId} to /artist_bio.cfm?bioId={bioId}
+RewriteRule ^artist_bio/([0-9]+)/?$ /artist_bio.cfm?bioId=$1 [L,QSA]
+
+# http://23.20.226.157/requests_submit.cfm
+RewriteRule ^requests_submit/?$ /requests_submit.cfm [L]
+
+# http://23.20.226.157/alerts_login.cfm
+RewriteRule ^alerts_login/?$ /alerts_login.cfm [L]
+
+# http://23.20.226.157/alerts_info.cfm
+RewriteRule ^alerts_info/?$ /alerts_info.cfm [L]
+
+# http://23.20.226.157/alerts_registration.cfm
+RewriteRule ^alerts_registration/?$ /alerts_registration.cfm [L]
+
+# http://23.20.226.157/framing_details.cfm
+RewriteRule ^framing_details/?$ /framing_details.cfm [L]
+
+# http://23.20.226.157/framing.cfm
+RewriteRule ^framing/?$ /framing.cfm [L]
+
+# http://23.20.226.157/purchase.cfm
+RewriteRule ^purchase/?$ /purchase.cfm [L]
+
+# http://23.20.226.157/requests_thanks.cfm
+RewriteRule ^requests_thanks/?$ /requests_thanks.cfm [L]
+
+# Specific rule FIRST — handles /user_listing_results/{process}
+RewriteRule ^user_listing_results/([^/]+)/?$ /user_listing_results.cfm?process=$1 [L,QSA,NC]
+
+# General rule SECOND — handles /user_listing_results → /user_listing_results.cfm
+RewriteRule ^user_listing_results/?$ /user_listing_results.cfm [L]
+
+# http://23.20.226.157/requests_registration.cfm
+RewriteRule ^requests_registration/?$ /requests_registration.cfm [L]
+
+# Match exactly /user_listing_search or /user_listing_search/
+RewriteRule ^user_listing_search/?$ /user_listing_search.cfm [L,NC]
+
+# Match /user_listing_search/{process} → /user_listing_search.cfm?process={process}
+RewriteRule ^user_listing_search/([^/]+)/?$ /user_listing_search.cfm?process=$1 [L,QSA,NC]
+
+# Success case: http://23.20.226.157/thankyou/y → http://23.20.226.157/thankyou.cfm?val=y
+RewriteRule ^thankyou/y/?$ /thankyou.cfm?val=y [L,QSA]
+
+# Error case: http://23.20.226.157/thankyou/n/ErrorMessage → http://23.20.226.157/thankyou.cfm?val=n&errormsg=ErrorMessage
+RewriteRule ^thankyou/n/([^/]+)/?$ /thankyou.cfm?val=n&errormsg=$1 [L,QSA]
+
+
+# Redirect /404 to /404.cfm
+RewriteRule ^404/?$ /404.cfm [L]

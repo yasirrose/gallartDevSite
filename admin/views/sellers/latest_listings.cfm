@@ -1,0 +1,283 @@
+<cfajaxproxy cfc="admin.models.art" />
+<cfajaxproxy cfc="admin.models.mailer" />
+<cfajaxproxy bind="javascript:latestGridChange({data.uid})">
+<cfhtmlhead text='<script type="text/javascript" src="/admin/scripts/sellers.latestlistings.js.cfm" language="JavaScript"></script>'>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+	<tr>
+		<td valign="top">
+			<table border = "0" width = "100%" cellpadding = "5" cellspacing = "0">
+				<tr>
+					<td valign="top" width="450">
+						<cfform name="gridForm">
+
+							<table cellspacing="0" cellpadding="3" border="0" width="100%">
+								<tr>
+									<td colspan="3">
+										<table cellspacing="0" cellpadding="3" border="0" width="100%">
+											<tr>
+												<td style="font-size: 11px;"><strong>VIEW LATEST LISTINGS:</strong></td>
+												<td><strong>Show:</strong>&nbsp;
+													<select name="searchActive">
+														<option value="">All</option>
+														<option value="1">Active Only</option>
+														<option value="0">Inactive Only</option>
+													</select>
+												</td>
+												<td><strong>Timeframe:</strong></td>
+												<td>
+													<select name="searchTimeframe">
+														<option value="">Show all</option>
+														<option value="week">Previous Week</option>
+														<option value="month">Previous Month</option>
+														<option value="twomonths">Previous Two Months</option>
+													</select>
+												</td>
+												<td>
+													<input type="Reset"><cfinput type="button" name="searchBtn" value="Search" onclick="ColdFusion.Grid.refresh('data', false);" />
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3">
+										<input type="button" value="Back To Seller Management" onclick="location.href='index.cfm?event=sellers'" />
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3">
+										<cfgrid format="html" name="data" pagesize="15" stripeRows="true" stripeRowColor="##e0e0e0" bind="cfc:admin.models.art.getLatestListings({cfgridpage},{cfgridpagesize},{cfgridsortcolumn},{cfgridsortdirection},{searchActive},{searchTimeframe})">
+											<cfgridcolumn name="lname" header="Seller" width="150">
+											<cfgridcolumn name="name" header="Title" width="150">
+											<cfgridcolumn name="manufacturer" header="Artist" width="150">
+											<cfgridcolumn name="gallery_price" header="Gallery Price" width="100">
+											<cfgridcolumn name="listingDate" header="Date" width="75">
+										</cfgrid>
+									</td>
+								</tr>
+							</table>
+						</cfform>
+					</td>
+					<td valign="top">
+						<cfform name="latestEditForm">
+							<cfinput type="hidden" name="uid" id="uid" bind="{data.uid}">
+							<cfinput type="hidden" name="moduleName" id="moduleName" value="Latest Listing Module">
+							<table border = "0" width = "500" cellpadding = "5" cellspacing = "0" class="editBox" style="margin-top: 55px;">
+								<tr>
+									<td id="stuff" colspan="2"></td>
+								</tr>
+								<tr>
+									<td width="100">
+										First Name:
+										<br>
+										<cfinput type="text" name="fname" id="fname"  bind="{data.fname}" maxlength="30" size="30" class="displayInput" disabled>
+									</td>
+									<td>
+										Last Name:
+										<br>
+										<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" maxlength="30" size="30" class="displayInput" disabled>
+									</td>
+								</tr>
+								<!--- <tr>
+									<td>
+										Last Name:
+									</td>
+									<td>
+										<cfinput type="text" name="lname" id="lname"  bind="{data.lname}" maxlength="30" size="30" class="displayInput" disabled>
+									</td>
+								</tr> --->
+								<tr>
+									<td>
+										Phone:
+										<br>
+										<cfinput type="text" name="phone" id="phone"  bind="{data.phone}" size="30" maxlength="30" class="displayInput" disabled>
+									</td>
+									<td>
+										Email:
+										<br>
+										<cfinput type="text" name="seller_email" id="seller_email" size="30" maxlength="30" class="displayInput" disabled>
+										<span  id="emailLink"></span>
+									</td>
+									
+								</tr>
+								<!--- <tr>
+									<td>
+										Phone:
+									</td>
+									<td>
+										<cfinput type="text" name="phone" id="phone"  bind="{data.phone}" size="30" maxlength="30" class="displayInput" disabled>&nbsp;
+									</td>
+								</tr> --->
+								<tr>
+									<td>
+										Title:
+										<br>
+										<cfinput type="text" name="name" id="name"  bind="{data.name}" maxlength="30" size="30">
+									</td>
+									<td>
+										Size:
+										<br>
+										<cfinput type="text" name="size" id="size"  bind="{data.size}" maxlength="30" size="30">
+									</td>
+									
+								</tr>
+								<!--- <tr>
+									<td valign="top">
+										Artist:
+									</td>
+									<td>
+										<select name="manufacturer" id="manufacturer">
+											<cfoutput query="getAllArtists" group="manufacturer">
+												<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+												<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
+												</cfif>
+											</cfoutput>
+										</select>
+									</td>
+								</tr> --->
+								<tr>
+									<td>
+										Artist:
+										<br>
+										<select name="manufacturer" id="manufacturer">
+											<cfoutput query="getAllArtists" group="manufacturer">
+												<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
+												<option value="#HTMLEditFormat(manufacturer)#">#HTMLEditFormat(manufacturer)#
+												</cfif>
+											</cfoutput>
+										</select>
+									</td>
+									<td>
+										Medium:
+										<br>
+										<select name="path" style="width: 100%;">
+											<cfoutput query="getAllMedium" group="path">
+												<option value="#path#">#path#
+											</cfoutput>
+										</select>
+									</td>								
+								</tr>
+								<tr>
+									<td>
+										Retail Price:
+										<br>
+										<cfinput type="text" name="retail_price" id="retail_price"  bind="{data.retail_price}" maxlength="10" size="30">
+									</td>
+									<td>
+										Gallery Price:
+										<br>
+										<cfinput type="text" name="gallery_price" id="gallery_price"  bind="{data.gallery_price}" maxlength="10" size="30">&nbsp;
+									</td>
+								</tr>
+								<!--- <tr>
+									<td>
+										Size:
+									</td>
+									<td>
+										<cfinput type="text" name="size" id="size"  bind="{data.size}" maxlength="30" size="30">&nbsp;
+									</td>
+								</tr> --->
+								<tr>
+									<td valign="top">
+										Description:
+										<br>
+										<cftextarea name="caption" id="caption"  bind="{data.caption}" cols="40" rows="5" maxlength="500"/>
+										<div id="captionCount" class="mb-3">0 / 500 characters</div>
+									</td>
+									<td id="imageDisplay" > 
+										Thumbnail:
+										<br>
+										<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
+										<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
+									</td>
+								</tr>
+								
+								<!--- <tr>
+									<td>
+										Gallery Price:
+									</td>
+									<td>
+										<cfinput type="text" name="gallery_price" id="gallery_price"  bind="{data.gallery_price}" maxlength="10" size="30">&nbsp;
+									</td>
+								</tr> --->
+								<tr>
+									<td>
+										Active:
+										<br>
+										<input type="radio" name="active" value="1">Active <input type="radio" name="active" value="0">Inactive
+									</td>
+									<!--- <td id="imageDisplay" height="150"> 
+										Thumbnail:
+										<br>
+										<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
+										<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
+									</td> --->
+								</tr>
+								<!--- <tr>
+									<td >
+										Thumbnail:
+									</td>
+									<td id="imageDisplay" height="150">
+										<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
+										<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
+									</td>
+								</tr> --->
+								<tr>
+									<td colspan="2" >
+										<cfinput type="button" name="edit" id="edit" value="Edit" onclick="doEdit('edit');" />
+										<cfinput type="button" name="delete" id="delete" value="Delete" onclick="doEdit('delete')" />
+									</td>
+								</tr>
+							</table>
+						</cfform>
+					</td>
+				</tr>
+			</table>
+<cfif structKeyExists(form, "searchActive") AND structKeyExists(form, "searchTimeframe")>
+	<script language="JavaScript">
+		var searchActiveVal = "<cfoutput>#JSStringFormat(form.searchActive)#</cfoutput>";
+		var searchTimeframeVal = "<cfoutput>#JSStringFormat(form.searchTimeframe)#</cfoutput>";
+	
+		for (var i = 0; i < gridForm.searchActive.options.length; i++) {
+			gridForm.searchActive.options[i].selected = (gridForm.searchActive.options[i].value === searchActiveVal);
+		}
+	
+		for (var i = 0; i < gridForm.searchTimeframe.options.length; i++) {
+			gridForm.searchTimeframe.options[i].selected = (gridForm.searchTimeframe.options[i].value === searchTimeframeVal);
+		}
+	</script>
+</cfif>
+
+<script>
+	/* ---------- global counter function ---------- */
+	function updateAdditionalDetailsCounter() {
+		var textarea = document.getElementById('caption');
+		var counter = document.getElementById('captionCount');
+		var maxLength = 500;
+		if (!textarea || !counter) return;
+		var len = textarea.value ? textarea.value.length : 0;
+		counter.textContent = len + ' / ' + maxLength + ' characters';
+
+		// optional red warning
+		if (len > maxLength) {
+			counter.style.color = 'red';
+		} else {
+			counter.style.color = '';
+		}
+	}
+
+	/* ---------- run on page load and attach input handler ---------- */
+	document.addEventListener("DOMContentLoaded", function() {
+		const textarea = document.getElementById("caption");
+		const maxLength = 500;
+
+		textarea.addEventListener("input", function() {
+			if (this.value.length > maxLength) {
+				this.value = this.value.substring(0, maxLength); // trim extra text
+			}
+			updateAdditionalDetailsCounter();
+		});
+	});
+</script>
+

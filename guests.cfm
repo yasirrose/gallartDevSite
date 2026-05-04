@@ -110,7 +110,7 @@
 
 <cfinclude template="meta.cfm">
 
-<link href="stylesheet_.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet_.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -174,13 +174,21 @@
 							<i class="fas fa-bars"></i>
 						</div>
 					</div>
-					<div class="sidebar web-sidebar-modal">	
+					<!--- <div class="sidebar web-sidebar-modal">	
 						<cfinclude template="left_.cfm">
-					</div>
+					</div> --->
 					<div class="content-section">
 						<div class="bottom-content-sec">
 							<div class="banner-section">
 								<div class="art-work-content">
+
+									<div aria-label="breadcrumb">
+										<ol class="breadcrumb">
+										  <li class="breadcrumb-item"><a href="/" style="color:black;" >Home</a></li>
+										  <li class="breadcrumb-item active" aria-current="page">Guest Book</li>
+										</ol>
+									</div>
+
 									<div class="bottom-content">
 										<div class="user-registrations guests-page">
 											<div class="user-content">
@@ -298,52 +306,53 @@
 															</cfif>
 															<p>Please sign our Guest Book for upcoming shows and information, and to be placed on our Mailing List.</p>
 														</div>
+														<span style="color: ##ff0000;">* Required</span><br><br>
 														<div class="input-form">
 															<div class="input-field">
-																<label><b>FIRST NAME</b></label>
-																<cfinput type="text" size=40 maxsize=50 name="fname" value="#form.fname#" required="Yes" MESSAGE="Please fill in your first name.">
+																<label><b>FIRST NAME:</b></label>
+																<cfinput type="text" size=40 maxsize=50 name="fname" value="#form.fname#" required="Yes" MESSAGE="Please fill in your first name."> &nbsp;<span style="color:##ff0000;">*</span>
 															</div>
 															<div class="input-field">
-																<label><b>LAST NAME</b></label>
-																<cfinput type="text" size=40 maxsize=50 name="lname" value="#form.lname#" required="Yes" MESSAGE="Please fill in your last name.">
+																<label><b>LAST NAME:</b></label>
+																<cfinput type="text" size=40 maxsize=50 name="lname" value="#form.lname#" required="Yes" MESSAGE="Please fill in your last name."> &nbsp;<span style="color:##ff0000;">*</span>
 															</div>
 															<div class="input-field">
-																<label><b>E-MAIL ADDRESS</b></label>
-																<cfinput type="text" size=40 maxsize=50 name="email" value="#form.email#" required="Yes" MESSAGE="Please fill in a proper email address." validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$">
+																<label><b>E-MAIL ADDRESS:</b></label>
+																<cfinput type="text" size=40 maxsize=50 name="email" value="#form.email#" required="Yes" MESSAGE="Please fill in a proper email address." validate="regular_expression" pattern="^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-|\_)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$"> &nbsp;<span style="color:##ff0000;">*</span>
 															</div>
 															<div class="input-field">
-																<label><b>CELL PHONE (xxx) xxx-xxxx</b></label>
+																<label><b>CELL PHONE (xxx) xxx-xxxx:</b></label>
 																<cfinput type="text" size=40 maxsize=50 name="cellphone" value="#form.cellphone#" required="No" MESSAGE="Please fill in your cell phone with a proper number." mask="(999) 999-9999">
 															</div>
 															<div class="input-field">
-																<label><b>HOME PHONE (xxx) xxx-xxxx</b></label>
+																<label><b>HOME PHONE (xxx) xxx-xxxx:</b></label>
 																<cfinput type="text" size=40 maxsize=50 name="phone" value="#form.phone#" required="No" MESSAGE="Please fill in your home phone with a proper number." mask="(999) 999-9999">
 															</div>
 															<div class="input-field">
-																<label><b>BUSINESS PHONE (xxx) xxx-xxxx</b></label>
+																<label><b>BUSINESS PHONE (xxx) xxx-xxxx:</b></label>
 																<cfinput type="text" size=40 maxsize=50 name="businessphone" value="#form.businessphone#" required="No" MESSAGE="Please fill in your business phone with a proper number." mask="(999) 999-9999">
 															</div>
 															<div class="input-field">
-																<label><b>PHONE NUMBER OUTSIDE THE US<b></label>
+																<label><b>PHONE NUMBER OUTSIDE THE US:<b></label>
 																<cfinput type="text" size=40 maxsize=50 name="otherphone" value="#form.otherphone#" required="No" >
 															</div>
 															<div class="input-field">
-																<label><b>WEBSITE</b></label>
+																<label><b>WEBSITE:</b></label>
 																<cfinput type="text" size=40 maxsize=50 name="website" value="#form.website#" required="No" MESSAGE="Please fill in your website.">
 															</div>
 															<div class="input-field">
-																<label><b>COMMENTS</b></label>
+																<label><b>COMMENTS:</b></label>
 																<TEXTAREA NAME="comments" ROWS=10 COLS=35>#form.comments#</TEXTAREA>
 															</div>
 															<div class="input-field">
 																<cfimage action="captcha" height="75" width="363" text="#strCaptcha#" difficulty="low"	fonts="verdana,arial,times new roman,courier,tahoma" fontsize="28"	/>
 																<br><br>
 																<label><b>Please enter the characters in the image above:</b></label>
-																<cfinput type="text" name="captcha" required="true" message="Please enter the characters in the image.">
+																<cfinput type="text" name="captcha" required="true" message="Please enter the characters in the image.">&nbsp;<span style="color:##ff0000;">*</span>
 															</div>
 															<div class="input-button">
-																<button type="button" class="SeeMore">Send</button>
-																<button type="button" class="SeeMore">Reset</button>
+																<button type="submit" class="SeeMore">Send</button>
+																<button type="reset" class="SeeMore">Reset</button>
 															</div>
 														</div>
 														</cfform>

@@ -36,40 +36,40 @@
 </script>
 
 <cfoutput>
-	<!--- <script language="JavaScript" src="./js/utils.js"></script> --->
+	<!--- <script language="JavaScript" src="/js/utils.js"></script> --->
 	<div id="left">
 		<div class="productSearch-filed web-search">
-			<form action="products.cfm?xss=#xss#" method="post">
+			<form action="/products" method="post">
 			<input type="text" name="keywords" placeholder="Product Search">                  
 			<button type="button" class="search-btn"><i class="fas fa-search"></i></button>
 			</form>
 		</div>
 		<div class="advance-search">
-			<a href="searchpage.cfm?xss=#xss#">ADVANCED SEARCH </a>
+			<a href="searchpage">ADVANCED SEARCH </a>
 			<button class="close-button">
 				<i class='fas fa-times'></i>
 			</button>
 		</div>
 		<div class="mobile-overlay">	
 			<div class="box">
-				<a href="quotes.cfm?xss=#xss#"></a>
+				<a href="quotes"></a>
 			</div>
 			<div class="box">
 				<span>How To Buy From Gallery Art</span>
 				<ul>
-				<li><i class="fas fa-check"></i><a href="searchpage.cfm?xss=#xss#" style="font-size: 14px; font-weight: normal;">Search Our Listings</a></li>
-				<li><i class="fas fa-check"></i><a href="buyer_info.cfm?xss=#xss#" style="font-size: 14px; font-weight: normal;">Review Buyer Info</a></li>
+				<li><i class="fas fa-check"></i><a href="/search" style="font-size: 14px; font-weight: normal;">Search Our Listings</a></li>
+				<li><i class="fas fa-check"></i><a href="/buyer_info" style="font-size: 14px; font-weight: normal;">Review Buyer Info</a></li>
 				<li><i class="fas fa-check"></i><a href="##">Click Thumbnail Image</a></li>
 				<li><i class="fas fa-check"></i><a href="##">Buy Online, or</a></li>
-				<li><i class="fas fa-check"></i><a href="contact.cfm?xss=#xss#" style="font-size: 14px; font-weight: normal;">Contact Gallery Art</a></li>
+				<li><i class="fas fa-check"></i><a href="/contact" style="font-size: 14px; font-weight: normal;">Contact Gallery Art</a></li>
 				</ul>
 			</div>
 			<div class="box">
 				<span>How To Sell On Gallery Art</span>
 				<ul>
-				<li><i class="fas fa-check"></i><a href="user_registration.cfm?xss=#xss#" style="font-size: 14px; font-weight: normal;">Register</a></li>
-				<li><i class="fas fa-check"></i><a href="seller_info.cfm?xss=#xss#" style="font-size: 14px; font-weight: normal;">Review Seller Info</a></li>
-				<li><i class="fas fa-check"></i><a href="user_listing_search.cfm?xss=#xss#" style="font-size: 14px; font-weight: normal;">List Your Art</a></li>
+				<li><i class="fas fa-check"></i><a href="/user_registration" style="font-size: 14px; font-weight: normal;">Register</a></li>
+				<li><i class="fas fa-check"></i><a href="/seller_info" style="font-size: 14px; font-weight: normal;">Review Seller Info</a></li>
+				<li><i class="fas fa-check"></i><a href="/user_listing_search" style="font-size: 14px; font-weight: normal;">List Your Art</a></li>
 				</ul>
 				<span class="small">It is free to list with Gallery Art. You only pay a 20% commission on items that are sold.</span>
 			</div>

@@ -15,10 +15,10 @@
 <cfinclude template="meta.cfm">
 
 <cfoutput>
-<script language="JavaScript" src="./js/utils.js"></script>
+<script language="JavaScript" src="/js/utils.js"></script>
 </cfoutput>
 
-<link href="stylesheet.css" rel="stylesheet" type="text/css">
+<link href="/stylesheet.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -84,7 +84,7 @@
 										<tr>
 											<td align="center">
 												<span style="font-size: 12px; color: ##ff0000;">Thank you for submitting your request.</span><br><br>
-												Click <a href="requests_submit.cfm?xss=#xss#">HERE</a> to submit another request for our ART WANTED page, or <a href="requests.cfm?xss=#xss#">HERE</a> view our request list.
+												Click <a href="/requests_submit">HERE</a> to submit another request for our ART WANTED page, or <a href="/requests">HERE</a> view our request list.
 											</td>
 										</tr>
 									</table>

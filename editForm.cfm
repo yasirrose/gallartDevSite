@@ -35,6 +35,33 @@ function artTypesvalue() {
     document.editForm.artType.value = selectedValues.join(',');
     return true;
 }
+function artTypeesvalue() {
+	var selectedArtValues = [];
+    var selectedOptions = document.editForm.artTypees.selectedOptions;
+    for (var i = 0; i < selectedOptions.length; i++) {
+        selectedArtValues.push(selectedOptions[i].value);
+    }
+    document.editForm.artTypee.value = selectedArtValues.join(',');
+    return true;
+}
+function artSubjectvalue() {
+	var selectedArtSubject = [];
+    var selectedOptions = document.editForm.artSubjectt.selectedOptions;
+    for (var i = 0; i < selectedOptions.length; i++) {
+        selectedArtSubject.push(selectedOptions[i].value);
+    }
+    document.editForm.artSubject.value = selectedArtSubject.join(',');
+    return true;
+}
+function artSizevalue() {
+	var selectedArtSize = [];
+    var selectedOptions = document.editForm.artSizee.selectedOptions;
+    for (var i = 0; i < selectedOptions.length; i++) {
+        selectedArtSize.push(selectedOptions[i].value);
+    }
+    document.editForm.artSize.value = selectedArtSize.join(',');
+    return true;
+}
 
 function isValidSize(sText){
    var ValidChars = "0123456789.xX ";
@@ -57,29 +84,29 @@ function validEntries(frm) {
 	}
 	console.log(frm.uid.value)
 	if(frm.name.value == ''){
-	alert('You must select a Name.');
-	frm.name.focus();
-	return false;
+		alert('You must select a Name.');
+		frm.name.focus();
+		return false;
 	}
 	if(frm.manufacturer.value == ''){
-	alert('You must select an Artist.');
-	frm.manufacturer.focus();
-	return false;
+		alert('You must select an Artist.');
+		frm.manufacturer.focus();
+		return false;
 	}
 	if(frm.path.value == ''){
-	alert('You must select a Medium.');
-	frm.path.focus();
-	return false;
+		alert('You must select a Medium.');
+		frm.path.focus();
+		return false;
 	}
 	if(frm.quantity.value == ''){
-	alert('You must select a Quantity.');
-	frm.quantity.focus();
-	return false;
+		alert('You must select a Quantity.');
+		frm.quantity.focus();
+		return false;
 	}
 	if(!isValidSize(frm.size.value)){
-	alert('You must enter a valid SIZE: only numbers and the letter x');
-	frm.size.focus();
-	return false;
+		alert('You must enter a valid SIZE: only numbers and the letter x');
+		frm.size.focus();
+		return false;
 	}
 	return true;
 
@@ -103,6 +130,18 @@ function popupWin(url) {
 <cfform method="POST" action="/admin/index.cfm?event=listings.procListing" name="editForm" id="editForm"  enctype="multipart/form-data" onsubmit="javascript:return validEntries(document.editForm);">
 <cfinput type="hidden" name="uid" id="uid">
 <table border = "0" width = "700" cellpadding = "3" cellspacing = "0" class="editBox">
+
+	<!--- <cfif> --->
+		<cfoutput>
+			<script>
+				<cfif structKeyExists(session, "ext") and session.ext eq 'true'>
+					alert('Only JGP files add');
+					<cfset structDelete(session, "ext")>
+				</cfif>
+			</script>
+		</cfoutput>
+	<!--- </cfif> --->
+
 	<cfif structKeyExists(url,'gridRefresh')>
 		<tr>
 			<td colspan="2" valign="top" id="gridRefreshMsg"><span style="color: #ff0000;">LISTING EDIT SUCCESSFUL</span></td>
@@ -137,8 +176,9 @@ function popupWin(url) {
 						<select name="artistview"  onchange="ArtistView()">
 						<option value="">Please Select</option>
 						<cfoutput query="getAllArtists" group="manufacturer">
+							<!--- <cfset manufacturer = > --->
 							<cfif not isnumeric(manufacturer) and len(manufacturer) gt 1>
-							<option value="#manufacturer#">#ucase(manufacturer)#
+							<option value="#HTMLEditFormat(manufacturer)#">#manufacturer#
 							</cfif>
 						</cfoutput>
 						</select>
@@ -155,7 +195,7 @@ function popupWin(url) {
 						<select name="catstringview"  onchange="CatView()">
 							<option value="">Please Select</option>
 							<cfoutput query="getAllMedium" group="path">
-								<option value="#path#">#left(ucase(path),50)#
+								<option value="#path#">#path#
 							</cfoutput>
 						</select>
 						<br><i>Select existing medium from dropdown above, and edit if desired,<br>OR type in a new string.
@@ -164,13 +204,22 @@ function popupWin(url) {
 					</td>
 				</tr>
 				<tr>
+					<cfquery name="qGetStyle" datasource="#application.dsource#">
+						SELECT * 
+						FROM filterOption
+						WHERE filterType = 'Style'
+						ORDER BY filterName ASC
+					</cfquery>
 					<td style="font-size: 10px;" valign="top">
 						Art Style:&nbsp;
 					</td>
 					<td>
 						<select name="artTypes" class="chosen-select" data-placeholder="Choose art Style" multiple onchange="artTypesvalue()">
 							<option value="">Please Select</option>
-							<option value="Abstract">Abstract</option>
+							<cfoutput query="qGetStyle">
+								<option value="#filterName#">#filterName#</option>
+							</cfoutput>
+							<!--- <option value="Abstract">Abstract</option>
 							<option value="Art Deco">Art Deco</option>
 							<option value="Contemporary Art">Contemporary Art</option>
 							<option value="Cubism">Cubism</option>
@@ -180,7 +229,7 @@ function popupWin(url) {
 							<option value="Urban Art">Urban Art</option>
 							<option value="Figurative">Figurative</option>
 							<option value="Animation">Animation</option>
-							<option value="Memorabilia">Memorabilia</option>
+							<option value="Memorabilia">Memorabilia</option> --->
 						</select>
 						<!--- <br><i>Select an art type from dropdown above,<br>
 							OR type in a new art type below:</i><br> --->
@@ -188,32 +237,30 @@ function popupWin(url) {
 					</td>
 				</tr>
 				<tr>
+					<cfquery name="qGetType" datasource="#application.dsource#">
+						SELECT * 
+						FROM filterOption
+						WHERE filterType = 'Type'
+						ORDER BY filterName ASC
+					</cfquery>
 					<td style="font-size: 10px;">
 						Art Type:
 					</td>
 					<td>
-						<select name="artTypee">
+						<select name="artTypees" class="chosen-select artTypeesvalue" data-placeholder="Choose art Type" multiple onchange="artTypeesvalue()">
 							<option value="">Please Select</option>
-							<option value="Paintings">Paintings</option>
+							<cfoutput query="qGetType">
+								<option value="#filterName#">#filterName#</option>
+							</cfoutput>
+							<!--- <option value="Paintings">Paintings</option>
 							<option value="Drawings and Watercolor">Drawings and Watercolor</option>
 							<option value="Mixed Media">Mixed Media</option>
 							<option value="Prints and Editions">Prints and Editions</option>
 							<option value="Photography">Photography</option>
-							<option value="Sculptures">Sculptures</option>
+							<option value="Sculptures">Sculptures</option> --->
 						</select>
-					</td>
-				</tr>
-				<tr>
-					<td style="font-size: 10px;" valign="top">
-						Featured on home page:
-					</td>
-					<td valign="top">
-						<select name="test">
-							<option value="0">Don't Show
-							<option value="1">Top
-							<option value="2">Middle
-							<option value="3">Bottom
-						</select>
+
+						<input type="hidden" name="artTypee" value="" size="100" >
 					</td>
 				</tr>
 				<tr>
@@ -225,12 +272,22 @@ function popupWin(url) {
 					</td>
 				</tr>
 				<tr>
+					<cfquery name="qGetSubject" datasource="#application.dsource#">
+						SELECT * 
+						FROM filterOption
+						WHERE filterType = 'Subject'
+						ORDER BY filterName ASC
+					</cfquery>
 					<td style="font-size: 10px;">
 						Art Subject:
 					</td>
 					<td>
-						<select name="artSubject" class="chosen-select" data-placeholder="Choose art Subject">
-							<option value="">Please Select</option>
+						<select name="artSubjectt" id="artSubjectt" class="chosen-select artSubjectvalue" data-placeholder="Choose art Subject" multiple onchange="artSubjectvalue()">
+							<option value="">Search by Subject</option>
+							<cfoutput query="qGetSubject">
+								<option value="#filterName#">#filterName#</option>
+							</cfoutput>
+							<!--- <option value="Abstract">Abstract</option>
 							<option value="Animals">Animals</option>
 							<option value="Animation">Animation</option>
 							<option value="Cityscapes">Cityscapes</option>
@@ -238,6 +295,7 @@ function popupWin(url) {
 							<option value="Fantasy">Fantasy</option>
 							<option value="Figures">Figures</option>
 							<option value="Floral">Floral</option>
+							<option value="Inspirational">Inspirational</option>
 							<option value="Landscapes">Landscapes</option>
 							<option value="Military">Military</option>
 							<option value="Music">Music</option>
@@ -247,22 +305,34 @@ function popupWin(url) {
 							<option value="Sports">Sports</option>
 							<option value="Still Life">Still Life</option>
 							<option value="Text">Text</option>
-							<option value="Transportation">Transportation</option>
+							<option value="Transportation">Transportation</option> --->
 						</select>
+						<input type="hidden" name="artSubject" value="" size="100" >
 					</td>
 				</tr>
 				<tr>
+					<cfquery name="qGetSize" datasource="#application.dsource#">
+						SELECT * 
+						FROM filterOption
+						WHERE filterType = 'Size'
+						ORDER BY id ASC
+					</cfquery>
+
 					<td style="font-size: 10px;">
 						Art Size:
 					</td>
 					<td>
-						<select name="artSize" class="chosen-select" data-placeholder="Choose art Size">
+						<select name="artSizee" class="chosen-select artSizevalue" data-placeholder="Choose art Size" multiple onchange="artSizevalue()">
 							<option value="">Please Select</option>
-							<option value="small">Small (up to 12 inches)</option>
+							<cfoutput query="qGetSize">
+								<option value="#filterName#">#filterName#</option>
+							</cfoutput>
+							<!--- <option value="small">Small (up to 12 inches)</option>
 							<option value="medium">Medium (13 to 36 inches)</option>
 							<option value="large">Large (37 to 60 inches)</option>
-							<option value="Oversized">Oversized (over 60 inches)</option>
+							<option value="Oversized">Oversized (over 60 inches)</option> --->
 						</select>
+						<input type="hidden" name="artSize" value="" size="100" >
 					</td>
 				</tr>
 			
@@ -290,6 +360,7 @@ function popupWin(url) {
 					<td>
 						<cfinput type="text" name="retail_price" id="retail_price" size="20">
 					</td>
+					
 				</tr>
 				<tr>
 					<td style="font-size: 10px;">
@@ -298,16 +369,26 @@ function popupWin(url) {
 					<td>
 						<cfinput type="text" name="gallery_price" id="gallery_price" size="20">
 					</td>
+					<td style="font-size: 10px;">
+						This should be less then the Retail price
+					</td>
 				</tr>
 				<tr>
 					<td style="font-size: 10px;">
 						Sale Price:
 					</td>
 					<td>
-						<cfinput type="text" name="special_price" id="special_price" size="20">&nbsp;<input type="Checkbox" name="closeout" value="1">&nbsp;Use sale price
+						<cfinput type="text" name="special_price" id="special_price" size="20">
+						&nbsp;<input type="Checkbox" name="closeout" value="1">&nbsp;Use sale price
+						&nbsp;<input type="Checkbox" name="promotion" value="1">&nbsp;Use promotion
 						<input type="hidden" name="closeout">
+						<input type="hidden" name="promotion">
+					</td>
+					<td style="font-size: 10px;">
+						This should be less then the Retail price
 					</td>
 				</tr>
+				
 				<tr>
 					<td style="font-size: 10px;">
 						Low Estimate:
@@ -407,7 +488,7 @@ function popupWin(url) {
 				<tr>
 					<td colspan="2">
 						<table border="0" cellpadding="2" cellspacing="0" width="100%">
-							<tr>
+							<!--- <tr>
 								<td colspan="2" width="100%">
 									<hr>
 								</td>
@@ -437,13 +518,13 @@ function popupWin(url) {
 									<td style="font-size: 10px;" valign="top">Wall:</td>
 									<td><input type="text" name="location_wall"></td>
 								</tr>
-							</tr>
+							</tr> --->
 							<tr>
 								<td colspan="2" style="font-size: 10px;" valign="top">Notes:</td>
 							</tr>
 							<tr>
 								<td colspan="2">
-									<textarea name="location_notes" cols="60" rows="5" value=""></textarea>
+									<textarea name="location_notes" id="location_notes" cols="60" rows="5" value=""></textarea>
 								</td>
 							</tr>
 							<tr>
@@ -479,7 +560,7 @@ function popupWin(url) {
 				<tr>
 					<td id="imageDisplay" height="150">
 						<img src="/images/0.gif" name="mainImg" id="mainImg" border="0" width="100"  /><br>
-						<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge<br><br>
+						<a href="" id="clickEnlarge" target="_blank">Click  to enlarge</a><br><br>
 					</td>
 				</tr>
 				<tr>

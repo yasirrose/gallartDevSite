@@ -23,7 +23,7 @@
     <cfoutput>
         <div>
             <div class="top-heading">
-                <p>Please sign our <a href="guests.cfm?xss=#xss#" class="company">Guest Book</a> for upcoming shows and information.</p>
+                <p>Please sign our <a href="/guests" class="company">Guest Book</a> for upcoming shows and information.</p>
             </div>
             <div class="bottom-heading">
                 <p>#getPages.page_content#</p>
