@@ -589,9 +589,10 @@
 					// if (!disableButtons(form)) return false;
 
 
-					var formData = new FormData(form); 
+					var formData = new FormData(form);
 
-					
+					var editBtn = document.getElementById("edit");
+					editBtn.disabled = true;
 
 					fetch("/admin/models/banners.cfc?method=updateBanner&returnformat=json", {
 						method: "POST",
@@ -616,6 +617,9 @@
 					.catch(err => {
 						console.error(err);
 						toastr.error('Error occurred.', 'Alert!');
+					})
+					.finally(() => {
+						setTimeout(function() { editBtn.disabled = false; }, 5000);
 					});
 				}
 

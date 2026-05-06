@@ -814,7 +814,10 @@
     			if (!disableButtons(form)) return false;
 
 
-				var formData = new FormData(form); 
+				var formData = new FormData(form);
+
+				var editBtn = document.getElementById("edit");
+				editBtn.disabled = true;
 
 				fetch("/admin/models/art.cfc?method=editListingsFromForm&returnformat=json", {
 					method: "POST",
@@ -823,7 +826,9 @@
 				.then(res => res.json())
 				.then(data => {
 					console.log('test: ' , data)
-					
+
+					window.scrollTo({ top: 0, behavior: 'smooth' });
+
 					if (data.SUCCESS == false) {
 						toastr.error(data.MESSAGE);
 						return;
@@ -839,7 +844,11 @@
 				})
 				.catch(err => {
 					console.error(err);
+					window.scrollTo({ top: 0, behavior: 'smooth' });
 					toastr.error('Error occurred.');
+				})
+				.finally(() => {
+					setTimeout(function() { editBtn.disabled = false; }, 5000);
 				});
 			}
 
