@@ -173,13 +173,13 @@
 					return false;
 				}
 
-				if(frm.year.value != ''){
-					if(!/^[0-9]+$/.test(frm.year.value.trim())){
-						toastr.warning('Year must be numeric', 'Alert!');
-						frm.year.focus();
-						return false;
-					}
-				}
+				// if(frm.year.value != ''){
+				// 	if(!/^[0-9]+$/.test(frm.year.value.trim())){
+				// 		toastr.warning('Year must be numeric', 'Alert!');
+				// 		frm.year.focus();
+				// 		return false;
+				// 	}
+				// }
 
 				// if(!isValidSize(frm.size.value)){
 				// 	alert('You must enter a valid SIZE: only numbers and the letter x');
@@ -361,7 +361,7 @@
 									Year:
 								</td>
 								<td>
-									<cfinput type="text" name="year" id="year" maxlength="10" size="20">
+									<cfinput type="text" name="year" id="year" maxlength="20" size="20">
 								</td>
 							</tr>
 							<tr>
