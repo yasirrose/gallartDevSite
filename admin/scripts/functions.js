@@ -734,6 +734,11 @@ function checkPasswordOrder() {
 
 function passwordResponseOrder(s) {
 	if(trim(s)== "true") {
+		// Re-enable both dropdowns before submit so their values are included in the POST
+		var custSel = document.getElementById('customerId');
+		var leadSel = document.getElementById('leadId');
+		if (custSel) custSel.disabled = false;
+		if (leadSel) leadSel.disabled = false;
 		document.orderForm.submit();
 	} else {
 		alert('That\'s not a valid password. Please try again.');

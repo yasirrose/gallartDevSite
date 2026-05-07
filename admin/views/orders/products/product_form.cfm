@@ -347,21 +347,21 @@
 			<tr>
 				<td>Street Address:</td>
 				<td>
-					<cfinput type="text" name="Address1" id="Address1" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromAddress({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="40" size="50" value="#form.Address1#">
+					<input type="text" name="Address1" id="Address1" maxlength="40" size="50" value="#form.Address1#">
 				</td>
 			</tr>
 
 			<tr>
 				<td>City:</td>
 				<td>
-					<cfinput type="text" name="City" id="City" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromCity({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="40" size="50" value="#form.City#">
+					<input type="text" name="City" id="City" maxlength="40" size="50" value="#form.City#">
 				</td>
 			</tr>
 
 			<tr>
 				<td>Zip Code:</td>
 				<td>
-					<cfinput type="text" name="Zip" id="Zip" autosuggest="cfc:admin.models.all_contacts.getAllContactsFromZipCode({cfautosuggestvalue})" maxResultsDisplay="10" maxlength="10" size="50" value="#form.Zip#">
+					<input type="text" name="Zip" id="Zip" maxlength="10" size="50" value="#form.Zip#">
 				</td>
 			</tr>
 
@@ -862,33 +862,35 @@ document.addEventListener("DOMContentLoaded", function() {
     const customerSelect = $("#customerId");
     const leadSelect = $("#leadId");
 
-    function toggleDropdowns() {
+    function toggleDropdowns(triggerFill) {
         const customerVal = customerSelect.val();
         const leadVal = leadSelect.val();
 
         if (customerVal) {
-            // Customer selected → disable leads
-            leadSelect.prop("disabled", true).trigger("change.select2");
-            customerSelect.prop("disabled", false).trigger("change.select2");
+            // Customer selected → disable leads only, no fill trigger on page load
+            leadSelect.prop("disabled", true);
+            customerSelect.prop("disabled", false);
+            if (triggerFill) getCustomer(customerVal);
         } 
         else if (leadVal) {
-            // Lead selected → disable customers
-            customerSelect.prop("disabled", true).trigger("change.select2");
-            leadSelect.prop("disabled", false).trigger("change.select2");
+            // Lead selected → disable customers only, no fill trigger on page load
+            customerSelect.prop("disabled", true);
+            leadSelect.prop("disabled", false);
+            if (triggerFill) getLead(leadVal);
         } 
         else {
             // Both empty → enable both
-            customerSelect.prop("disabled", false).trigger("change.select2");
-            leadSelect.prop("disabled", false).trigger("change.select2");
+            customerSelect.prop("disabled", false);
+            leadSelect.prop("disabled", false);
         }
     }
 
-    // Run once on page load
-    toggleDropdowns();
+    // Run once on page load — disable only, do NOT overwrite session-restored values
+    toggleDropdowns(false);
 
-    // Run on change
-    customerSelect.on("change", toggleDropdowns);
-    leadSelect.on("change", toggleDropdowns);
+    // Run on manual user change — allow fill
+    customerSelect.on("change", function() { toggleDropdowns(true); });
+    leadSelect.on("change", function() { toggleDropdowns(true); });
 });
 </script>
 
