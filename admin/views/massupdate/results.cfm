@@ -168,16 +168,44 @@ function artSizevalue(uid) {
 	ORDER BY filterName ASC
 </cfquery>
 		<!--- <cfdump var="#getListingsMassUpdate#" abort="true"> --->
+<cfset isChunkMode = structKeyExists(form,'chunkMode') AND isNumeric(form.chunkMode) AND val(form.chunkMode) EQ 1 />
+<cfset chunkStart = 1 />
+<cfset chunkSize = 50 />
+<cfset chunkThrough = 0 />
+<cfset totalFound = getListingsMassUpdate.qListings.recordcount />
+<cfif isChunkMode>
+	<cfif structKeyExists(form,'chunkStart') AND isNumeric(form.chunkStart) AND val(form.chunkStart) GT 0>
+		<cfset chunkStart = val(form.chunkStart) />
+	<cfelseif structKeyExists(form,'number_records') AND isNumeric(form.number_records) AND val(form.number_records) GT 0>
+		<cfset chunkStart = val(form.number_records) />
+	</cfif>
+	<cfif structKeyExists(form,'chunkSize') AND isNumeric(form.chunkSize) AND val(form.chunkSize) GT 0>
+		<cfset chunkSize = val(form.chunkSize) />
+	</cfif>
+	<cfset totalFound = val(getListingsMassUpdate.totalrecords) />
+	<cfif totalFound GT 0>
+		<cfset chunkThrough = min(chunkStart + chunkSize - 1, totalFound) />
+	</cfif>
+</cfif>
 <table border = "0" width = "100%" cellpadding = "5" cellspacing = "0">
 	<tr>
 		<td valign="top">
         	
 			<cfform method="post" action="index.cfm?event=massupdate.massUpdateProc" >
+				<cfif isChunkMode>
+					<cfoutput>
+						<input type="hidden" name="chunkMode" value="1">
+						<input type="hidden" name="chunkSize" value="#chunkSize#">
+						<cfif structKeyExists(form,'displayFields')>
+							<input type="hidden" name="displayFields" value="#HTMLEditFormat(form.displayFields)#">
+						</cfif>
+					</cfoutput>
+				</cfif>
 				<table border="0" cellspacing="0" cellpadding="2" align="center">
 					<tr>
 						<td colspan="15">
 						<cfoutput>
-						<cfif  structKeyExists(form,'groups')>#getListingsMassUpdate.totalrecords.countall#<cfelse>#getListingsMassUpdate.qListings.recordcount#</cfif> listings found
+						<cfif  structKeyExists(form,'groups')>#getListingsMassUpdate.totalrecords.countall#<cfelseif isChunkMode>#totalFound#<cfelse>#getListingsMassUpdate.qListings.recordcount#</cfif> listings found
 						<cfif structKeyExists(form,'alphaCharNum')> where artist's name starts with the letter <cfoutput>#chr(form.alphaCharNum)#</cfoutput></cfif>
 						<cfif  structKeyExists(form,'groups')>
 							(from #(page-1)*groups+1# to
@@ -187,7 +215,13 @@ function artSizevalue(uid) {
 						</cfoutput>
 					</td>
 					</tr>
-					<cfif isDefined('form.number_records') AND form.number_records neq ''>
+					<cfif isChunkMode>
+						<tr>
+							<td colspan="15">
+								<cfoutput>Showing #chunkStart# through #chunkThrough#</cfoutput>
+							</td>
+						</tr>
+					<cfelseif isDefined('form.number_records') AND form.number_records neq ''>
 						<cfset through = form.number_records + 49 />
 						<cfif through GT getListingsMassUpdate.qListings.recordcount>
 							<cfset through = getListingsMassUpdate.qListings.recordcount />
@@ -201,6 +235,16 @@ function artSizevalue(uid) {
 					<tr>
 						<td colspan="3">
 							<input type="Button" value="Back To Search" onclick="location.href='index.cfm?event=massupdate'">
+							<cfif isChunkMode>
+								<cfoutput>
+									<cfif chunkStart GT 1>
+										<button type="submit" name="chunkStart" value="#max(1, chunkStart - chunkSize)#" formaction="index.cfm?event=massupdate.results" formmethod="post" formnovalidate="formnovalidate" style="margin-left: 12px;">&lt;&lt; PREV</button>
+									</cfif>
+									<cfif chunkThrough LT totalFound>
+										<button type="submit" name="chunkStart" value="#chunkStart + chunkSize#" formaction="index.cfm?event=massupdate.results" formmethod="post" formnovalidate="formnovalidate" style="margin-left: 8px;">NEXT &gt;&gt;</button>
+									</cfif>
+								</cfoutput>
+							</cfif>
 						</td>
 						<td>
 							<span style="font-size: 10px;">(click to uncheck)</span>
@@ -387,7 +431,10 @@ function artSizevalue(uid) {
 					</tr>
 					<cfparam name="thisStartrow" default="1">
 					<cfparam name="thisMaxrows" default="#getListingsMassUpdate.qListings.recordcount#">
-					<cfif isDefined('form.number_records') AND form.number_records neq ''>
+					<cfif isChunkMode>
+						<cfset thisStartrow = 1 />
+						<cfset thisMaxrows = getListingsMassUpdate.qListings.recordcount />
+					<cfelseif isDefined('form.number_records') AND form.number_records neq ''>
 						<cfset thisStartrow = form.number_records />
 						<cfset thisMaxrows = 49 />
 					</cfif>
