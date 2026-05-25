@@ -1,4 +1,3 @@
-<!--- <cfdump var="#session.invoiceinfo#" abort="true"> --->
 
 <form method="post" action="index.cfm?event=orders.createPdf" name="confirmForm">
 	<cfinclude template="print_invoice_template.cfm">

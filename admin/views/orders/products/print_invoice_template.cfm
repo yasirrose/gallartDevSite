@@ -381,7 +381,7 @@
 						<cfif isDefined('printFields')>
 							<span class="data">#dollarFormat(session.invoiceInfo.amountpaid)#</span>
 						<cfelse>
-							$<input type="Text" name="amountPaid" id="amountPaid" size="5" onkeyup="computeAmount();"  style="font-size: 15px; text-align:right;" />
+							$<input type="Text" name="amountPaid" id="amountPaid" size="5" onkeyup="computeAmount();" style="font-size: 15px; text-align:right;" />
 						</cfif>
 					</td>
 				</tr>
@@ -422,6 +422,5 @@
 		</td>
 	</tr>
 </table>
-
 </cfoutput>
 

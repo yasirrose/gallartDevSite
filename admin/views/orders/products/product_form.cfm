@@ -20,9 +20,7 @@
 	<cfform action="index.cfm?event=orders.confirmInvoice" id="orderForm" name="orderForm">
 		<input type="hidden" name="invoiceNumber" id="invoiceNumber" value="0">
 		<input type="hidden" name="displayInvoiceNumber" id="displayInvoiceNumber" value="0">
-		<input type="hidden" name="assignedTo" id="assignedTo">
-
-		
+		<input type="hidden" name="assignedTo" id="assignedTo">	
 
 		<table border = "0" width = "600" cellpadding = "5" cellspacing = "5" bgcolor="eeeeee">
 
