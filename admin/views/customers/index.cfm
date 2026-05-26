@@ -126,7 +126,7 @@
 									<td>
 										Email:
 										<br>
-										<cfinput type="text" name="customer_email" id="customer_email" maxlength="30" bind="{data.customer_email}" size="30">&nbsp;
+										<cfinput type="text" name="customer_email" id="customer_email" maxlength="100" bind="{data.customer_email}" size="30">&nbsp;
 										<span  id="emailLink"></span>
 									</td>
 									

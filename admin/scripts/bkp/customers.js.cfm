@@ -29,10 +29,6 @@ getState = function(){
 	   var s = ColdFusion.getElementValue('searchState');
 	   return s;
 }
-
-function isValidCustomerEmail(email) {
-	return /^(?!.*\.\.)[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/.test(email);
-}
 	
 	
 // get current row id 
@@ -187,36 +183,19 @@ function doEdit(type) {
     
     if (type == 'edit'){
 
-		var email = document.getElementById('customer_email').value.trim();
 		var phone = document.getElementById('phoneNumber').value.trim();
 		var phoneType = document.getElementById('PhoneType').value;
-		var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
 
-		if (email === "") {
-			alert("Email is required.");
-			document.getElementById('customer_email').focus();
-			return false;
-		}
+		
 
-		if (!isValidCustomerEmail(email)) {
-			alert("Please enter a valid email address.");
-			document.getElementById('customer_email').focus();
-			return false;
-		}
-
-		if (phone === "") {
-			alert("Phone Number is required.");
-			document.getElementById('phoneNumber').focus();
-			return false;
-		}
-
-		if (
-			(phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") &&
-			!phonePattern.test(phone)
-		) {
-			alert("Please enter phone number in format: (xxx) xxx-xxxx");
-			document.getElementById('phoneNumber').focus();
-			return false;
+		if (phoneType === "Home Phone" || phoneType === "Cell Phone" || phoneType === "Business Phone") {
+			// Format: (123) 456-7890
+			var phonePattern = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+			if (!phonePattern.test(phone)) {
+				alert("Please enter phone number in format: (xxx) xxx-xxxx");
+				document.getElementById('phoneNumber').focus();
+				return false;
+			}
 		}
 
 		editBtn.disabled = true;
