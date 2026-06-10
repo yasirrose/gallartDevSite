@@ -1,0 +1,37 @@
+# Gallart.com
+> Gallart is an online fine art gallery specializing in buying and selling modern and contemporary fine art, including works by leading artists such as Peter Max, Andy Warhol, and Tom Wesselmann.
+
+## About
+- https://gallart.com/about-us/
+
+## Browse Art
+- https://gallart.com/artists/
+- https://gallart.com/recent-acquisitions/
+- https://gallart.com/sale-items/
+- https://gallart.com/classifieds/
+- https://gallart.com/alpha_list/
+
+## Artist Information
+- https://gallart.com/artists/search/
+
+## Buy & Sell
+- https://gallart.com/buyer-info/
+- https://gallart.com/seller-info/
+- https://gallart.com/sell-your-art/
+- https://gallart.com/quotes/
+
+## Events & Articles
+- https://gallart.com/events/
+- https://gallart.com/articles/
+
+## Customer Service
+- https://gallart.com/contact-us/
+- https://gallart.com/shipping-policy/
+- https://gallart.com/privacy/
+- https://gallart.com/terms/
+- https://gallart.com/guarantee/
+
+## Alerts & Requests
+- https://gallart.com/alerts/
+- https://gallart.com/requests/
+- https://gallart.com/mailing-list/

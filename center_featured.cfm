@@ -24,19 +24,25 @@
 		
 			<div class="featured-item">
 				<div class="featured-img">
-					<span itemprop="url"><a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
-						<cfset imgFile =  'http://#server_name#/img/thumbnails/' & uid &'.jpg' />
+					<span itemprop="url"><a href="/artists/#producturl#">
+						<cfset imgFile =  'http://23.20.226.157/img/thumbnails/' & uid &'.jpg' />
 						<cfif fileExists(imgFile)>
-							<span itemprop="image"><img src="http://#server_name#/img/#uid#.jpg" alt="#artist_name_alt# - #name#" title="#artist_name_alt# - #name#" border="0" align="center"></span>
+							<span itemprop="image"><img src="http://23.20.226.157/img/#uid#.jpg" alt="#artist_name_alt# - #name#" title="#artist_name_alt# - #name#" border="0" align="center"></span>
 							<!--- <img src="http://#server_name#/img/thumbnails/#uid#.jpg" alt="#artist_name_alt# - #name#" title="#artist_name_alt# - #name#" border="0" align="center"> --->
 						<cfelse>
-							#artist_name#
+							
+							<!--- #artist_name# --->
+							<span itemprop="image">
+								<img src="http://23.20.226.157/img/thumbnails/noImage.jfif.jpeg">
+							</span>
+							
 						</cfif>
 				</div>
-				<div class="featured-heading" itemscope itemtype="http://schema.org/ArtGallery">
+				<div class="featured-heading" itemscope itemtype="http://schema.org/Person">
 					<h5 itemprop="name">
-						<a href="products.cfm?man=#manufacturer#<cfif parameterexists(xss)>&xss=#xss#</cfif>">
-							#ucase(artist_name)#</a>
+						<a href="/artists/#producturl#" >
+							<cfset capitalize_artistName = REReplace(artist_name, "\b([a-zA-Z])([a-zA-Z]*)", "\u\1\L\2", "ALL")>
+							#artist_name#</a>
 					</h5>
 				</div>
 			</div>
@@ -46,6 +52,28 @@
 	</cfoutput>
 </div>
 </div>
+
+<!--- <script>
+	function changeurl(event, man, xss) {
+	  event.preventDefault(); // stop the normal link navigation
+  
+	  // Convert "Indiana, Robert" to "indiana-robert"
+	  const artistSlug = man.toLowerCase()
+		.replace(/\s*,\s*/g, '-') // replace commas with hyphens
+		.replace(/\s+/g, '-');    // replace spaces with hyphens
+  
+	  // Create the new URL
+	  const newURL = `${window.location.origin}/artists/${artistSlug}/`;
+	  console.log(newURL);
+	  
+	  // Redirect to the new URL
+	  window.location.replace(newURL);
+  
+	  
+	}
+  </script> --->
+
+
 <!--- <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
 		<td style="padding: 0 25px;" align="center">
