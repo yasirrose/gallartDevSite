@@ -79,7 +79,7 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 
-        <!---<script id="scripts" type="text/javascript" src="/scripts_887a5339b2625a8970658c4f5f9bd94f1067ab7a.js"></script>--->
+        <script id="scripts" type="text/javascript" src="/scripts_887a5339b2625a8970658c4f5f9bd94f1067ab7a.js"></script>
         <meta name="referrer" content="same-origin" />
 
         <!--- <link rel="icon" sizes="16x16" type="image/png" href=/assets/favicon_16.png />

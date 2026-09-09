@@ -336,6 +336,174 @@
 
 <script>
 	$(document).ready(function () {
+		function keepDigitsOnly(value) {
+			return value.replace(/\D+/g, '');
+		}
+
+		function keepDecimalOnly(value) {
+			var sanitizedValue = value.replace(/[^0-9.]/g, '');
+			var decimalParts = sanitizedValue.split('.');
+
+			if (decimalParts.length <= 1) {
+				return sanitizedValue;
+			}
+
+			return decimalParts.shift() + '.' + decimalParts.join('');
+		}
+
+		function keepDateOnly(value) {
+			return value.replace(/[^0-9\/-]/g, '');
+		}
+
+		function bindInputSanitizer(selector, sanitizer, inputMode) {
+			$(selector).attr('inputmode', inputMode);
+
+			$(document).on('input blur', selector, function () {
+				var sanitizedValue = sanitizer(this.value);
+
+				if (this.value !== sanitizedValue) {
+					this.value = sanitizedValue;
+				}
+			});
+		}
+
+		function isInsideElement(element, target) {
+			return !!(element && target && (element === target || element.contains(target)));
+		}
+
+		function getDomElement(extElement) {
+			return extElement && extElement.dom ? extElement.dom : null;
+		}
+
+		function hideOpenColdFusionCalendar(event) {
+			var calendarApi;
+			var calendarInstance;
+			var clickTarget = event.target;
+			var fieldElement;
+			var buttonElement;
+			var containerElement;
+
+			if (
+				typeof ColdFusion === 'undefined' ||
+				!ColdFusion.Calendar ||
+				!ColdFusion.Calendar.openedCalendarInstance
+			) {
+				return false;
+			}
+
+			calendarApi = ColdFusion.Calendar;
+			calendarInstance = calendarApi.openedCalendarInstance;
+			fieldElement = calendarInstance.calendarinput || document.getElementById(calendarInstance.calendarinputid);
+			buttonElement = document.getElementById(calendarInstance.calendarinputid + calendarInstance.formname + '_cf_button');
+			containerElement = document.getElementById(calendarInstance.calendarinputid + calendarInstance.formname + '_cf_container');
+
+			if (
+				isInsideElement(fieldElement, clickTarget) ||
+				isInsideElement(buttonElement, clickTarget) ||
+				isInsideElement(containerElement, clickTarget)
+			) {
+				return true;
+			}
+
+			if (calendarInstance.hide) {
+				calendarInstance.hide();
+			}
+
+			calendarApi.openedCalendarInstance = null;
+			return true;
+		}
+
+		function isDateFieldComponent(component) {
+			if (typeof Ext === 'undefined' || !component) {
+				return false;
+			}
+
+			return !!(
+				(Ext.form && Ext.form.DateField && component instanceof Ext.form.DateField) ||
+				(Ext.form && Ext.form.Date && component instanceof Ext.form.Date) ||
+				(Ext.form && Ext.form.field && Ext.form.field.Date && component instanceof Ext.form.field.Date)
+			);
+		}
+
+		function getDatePopup(component) {
+			if (component.menu && component.menu.hide) {
+				return component.menu;
+			}
+
+			if (component.picker && component.picker.hide) {
+				return component.picker;
+			}
+
+			if (component.getPicker) {
+				try {
+					return component.getPicker();
+				} catch (error) {
+					return null;
+				}
+			}
+
+			return null;
+		}
+
+		function hideOpenDateMenus(event) {
+			var componentManager;
+			var components;
+			var componentIndex;
+
+			if (hideOpenColdFusionCalendar(event)) {
+				return;
+			}
+
+			if (
+				typeof Ext === 'undefined' ||
+				!(Ext.ComponentMgr || Ext.ComponentManager)
+			) {
+				return;
+			}
+
+			componentManager = Ext.ComponentMgr || Ext.ComponentManager;
+			components = componentManager.getAll ? componentManager.getAll() : [];
+
+			var clickTarget = event.target;
+
+			for (componentIndex = 0; componentIndex < components.length; componentIndex++) {
+				var component = components[componentIndex];
+				var popup = getDatePopup(component);
+				var hasVisiblePopup = isDateFieldComponent(component) && popup && popup.isVisible && popup.isVisible();
+
+				if (!hasVisiblePopup) {
+					continue;
+				}
+
+				var componentElement = component.getEl ? component.getEl() : null;
+				var popupWrapperElement = popup.getEl ? popup.getEl() : null;
+				var fieldElement = getDomElement(component.inputEl) || getDomElement(component.el) || getDomElement(componentElement);
+				var wrapElement = getDomElement(component.triggerWrap) || getDomElement(component.wrap);
+				var triggerElement = getDomElement(component.triggerWrap) || getDomElement(component.trigger);
+				var popupElement = getDomElement(popup.el) || getDomElement(popupWrapperElement);
+
+				if (
+					isInsideElement(fieldElement, clickTarget) ||
+					isInsideElement(wrapElement, clickTarget) ||
+					isInsideElement(triggerElement, clickTarget) ||
+					isInsideElement(popupElement, clickTarget)
+				) {
+					continue;
+				}
+
+				if (component.collapse) {
+					component.collapse();
+					continue;
+				}
+
+				popup.hide();
+			}
+		}
+
+		bindInputSanitizer('input[name="modelno"], input[id="modelno"]', keepDigitsOnly, 'numeric');
+		bindInputSanitizer('input[name="FromPrice"], input[id="FromPrice"], input[name="ToPrice"], input[id="ToPrice"]', keepDecimalOnly, 'decimal');
+		bindInputSanitizer('input[name="FromDate"], input[id="FromDate"], input[name="ToDate"], input[id="ToDate"], input[name="FromLastedit"], input[id="FromLastedit"], input[name="ToLastedit"], input[id="ToLastedit"]', keepDateOnly, 'numeric');
+
 		$('.select2').select2({
 			matcher: function (params, data) {
 				if ($.trim(params.term) === '') {
@@ -377,6 +545,8 @@
 				});
 			}
 		});
+
+		$(document).on('mousedown', hideOpenDateMenus);
 	});
 
 

@@ -97,7 +97,6 @@
     AND fk_users is not null
     ORDER by producturl 
 </cfquery>
-<!--- <cfdump var="#getArtists#" label="getArtists"/> --->
 
 <cfquery name="getMedium" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
     Select path from products
@@ -105,7 +104,6 @@
     group by path
     order by path
 </cfquery>
-<!--- <cfdump var="#getMedium#" label="getMedium"/> --->
 
 <cfquery name="qEmployees" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
     SELECT * 
@@ -113,7 +111,6 @@
     WHERE filterType = 'Subject'
     ORDER BY filterName ASC
 </cfquery>
-<!--- <cfdump var="#qEmployees#" label="qEmployees"/> --->
 
 <cfquery name="qGetStyle" datasource="#application.dsource#">
     SELECT * 
@@ -121,7 +118,6 @@
     WHERE filterType = 'Style'
     ORDER BY filterName ASC
 </cfquery>
-<!--- <cfdump var="#qGetStyle#" label="qGetStyle"/> --->
 
 <cfquery name="qGetSize" datasource="#application.dsource#">
     SELECT * 
@@ -129,7 +125,6 @@
     WHERE filterType = 'Size'
     ORDER BY id ASC
 </cfquery>
-<!--- <cfdump var="#qGetSize#" label="qGetSize"/> --->
 
 <cfquery name="qGetType" datasource="#application.dsource#">
     SELECT * 
@@ -246,12 +241,9 @@
                                                             </div>
                                                             
                                                             <cfset strippedBioText = REReplaceNoCase(bioText, "<[^>]*>", "", "ALL")>
-                                                            <cfset strippedBioText = Trim(REReplaceNoCase(strippedBioText, "&nbsp;", "", "ALL"))>
-
-                                                            <cfif strippedBioText NEQ "" >
-
-                                                            <p style="font-weight: bold; cursor: pointer;" id="toggle-btn" onclick="toggleBio()">Show More</p>
-
+                                                            <cfset strippedBioTextt = Trim(REReplaceNoCase(strippedBioText, "&nbsp;", "", "ALL"))>
+                                                            <cfif strippedBioTextt NEQ "">
+                                                            <p style="display:none; font-weight: bold; cursor: pointer;" id="toggle-btn" onclick="toggleBio()">Show More</p>
                                                             </cfif>
                                                         </div>
                                                 </div>
@@ -369,21 +361,57 @@
 
         <script>
             function toggleBio() {
-                // Get the elements for the preview and the button
                 var preview = document.getElementById('bio-preview');
                 var button = document.getElementById('toggle-btn');
-            
-                // Toggle between showing truncated and full content
+
+                if (!preview || !button) {
+                    return;
+                }
+
                 if (preview.classList.contains('expanded')) {
-                    // If currently showing full content, collapse it
                     preview.classList.remove('expanded');
-                    button.innerText = 'Show More'; // Change the button text
+                    button.innerText = 'Show More';
                 } else {
-                    // If currently showing truncated content, expand it
                     preview.classList.add('expanded');
-                    button.innerText = 'Show Less';  // Change the button text
+                    button.innerText = 'Show Less';
                 }
             }
+
+            function updateBioToggleVisibility() {
+                var preview = document.getElementById('bio-preview');
+                var button = document.getElementById('toggle-btn');
+
+                if (!preview || !button) {
+                    return;
+                }
+
+                var wasExpanded = preview.classList.contains('expanded');
+
+                if (wasExpanded) {
+                    preview.classList.remove('expanded');
+                }
+
+                var isOverflowing = preview.scrollHeight > (preview.clientHeight + 1);
+
+                if (isOverflowing) {
+                    button.style.display = 'block';
+                    button.innerText = wasExpanded ? 'Show Less' : 'Show More';
+                } else {
+                    button.style.display = 'none';
+                    button.innerText = 'Show More';
+                }
+
+                if (wasExpanded && isOverflowing) {
+                    preview.classList.add('expanded');
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                window.requestAnimationFrame(updateBioToggleVisibility);
+            });
+
+            window.addEventListener('load', updateBioToggleVisibility);
+            window.addEventListener('resize', updateBioToggleVisibility);
 
             window.onscroll = function() {scrollFunction()};
 

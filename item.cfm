@@ -1,6 +1,6 @@
 
 
-<cfset fullURL = ""> <!-- Declare first -->
+<cfset fullURL = ""> <!-- Declare first.. -->
 <!--- <cfparam name="url.slug" default=""> --->
 <cfsilent>
    <cfparam name="form.fname" default="">
@@ -61,6 +61,30 @@
    ) />
    <cfset FORM.captcha_check = Encrypt( strCaptcha,"gallart-is-the-best", "CFMX_COMPAT", "HEX" ) />
 </cfsilent>
+<!--- Pre-fetch product name/artist for <title> tag --->
+<cfparam name="url.slug" default="">
+<cfparam name="url.artist" default="">
+<cfquery name="productinfoTitle" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+   SELECT name, manufacturer FROM products
+   WHERE slug = <cfqueryparam value="#url.slug#" cfsqltype="cf_sql_varchar">
+   AND (path <> '') AND (path IS NOT NULL)
+</cfquery>
+<cfif productinfoTitle.recordCount EQ 1>
+   <!--- Build display name from "Last, First" format --->
+   <cfset titleNameParts = listToArray(productinfoTitle.manufacturer, ",")>
+   <cfif arrayLen(titleNameParts) EQ 2>
+      <cfset titleArtist = trim(titleNameParts[2]) & " " & trim(titleNameParts[1])>
+   <cfelse>
+      <cfset titleArtist = trim(productinfoTitle.manufacturer)>
+   </cfif>
+   <!--- Strip "by ArtistName" if title is "Untitled by ..." --->
+   <cfset titleName = trim(productinfoTitle.name)>
+   <cfif REFindNoCase("^untitled\s+by\s+", titleName)>
+      <cfset titleName = "Untitled">
+   </cfif>
+   <cfset titletext = titleArtist & " - " & titleName>
+</cfif>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
 <html>
@@ -551,6 +575,11 @@
                                                          </cfloop>
 
                                                          <cfset updatedName = Trim(updatedName)>
+
+                                                         <!--- Strip " by ArtistName" if title starts with "Untitled by" --->
+                                                         <cfif REFindNoCase("^untitled\s+by\s+", updatedName)>
+                                                            <cfset updatedName = "Untitled">
+                                                         </cfif>
 
 															            <h2 class="title">#updatedName#</h2>
 

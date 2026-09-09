@@ -135,7 +135,7 @@
 				</table>
 			</cfform>
 		</td>
-		<td valign="top">
+		<td valign="top" class="test">
 			<!--- <input type="button" value="New" onclick="showNew()"> --->
 			<cfform name="editForm" enctype="multipart/form-data" onsubmit="return CheckEntries()">
 				<cfinput type="hidden" name="pk_purchases_consignments" id="pk_purchases_consignments" bind="{data.pk_purchases_consignments}">
@@ -219,7 +219,7 @@
 										
 									</td>
 									<td  height="150" colspan="2">
-										<div id="imageDisplay">
+										<div id="imageDisplay" class="testing">
 											<div class="img-box">
 												<img src="" name="mainImg" id="mainImg" border="0" width="100"  /><br>
 												<a href="" id="clickEnlarge" target="_blank">Click</a> to enlarge

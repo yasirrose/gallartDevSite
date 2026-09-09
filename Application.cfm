@@ -1,7 +1,7 @@
 <!--- Global error handler --->
 <!--- <cferror type="exception" template="/errorHandler.cfm">
 <cferror type="request" template="/errorHandler.cfm"> --->
-
+<cfprocessingdirective suppresswhitespace="yes">
 <cfapplication 
     name="galleryart"
     clientmanagement="Yes"
@@ -259,3 +259,4 @@ WHERE createdon < '#DateFormat(createodbcdate(DateAdd('w',-1,now())))#'
 
     <cfabort>
   </cffunction>
+</cfprocessingdirective>

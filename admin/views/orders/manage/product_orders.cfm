@@ -520,7 +520,7 @@ function popupWinEmail(url) {
 									Email:
 								</td>
 								<td>
-									<cfinput type="text" name="customer_email" id="customer_email"  bind="{data.customer_email}" size="35" class="displayInput">&nbsp;
+									<cfinput type="text" name="customer_email" id="customer_email"  bind="{data.customer_email}" size="35" class="displayInput" validate="email" message="Please enter a valid email address.">&nbsp;
                                     <input type="Button" id="emailButton" value="Send Email To Customer" onclick="openCustomerEmailWindow();" />
 									<!--<span  id="emailLink"></span>-->
 								</td>
@@ -955,6 +955,16 @@ function popupWinEmail(url) {
 	function validateOrderForm() {
 		let phoneType = document.getElementById("PhoneType").value;
 		let phone = document.getElementById("phoneNumber").value.trim();
+		let email = document.getElementById("customer_email").value.trim();
+
+		if (email !== "") {
+			let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailPattern.test(email)) {
+				alert("Please enter a valid email address.");
+				document.getElementById("customer_email").focus();
+				return false;
+			}
+		}
 
 		// Agar phone empty hai aur required nahi, to skip
 		if (phone === "") {
