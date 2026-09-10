@@ -9,13 +9,49 @@
 <cfparam name="avscode" default="">
 <cfparam name="Approved" default="1">
 
-<!--- Get contents of cart --->
-<cfquery name="GetCartInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT  * FROM cart WHERE trackerid = '#session.xss#'
-</cfquery>
-<cfquery name="GetuserInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
-	SELECT  * FROM tracker WHERE sessionid = '#session.xss#'
-</cfquery>
+<!--- Reject direct, replayed, or incomplete checkout requests before changing data. --->
+<cfset checkoutError = "">
+
+<cfif CGI.REQUEST_METHOD NEQ "POST">
+	<cfset checkoutError = "Invalid checkout request.">
+<cfelseif NOT structKeyExists(session, "xss") OR NOT structKeyExists(form, "checkout_token") OR NOT structKeyExists(form, "recaptcha_response")>
+	<cfset checkoutError = "Your checkout session has expired. Please return to checkout and try again.">
+</cfif>
+
+<cfif NOT len(checkoutError)>
+	<cfquery name="GetCartInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+		SELECT * FROM cart WHERE trackerid = <cfqueryparam value="#session.xss#" cfsqltype="cf_sql_varchar">
+	</cfquery>
+	<cfquery name="GetuserInfo" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
+		SELECT * FROM tracker WHERE sessionid = <cfqueryparam value="#session.xss#" cfsqltype="cf_sql_varchar">
+	</cfquery>
+
+	<cfif NOT GetCartInfo.recordCount OR NOT GetuserInfo.recordCount>
+		<cfset checkoutError = "Your cart is empty or your checkout session has expired.">
+	</cfif>
+</cfif>
+
+<cfif NOT len(checkoutError)>
+	<cfif NOT structKeyExists(session, "checkoutCaptchaToken") OR session.checkoutCaptchaToken NEQ form.checkout_token>
+		<cfset checkoutError = "Please return to checkout and complete reCAPTCHA again.">
+	</cfif>
+</cfif>
+
+<cfif NOT len(checkoutError)>
+	<cflock scope="session" type="exclusive" timeout="5">
+		<cfif NOT structKeyExists(session, "checkoutToken") OR NOT structKeyExists(session, "checkoutTokenUsed") OR session.checkoutTokenUsed OR form.checkout_token NEQ session.checkoutToken>
+			<cfset checkoutError = "This checkout has already been submitted. Please start a new checkout.">
+		<cfelse>
+			<cfset session.checkoutTokenUsed = true>
+		</cfif>
+	</cflock>
+</cfif>
+
+<cfif len(checkoutError)>
+	<cfheader statuscode="400" statustext="Invalid Checkout Request">
+	<cfoutput><p>#encodeForHTML(checkoutError)#</p></cfoutput>
+	<cfabort>
+</cfif>
 
 	<!--- Insert info into customers table if new customer remove this section if not supported --->
 	<cfquery name="find_cust" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">

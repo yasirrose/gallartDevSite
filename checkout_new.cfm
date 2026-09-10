@@ -1,6 +1,6 @@
 
 
-<cfif isDefined('form.updateQty')>
+<cfif isDefined('form.updateQty') AND structKeyExists(form, "selected_pid") AND structKeyExists(form, "qty_" & form.selected_pid)>
 	<cfset selectedQty = form["qty_" & form.selected_pid]>
 	<cfif #selectedQty# eq 0 or #selectedQty# eq '' >
 		<cfquery name="lineitem" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
@@ -26,6 +26,26 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <cfparam name="xss" default="">
 
+<!--- Preserve reviewed field values when the customer chooses Make Changes. --->
+<cfset checkoutReturnValues = structNew()>
+<cfif structKeyExists(form, "return_to_checkout") AND form.return_to_checkout EQ "1">
+	<cfloop collection="#form#" item="checkoutField">
+		<cfif NOT listFindNoCase("return_to_checkout,checkout_token,recaptcha_response,g-recaptcha-response", checkoutField)>
+			<cfset checkoutReturnValues[checkoutField] = form[checkoutField]>
+		</cfif>
+	</cfloop>
+</cfif>
+<cfset checkoutReturnValuesJson = replace(serializeJSON(checkoutReturnValues), "</", "<\\/", "all")>
+
+<!--- A checkout token is valid for one order submission only. --->
+<cflock scope="session" type="exclusive" timeout="5">
+	<!--- Keep an unused token when a customer returns from the review page to make changes. --->
+	<cfif NOT structKeyExists(session, "checkoutToken") OR NOT structKeyExists(session, "checkoutTokenUsed") OR session.checkoutTokenUsed>
+		<cfset session.checkoutToken = hash(createUUID() & now() & session.xss, "SHA-256")>
+		<cfset session.checkoutTokenUsed = false>
+	</cfif>
+</cflock>
+
 <html>
 	<head>
 		<cfoutput>
@@ -44,6 +64,27 @@
 
 		<SCRIPT LANGUAGE="JavaScript">
 			var formSubmited = 0;
+			var checkoutReturnValues = JSON.parse("<cfoutput>#JSStringFormat(checkoutReturnValuesJson)#</cfoutput>");
+
+			function restoreCheckoutFields() {
+				Object.keys(checkoutReturnValues).forEach(function (name) {
+					var controls = document.querySelectorAll("[name]");
+					for (var i = 0; i < controls.length; i++) {
+						var control = controls[i];
+						if (control.name.toUpperCase() !== name.toUpperCase()) continue;
+						if (control.type === "checkbox" || control.type === "radio") {
+							control.checked = checkoutReturnValues[name] === control.value || checkoutReturnValues[name] === "on";
+						} else {
+							control.value = checkoutReturnValues[name];
+						}
+					}
+				});
+
+				if (typeof toggleAddressFields === "function") toggleAddressFields();
+				if (typeof ShiptoggleAddressFields === "function") ShiptoggleAddressFields();
+				var comments = document.getElementById("comments");
+				if (comments) comments.dispatchEvent(new Event("input", { bubbles: true }));
+			}
 
 			var cardRules = {
 				"Visa": { length: 19, pattern: /^4\d{15}$/, format: "#### #### #### ####", placeholder: "4111 1111 1111 1111" },
@@ -53,6 +94,7 @@
 			};
 
 			document.addEventListener("DOMContentLoaded", function () {
+				restoreCheckoutFields();
 				const cardInput = document.getElementById("cardnum");
 				const cardTypeSelect = document.querySelector("[name='cardtype']");
 
@@ -138,6 +180,7 @@
 
 				const phoneType = document.querySelector("[name='phoneType']").value;
 				const selectedCardType = document.querySelector("[name='cardtype']").value;
+				const recaptchaField = document.querySelector("#gRecaptchaCheckout iframe") || document.getElementById("gRecaptchaCheckout");
 
 				const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
 				const emailRegex = /\S+@\S+\.\S+/;
@@ -191,6 +234,16 @@
 					);
 				}
 
+				// reCAPTCHA validation
+				if (typeof grecaptcha !== 'undefined') {
+					if (!grecaptcha.getResponse()) {
+						setError("recaptcha", "Please confirm you are not a robot.");
+						if (recaptchaField) recaptchaField.focus();
+					}
+				} else {
+					setError("recaptcha", "Please confirm you are not a robot.");
+				}
+
 				// Stop if invalid
 				if (!isValid) return false;
 
@@ -201,6 +254,16 @@
 				}
 
 				formSubmited = 1;
+
+				// Use a ColdFusion-safe field name for the reCAPTCHA response.
+				let input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'recaptcha_response';
+				input.value = grecaptcha.getResponse();
+				frm.appendChild(input);
+
+				const recaptchaInput = frm.querySelector('textarea[name="g-recaptcha-response"]');
+				if (recaptchaInput) recaptchaInput.remove();
 				return true;
 			}
 		
@@ -234,7 +297,7 @@
 
 					var input = document.createElement('input');
 					input.type = 'hidden';
-					input.name = 'updateQty';
+					input.name = 'removeItem';
 					input.value = '1';
 
 					var pidInput = document.createElement('input');
@@ -945,11 +1008,16 @@
 																		</div>
 																	</div>
 																</div>
-																<div class="text-center mt-3">
+																																												<div class="input-field pt-3">
+																																													<div class="g-recaptcha" id="gRecaptchaCheckout" data-sitekey="6LddEiMrAAAAAOnJRd03TsT_vYkEbebkW0T3u_ne"></div>
+																																													<span class="error-message" id="recaptchaError"></span>
+																																												</div>
+																																														<div class="text-center mt-3">
 																	<input type="submit" value="Review Order" id="submitBtn" class="pinkSubmit">
 																	<input type="reset" value="Reset Form" class="pinkSubmit">
 																</div>
-																<input type="Hidden" name="fk_locations" value="1">
+																																												<input type="Hidden" name="fk_locations" value="1">
+																																												<input type="hidden" name="checkout_token" value="#encodeForHTMLAttribute(session.checkoutToken)#">
 															</cfform>
 														</cfoutput>
 													</cfif>
@@ -1276,6 +1344,8 @@
 			}
 		</style>
 	
+
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 	</body>
 </html>

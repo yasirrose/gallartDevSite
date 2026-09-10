@@ -95,6 +95,38 @@ table tr td, table tr td * {
 	</cfloop>
 </cfif>
 
+<cfif NOT structKeyExists(form, "checkout_token") OR NOT structKeyExists(session, "checkoutToken") OR form.checkout_token NEQ session.checkoutToken>
+	<cflocation url="/checkout_new" addtoken="false">
+</cfif>
+
+<!--- Verify the existing checkout reCAPTCHA response before displaying review. --->
+<cfif NOT (isDefined("url.error") AND url.error EQ 1)>
+	<cfset captchaVerified = false>
+	<cfset apikey = "6LddEiMrAAAAAJdkOFhc6RFcBOQ4Ol15oaRHRwJb">
+	<cfif structKeyExists(form, "recaptcha_response")>
+		<cftry>
+			<cfhttp url="https://www.google.com/recaptcha/api/siteverify" method="post" timeout="10" throwonerror="true" result="recaptchaHttp">
+				<cfhttpparam type="formField" name="secret" value="#apikey#">
+				<cfhttpparam type="formField" name="response" value="#form.recaptcha_response#">
+				<cfhttpparam type="formField" name="remoteip" value="#CGI.REMOTE_ADDR#">
+			</cfhttp>
+			<cfset captchaResponse = deserializeJson(recaptchaHttp.fileContent)>
+			<cfset captchaVerified = structKeyExists(captchaResponse, "success") AND captchaResponse.success>
+			<cfcatch type="any">
+				<cfset captchaVerified = false>
+			</cfcatch>
+		</cftry>
+	</cfif>
+
+	<cfif NOT captchaVerified>
+		<cflocation url="/checkout_new" addtoken="false">
+	</cfif>
+
+	<cflock scope="session" type="exclusive" timeout="5">
+		<cfset session.checkoutCaptchaToken = session.checkoutToken>
+	</cflock>
+</cfif>
+
 <cfquery name="contents" datasource="#dsource#" dbtype="ODBC" username="#uname#" password="#pword#">
 	select * from cart  where trackerid='#session.xss#'
 </cfquery>
@@ -485,6 +517,7 @@ table tr td, table tr td * {
 							<form method="post" name="purcahseForm" action="/purchase" onsubmit="disableSubmitBtn()">
 								<input type="Hidden" name="shipMethod" value="#shipMethod#">
 								<input type="Hidden" name="origin" value="WEBSITE">
+								<input type="hidden" name="return_to_checkout" value="1">
 								<cfloop collection="#form#" item="idx">
 									<input type="Hidden" name="#idx#" value="#evaluate('form.'&idx)#">
 								</cfloop>
@@ -498,7 +531,7 @@ table tr td, table tr td * {
 									</font> ---> 
 									<div>
 										<div class="d-flex gap-3">
-											<input type="Button" value="Make Changes" onClick="javascript:self.history.go(-1);" class="Seemore">
+											<input type="Button" value="Make Changes" onClick="returnToCheckout();" class="Seemore">
 											<input type="submit" value="Purchase!" id="submitBtn" class="Seemore">
 										</div> 
 										<font face="verdana, arial" size="1">
@@ -544,6 +577,12 @@ table tr td, table tr td * {
 <cfinclude template="frmxss.cfm">
 
 <script>
+	function returnToCheckout() {
+		const checkoutForm = document.forms.purcahseForm;
+		checkoutForm.action = "/checkout_new";
+		checkoutForm.submit();
+	}
+
 	function disableSubmitBtn() {
 		console.log('test 1: ')
 		const btn = document.getElementById('submitBtn');
